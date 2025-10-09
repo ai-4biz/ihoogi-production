@@ -349,9 +349,12 @@ const ContentInspiration = () => {
                                 };
 
                                 return (
-                                  <span key={index} className={`px-2 py-1 rounded text-xs border ${getSourceColor(source.name)}`}>
-                                    {source.name}
-                                  </span>
+                                  <div key={index} className={`px-2 py-1 rounded text-xs border ${getSourceColor(source.name)} flex items-center gap-1`}>
+                                    <span>{source.name}</span>
+                                    <span className="text-xs opacity-75">
+                                      ({source.total || 0} / {source.new || 0})
+                                    </span>
+                                  </div>
                                 );
                               })
                             ) : (
@@ -369,9 +372,12 @@ const ContentInspiration = () => {
                           <div className="flex flex-wrap gap-1">
                             {q.partners.length > 0 ? (
                               q.partners.map((partner, index) => (
-                                <span key={index} className="bg-secondary/10 text-secondary px-2 py-1 rounded text-xs">
-                                  {partner.name}
-                                </span>
+                                <div key={index} className="bg-secondary/10 text-secondary px-2 py-1 rounded text-xs flex items-center gap-1">
+                                  <span>{partner.name}</span>
+                                  <span className="text-xs opacity-75">
+                                    ({partner.total || 0} / {partner.new || 0})
+                                  </span>
+                                </div>
                               ))
                             ) : (
                               <span className="text-muted-foreground text-xs">אין שותפים</span>
