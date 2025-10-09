@@ -225,12 +225,12 @@ const ContentInspiration = () => {
                         {/* Stats */}
                         <div className="flex gap-4">
                           <div className="text-center">
-                            <div className="text-2xl font-bold text-foreground">{q.responses.total}</div>
-                            <div className="text-xs text-muted-foreground">תגובות</div>
+                            <div className="text-2xl font-bold text-primary">{q.leads.total}</div>
+                            <div className="text-xs text-muted-foreground">לידים סה"כ</div>
                           </div>
                           <div className="text-center">
-                            <div className="text-2xl font-bold text-primary">{q.leads.total}</div>
-                            <div className="text-xs text-muted-foreground">לידים</div>
+                            <div className="text-2xl font-bold text-green-600">{q.leads.new}</div>
+                            <div className="text-xs text-muted-foreground">לידים חדשים</div>
                           </div>
                         </div>
                       </div>
@@ -239,49 +239,6 @@ const ContentInspiration = () => {
                       <div className="text-right">
                         <h3 className="font-semibold text-lg text-foreground mb-1">{q.title}</h3>
                         <p className="text-sm text-muted-foreground">נוצר ב-{q.createdAt}</p>
-                      </div>
-                    </div>
-
-                    {/* חלק שלישי: נתונים - מקורות לידים ושותפים */}
-                    <div className="pt-4 border-t">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        {/* מקורות לידים */}
-                        <div className="bg-muted/50 rounded-lg p-3">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Users className="h-4 w-4 text-primary" />
-                            <h4 className="font-semibold text-sm">מקורות לידים</h4>
-                          </div>
-                          <div className="flex flex-wrap gap-1">
-                            {q.sources.length > 0 ? (
-                              q.sources.map((source, index) => (
-                                <span key={index} className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">
-                                  {source.name}
-                                </span>
-                              ))
-                            ) : (
-                              <span className="text-muted-foreground text-xs">אין מקורות</span>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* שותפים */}
-                        <div className="bg-muted/50 rounded-lg p-3">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Users className="h-4 w-4 text-primary" />
-                            <h4 className="font-semibold text-sm">שותפים</h4>
-                          </div>
-                          <div className="flex flex-wrap gap-1">
-                            {q.partners.length > 0 ? (
-                              q.partners.map((partner, index) => (
-                                <span key={index} className="bg-secondary/10 text-secondary px-2 py-1 rounded text-xs">
-                                  {partner.name}
-                                </span>
-                              ))
-                            ) : (
-                              <span className="text-muted-foreground text-xs">אין שותפים</span>
-                            )}
-                          </div>
-                        </div>
                       </div>
                     </div>
 
@@ -347,6 +304,80 @@ const ContentInspiration = () => {
                           <Copy className="h-5 w-5 text-muted-foreground" />
                           <span className="text-xs font-medium">שכפול</span>
                         </Button>
+                      </div>
+                    </div>
+
+                    {/* חלק שלישי: נתונים - מקורות לידים ושותפים */}
+                    <div className="pt-4 border-t">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {/* מקורות לידים */}
+                        <div className="bg-muted/50 rounded-lg p-3">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Users className="h-4 w-4 text-primary" />
+                            <h4 className="font-semibold text-sm">מקורות לידים</h4>
+                          </div>
+                          <div className="flex flex-wrap gap-1">
+                            {q.sources.length > 0 ? (
+                              q.sources.map((source, index) => {
+                                // צבעים מייצגים לרשתות חברתיות
+                                const getSourceColor = (sourceName: string) => {
+                                  switch (sourceName.toLowerCase()) {
+                                    case 'פייסבוק':
+                                    case 'facebook':
+                                      return 'bg-blue-100 text-blue-800 border-blue-200';
+                                    case 'אינסטגרם':
+                                    case 'instagram':
+                                      return 'bg-pink-100 text-pink-800 border-pink-200';
+                                    case 'לינקדאין':
+                                    case 'linkedin':
+                                      return 'bg-blue-100 text-blue-900 border-blue-300';
+                                    case 'ווטסאפ':
+                                    case 'whatsapp':
+                                      return 'bg-green-100 text-green-800 border-green-200';
+                                    case 'אתר':
+                                    case 'website':
+                                      return 'bg-purple-100 text-purple-800 border-purple-200';
+                                    case 'טיקטוק':
+                                    case 'tiktok':
+                                      return 'bg-black text-white border-gray-800';
+                                    case 'טוויטר':
+                                    case 'twitter':
+                                      return 'bg-sky-100 text-sky-800 border-sky-200';
+                                    default:
+                                      return 'bg-gray-100 text-gray-800 border-gray-200';
+                                  }
+                                };
+
+                                return (
+                                  <span key={index} className={`px-2 py-1 rounded text-xs border ${getSourceColor(source.name)}`}>
+                                    {source.name}
+                                  </span>
+                                );
+                              })
+                            ) : (
+                              <span className="text-muted-foreground text-xs">אין מקורות</span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* שותפים */}
+                        <div className="bg-muted/50 rounded-lg p-3">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Users className="h-4 w-4 text-primary" />
+                            <h4 className="font-semibold text-sm">שותפים</h4>
+                          </div>
+                          <div className="flex flex-wrap gap-1">
+                            {q.partners.length > 0 ? (
+                              q.partners.map((partner, index) => (
+                                <span key={index} className="bg-secondary/10 text-secondary px-2 py-1 rounded text-xs">
+                                  {partner.name}
+                                </span>
+                              ))
+                            ) : (
+                              <span className="text-muted-foreground text-xs">אין שותפים</span>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
