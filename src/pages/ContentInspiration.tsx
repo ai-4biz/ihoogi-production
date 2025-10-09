@@ -211,26 +211,55 @@ const ContentInspiration = () => {
               <p>אין שאלונים עדיין</p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {questionnaires.map((q, index) => {
                 const bgColors = [
-                  'bg-blue-50/50 border-blue-200/60',
-                  'bg-purple-50/50 border-purple-200/60',
-                  'bg-green-50/50 border-green-200/60',
-                  'bg-orange-50/50 border-orange-200/60',
-                  'bg-pink-50/50 border-pink-200/60',
-                  'bg-cyan-50/50 border-cyan-200/60',
+                  'bg-blue-50/40 border-blue-200/50',
+                  'bg-green-50/40 border-green-200/50',
+                  'bg-purple-50/40 border-purple-200/50',
+                  'bg-orange-50/40 border-orange-200/50',
+                  'bg-pink-50/40 border-pink-200/50',
+                  'bg-cyan-50/40 border-cyan-200/50',
+                  'bg-indigo-50/40 border-indigo-200/50',
+                  'bg-emerald-50/40 border-emerald-200/50',
                 ];
+                // לוודא שכל שאלון מקבל צבע שונה
                 const bgColor = bgColors[index % bgColors.length];
                 
                 return (
                 <Card key={q.id} className={`border shadow-sm hover:shadow-md transition-shadow ${bgColor}`}>
                   <CardContent className="p-4 md:p-6">
                     
-                    {/* חלק ראשון: כותרת השאלון בשורה אחת */}
+                    {/* חלק ראשון: כותרת השאלון - מותאם לנייד */}
                     <div className="mb-6">
-                      <div className="flex items-center justify-between gap-4">
-                        {/* Status Badge - Clickable */}
+                      {/* Mobile Layout */}
+                      <div className="block md:hidden">
+                        <div className="flex items-center justify-between mb-3">
+                          <button 
+                            onClick={() => toggleActive(q.id)}
+                            className={`px-3 py-1 rounded-full text-sm font-medium cursor-pointer hover:opacity-80 transition-opacity ${q.status === 'active' ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'bg-muted text-muted-foreground hover:bg-muted/80'}`}
+                          >
+                            {q.status === 'active' ? 'פעיל' : 'כבוי'}
+                          </button>
+                          <div className="flex gap-3">
+                            <div className="text-center cursor-pointer" onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=all`, '_blank')}>
+                              <div className="text-lg font-bold text-primary">{q.leads.total}</div>
+                              <div className="text-xs text-muted-foreground">סה"כ</div>
+                            </div>
+                            <div className="text-center cursor-pointer" onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=new`, '_blank')}>
+                              <div className="text-lg font-bold text-green-600">{q.leads.new}</div>
+                              <div className="text-xs text-muted-foreground">חדשים</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <h3 className="font-semibold text-base text-foreground mb-1">{q.title}</h3>
+                          <p className="text-sm text-muted-foreground">נוצר ב-{q.createdAt}</p>
+                        </div>
+                      </div>
+                      
+                      {/* Desktop Layout */}
+                      <div className="hidden md:flex items-center justify-between gap-4">
                         <button 
                           onClick={() => toggleActive(q.id)}
                           className={`px-3 py-1 rounded-full text-sm font-medium cursor-pointer hover:opacity-80 transition-opacity ${q.status === 'active' ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'bg-muted text-muted-foreground hover:bg-muted/80'}`}
@@ -238,13 +267,11 @@ const ContentInspiration = () => {
                           {q.status === 'active' ? 'פעיל' : 'כבוי'}
                         </button>
                         
-                        {/* Title and Date */}
                         <div className="text-right flex-1">
                           <h3 className="font-semibold text-lg text-foreground mb-1">{q.title}</h3>
                           <p className="text-sm text-muted-foreground">נוצר ב-{q.createdAt}</p>
                         </div>
                         
-                        {/* Stats */}
                         <div className="flex gap-4">
                           <div className="text-center cursor-pointer" onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=all`, '_blank')}>
                             <div className="text-2xl font-bold text-primary">{q.leads.total}</div>
@@ -258,9 +285,9 @@ const ContentInspiration = () => {
                       </div>
                     </div>
 
-                    {/* חלק שני: כלי הפעולה */}
+                    {/* חלק שני: כלי הפעולה - מותאם לנייד */}
                     <div className="mb-6">
-                      <div className="grid grid-cols-5 gap-2">
+                      <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
                         {/* הצגה */}
                         <Button 
                           variant="ghost" 
@@ -323,9 +350,9 @@ const ContentInspiration = () => {
                       </div>
                     </div>
 
-                    {/* חלק שלישי: נתונים - מקורות לידים ושותפים */}
+                    {/* חלק שלישי: נתונים - מקורות לידים ושותפים - מותאם לנייד */}
                     <div className="pt-4 border-t">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-3">
                         {/* מקורות לידים */}
                         <div className="bg-muted/50 rounded-lg p-3">
                           <div className="flex items-center justify-between mb-2">
