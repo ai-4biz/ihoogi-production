@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
-import { FileText, Calendar, MessageSquare, Users, BarChart3, Edit, Copy, Share2, FileInput, QrCode, Facebook, MessagesSquare, ExternalLink, Instagram, Linkedin, Globe, Mail, Bot, Link as LinkIcon, MessageCircle, Eye, ChevronDown, ArrowRight } from "lucide-react";
+import { FileText, Calendar, MessageSquare, Users, BarChart3, Edit, Copy, Share2, FileInput, QrCode, Facebook, MessagesSquare, ExternalLink, Instagram, Linkedin, Globe, Mail, Bot, Link as LinkIcon, MessageCircle, Eye, ChevronDown, ArrowRight, Menu, X } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import questionnairesIcon from "@/assets/questionnaires-icon-new.png";
@@ -46,6 +46,7 @@ const ContentInspiration = () => {
   // State for questionnaire view mode (form or chat)
   const [questionnaireViewMode, setQuestionnaireViewMode] = useState<{[key: string]: 'form' | 'chat'}>({});
   
+  const [openToolbarId, setOpenToolbarId] = useState<number | null>(null);
   const [questionnaires, setQuestionnaires] = useState<Questionnaire[]>([
     {
       id: 1,
@@ -239,7 +240,7 @@ const ContentInspiration = () => {
                             onClick={() => toggleActive(q.id)}
                             className={`px-3 py-1 rounded-full text-sm font-medium cursor-pointer hover:opacity-80 transition-opacity ${q.status === 'active' ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'bg-muted text-muted-foreground hover:bg-muted/80'}`}
                           >
-                            {q.status === 'active' ? 'פעיל' : 'כבוי'}
+                          {q.status === 'active' ? 'פעיל' : 'כבוי'}
                           </button>
                           <div className="flex gap-3">
                             <div className="text-center cursor-pointer" onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=all`, '_blank')}>
@@ -257,7 +258,7 @@ const ContentInspiration = () => {
                           <p className="text-sm text-muted-foreground">נוצר ב-{q.createdAt}</p>
                         </div>
                       </div>
-                      
+
                       {/* Desktop Layout */}
                       <div className="hidden md:flex items-center justify-between gap-4">
                         <button 
@@ -280,79 +281,158 @@ const ContentInspiration = () => {
                           <div className="text-center cursor-pointer" onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=new`, '_blank')}>
                             <div className="text-2xl font-bold text-green-600">{q.leads.new}</div>
                             <div className="text-xs text-muted-foreground">חדשים</div>
-                          </div>
+                        </div>
                         </div>
                       </div>
                     </div>
 
                     {/* חלק שני: כלי הפעולה - מותאם לנייד */}
                     <div className="mb-4 sm:mb-6">
-                      <div className="grid grid-cols-5 gap-1 sm:gap-2">
-                        {/* הצגה */}
+                      {/* נייד - כפתור המבורגר */}
+                      <div className="block sm:hidden">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="w-full flex items-center justify-center gap-2"
+                          onClick={() => setOpenToolbarId(openToolbarId === q.id ? null : q.id)}
+                        >
+                          {openToolbarId === q.id ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+                          <span>כלי פעולה</span>
+                        </Button>
+                        
+                        {/* תפריט נפתח בנייד */}
+                        {openToolbarId === q.id && (
+                          <div className="mt-2 grid grid-cols-2 gap-2 p-3 bg-muted/30 rounded-lg">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="flex-col h-auto py-2 px-2 gap-1 hover:bg-primary/10 transition-colors"
+                              onClick={() => {
+                                window.open(`/questionnaire-view/${q.id}?mode=form`, '_blank');
+                                setOpenToolbarId(null);
+                              }}
+                            >
+                              <Eye className="h-4 w-4 text-primary" />
+                              <span className="text-xs font-medium">הצגה</span>
+                            </Button>
+                            
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="flex-col h-auto py-2 px-2 gap-1 hover:bg-primary/10 transition-colors"
+                              onClick={() => {
+                                window.open(`/distribution?id=${q.id}`, '_blank');
+                                setOpenToolbarId(null);
+                              }}
+                            >
+                              <Share2 className="h-4 w-4 text-primary" />
+                              <span className="text-xs font-medium">הפצה</span>
+                            </Button>
+                            
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="flex-col h-auto py-2 px-2 gap-1 hover:bg-muted transition-colors"
+                              onClick={() => {
+                                window.open(`/create-questionnaire?id=${q.id}&mode=edit`, '_blank');
+                                setOpenToolbarId(null);
+                              }}
+                            >
+                              <Edit className="h-4 w-4 text-muted-foreground" />
+                              <span className="text-xs font-medium">עריכה</span>
+                            </Button>
+                            
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="flex-col h-auto py-2 px-2 gap-1 hover:bg-muted transition-colors"
+                              onClick={() => {
+                                handleDuplicateQuestionnaire(q);
+                                setOpenToolbarId(null);
+                              }}
+                            >
+                              <Copy className="h-4 w-4 text-muted-foreground" />
+                              <span className="text-xs font-medium">שכפול</span>
+                            </Button>
+                            
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="flex-col h-auto py-2 px-2 gap-1 hover:bg-primary/10 transition-colors col-span-2"
+                              onClick={() => {
+                                window.open(`/leads-responses?id=${q.id}&tab=analysis`, '_blank');
+                                setOpenToolbarId(null);
+                              }}
+                            >
+                              <BarChart3 className="h-4 w-4 text-primary" />
+                              <span className="text-xs font-medium">נתונים</span>
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* דסקטופ - רשת רגילה */}
+                      <div className="hidden sm:grid grid-cols-5 gap-2">
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="flex-col h-auto py-2 px-1 sm:py-3 sm:px-2 gap-1 sm:gap-1.5 hover:bg-primary/10 transition-colors"
+                          className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-primary/10 transition-colors"
                           title="הצג שאלון"
                           onClick={() => window.open(`/questionnaire-view/${q.id}?mode=form`, '_blank')}
                         >
-                          <Eye className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-                          <span className="text-xs font-medium hidden sm:inline">הצגה</span>
+                          <Eye className="h-5 w-5 text-primary" />
+                          <span className="text-xs font-medium">הצגה</span>
                         </Button>
                         
-                        {/* הפצה */}
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="flex-col h-auto py-2 px-1 sm:py-3 sm:px-2 gap-1 sm:gap-1.5 hover:bg-primary/10 transition-colors"
+                          className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-primary/10 transition-colors"
                           title="הפצה"
                           onClick={() => window.open(`/distribution?id=${q.id}`, '_blank')}
                         >
-                          <Share2 className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-                          <span className="text-xs font-medium hidden sm:inline">הפצה</span>
+                          <Share2 className="h-5 w-5 text-primary" />
+                          <span className="text-xs font-medium">הפצה</span>
                         </Button>
                         
-                        {/* עריכה */}
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="flex-col h-auto py-2 px-1 sm:py-3 sm:px-2 gap-1 sm:gap-1.5 hover:bg-muted transition-colors"
+                          className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-muted transition-colors"
                           title="עריכה"
                           onClick={() => window.open(`/create-questionnaire?id=${q.id}&mode=edit`, '_blank')}
                         >
-                          <Edit className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
-                          <span className="text-xs font-medium hidden sm:inline">עריכה</span>
+                          <Edit className="h-5 w-5 text-muted-foreground" />
+                          <span className="text-xs font-medium">עריכה</span>
                         </Button>
                         
-                        {/* שכפול */}
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="flex-col h-auto py-2 px-1 sm:py-3 sm:px-2 gap-1 sm:gap-1.5 hover:bg-muted transition-colors"
+                          className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-muted transition-colors"
                           title="שכפול"
                           onClick={() => handleDuplicateQuestionnaire(q)}
                         >
-                          <Copy className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
-                          <span className="text-xs font-medium hidden sm:inline">שכפול</span>
+                          <Copy className="h-5 w-5 text-muted-foreground" />
+                          <span className="text-xs font-medium">שכפול</span>
                         </Button>
                         
-                        {/* נתונים */}
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="flex-col h-auto py-2 px-1 sm:py-3 sm:px-2 gap-1 sm:gap-1.5 hover:bg-primary/10 transition-colors"
+                          className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-primary/10 transition-colors"
                           title="נתונים"
                           onClick={() => window.open(`/leads-responses?id=${q.id}&tab=analysis`, '_blank')}
                         >
-                          <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-                          <span className="text-xs font-medium hidden sm:inline">נתונים</span>
+                          <BarChart3 className="h-5 w-5 text-primary" />
+                          <span className="text-xs font-medium">נתונים</span>
                         </Button>
                       </div>
                     </div>
 
                     {/* חלק שלישי: נתונים - מקורות לידים ושותפים - מותאם לנייד */}
-                    <div className="pt-4 border-t">
-                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-3">
+                    <div className="pt-3 sm:pt-4 border-t">
+                      <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-3">
                         {/* מקורות לידים */}
                         <div className="bg-muted/50 rounded-lg p-3">
                           <div className="flex items-center justify-between mb-2">
@@ -374,9 +454,9 @@ const ContentInspiration = () => {
                               >
                                 {q.sources.reduce((sum, source) => sum + (source.new || 0), 0)} חדשים
                               </span>
-                            </div>
-                          </div>
-                          <div className="flex flex-wrap gap-1">
+                        </div>
+                      </div>
+                        <div className="flex flex-wrap gap-1.5">
                             {q.sources.length > 0 ? (
                               q.sources.map((source, index) => {
                                 // לוגו מייצג לרשתות חברתיות
@@ -411,22 +491,22 @@ const ContentInspiration = () => {
                                 return (
                                   <div 
                                     key={index} 
-                                    className="bg-gray-100 text-gray-800 border border-gray-200 px-2 py-1 rounded text-xs flex items-center gap-1 cursor-pointer hover:bg-gray-200 transition-colors"
+                                    className="bg-gray-100 text-gray-800 border border-gray-200 px-2 py-1.5 rounded text-xs flex items-center gap-1.5 cursor-pointer hover:bg-gray-200 transition-colors min-w-0 flex-shrink-0"
                                     onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=source&source=${encodeURIComponent(source.name)}`, '_blank')}
                                   >
                                     {getSourceIcon(source.name)}
-                                    <span>{source.name}</span>
-                                    <span className="text-xs opacity-75">
+                                    <span className="truncate">{source.name}</span>
+                                    <span className="text-xs opacity-75 flex-shrink-0">
                                       ({source.total || 0} / {source.new || 0})
-                                    </span>
+                              </span>
                                   </div>
                                 );
                               })
-                            ) : (
+                          ) : (
                               <span className="text-muted-foreground text-xs">אין מקורות</span>
-                            )}
-                          </div>
+                          )}
                         </div>
+                      </div>
 
                         {/* שותפים */}
                         <div className="bg-muted/30 rounded-lg p-3">
@@ -451,16 +531,16 @@ const ContentInspiration = () => {
                               </span>
                             </div>
                           </div>
-                          <div className="flex flex-wrap gap-1">
+                          <div className="flex flex-wrap gap-1.5">
                             {q.partners.length > 0 ? (
                               q.partners.map((partner, index) => (
                                 <div 
                                   key={index} 
-                                  className="bg-gray-800 text-white px-2 py-1 rounded text-xs flex items-center gap-1 cursor-pointer hover:bg-gray-700 transition-colors"
+                                  className="bg-slate-100 text-slate-800 border border-slate-200 px-2 py-1.5 rounded text-xs flex items-center gap-1.5 cursor-pointer hover:bg-slate-200 transition-colors min-w-0 flex-shrink-0"
                                   onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=partner&partner=${encodeURIComponent(partner.name)}`, '_blank')}
                                 >
-                                  <span>{partner.name}</span>
-                                  <span className="text-xs opacity-75">
+                                  <span className="truncate">{partner.name}</span>
+                                  <span className="text-xs opacity-75 flex-shrink-0">
                                     ({partner.total || 0} / {partner.new || 0})
                                   </span>
                                 </div>
