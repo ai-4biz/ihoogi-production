@@ -147,6 +147,30 @@ const ContentInspiration = () => {
 
   const getViewMode = (id: number) => questionnaireViewMode[id.toString()] || 'form';
 
+  const handleDuplicateQuestionnaire = (questionnaire: Questionnaire) => {
+    const newTitle = prompt(`הכנס כותרת חדשה לשאלון המשוכפל:\n(השאלון המקורי: "${questionnaire.title}")`, `${questionnaire.title} - עותק`);
+    
+    if (newTitle && newTitle.trim()) {
+      const duplicatedQuestionnaire = {
+        ...questionnaire,
+        id: Date.now(), // Generate new ID
+        title: newTitle.trim(),
+        createdAt: new Date().toLocaleDateString('he-IL'),
+        leads: { total: 0, new: 0 },
+        responses: { total: 0 },
+        sources: [],
+        partners: [],
+        automations: []
+      };
+      
+      setQuestionnaires(prev => [duplicatedQuestionnaire, ...prev]);
+      toast({
+        title: "השאלון שוכפל בהצלחה!",
+        description: `השאלון "${newTitle.trim()}" נוסף לרשימה.`,
+      });
+    }
+  };
+
   return (
     <MainLayout initialState="articles">
       <div className="bg-background rounded-lg shadow-sm p-3 md:p-6">
@@ -274,6 +298,7 @@ const ContentInspiration = () => {
                         size="sm" 
                         className="flex-col h-auto py-3 px-2 gap-2 hover:bg-blue-50 hover:text-blue-700 transition-colors"
                         title="עריכה"
+                        onClick={() => window.open(`/edit-questionnaire/${q.id}`, '_blank')}
                       >
                         <Edit className="h-5 w-5" />
                         <span className="text-xs font-medium">עריכה</span>
@@ -285,6 +310,7 @@ const ContentInspiration = () => {
                         size="sm" 
                         className="flex-col h-auto py-3 px-2 gap-2 hover:bg-green-50 hover:text-green-700 transition-colors"
                         title="הפצה"
+                        onClick={() => window.open(`/distribute-questionnaire/${q.id}`, '_blank')}
                       >
                         <Share2 className="h-5 w-5" />
                         <span className="text-xs font-medium">הפצה</span>
@@ -296,6 +322,7 @@ const ContentInspiration = () => {
                         size="sm" 
                         className="flex-col h-auto py-3 px-2 gap-2 hover:bg-gray-50 hover:text-gray-700 transition-colors"
                         title="שכפול"
+                        onClick={() => handleDuplicateQuestionnaire(q)}
                       >
                         <Copy className="h-5 w-5" />
                         <span className="text-xs font-medium">שכפול</span>
@@ -307,6 +334,7 @@ const ContentInspiration = () => {
                         size="sm" 
                         className="flex-col h-auto py-3 px-2 gap-2 hover:bg-purple-50 hover:text-purple-700 transition-colors"
                         title="סטטיסטיקה"
+                        onClick={() => window.open(`/response-analysis/${q.id}`, '_blank')}
                       >
                         <BarChart3 className="h-5 w-5" />
                         <span className="text-xs font-medium">סטטיסטיקה</span>
