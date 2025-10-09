@@ -180,9 +180,21 @@ const CreateQuestionnaire = () => {
           </Button>
         </div>
 
-        {/* Header with business name, logo and profile picture */}
-        <div className="mb-6 bg-card rounded-xl p-6 shadow-sm border border-border">
-          <div className="flex items-center justify-between">
+        {/* Header with business name */}
+        <div className="mb-6 flex justify-center">
+          <div className="bg-card rounded-xl p-4 shadow-sm border border-border w-1/2">
+            <div className="text-center">
+              <h1 className="text-xl md:text-2xl font-bold text-foreground">
+                {businessName}
+              </h1>
+              <p className="text-sm md:text-base text-muted-foreground">{subCategory}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Logo and Profile Picture section */}
+        <div className="mb-6 bg-card rounded-xl p-4 shadow-sm border border-border">
+          <div className="flex items-center justify-center gap-8">
             {/* Logo section */}
             <div className="flex items-center gap-3">
               <input type="checkbox" className="w-5 h-5 text-primary" defaultChecked />
@@ -191,26 +203,18 @@ const CreateQuestionnaire = () => {
                 alt="Logo"
                 className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-2 border-primary/20"
               />
-              <span className="text-sm font-medium text-foreground">לוגו</span>
-            </div>
-
-            {/* Business name - centered */}
-            <div className="text-center flex-1 mx-8">
-              <h1 className="text-xl md:text-2xl font-bold text-foreground">
-                {businessName}
-              </h1>
-              <p className="text-sm md:text-base text-muted-foreground">{subCategory}</p>
+              <span className="text-sm font-medium text-foreground">הוספת לוגו</span>
             </div>
 
             {/* Profile Picture section */}
             <div className="flex items-center gap-3">
-              <span className="text-sm font-medium text-foreground">פרופיל</span>
+              <input type="checkbox" className="w-5 h-5 text-primary" defaultChecked />
               <img
                 src={profileFile || logoUrl}
                 alt="Profile"
                 className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-2 border-primary/20"
               />
-              <input type="checkbox" className="w-5 h-5 text-primary" defaultChecked />
+              <span className="text-sm font-medium text-foreground">הוספת תמונת פרופיל</span>
             </div>
           </div>
         </div>
