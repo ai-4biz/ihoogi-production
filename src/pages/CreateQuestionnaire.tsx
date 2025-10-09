@@ -273,24 +273,16 @@ const CreateQuestionnaire = () => {
                 />
               </div>
 
-              {/* Upload section */}
-              <div className="bg-card rounded-xl p-4 md:p-6 shadow-sm border border-border hover:shadow-md transition-shadow">
-                <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-foreground">קובץ או קישור</h3>
+            </div>
+
+            {/* Right column - Sidebar */}
+            <div className="space-y-4 md:space-y-6">
+              {/* העלאת קבצים */}
+              <div className="bg-card rounded-xl p-4 md:p-6 shadow-sm border border-border">
+                <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-foreground text-right">העלאת קבצים</h3>
                 <div className="space-y-4">
                   <div>
-                    <label className="text-sm font-medium mb-2 block text-foreground">קישור</label>
-                    <div className="flex gap-2">
-                      <Input
-                        placeholder="הדבק קישור..."
-                        className="flex-1"
-                      />
-                      <Button variant="outline" size="icon" className="bg-primary/10 hover:bg-primary/20 border-primary/30">
-                        <LinkIcon className="h-5 w-5 text-primary" />
-                      </Button>
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium mb-2 block text-foreground">העלאת לוגו (לתצוגה מקדימה)</label>
+                    <label className="text-sm font-medium mb-2 block text-foreground text-right">העלאת לוגו (לתצוגה מקדימה)</label>
                     <div className="flex gap-2">
                       <Input
                         type="file"
@@ -307,13 +299,13 @@ const CreateQuestionnaire = () => {
                           }
                         }}
                       />
-                      <Button variant="outline" size="icon" className="bg-accent/10 hover:bg-accent/20 border-accent/30">
-                        <Upload className="h-5 w-5 text-accent" />
+                      <Button variant="outline" size="icon" className="bg-primary/10 hover:bg-primary/20 border-primary/30">
+                        <Upload className="h-5 w-5 text-primary" />
                       </Button>
                     </div>
                   </div>
                   <div>
-                    <label className="text-sm font-medium mb-2 block text-foreground">תמונת פרופיל (אופציונלי)</label>
+                    <label className="text-sm font-medium mb-2 block text-foreground text-right">תמונת פרופיל (אופציונלי)</label>
                     <div className="flex gap-2">
                       <Input
                         type="file"
@@ -338,30 +330,27 @@ const CreateQuestionnaire = () => {
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Right column - Sidebar */}
-            <div className="space-y-4 md:space-y-6">
-              {/* בניית שאלות card */}
-              <div 
-                className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl p-4 md:p-6 shadow-sm border border-primary/20 hover:shadow-md transition-all cursor-pointer"
-                onClick={() => setIsBuilderOpen(true)}
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-3 bg-primary/20 rounded-lg">
-                    <FileText className="h-6 w-6 text-primary" />
-                  </div>
-                  <h2 className="text-lg md:text-xl font-bold text-foreground">בניית שאלות</h2>
-                </div>
-                <p className="text-sm text-muted-foreground mb-3">
-                  יצירה ועריכה של שאלות
-                </p>
-                {questions.length > 0 && (
-                  <p className="text-xs text-primary font-medium">
-                    {questions.length} שאלות נוספו
-                  </p>
-                )}
+          {/* בניית השאלון - מלבן לכל הרוחב */}
+          <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl p-6 shadow-sm border border-primary/20 hover:shadow-md transition-all cursor-pointer mb-6"
+               onClick={() => setIsBuilderOpen(true)}>
+            <div className="flex items-center gap-4 mb-3">
+              <div className="p-4 bg-primary/20 rounded-lg">
+                <FileText className="h-8 w-8 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-xl md:text-2xl font-bold text-foreground">בניית השאלון</h2>
+                <p className="text-sm text-muted-foreground">יצירה ועריכה של שאלות לשאלון</p>
               </div>
             </div>
+            {questions.length > 0 && (
+              <div className="bg-primary/10 rounded-lg p-3">
+                <p className="text-sm text-primary font-medium">
+                  {questions.length} שאלות נוספו לשאלון
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Save button at bottom - centered */}

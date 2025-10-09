@@ -331,16 +331,6 @@ const QuestionBuilder = ({ onSave, onCancel }: QuestionBuilderProps) => {
               </div>
             )}
 
-            {(question.type === "text" || question.type === "email" || question.type === "phone") && (
-              <div className="mb-4">
-                <label className="text-sm font-medium mb-2 block">טקסט עזרה (placeholder)</label>
-                <Input
-                  value={question.placeholder || ""}
-                  onChange={(e) => updateQuestion(question.id, "placeholder", e.target.value)}
-                  placeholder="הכנס טקסט עזרה..."
-                />
-              </div>
-            )}
 
             {/* Move buttons */}
             <div className="flex gap-2">
@@ -398,7 +388,7 @@ const QuestionBuilder = ({ onSave, onCancel }: QuestionBuilderProps) => {
               window.open('/questionnaire-view/preview?mode=form', '_blank');
             }
           }}
-          className="bg-orange-500 hover:bg-orange-600 text-white px-8"
+          className="bg-purple-600 hover:bg-purple-700 text-white px-8"
           size="lg"
           disabled={questions.length === 0}
         >
