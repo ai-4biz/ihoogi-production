@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
-import { FileText, Calendar, MessageSquare, Users, BarChart3, Edit, Copy, Share2, FileInput, QrCode, Facebook, MessagesSquare, ExternalLink, Instagram, Linkedin, Globe, Mail, Bot, Link as LinkIcon, MessageCircle, Eye, ChevronDown } from "lucide-react";
+import { FileText, Calendar, MessageSquare, Users, BarChart3, Edit, Copy, Share2, FileInput, QrCode, Facebook, MessagesSquare, ExternalLink, Instagram, Linkedin, Globe, Mail, Bot, Link as LinkIcon, MessageCircle, Eye, ChevronDown, ArrowRight } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import questionnairesIcon from "@/assets/questionnaires-icon-new.png";
@@ -173,9 +173,22 @@ const ContentInspiration = () => {
 
   return (
     <MainLayout initialState="articles">
-      <div className="bg-background rounded-lg shadow-sm p-3 md:p-6">
-        <h1 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 flex items-center">
-          <img src={questionnairesIcon} alt="שאלונים" className="h-6 w-6 md:h-8 md:w-8 ml-2" />
+      <div className="bg-background rounded-lg shadow-sm p-3 md:p-6" dir="rtl">
+        {/* Back Button */}
+        <div className="flex items-center mb-4">
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={() => window.history.back()}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <ArrowRight className="ml-2 h-4 w-4" />
+            חזור
+          </Button>
+        </div>
+
+        <h1 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 flex items-center justify-end">
+          <img src={questionnairesIcon} alt="שאלונים" className="h-6 w-6 md:h-8 md:w-8 mr-2" />
           השאלונים שלי
         </h1>
         
@@ -199,7 +212,7 @@ const ContentInspiration = () => {
                         </div>
 
                         {/* Title */}
-                        <div className="flex-1">
+                        <div className="flex-1 text-right">
                           <h3 className="text-lg font-bold text-foreground">{q.title}</h3>
                         </div>
                       </div>

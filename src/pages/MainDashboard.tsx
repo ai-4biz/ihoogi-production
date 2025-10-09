@@ -1,7 +1,7 @@
 import MainLayout from "@/components/layout/MainLayout";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Plus, MessageSquare, Users, TrendingUp, CheckCircle2, Clock, AlertCircle, FileText } from "lucide-react";
+import { Plus, MessageSquare, Users, TrendingUp, CheckCircle2, Clock, AlertCircle, FileText, ArrowRight } from "lucide-react";
 
 const MainDashboard = () => {
   const navigate = useNavigate();
@@ -42,14 +42,27 @@ const MainDashboard = () => {
 
   return (
     <MainLayout initialState="root">
-      <div className="flex flex-col w-full space-y-6 p-4 md:p-8 bg-background">
+      <div className="flex flex-col w-full space-y-6 p-4 md:p-8 bg-background" dir="rtl">
+        {/* Back Button */}
+        <div className="flex items-center mb-2">
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={() => window.history.back()}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <ArrowRight className="ml-2 h-4 w-4" />
+            חזור
+          </Button>
+        </div>
+
         {/* Header with greeting and new questionnaire button */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold flex items-center gap-2 text-foreground">
+          <div className="text-right">
+            <h1 className="text-2xl md:text-3xl font-bold flex items-center gap-2 text-foreground justify-end">
               <span className="text-3xl">👋</span> שלום !{userName}
             </h1>
-            <p className="text-sm md:text-base text-muted-foreground mt-1">
+            <p className="text-sm md:text-base text-muted-foreground mt-1 text-right">
               הנה תמונת מצב מלאה של העסק שלך - הכל במקום אחד
             </p>
           </div>
@@ -121,42 +134,42 @@ const MainDashboard = () => {
 
         {/* Bottom Stats - 4 smaller cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-          <div className="border-l-4 border-primary rounded-lg p-4 bg-card shadow-sm">
-            <div className="flex items-center gap-2 text-primary mb-2">
-              <TrendingUp className="h-5 w-5" />
+          <div className="border-r-4 border-primary rounded-lg p-4 bg-card shadow-sm">
+            <div className="flex items-center gap-2 text-primary mb-2 justify-end">
               <span className="text-sm font-medium">הכנסות היום</span>
+              <TrendingUp className="h-5 w-5" />
             </div>
-            <div className="text-3xl md:text-4xl font-bold text-foreground">{stats.todayReturns}</div>
+            <div className="text-3xl md:text-4xl font-bold text-foreground text-right">{stats.todayReturns}</div>
           </div>
 
-          <div className="border-l-4 border-accent rounded-lg p-4 bg-card shadow-sm">
-            <div className="flex items-center gap-2 text-accent mb-2">
-              <CheckCircle2 className="h-5 w-5" />
+          <div className="border-r-4 border-accent rounded-lg p-4 bg-card shadow-sm">
+            <div className="flex items-center gap-2 text-accent mb-2 justify-end">
               <span className="text-sm font-medium">השלמנו</span>
+              <CheckCircle2 className="h-5 w-5" />
             </div>
-            <div className="text-3xl md:text-4xl font-bold text-foreground">{stats.inProgress}</div>
+            <div className="text-3xl md:text-4xl font-bold text-foreground text-right">{stats.inProgress}</div>
           </div>
 
-          <div className="border-l-4 border-secondary rounded-lg p-4 bg-card shadow-sm">
-            <div className="flex items-center gap-2 text-secondary mb-2">
-              <Clock className="h-5 w-5" />
+          <div className="border-r-4 border-secondary rounded-lg p-4 bg-card shadow-sm">
+            <div className="flex items-center gap-2 text-secondary mb-2 justify-end">
               <span className="text-sm font-medium">בטיפול</span>
+              <Clock className="h-5 w-5" />
             </div>
-            <div className="text-3xl md:text-4xl font-bold text-foreground">{stats.completed}</div>
+            <div className="text-3xl md:text-4xl font-bold text-foreground text-right">{stats.completed}</div>
           </div>
 
-          <div className="border-l-4 border-purple-500 rounded-lg p-4 bg-card shadow-sm">
-            <div className="flex items-center gap-2 text-purple-600 mb-2">
-              <AlertCircle className="h-5 w-5" />
+          <div className="border-r-4 border-purple-500 rounded-lg p-4 bg-card shadow-sm">
+            <div className="flex items-center gap-2 text-purple-600 mb-2 justify-end">
               <span className="text-sm font-medium">חודשים</span>
+              <AlertCircle className="h-5 w-5" />
             </div>
-            <div className="text-3xl md:text-4xl font-bold text-foreground">{stats.new}</div>
+            <div className="text-3xl md:text-4xl font-bold text-foreground text-right">{stats.new}</div>
           </div>
         </div>
 
         {/* Questionnaires List */}
         <div className="mt-4">
-          <h2 className="text-xl md:text-2xl font-bold mb-4 text-foreground">השאלונים שלך</h2>
+          <h2 className="text-xl md:text-2xl font-bold mb-4 text-foreground text-right">השאלונים שלך</h2>
           <div className="space-y-3">
             {questionnaires.map((q) => (
               <div 
@@ -169,7 +182,7 @@ const MainDashboard = () => {
                     <div className="bg-primary/10 p-3 rounded-lg">
                       <FileText className="h-6 w-6 text-primary" />
                     </div>
-                    <div className="flex-1">
+                    <div className="flex-1 text-right">
                       <h3 className="font-bold text-foreground text-base md:text-lg">{q.title}</h3>
                       <p className="text-sm text-muted-foreground">{q.category}</p>
                     </div>

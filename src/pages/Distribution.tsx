@@ -5,7 +5,7 @@ import SurveyPicker from "@/components/surveys/SurveyPicker";
 import QuickLinks from "@/components/surveys/QuickLinks";
 import PreviewPane from "@/components/surveys/PreviewPane";
 import { Button } from "@/components/ui/button";
-import { Plus, Mail, MessageCircle, Smartphone, ExternalLink } from "lucide-react";
+import { Plus, Mail, MessageCircle, Smartphone, ExternalLink, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -67,13 +67,26 @@ const Distribution = () => {
   };
   return <MainLayout initialState="content">
       <div className="flex flex-col w-full space-y-6 p-4 md:p-8 bg-background" dir="rtl">
+        {/* Back Button */}
+        <div className="flex items-center mb-2">
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={() => window.history.back()}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <ArrowRight className="ml-2 h-4 w-4" />
+            חזור
+          </Button>
+        </div>
+
         {/* Header */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground flex items-center gap-2">
+          <div className="text-right">
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground flex items-center gap-2 justify-end">
               <span>📤</span> הפצת שאלונים
             </h1>
-            <p className="text-sm md:text-base text-muted-foreground mt-1">
+            <p className="text-sm md:text-base text-muted-foreground mt-1 text-right">
               צור קישורי הפצה לשאלונים שלך ושתף אותם עם הלקוחות
             </p>
           </div>

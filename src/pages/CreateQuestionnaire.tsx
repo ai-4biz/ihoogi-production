@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Sparkles, Users, MessageSquare, FileText, Link as LinkIcon, Upload, Eye } from "lucide-react";
+import { Plus, Sparkles, Users, MessageSquare, FileText, Link as LinkIcon, Upload, Eye, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import QuestionBuilder, { Question } from "@/components/questionnaire/QuestionBuilder";
 import FormPreview from "@/components/questionnaire/FormPreview";
@@ -166,7 +166,20 @@ const CreateQuestionnaire = () => {
 
   return (
     <MainLayout initialState="content">
-      <div className="flex flex-col w-full min-h-screen bg-background p-4 md:p-8">
+      <div className="flex flex-col w-full min-h-screen bg-background p-4 md:p-8" dir="rtl">
+        {/* Back Button */}
+        <div className="flex items-center mb-4">
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={() => window.history.back()}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <ArrowRight className="ml-2 h-4 w-4" />
+            חזור
+          </Button>
+        </div>
+
         {/* Header with business name and logo */}
         <div className="mb-6 flex items-center gap-3 bg-card rounded-xl p-4 shadow-sm border border-border">
           <img
@@ -174,7 +187,7 @@ const CreateQuestionnaire = () => {
             alt="Logo"
             className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover"
           />
-          <div>
+          <div className="text-right">
             <h1 className="text-xl md:text-2xl font-bold text-foreground">
               {businessName}
             </h1>

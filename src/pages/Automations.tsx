@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"; 
 import MainLayout from "@/components/layout/MainLayout";
-import { Bell, Edit, Settings } from "lucide-react";
+import { Bell, Edit, Settings, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import TriggersTab from "@/components/automations/TriggersTab";
 import TemplatesTab from "@/components/automations/TemplatesTab";
 import PreferencesTab from "@/components/automations/PreferencesTab";
 import { useSearchParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 type AutomationTab = "triggers" | "templates" | "prefs";
 
@@ -23,10 +24,23 @@ const Automations = () => {
 
   return (
     <MainLayout initialState="automations">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto" dir="rtl">
+        {/* Back Button */}
+        <div className="flex items-center mb-4">
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={() => window.history.back()}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <ArrowRight className="ml-2 h-4 w-4" />
+            חזור
+          </Button>
+        </div>
+
         <div className="mb-6">
-          <h1 className="text-2xl font-bold">אוטומציות</h1>
-          <p className="text-gray-500">ניהול אוטומציות והתראות</p>
+          <h1 className="text-2xl font-bold text-right">אוטומציות</h1>
+          <p className="text-gray-500 text-right">ניהול אוטומציות והתראות</p>
         </div>
         
         <Tabs 

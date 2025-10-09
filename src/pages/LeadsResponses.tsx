@@ -2,10 +2,11 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MessageSquare, LineChart } from "lucide-react";
+import { MessageSquare, LineChart, ArrowRight } from "lucide-react";
 import MainLayout from "@/components/layout/MainLayout";
 import LeadsList from "@/components/leads-responses/LeadsList";
 import AnswersAnalyticsTab from "@/components/leads-responses/AnswersAnalyticsTab";
+import { Button } from "@/components/ui/button";
 
 const LeadsResponses = () => {
   const [searchParams] = useSearchParams();
@@ -15,8 +16,21 @@ const LeadsResponses = () => {
 
   return (
     <MainLayout initialState="leads">
-      <div className="bg-white rounded-lg shadow-sm p-4">
-        <h1 className="text-2xl font-bold mb-6 flex items-center">
+      <div className="bg-white rounded-lg shadow-sm p-4" dir="rtl">
+        {/* Back Button */}
+        <div className="flex items-center mb-4">
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={() => window.history.back()}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <ArrowRight className="ml-2 h-4 w-4" />
+            חזור
+          </Button>
+        </div>
+
+        <h1 className="text-2xl font-bold mb-6 flex items-center justify-end">
           <MessageSquare className="mr-2 h-6 w-6" />
           לידים ותשובות
         </h1>

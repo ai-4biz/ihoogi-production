@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText, MessageCircle, ArrowLeft, Eye, Users, Calendar } from "lucide-react";
+import { FileText, MessageCircle, ArrowLeft, Eye, Users, Calendar, ArrowRight } from "lucide-react";
 
 interface QuestionnaireData {
   id: number;
@@ -245,7 +245,7 @@ const QuestionnaireView: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" dir="rtl">
       {/* Header */}
       <div className="bg-card border-b shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-4">
@@ -257,10 +257,10 @@ const QuestionnaireView: React.FC = () => {
                 onClick={() => window.history.back()}
                 className="flex items-center gap-2"
               >
-                <ArrowLeft className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4" />
                 חזרה
               </Button>
-              <div>
+              <div className="text-right">
                 <h1 className="text-2xl font-bold text-foreground">{questionnaire.title}</h1>
                 <p className="text-muted-foreground">{questionnaire.description}</p>
               </div>
