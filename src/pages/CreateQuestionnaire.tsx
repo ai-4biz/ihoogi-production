@@ -183,11 +183,14 @@ const CreateQuestionnaire = () => {
         {/* Header with business name, logo and profile picture */}
         <div className="mb-6 flex items-center justify-between bg-card rounded-xl p-4 shadow-sm border border-border">
           <div className="flex items-center gap-3">
-            <img
-              src={logoUrl}
-              alt="Logo"
-              className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover"
-            />
+            <div className="flex items-center gap-2">
+              <img
+                src={logoUrl}
+                alt="Logo"
+                className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover"
+              />
+              <input type="checkbox" className="w-4 h-4" />
+            </div>
             <div className="text-right">
               <h1 className="text-xl md:text-2xl font-bold text-foreground">
                 {businessName}
@@ -195,7 +198,8 @@ const CreateQuestionnaire = () => {
               <p className="text-sm md:text-base text-muted-foreground">{subCategory}</p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <input type="checkbox" className="w-4 h-4" />
             <img
               src={profileFile || logoUrl}
               alt="Profile"
@@ -209,7 +213,7 @@ const CreateQuestionnaire = () => {
           <div className="space-y-4 md:space-y-6 mb-6">
 
               {/* Title input */}
-              <div className="bg-card rounded-xl p-4 md:p-6 shadow-sm border border-border hover:shadow-md transition-shadow">
+              <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl p-4 md:p-6 shadow-sm border border-primary/20 hover:shadow-md transition-shadow">
                 <h3 className="text-base md:text-lg font-semibold text-foreground mb-3 md:mb-4">כותרת השאלון</h3>
                 <Input
                   placeholder="הקלד כותרת..."
@@ -226,13 +230,13 @@ const CreateQuestionnaire = () => {
                   placeholder="כתוב מילים שמסבירות בצורה כללית את השאלון..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="min-h-[120px] md:min-h-[150px] text-base"
+                  className="min-h-[80px] md:min-h-[100px] text-base resize-none"
                 />
               </div>
 
               {/* Link or Image upload */}
-              <div className="bg-card rounded-xl p-4 md:p-6 shadow-sm border border-border hover:shadow-md transition-shadow">
-                <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-foreground">קישור או תמונה</h3>
+              <div className="bg-gradient-to-br from-secondary/5 to-secondary/10 rounded-xl p-4 md:p-6 shadow-sm border border-secondary/20 hover:shadow-md transition-shadow">
+                <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-foreground">הוספת קישור / תמונה לשאלון</h3>
                 <div className="flex gap-3">
                   <div className="flex-1">
                     <label className="text-sm font-medium mb-2 block text-foreground">קישור</label>
@@ -274,13 +278,20 @@ const CreateQuestionnaire = () => {
             )}
           </div>
 
-          {/* Save button at bottom - centered */}
-          <div className="flex justify-center mt-8 mb-4">
+          {/* Save and Distribute buttons at bottom - centered */}
+          <div className="flex justify-center gap-4 mt-8 mb-4">
             <Button 
               className="bg-primary hover:bg-primary/90 text-white shadow-lg px-12 py-6 text-lg font-semibold rounded-xl"
               size="lg"
             >
               שמירה
+            </Button>
+            <Button 
+              className="bg-secondary hover:bg-secondary/90 text-white shadow-lg px-12 py-6 text-lg font-semibold rounded-xl"
+              size="lg"
+              onClick={() => navigate('/distribution')}
+            >
+              הפצה
             </Button>
           </div>
         </div>
