@@ -200,8 +200,18 @@ const ContentInspiration = () => {
             </div>
           ) : (
             <div className="space-y-4">
-              {questionnaires.map((q) => (
-                <Card key={q.id} className="border shadow-sm hover:shadow-md transition-shadow">
+              {questionnaires.map((q, index) => {
+                const bgColors = [
+                  'bg-blue-50/30',
+                  'bg-purple-50/30',
+                  'bg-green-50/30',
+                  'bg-orange-50/30',
+                  'bg-pink-50/30',
+                ];
+                const bgColor = bgColors[index % bgColors.length];
+                
+                return (
+                <Card key={q.id} className={`border shadow-sm hover:shadow-md transition-shadow ${bgColor}`}>
                   <CardContent className="p-4 md:p-6">
                     {/* Header Section */}
                     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-4">
@@ -296,37 +306,13 @@ const ContentInspiration = () => {
                       </div>
                     </div>
 
-                    {/* Action Buttons */}
+                    {/* Action Buttons - סדר חדש: הפצה, נתונים, הצגה, עריכה, שכפול */}
                     <div className="grid grid-cols-5 gap-2 mt-4 pt-4 border-t">
-                      {/* הצגת השאלון */}
+                      {/* הפצה - ראשון */}
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-muted transition-colors"
-                        title="הצג שאלון"
-                        onClick={() => window.open(`/questionnaire-view/${q.id}?mode=form`, '_blank')}
-                      >
-                        <Eye className="h-5 w-5 text-primary" />
-                        <span className="text-xs font-medium">הצגה</span>
-                      </Button>
-                      
-                      {/* עריכה */}
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-muted transition-colors"
-                        title="עריכה"
-                        onClick={() => window.open(`/create-questionnaire?id=${q.id}&mode=edit`, '_blank')}
-                      >
-                        <Edit className="h-5 w-5 text-primary" />
-                        <span className="text-xs font-medium">עריכה</span>
-                      </Button>
-                      
-                      {/* הפצה */}
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-muted transition-colors"
+                        className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-primary/10 transition-colors"
                         title="הפצה"
                         onClick={() => window.open(`/distribution?id=${q.id}`, '_blank')}
                       >
@@ -334,7 +320,43 @@ const ContentInspiration = () => {
                         <span className="text-xs font-medium">הפצה</span>
                       </Button>
                       
-                      {/* שכפול */}
+                      {/* נתונים (סטטיסטיקה) - שני */}
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-primary/10 transition-colors"
+                        title="נתונים"
+                        onClick={() => window.open(`/leads-responses?id=${q.id}&tab=analysis`, '_blank')}
+                      >
+                        <BarChart3 className="h-5 w-5 text-primary" />
+                        <span className="text-xs font-medium">נתונים</span>
+                      </Button>
+                      
+                      {/* הצגת השאלון - שלישי */}
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-muted transition-colors"
+                        title="הצג שאלון"
+                        onClick={() => window.open(`/questionnaire-view/${q.id}?mode=form`, '_blank')}
+                      >
+                        <Eye className="h-5 w-5 text-muted-foreground" />
+                        <span className="text-xs font-medium">הצגה</span>
+                      </Button>
+                      
+                      {/* עריכה - רביעי */}
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-muted transition-colors"
+                        title="עריכה"
+                        onClick={() => window.open(`/create-questionnaire?id=${q.id}&mode=edit`, '_blank')}
+                      >
+                        <Edit className="h-5 w-5 text-muted-foreground" />
+                        <span className="text-xs font-medium">עריכה</span>
+                      </Button>
+                      
+                      {/* שכפול - חמישי */}
                       <Button 
                         variant="ghost" 
                         size="sm" 
@@ -342,25 +364,14 @@ const ContentInspiration = () => {
                         title="שכפול"
                         onClick={() => handleDuplicateQuestionnaire(q)}
                       >
-                        <Copy className="h-5 w-5 text-primary" />
+                        <Copy className="h-5 w-5 text-muted-foreground" />
                         <span className="text-xs font-medium">שכפול</span>
-                      </Button>
-                      
-                      {/* סטטיסטיקה */}
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-muted transition-colors"
-                        title="סטטיסטיקה"
-                        onClick={() => window.open(`/leads-responses?id=${q.id}&tab=analysis`, '_blank')}
-                      >
-                        <BarChart3 className="h-5 w-5 text-primary" />
-                        <span className="text-xs font-medium">סטטיסטיקה</span>
                       </Button>
                     </div>
                   </CardContent>
                 </Card>
-              ))}
+              );
+              })}
             </div>
           )}
         </div>
