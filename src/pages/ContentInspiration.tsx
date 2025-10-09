@@ -213,170 +213,139 @@ const ContentInspiration = () => {
                 return (
                 <Card key={q.id} className={`border shadow-sm hover:shadow-md transition-shadow ${bgColor}`}>
                   <CardContent className="p-4 md:p-6">
-                    {/* Header Section */}
-                    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-4">
-                      {/* Right side: Status badge + Title */}
-                      <div className="flex items-center gap-3 flex-1">
+                    
+                    {/* חלק ראשון: כותרת השאלון */}
+                    <div className="mb-6">
+                      <div className="flex items-center justify-between mb-3">
                         {/* Status Badge */}
-                        <div className={`px-3 py-1 rounded-md text-xs font-medium ${q.status === 'active' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
+                        <div className={`px-3 py-1 rounded-full text-sm font-medium ${q.status === 'active' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
                           {q.status === 'active' ? 'פעיל' : 'כבוי'}
                         </div>
-
-                        {/* Title */}
-                        <div className="flex-1 text-right">
-                          <h3 className="text-lg font-semibold text-foreground">{q.title}</h3>
+                        
+                        {/* Stats */}
+                        <div className="flex gap-4">
+                          <div className="text-center">
+                            <div className="text-2xl font-bold text-foreground">{q.responses}</div>
+                            <div className="text-xs text-muted-foreground">תגובות</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="text-2xl font-bold text-primary">{q.leads}</div>
+                            <div className="text-xs text-muted-foreground">לידים</div>
+                          </div>
                         </div>
                       </div>
-
-                      {/* Center: Stats */}
-                      <div className="flex items-center gap-4 text-sm">
-                        <div className="text-center px-3 py-1 bg-muted/50 rounded-md">
-                          <span className="text-muted-foreground">לידים: </span>
-                          <span className="font-semibold">{q.leads.total}</span>
-                        </div>
-                        <div className="text-center px-3 py-1 bg-primary/10 rounded-md">
-                          <span className="text-muted-foreground">חדשים: </span>
-                          <span className="font-semibold text-primary">{q.leads.new}</span>
-                        </div>
-                      </div>
-
-                      {/* Right side: Date */}
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Calendar className="h-4 w-4" />
-                        <span>{q.createdAt}</span>
+                      
+                      {/* Title */}
+                      <div className="text-right">
+                        <h3 className="font-semibold text-lg text-foreground mb-1">{q.title}</h3>
+                        <p className="text-sm text-muted-foreground">{q.description}</p>
                       </div>
                     </div>
 
-                    {/* Information Section */}
-                    <div className="mt-4 pt-4 border-t">
+                    {/* חלק שלישי: נתונים - מקורות לידים ושותפים */}
+                    <div className="pt-4 border-t">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {/* מקורות לידים */}
-                        <div className="bg-card border rounded-lg p-3">
+                        <div className="bg-muted/50 rounded-lg p-3">
                           <div className="flex items-center gap-2 mb-2">
                             <Users className="h-4 w-4 text-primary" />
                             <h4 className="font-semibold text-sm">מקורות לידים</h4>
                           </div>
-                          <div className="flex flex-wrap gap-1.5">
+                          <div className="flex flex-wrap gap-1">
                             {q.sources.length > 0 ? (
-                              q.sources.slice(0, 3).map((s, idx) => (
-                                <div key={idx} className="flex items-center gap-1 px-2 py-1 rounded-md bg-muted/50 text-xs">
-                                  {getSourceIcon(s.name)}
-                                  <span className="font-medium">{s.name}</span>
-                                  <span className="font-semibold text-primary">{s.total}</span>
-                                </div>
+                              q.sources.map((source, index) => (
+                                <span key={index} className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">
+                                  {source}
+                                </span>
                               ))
                             ) : (
-                              <span className="text-xs text-muted-foreground">אין מקורות</span>
-                            )}
-                            {q.sources.length > 3 && (
-                              <span className="px-2 py-1 rounded-md bg-muted text-xs font-medium">
-                                +{q.sources.length - 3}
-                              </span>
+                              <span className="text-muted-foreground text-xs">אין מקורות</span>
                             )}
                           </div>
                         </div>
 
                         {/* שותפים */}
-                        <div className="bg-card border rounded-lg p-3">
+                        <div className="bg-muted/50 rounded-lg p-3">
                           <div className="flex items-center gap-2 mb-2">
                             <Users className="h-4 w-4 text-primary" />
                             <h4 className="font-semibold text-sm">שותפים</h4>
                           </div>
-                          <div className="flex flex-wrap gap-1.5">
+                          <div className="flex flex-wrap gap-1">
                             {q.partners.length > 0 ? (
-                              q.partners.slice(0, 3).map((p, idx) => (
-                                <div key={idx} className="flex items-center gap-1 px-2 py-1 rounded-md bg-muted/50 text-xs">
-                                  <div className="w-4 h-4 bg-primary rounded-full flex items-center justify-center">
-                                    <span className="text-[9px] font-semibold text-primary-foreground">{p.name.charAt(0)}</span>
-                                  </div>
-                                  <span className="font-medium">{p.name}</span>
-                                  <span className="font-semibold text-primary">{p.total}</span>
-                                </div>
+                              q.partners.map((partner, index) => (
+                                <span key={index} className="bg-secondary/10 text-secondary px-2 py-1 rounded text-xs">
+                                  {partner}
+                                </span>
                               ))
                             ) : (
-                              <span className="text-xs text-muted-foreground">אין שותפים</span>
-                            )}
-                            {q.partners.length > 3 && (
-                              <span className="px-2 py-1 rounded-md bg-muted text-xs font-medium">
-                                +{q.partners.length - 3}
-                              </span>
+                              <span className="text-muted-foreground text-xs">אין שותפים</span>
                             )}
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    {/* Action Buttons - עיצוב WOW מקצועי */}
-                    <div className="mt-6 pt-5 border-t border-border/30">
-                      <div className="grid grid-cols-5 gap-3">
-                        {/* הפצה - ראשון - עיצוב מקצועי */}
+                    {/* חלק שני: כלי הפעולה */}
+                    <div className="mb-6">
+                      <div className="grid grid-cols-5 gap-2">
+                        {/* הפצה */}
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="group flex-col h-auto py-4 px-3 gap-2 bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 border border-blue-200 hover:border-blue-300 transition-all duration-300 hover:shadow-lg"
+                          className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-primary/10 transition-colors"
                           title="הפצה"
                           onClick={() => window.open(`/distribution?id=${q.id}`, '_blank')}
                         >
-                          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-                            <Share2 className="h-5 w-5 text-white" />
-                          </div>
-                          <span className="text-xs font-semibold text-blue-800">הפצה</span>
+                          <Share2 className="h-5 w-5 text-primary" />
+                          <span className="text-xs font-medium">הפצה</span>
                         </Button>
                         
-                        {/* נתונים - שני - עיצוב מודגש עם רקע כחול */}
+                        {/* נתונים */}
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="group flex-col h-auto py-4 px-3 gap-2 bg-gradient-to-br from-cyan-50 to-cyan-100 hover:from-cyan-100 hover:to-cyan-200 border-2 border-cyan-300 hover:border-cyan-400 transition-all duration-300 hover:shadow-lg ring-2 ring-cyan-200/50"
+                          className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-primary/10 transition-colors"
                           title="נתונים"
                           onClick={() => window.open(`/leads-responses?id=${q.id}&tab=analysis`, '_blank')}
                         >
-                          <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-                            <BarChart3 className="h-5 w-5 text-white" />
-                          </div>
-                          <span className="text-xs font-semibold text-cyan-800">נתונים</span>
+                          <BarChart3 className="h-5 w-5 text-primary" />
+                          <span className="text-xs font-medium">נתונים</span>
                         </Button>
                         
-                        {/* הצגה - שלישי - עיצוב עדין */}
+                        {/* הצגה */}
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="group flex-col h-auto py-4 px-3 gap-2 hover:bg-gray-50 border border-gray-200 hover:border-gray-300 transition-all duration-300"
+                          className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-muted transition-colors"
                           title="הצג שאלון"
                           onClick={() => window.open(`/questionnaire-view/${q.id}?mode=form`, '_blank')}
                         >
-                          <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-gray-200 transition-colors">
-                            <Eye className="h-5 w-5 text-gray-600" />
-                          </div>
-                          <span className="text-xs font-medium text-gray-700">הצגה</span>
+                          <Eye className="h-5 w-5 text-muted-foreground" />
+                          <span className="text-xs font-medium">הצגה</span>
                         </Button>
                         
-                        {/* עריכה - רביעי - עיצוב עדין */}
+                        {/* עריכה */}
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="group flex-col h-auto py-4 px-3 gap-2 hover:bg-gray-50 border border-gray-200 hover:border-gray-300 transition-all duration-300"
+                          className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-muted transition-colors"
                           title="עריכה"
                           onClick={() => window.open(`/create-questionnaire?id=${q.id}&mode=edit`, '_blank')}
                         >
-                          <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-gray-200 transition-colors">
-                            <Edit className="h-5 w-5 text-gray-600" />
-                          </div>
-                          <span className="text-xs font-medium text-gray-700">עריכה</span>
+                          <Edit className="h-5 w-5 text-muted-foreground" />
+                          <span className="text-xs font-medium">עריכה</span>
                         </Button>
                         
-                        {/* שכפול - חמישי - עיצוב עדין */}
+                        {/* שכפול */}
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="group flex-col h-auto py-4 px-3 gap-2 hover:bg-gray-50 border border-gray-200 hover:border-gray-300 transition-all duration-300"
+                          className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-muted transition-colors"
                           title="שכפול"
                           onClick={() => handleDuplicateQuestionnaire(q)}
                         >
-                          <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-gray-200 transition-colors">
-                            <Copy className="h-5 w-5 text-gray-600" />
-                          </div>
-                          <span className="text-xs font-medium text-gray-700">שכפול</span>
+                          <Copy className="h-5 w-5 text-muted-foreground" />
+                          <span className="text-xs font-medium">שכפול</span>
                         </Button>
                       </div>
                     </div>
