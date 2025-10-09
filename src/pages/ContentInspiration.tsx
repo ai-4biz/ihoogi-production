@@ -110,6 +110,18 @@ const ContentInspiration = () => {
   const toggleActive = (id: number) => {
     setQuestionnaires(prev => prev.map(q => q.id === id ? { ...q, status: q.status === "active" ? "draft" : "active" } : q));
   };
+
+  const getCardBackgroundColor = (index: number) => {
+    const colors = [
+      'bg-blue-50/30 border-blue-200/50',
+      'bg-green-50/30 border-green-200/50', 
+      'bg-purple-50/30 border-purple-200/50',
+      'bg-orange-50/30 border-orange-200/50',
+      'bg-pink-50/30 border-pink-200/50',
+      'bg-cyan-50/30 border-cyan-200/50'
+    ];
+    return colors[index % colors.length];
+  };
   const getSourceIcon = (sourceName: string) => {
     switch (sourceName) {
       case "פייסבוק": return <Facebook className="h-4 w-4 text-blue-600" />;
@@ -202,11 +214,12 @@ const ContentInspiration = () => {
             <div className="space-y-4">
               {questionnaires.map((q, index) => {
                 const bgColors = [
-                  'bg-blue-50/30',
-                  'bg-purple-50/30',
-                  'bg-green-50/30',
-                  'bg-orange-50/30',
-                  'bg-pink-50/30',
+                  'bg-blue-50/50 border-blue-200/60',
+                  'bg-purple-50/50 border-purple-200/60',
+                  'bg-green-50/50 border-green-200/60',
+                  'bg-orange-50/50 border-orange-200/60',
+                  'bg-pink-50/50 border-pink-200/60',
+                  'bg-cyan-50/50 border-cyan-200/60',
                 ];
                 const bgColor = bgColors[index % bgColors.length];
                 
@@ -217,10 +230,13 @@ const ContentInspiration = () => {
                     {/* חלק ראשון: כותרת השאלון בשורה אחת */}
                     <div className="mb-6">
                       <div className="flex items-center justify-between gap-4">
-                        {/* Status Badge */}
-                        <div className={`px-3 py-1 rounded-full text-sm font-medium ${q.status === 'active' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
+                        {/* Status Badge - Clickable */}
+                        <button 
+                          onClick={() => toggleActive(q.id)}
+                          className={`px-3 py-1 rounded-full text-sm font-medium cursor-pointer hover:opacity-80 transition-opacity ${q.status === 'active' ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'bg-muted text-muted-foreground hover:bg-muted/80'}`}
+                        >
                           {q.status === 'active' ? 'פעיל' : 'כבוי'}
-                        </div>
+                        </button>
                         
                         {/* Title and Date */}
                         <div className="text-right flex-1">
