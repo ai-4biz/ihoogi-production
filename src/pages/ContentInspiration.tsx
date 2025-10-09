@@ -197,9 +197,9 @@ const ContentInspiration = () => {
                       </div>
                     </div>
 
-                    {/* Three Colorful Information Boxes */}
+                    {/* Two Colorful Information Boxes */}
                     <div className="mt-4 pt-4 border-t">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
                         {/* מקורות לידים - כחול */}
                         <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-4">
                           <div className="flex items-center gap-2 mb-3">
@@ -219,21 +219,6 @@ const ContentInspiration = () => {
                             ) : (
                               <span className="text-xs text-blue-600">אין מקורות</span>
                             )}
-                          </div>
-                        </div>
-
-                        {/* ערוצי הפצה - ירוק */}
-                        <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-lg p-4">
-                          <div className="flex items-center gap-2 mb-3">
-                            <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
-                              <Share2 className="h-4 w-4 text-white" />
-                            </div>
-                            <h4 className="font-semibold text-green-800">ערוצי הפצה</h4>
-                          </div>
-                          <div className="space-y-2">
-                            <div className="text-center text-green-600 text-sm py-2">
-                              ערוצי הפצה פעילים
-                            </div>
                           </div>
                         </div>
 
@@ -264,22 +249,20 @@ const ContentInspiration = () => {
                     {/* Action Buttons */}
                     <div className="grid grid-cols-5 gap-3 mt-4 pt-4 border-t">
                       {/* הצגת השאלון - צ'אט או טופס */}
-                      <div className="flex flex-col gap-2">
-                        <div className="flex items-center justify-center gap-1">
-                          <Eye className="h-5 w-5 text-cyan-600" />
-                          <ChevronDown className="h-3 w-3 text-cyan-600" />
-                        </div>
-                        <Select value={getViewMode(q.id)} onValueChange={(value) => setQuestionnaireViewMode(prev => ({...prev, [q.id.toString()]: value as 'form' | 'chat'}))}>
-                          <SelectTrigger className="h-8 text-xs border-cyan-200 bg-cyan-50 hover:bg-cyan-100">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="form">טופס</SelectItem>
-                            <SelectItem value="chat">צ'אט</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <span className="text-xs font-medium text-center text-cyan-700">הצגת שאלון</span>
-                      </div>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="flex-col h-auto py-3 px-2 gap-2 hover:bg-cyan-50 hover:text-cyan-700 transition-colors"
+                        title={getViewMode(q.id) === 'form' ? 'הצג כטופס' : 'הצג כצ\'אט'}
+                        onClick={() => toggleQuestionnaireView(q.id)}
+                      >
+                        {getViewMode(q.id) === 'form' ? (
+                          <FileText className="h-5 w-5" />
+                        ) : (
+                          <MessageCircle className="h-5 w-5" />
+                        )}
+                        <span className="text-xs font-medium">הצגת שאלון</span>
+                      </Button>
                       
                       {/* עריכה */}
                       <Button 
