@@ -214,31 +214,31 @@ const ContentInspiration = () => {
                 <Card key={q.id} className={`border shadow-sm hover:shadow-md transition-shadow ${bgColor}`}>
                   <CardContent className="p-4 md:p-6">
                     
-                    {/* חלק ראשון: כותרת השאלון */}
+                    {/* חלק ראשון: כותרת השאלון בשורה אחת */}
                     <div className="mb-6">
-                      <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center justify-between gap-4">
                         {/* Status Badge */}
                         <div className={`px-3 py-1 rounded-full text-sm font-medium ${q.status === 'active' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
                           {q.status === 'active' ? 'פעיל' : 'כבוי'}
+                        </div>
+                        
+                        {/* Title and Date */}
+                        <div className="text-right flex-1">
+                          <h3 className="font-semibold text-lg text-foreground mb-1">{q.title}</h3>
+                          <p className="text-sm text-muted-foreground">נוצר ב-{q.createdAt}</p>
                         </div>
                         
                         {/* Stats */}
                         <div className="flex gap-4">
                           <div className="text-center cursor-pointer" onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=all`, '_blank')}>
                             <div className="text-2xl font-bold text-primary">{q.leads.total}</div>
-                            <div className="text-xs text-muted-foreground">לידים סה"כ</div>
+                            <div className="text-xs text-muted-foreground">סה"כ</div>
                           </div>
                           <div className="text-center cursor-pointer" onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=new`, '_blank')}>
                             <div className="text-2xl font-bold text-green-600">{q.leads.new}</div>
-                            <div className="text-xs text-muted-foreground">לידים חדשים</div>
+                            <div className="text-xs text-muted-foreground">חדשים</div>
                           </div>
                         </div>
-                      </div>
-                      
-                      {/* Title */}
-                      <div className="text-right">
-                        <h3 className="font-semibold text-lg text-foreground mb-1">{q.title}</h3>
-                        <p className="text-sm text-muted-foreground">נוצר ב-{q.createdAt}</p>
                       </div>
                     </div>
 
@@ -309,7 +309,7 @@ const ContentInspiration = () => {
 
                     {/* חלק שלישי: נתונים - מקורות לידים ושותפים */}
                     <div className="pt-4 border-t">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-md mx-auto">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {/* מקורות לידים */}
                         <div className="bg-muted/50 rounded-lg p-3">
                           <div className="flex items-center justify-between mb-2">
@@ -344,7 +344,7 @@ const ContentInspiration = () => {
                                       return 'bg-blue-100 text-blue-800 border-blue-200';
                                     case 'אינסטגרם':
                                     case 'instagram':
-                                      return 'bg-pink-100 text-pink-800 border-pink-200';
+                                      return 'bg-purple-100 text-purple-800 border-purple-200';
                                     case 'לינקדאין':
                                     case 'linkedin':
                                       return 'bg-blue-100 text-blue-900 border-blue-300';
@@ -353,7 +353,7 @@ const ContentInspiration = () => {
                                       return 'bg-green-100 text-green-800 border-green-200';
                                     case 'אתר':
                                     case 'website':
-                                      return 'bg-purple-100 text-purple-800 border-purple-200';
+                                      return 'bg-pink-100 text-pink-800 border-pink-200';
                                     case 'טיקטוק':
                                     case 'tiktok':
                                       return 'bg-black text-white border-gray-800';
