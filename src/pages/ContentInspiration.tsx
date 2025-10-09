@@ -197,49 +197,57 @@ const ContentInspiration = () => {
                       </div>
                     </div>
 
-                    {/* Two Colorful Information Boxes */}
+                    {/* Two Narrow Colorful Information Boxes */}
                     <div className="mt-4 pt-4 border-t">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
                         {/* מקורות לידים - כחול */}
-                        <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-4">
-                          <div className="flex items-center gap-2 mb-3">
-                            <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-                              <Users className="h-4 w-4 text-white" />
+                        <div className="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-3">
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="w-6 h-6 bg-blue-500 rounded-lg flex items-center justify-center">
+                              <Users className="h-3 w-3 text-white" />
                             </div>
-                            <h4 className="font-semibold text-blue-800">מקורות לידים</h4>
+                            <h4 className="font-semibold text-blue-800 text-sm">מקורות לידים</h4>
                           </div>
-                          <div className="space-y-2">
+                          <div className="flex flex-wrap gap-1">
                             {q.sources.length > 0 ? (
-                              q.sources.map((s, idx) => (
-                                <div key={idx} className="flex items-center justify-between text-sm">
-                                  <span className="text-blue-700">{s.name}</span>
-                                  <span className="text-blue-600 font-medium">{s.total} ({s.new} חדשים)</span>
-                                </div>
+                              q.sources.slice(0, 3).map((s, idx) => (
+                                <span key={idx} className="px-2 py-1 rounded-full bg-blue-200 text-blue-800 text-xs">
+                                  {s.name} {s.total}
+                                </span>
                               ))
                             ) : (
                               <span className="text-xs text-blue-600">אין מקורות</span>
+                            )}
+                            {q.sources.length > 3 && (
+                              <span className="px-2 py-1 rounded-full bg-blue-200 text-blue-800 text-xs">
+                                +{q.sources.length - 3} נוספים
+                              </span>
                             )}
                           </div>
                         </div>
 
                         {/* שותפים - סגול */}
-                        <div className="bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-lg p-4">
-                          <div className="flex items-center gap-2 mb-3">
-                            <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
-                              <Users className="h-4 w-4 text-white" />
+                        <div className="bg-gradient-to-r from-purple-50 to-purple-100 border border-purple-200 rounded-lg p-3">
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="w-6 h-6 bg-purple-500 rounded-lg flex items-center justify-center">
+                              <Users className="h-3 w-3 text-white" />
                             </div>
-                            <h4 className="font-semibold text-purple-800">שותפים</h4>
+                            <h4 className="font-semibold text-purple-800 text-sm">שותפים</h4>
                           </div>
-                          <div className="space-y-2">
+                          <div className="flex flex-wrap gap-1">
                             {q.partners.length > 0 ? (
-                              q.partners.map((p, idx) => (
-                                <div key={idx} className="flex items-center justify-between text-sm">
-                                  <span className="text-purple-700">{p.name}</span>
-                                  <span className="text-purple-600 font-medium">{p.total} ({p.new} חדשים)</span>
-                                </div>
+                              q.partners.slice(0, 3).map((p, idx) => (
+                                <span key={idx} className="px-2 py-1 rounded-full bg-purple-200 text-purple-800 text-xs">
+                                  {p.name} {p.total}
+                                </span>
                               ))
                             ) : (
                               <span className="text-xs text-purple-600">אין שותפים</span>
+                            )}
+                            {q.partners.length > 3 && (
+                              <span className="px-2 py-1 rounded-full bg-purple-200 text-purple-800 text-xs">
+                                +{q.partners.length - 3} נוספים
+                              </span>
                             )}
                           </div>
                         </div>
@@ -253,14 +261,10 @@ const ContentInspiration = () => {
                         variant="ghost" 
                         size="sm" 
                         className="flex-col h-auto py-3 px-2 gap-2 hover:bg-cyan-50 hover:text-cyan-700 transition-colors"
-                        title={getViewMode(q.id) === 'form' ? 'הצג כטופס' : 'הצג כצ\'אט'}
-                        onClick={() => toggleQuestionnaireView(q.id)}
+                        title="הצג שאלון"
+                        onClick={() => window.open(`/questionnaire-view/${q.id}?mode=form`, '_blank')}
                       >
-                        {getViewMode(q.id) === 'form' ? (
-                          <FileText className="h-5 w-5" />
-                        ) : (
-                          <MessageCircle className="h-5 w-5" />
-                        )}
+                        <Eye className="h-5 w-5" />
                         <span className="text-xs font-medium">הצגת שאלון</span>
                       </Button>
                       

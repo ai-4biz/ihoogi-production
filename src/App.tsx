@@ -25,6 +25,7 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import SurveysPage from "./pages/surveys/index";
 import Distribution from "./pages/Distribution";
+import QuestionnaireView from "./pages/QuestionnaireView";
 import { UserProvider } from "@/hooks/use-user";
 
 const queryClient = new QueryClient();
@@ -57,8 +58,9 @@ const App = () => {
               <Route path="/subscriptions" element={<Subscriptions />} />
               <Route path="/my-hoogi" element={<MyHoogi />} />
               <Route path="/distribution" element={<Distribution />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
+              <Route path="/questionnaire-view/:id" element={<QuestionnaireView />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/login" element={<Login />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
