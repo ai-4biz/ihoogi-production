@@ -37,6 +37,7 @@ const BusinessForm = () => {
   const [avatar, setAvatar] = useState<File | null>(null);
   const [infoSources, setInfoSources] = useState<string[]>([]);
   const [newInfoSource, setNewInfoSource] = useState("");
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [primaryColor, setPrimaryColor] = useState("#6366f1");
   const [secondaryColor, setSecondaryColor] = useState("#8b5cf6");
   const [backgroundColor, setBackgroundColor] = useState("#f8fafc");
@@ -92,6 +93,17 @@ const BusinessForm = () => {
     }
   };
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const newFiles = Array.from(e.target.files);
+      setUploadedFiles([...uploadedFiles, ...newFiles]);
+    }
+  };
+
+  const handleRemoveFile = (index: number) => {
+    setUploadedFiles(uploadedFiles.filter((_, i) => i !== index));
+  };
+
   // Dynamic subcategories based on main category
   const getSubcategories = (mainCategory: string) => {
     switch (mainCategory) {
@@ -132,20 +144,25 @@ const BusinessForm = () => {
         <div className="space-y-6">
           {/* שורה 1: שם העסק */}
           <div className="space-y-2">
-            <Label htmlFor="businessName" className="text-right font-semibold">שם העסק <HoogiTip tip="השם שיופיע בתוכן שייווצר" /></Label>
+            <Label htmlFor="businessName" className="text-right font-semibold">
+              שם העסק <span className="text-red-500">*</span> <HoogiTip tip="השם שיופיע בתוכן שייווצר" />
+            </Label>
             <Input 
               id="businessName" 
               value={businessData.businessName} 
               onChange={(e) => handleBusinessDataChange("businessName", e.target.value)}
               className="text-right bg-white"
               placeholder="הכנס את שם העסק"
+              required
             />
           </div>
 
-          {/* שורה 2: נייד ומייל */}
+          {/* שורה 2: וואטסאפ ומייל */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="mobile" className="text-right font-semibold">נייד</Label>
+              <Label htmlFor="mobile" className="text-right font-semibold">
+                וואטסאפ <span className="text-red-500">*</span>
+              </Label>
               <Input 
                 id="mobile" 
                 type="tel"
@@ -153,11 +170,14 @@ const BusinessForm = () => {
                 onChange={(e) => handleBusinessDataChange("mobile", e.target.value)} 
                 placeholder="050-1234567"
                 className="text-right bg-white"
+                required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-right font-semibold">מייל</Label>
+              <Label htmlFor="email" className="text-right font-semibold">
+                מייל <span className="text-red-500">*</span>
+              </Label>
               <Input 
                 id="email" 
                 type="email"
@@ -165,6 +185,7 @@ const BusinessForm = () => {
                 onChange={(e) => handleBusinessDataChange("email", e.target.value)} 
                 placeholder="example@email.com"
                 className="text-right bg-white"
+                required
               />
             </div>
           </div>
@@ -172,10 +193,13 @@ const BusinessForm = () => {
           {/* שורה 3: תחום, תת תחום, עיסוק עיקרי - מימין לשמאל */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="mainCategory" className="text-right font-semibold">תחום</Label>
+              <Label htmlFor="mainCategory" className="text-right font-semibold">
+                תחום <span className="text-red-500">*</span>
+              </Label>
               <Select 
                 value={businessData.mainCategory} 
                 onValueChange={(value) => handleBusinessDataChange("mainCategory", value)}
+                required
               >
                 <SelectTrigger id="mainCategory" className="text-right bg-white">
                   <SelectValue placeholder="בחר תחום" />
@@ -198,16 +222,20 @@ const BusinessForm = () => {
                   placeholder="תארי בקצרה את תחום העסק שלך"
                   value={businessData.customMainCategory}
                   onChange={(e) => handleBusinessDataChange("customMainCategory", e.target.value)}
+                  required
                 />
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="subCategory" className="text-right font-semibold">תת תחום</Label>
+              <Label htmlFor="subCategory" className="text-right font-semibold">
+                תת תחום <span className="text-red-500">*</span>
+              </Label>
               <Select 
                 value={businessData.subCategory} 
                 onValueChange={(value) => handleBusinessDataChange("subCategory", value)}
                 disabled={!businessData.mainCategory}
+                required
               >
                 <SelectTrigger id="subCategory" className="text-right bg-white">
                   <SelectValue placeholder={businessData.mainCategory ? "בחר תת-תחום" : "בחר תחום תחילה"} />
@@ -228,18 +256,22 @@ const BusinessForm = () => {
                   placeholder="פרטי את תת-התחום"
                   value={businessData.customSubCategory}
                   onChange={(e) => handleBusinessDataChange("customSubCategory", e.target.value)}
+                  required
                 />
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="mainService" className="text-right font-semibold">עיסוק עיקרי</Label>
+              <Label htmlFor="mainService" className="text-right font-semibold">
+                עיסוק עיקרי <span className="text-red-500">*</span>
+              </Label>
               <Input 
                 id="mainService" 
                 value={businessData.mainService} 
                 onChange={(e) => handleBusinessDataChange("mainService", e.target.value)} 
                 placeholder="תיאור העיסוק העיקרי"
                 className="text-right bg-white"
+                required
               />
             </div>
           </div>
@@ -514,31 +546,82 @@ const BusinessForm = () => {
 
           <div className="bg-white rounded-lg p-4 shadow-sm space-y-3">
             <Label className="text-right font-semibold">מקורות מידע על העסק</Label>
-            <div className="flex gap-2">
-              <Input 
-                value={newInfoSource}
-                onChange={(e) => setNewInfoSource(e.target.value)}
-                placeholder="הוסף מקור מידע (כתובת, קישור, וכו')"
-                className="text-right"
-                onKeyPress={(e) => e.key === 'Enter' && handleAddSource()}
-              />
-              <Button onClick={handleAddSource} size="sm" className="bg-green-500 hover:bg-green-600 text-white">
-                <Plus className="h-4 w-4" />
-              </Button>
+            
+            {/* הוספת קישור */}
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground text-right">הוסף קישור</p>
+              <div className="flex gap-2">
+                <Input 
+                  value={newInfoSource}
+                  onChange={(e) => setNewInfoSource(e.target.value)}
+                  placeholder="הדבק קישור (כתובת, מאמר, וכו')"
+                  className="text-right"
+                  onKeyPress={(e) => e.key === 'Enter' && handleAddSource()}
+                />
+                <Button onClick={handleAddSource} size="sm" className="bg-green-500 hover:bg-green-600 text-white">
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
-            {infoSources.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-3">
-                {infoSources.map((source, index) => (
-                  <Badge key={index} className="bg-green-100 text-green-800 hover:bg-green-200 flex items-center gap-2 px-3 py-1">
-                    {source}
-                    <button 
-                      onClick={() => handleRemoveSource(source)}
-                      className="hover:text-red-600 transition-colors"
-                    >
-                      <Trash className="h-3 w-3" />
-                    </button>
-                  </Badge>
-                ))}
+
+            {/* העלאת קבצי PDF */}
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground text-right">העלה מסמכים (PDF)</p>
+              <div>
+                <input
+                  type="file"
+                  id="pdf-upload"
+                  accept=".pdf"
+                  multiple
+                  onChange={handleFileUpload}
+                  className="hidden"
+                />
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => document.getElementById('pdf-upload')?.click()}
+                  className="w-full bg-green-50 border-green-200 hover:bg-green-100"
+                >
+                  <Upload className="h-4 w-4 ml-2" />
+                  העלה קבצי PDF
+                </Button>
+              </div>
+            </div>
+
+            {/* תצוגת קישורים וקבצים */}
+            {(infoSources.length > 0 || uploadedFiles.length > 0) && (
+              <div className="space-y-2 mt-4">
+                <p className="text-sm font-medium text-right">מקורות שהוספו:</p>
+                <div className="flex flex-wrap gap-2">
+                  {/* קישורים */}
+                  {infoSources.map((source, index) => (
+                    <Badge key={`link-${index}`} className="bg-blue-100 text-blue-800 hover:bg-blue-200 flex items-center gap-2 px-3 py-1">
+                      <Globe className="h-3 w-3" />
+                      {source.length > 30 ? source.substring(0, 30) + '...' : source}
+                      <button 
+                        onClick={() => handleRemoveSource(source)}
+                        className="hover:text-red-600 transition-colors"
+                      >
+                        <Trash className="h-3 w-3" />
+                      </button>
+                    </Badge>
+                  ))}
+                  {/* קבצי PDF */}
+                  {uploadedFiles.map((file, index) => (
+                    <Badge key={`file-${index}`} className="bg-red-100 text-red-800 hover:bg-red-200 flex items-center gap-2 px-3 py-1">
+                      <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
+                      </svg>
+                      {file.name}
+                      <button 
+                        onClick={() => handleRemoveFile(index)}
+                        className="hover:text-red-900 transition-colors"
+                      >
+                        <Trash className="h-3 w-3" />
+                      </button>
+                    </Badge>
+                  ))}
+                </div>
               </div>
             )}
           </div>

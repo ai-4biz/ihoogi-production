@@ -35,8 +35,8 @@ const Profile = () => {
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid grid-cols-2">
-            <TabsTrigger value="business">פרופיל</TabsTrigger>
-            <TabsTrigger value="billing">חיובים</TabsTrigger>
+            <TabsTrigger value="billing">המנוי שלי</TabsTrigger>
+            <TabsTrigger value="business">פרטי העסק</TabsTrigger>
           </TabsList>
           
           <div className="mt-6 border rounded-lg p-6">
