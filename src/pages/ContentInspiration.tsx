@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
-import { FileText, Calendar, MessageSquare, Users, BarChart3, Edit, Copy, Share2, FileInput, QrCode, Facebook, MessagesSquare, ExternalLink, Instagram, Linkedin, Globe, Mail, Bot, Link as LinkIcon, MessageCircle } from "lucide-react";
+import { FileText, Calendar, MessageSquare, Users, BarChart3, Edit, Copy, Share2, FileInput, QrCode, Facebook, MessagesSquare, ExternalLink, Instagram, Linkedin, Globe, Mail, Bot, Link as LinkIcon, MessageCircle, Eye } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import questionnairesIcon from "@/assets/questionnaires-icon-new.png";
 
@@ -199,108 +199,137 @@ const ContentInspiration = () => {
                       </div>
                     </div>
 
-                    {/* Additional Details - Sources, Partners, Automations */}
-                    <div className="mt-4 pt-4 border-t space-y-3">
-                      {/* Sources */}
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-xs font-medium text-muted-foreground min-w-[80px]">מקורות לידים:</span>
-                        <div className="flex flex-wrap gap-1.5">
-                          {q.sources.length > 0 ? (
-                            q.sources.map((s, idx) => (
-                              <span key={idx} className="px-2 py-0.5 rounded-full bg-muted text-xs border">
-                                {s.name} · {s.total} ({s.new} חדשים)
-                              </span>
-                            ))
-                          ) : (
-                            <span className="text-xs text-muted-foreground">אין מקורות</span>
-                          )}
+                    {/* Three Colorful Information Boxes */}
+                    <div className="mt-4 pt-4 border-t">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
+                        {/* מקורות לידים - כחול */}
+                        <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-4">
+                          <div className="flex items-center gap-2 mb-3">
+                            <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                              <Users className="h-4 w-4 text-white" />
+                            </div>
+                            <h4 className="font-semibold text-blue-800">מקורות לידים</h4>
+                          </div>
+                          <div className="space-y-2">
+                            {q.sources.length > 0 ? (
+                              q.sources.map((s, idx) => (
+                                <div key={idx} className="flex items-center justify-between text-sm">
+                                  <span className="text-blue-700">{s.name}</span>
+                                  <span className="text-blue-600 font-medium">{s.total} ({s.new} חדשים)</span>
+                                </div>
+                              ))
+                            ) : (
+                              <span className="text-xs text-blue-600">אין מקורות</span>
+                            )}
+                          </div>
                         </div>
-                      </div>
 
-                      {/* Partners */}
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-xs font-medium text-muted-foreground min-w-[80px]">שותפים:</span>
-                        <div className="flex flex-wrap gap-1.5">
-                          {q.partners.length > 0 ? (
-                            q.partners.map((p, idx) => (
-                              <span key={idx} className="px-2 py-0.5 rounded-full bg-primary/10 text-xs border border-primary/20">
-                                {p.name} · {p.total} ({p.new} חדשים)
-                              </span>
-                            ))
-                          ) : (
-                            <span className="text-xs text-muted-foreground">אין שותפים</span>
-                          )}
+                        {/* ערוצי הפצה - ירוק */}
+                        <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-lg p-4">
+                          <div className="flex items-center gap-2 mb-3">
+                            <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                              <Share2 className="h-4 w-4 text-white" />
+                            </div>
+                            <h4 className="font-semibold text-green-800">ערוצי הפצה</h4>
+                          </div>
+                          <div className="space-y-2">
+                            {q.automations.length > 0 ? (
+                              q.automations.map((a, idx) => (
+                                <div key={idx} className="flex items-center justify-between text-sm">
+                                  <span className="text-green-700">{a.type}</span>
+                                  <span className="text-green-600 font-medium">{a.method}</span>
+                                </div>
+                              ))
+                            ) : (
+                              <span className="text-xs text-green-600">אין ערוצי הפצה</span>
+                            )}
+                          </div>
                         </div>
-                      </div>
 
-                      {/* Automations */}
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-xs font-medium text-muted-foreground min-w-[80px]">אוטומציות:</span>
-                        <div className="flex flex-wrap gap-1.5">
-                          {q.automations.length > 0 ? (
-                            q.automations.map((a, idx) => (
-                              <span key={idx} className="px-2 py-0.5 rounded-full bg-accent text-xs border">
-                                {a.type}
-                              </span>
-                            ))
-                          ) : (
-                            <span className="text-xs text-muted-foreground">אין אוטומציות</span>
-                          )}
+                        {/* שותפים - סגול */}
+                        <div className="bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-lg p-4">
+                          <div className="flex items-center gap-2 mb-3">
+                            <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
+                              <Users className="h-4 w-4 text-white" />
+                            </div>
+                            <h4 className="font-semibold text-purple-800">שותפים</h4>
+                          </div>
+                          <div className="space-y-2">
+                            {q.partners.length > 0 ? (
+                              q.partners.map((p, idx) => (
+                                <div key={idx} className="flex items-center justify-between text-sm">
+                                  <span className="text-purple-700">{p.name}</span>
+                                  <span className="text-purple-600 font-medium">{p.total} ({p.new} חדשים)</span>
+                                </div>
+                              ))
+                            ) : (
+                              <span className="text-xs text-purple-600">אין שותפים</span>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="grid grid-cols-5 gap-2 mt-4 pt-4 border-t">
+                    <div className="grid grid-cols-5 gap-3 mt-4 pt-4 border-t">
+                      {/* הצגת השאלון - צ'אט או טופס */}
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="flex-col h-auto py-2 px-1 gap-1 hover:bg-cyan-50 hover:text-cyan-700 transition-colors"
+                        className="flex-col h-auto py-3 px-2 gap-2 hover:bg-cyan-50 hover:text-cyan-700 transition-colors"
                         title={getViewMode(q.id) === 'form' ? 'הצג כטופס' : 'הצג כצ\'אט'}
                         onClick={() => toggleQuestionnaireView(q.id)}
                       >
                         {getViewMode(q.id) === 'form' ? (
-                          <FileText className="h-4 w-4" />
+                          <FileText className="h-5 w-5" />
                         ) : (
-                          <MessageCircle className="h-4 w-4" />
+                          <MessageCircle className="h-5 w-5" />
                         )}
-                        <span className="text-xs">{getViewMode(q.id) === 'form' ? 'טופס' : 'צ\'אט'}</span>
+                        <span className="text-xs font-medium">{getViewMode(q.id) === 'form' ? 'טופס' : 'צ\'אט'}</span>
                       </Button>
+                      
+                      {/* עריכה */}
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="flex-col h-auto py-2 px-1 gap-1"
+                        className="flex-col h-auto py-3 px-2 gap-2 hover:bg-blue-50 hover:text-blue-700 transition-colors"
                         title="עריכה"
                       >
-                        <Edit className="h-4 w-4" />
-                        <span className="text-xs">עריכה</span>
+                        <Edit className="h-5 w-5" />
+                        <span className="text-xs font-medium">עריכה</span>
                       </Button>
+                      
+                      {/* הפצה */}
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="flex-col h-auto py-2 px-1 gap-1"
-                        title="שכפול"
-                      >
-                        <Copy className="h-4 w-4" />
-                        <span className="text-xs">שכפול</span>
-                      </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="flex-col h-auto py-2 px-1 gap-1"
-                        title="נתונים"
-                      >
-                        <BarChart3 className="h-4 w-4" />
-                        <span className="text-xs">נתונים</span>
-                      </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="flex-col h-auto py-2 px-1 gap-1"
+                        className="flex-col h-auto py-3 px-2 gap-2 hover:bg-green-50 hover:text-green-700 transition-colors"
                         title="הפצה"
                       >
-                        <Share2 className="h-4 w-4" />
-                        <span className="text-xs">הפצה</span>
+                        <Share2 className="h-5 w-5" />
+                        <span className="text-xs font-medium">הפצה</span>
+                      </Button>
+                      
+                      {/* שכפול */}
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="flex-col h-auto py-3 px-2 gap-2 hover:bg-gray-50 hover:text-gray-700 transition-colors"
+                        title="שכפול"
+                      >
+                        <Copy className="h-5 w-5" />
+                        <span className="text-xs font-medium">שכפול</span>
+                      </Button>
+                      
+                      {/* סטטיסטיקה */}
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="flex-col h-auto py-3 px-2 gap-2 hover:bg-purple-50 hover:text-purple-700 transition-colors"
+                        title="סטטיסטיקה"
+                      >
+                        <BarChart3 className="h-5 w-5" />
+                        <span className="text-xs font-medium">סטטיסטיקה</span>
                       </Button>
                     </div>
                   </CardContent>
