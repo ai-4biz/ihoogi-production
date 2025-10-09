@@ -180,31 +180,50 @@ const CreateQuestionnaire = () => {
           </Button>
         </div>
 
-        {/* Header with business name, logo and profile picture */}
-        <div className="mb-6 flex items-center justify-between bg-card rounded-xl p-4 shadow-sm border border-border">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <img
-                src={logoUrl}
-                alt="Logo"
-                className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover"
-              />
-              <input type="checkbox" className="w-4 h-4" />
-            </div>
-            <div className="text-right">
+        {/* Header with business name */}
+        <div className="mb-6 flex justify-center">
+          <div className="bg-card rounded-xl p-4 shadow-sm border border-border w-1/2">
+            <div className="text-center">
               <h1 className="text-xl md:text-2xl font-bold text-foreground">
                 {businessName}
               </h1>
               <p className="text-sm md:text-base text-muted-foreground">{subCategory}</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <input type="checkbox" className="w-4 h-4" />
-            <img
-              src={profileFile || logoUrl}
-              alt="Profile"
-              className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover"
-            />
+        </div>
+
+        {/* Logo and Profile Picture section */}
+        <div className="mb-6 bg-card rounded-xl p-4 shadow-sm border border-border">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Logo section */}
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
+                <input type="checkbox" className="w-5 h-5 text-primary" defaultChecked />
+                <span className="text-sm font-medium text-foreground">הוספת לוגו</span>
+              </div>
+              <div className="flex-1">
+                <img
+                  src={logoUrl}
+                  alt="Logo"
+                  className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-2 border-primary/20"
+                />
+              </div>
+            </div>
+
+            {/* Profile Picture section */}
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
+                <input type="checkbox" className="w-5 h-5 text-primary" defaultChecked />
+                <span className="text-sm font-medium text-foreground">הוספת תמונת פרופיל</span>
+              </div>
+              <div className="flex-1">
+                <img
+                  src={profileFile || logoUrl}
+                  alt="Profile"
+                  className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-2 border-primary/20"
+                />
+              </div>
+            </div>
           </div>
         </div>
 
