@@ -180,76 +180,33 @@ const CreateQuestionnaire = () => {
           </Button>
         </div>
 
-        {/* Header with business name and logo */}
-        <div className="mb-6 flex items-center gap-3 bg-card rounded-xl p-4 shadow-sm border border-border">
-          <img
-            src={logoUrl}
-            alt="Logo"
-            className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover"
-          />
-          <div className="text-right">
-            <h1 className="text-xl md:text-2xl font-bold text-foreground">
-              {businessName}
-            </h1>
-            <p className="text-sm md:text-base text-muted-foreground">{subCategory}</p>
+        {/* Header with business name, logo and profile picture */}
+        <div className="mb-6 flex items-center justify-between bg-card rounded-xl p-4 shadow-sm border border-border">
+          <div className="flex items-center gap-3">
+            <img
+              src={logoUrl}
+              alt="Logo"
+              className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover"
+            />
+            <div className="text-right">
+              <h1 className="text-xl md:text-2xl font-bold text-foreground">
+                {businessName}
+              </h1>
+              <p className="text-sm md:text-base text-muted-foreground">{subCategory}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <img
+              src={profileFile || logoUrl}
+              alt="Profile"
+              className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover"
+            />
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto w-full">
-          {/* Top section with two columns */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 mb-6">
-            {/* Left column - Main form */}
-            <div className="lg:col-span-2 space-y-4 md:space-y-6">
-              {/* Action buttons row - including view mode icons */}
-              <div className="flex flex-wrap gap-2 md:gap-3 justify-start items-center">
-                <Button 
-                  className="bg-secondary hover:bg-secondary/90 text-white shadow-md"
-                  onClick={createExampleQuestionnaire}
-                >
-                  <Sparkles className="ml-2 h-4 w-4" />
-                  דוגמה - כל סוגי השאלות
-                </Button>
-                <Button 
-                  className="bg-primary hover:bg-primary/90 text-white shadow-md"
-                  onClick={() => setIsBuilderOpen(true)}
-                >
-                  <Plus className="ml-2 h-4 w-4" />
-                  הוסף שאלה
-                </Button>
-                
-                {/* View mode icons */}
-                <div className="flex gap-2 mr-auto">
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
-                    className="h-8 w-8 md:h-9 md:w-9"
-                    onClick={() => questions.length > 0 ? setPreviewMode('chat') : toast.error("הוסף שאלות קודם")}
-                    title="תצוגת צ'אט"
-                  >
-                    <MessageSquare className="h-4 w-4" />
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
-                    className="h-8 w-8 md:h-9 md:w-9"
-                    onClick={() => questions.length > 0 ? setPreviewMode('form') : toast.error("הוסף שאלות קודם")}
-                    title="תצוגת טופס"
-                  >
-                    <FileText className="h-4 w-4" />
-                  </Button>
-                  {questions.length > 0 && (
-                    <Button 
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setPreviewMode('form')}
-                      className="hidden md:flex"
-                    >
-                      <Eye className="ml-2 h-4 w-4" />
-                      תצוגה מקדימה
-                    </Button>
-                  )}
-                </div>
-              </div>
+        <div className="max-w-4xl mx-auto w-full">
+          {/* Main form section */}
+          <div className="space-y-4 md:space-y-6 mb-6">
 
               {/* Title input */}
               <div className="bg-card rounded-xl p-4 md:p-6 shadow-sm border border-border hover:shadow-md transition-shadow">
@@ -273,63 +230,27 @@ const CreateQuestionnaire = () => {
                 />
               </div>
 
-            </div>
-
-            {/* Right column - Sidebar */}
-            <div className="space-y-4 md:space-y-6">
-              {/* העלאת קבצים */}
-              <div className="bg-card rounded-xl p-4 md:p-6 shadow-sm border border-border">
-                <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-foreground text-right">העלאת קבצים</h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium mb-2 block text-foreground text-right">העלאת לוגו (לתצוגה מקדימה)</label>
-                    <div className="flex gap-2">
-                      <Input
-                        type="file"
-                        className="flex-1"
-                        accept="image/*"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            const reader = new FileReader();
-                            reader.onloadend = () => {
-                              setLogoFile(reader.result as string);
-                            };
-                            reader.readAsDataURL(file);
-                          }
-                        }}
-                      />
-                      <Button variant="outline" size="icon" className="bg-primary/10 hover:bg-primary/20 border-primary/30">
-                        <Upload className="h-5 w-5 text-primary" />
-                      </Button>
-                    </div>
+              {/* Link or Image upload */}
+              <div className="bg-card rounded-xl p-4 md:p-6 shadow-sm border border-border hover:shadow-md transition-shadow">
+                <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-foreground">קישור או תמונה</h3>
+                <div className="flex gap-3">
+                  <div className="flex-1">
+                    <label className="text-sm font-medium mb-2 block text-foreground">קישור</label>
+                    <Input
+                      placeholder="הדבק קישור..."
+                      className="w-full"
+                    />
                   </div>
-                  <div>
-                    <label className="text-sm font-medium mb-2 block text-foreground text-right">תמונת פרופיל (אופציונלי)</label>
-                    <div className="flex gap-2">
-                      <Input
-                        type="file"
-                        className="flex-1"
-                        accept="image/*"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            const reader = new FileReader();
-                            reader.onloadend = () => {
-                              setProfileFile(reader.result as string);
-                            };
-                            reader.readAsDataURL(file);
-                          }
-                        }}
-                      />
-                      <Button variant="outline" size="icon" className="bg-primary/10 hover:bg-primary/20 border-primary/30">
-                        <Upload className="h-5 w-5 text-primary" />
-                      </Button>
-                    </div>
+                  <div className="flex-1">
+                    <label className="text-sm font-medium mb-2 block text-foreground">העלאת תמונה</label>
+                    <Input
+                      type="file"
+                      className="w-full"
+                      accept="image/*"
+                    />
                   </div>
                 </div>
               </div>
-            </div>
           </div>
 
           {/* בניית השאלון - מלבן לכל הרוחב */}
