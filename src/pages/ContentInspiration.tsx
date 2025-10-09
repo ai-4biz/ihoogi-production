@@ -286,66 +286,66 @@ const ContentInspiration = () => {
                     </div>
 
                     {/* חלק שני: כלי הפעולה - מותאם לנייד */}
-                    <div className="mb-6">
-                      <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+                    <div className="mb-4 sm:mb-6">
+                      <div className="grid grid-cols-5 gap-1 sm:gap-2">
                         {/* הצגה */}
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-primary/10 transition-colors"
+                          className="flex-col h-auto py-2 px-1 sm:py-3 sm:px-2 gap-1 sm:gap-1.5 hover:bg-primary/10 transition-colors"
                           title="הצג שאלון"
                           onClick={() => window.open(`/questionnaire-view/${q.id}?mode=form`, '_blank')}
                         >
-                          <Eye className="h-5 w-5 text-primary" />
-                          <span className="text-xs font-medium">הצגה</span>
+                          <Eye className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                          <span className="text-xs font-medium hidden sm:inline">הצגה</span>
                         </Button>
                         
                         {/* הפצה */}
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-primary/10 transition-colors"
+                          className="flex-col h-auto py-2 px-1 sm:py-3 sm:px-2 gap-1 sm:gap-1.5 hover:bg-primary/10 transition-colors"
                           title="הפצה"
                           onClick={() => window.open(`/distribution?id=${q.id}`, '_blank')}
                         >
-                          <Share2 className="h-5 w-5 text-primary" />
-                          <span className="text-xs font-medium">הפצה</span>
+                          <Share2 className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                          <span className="text-xs font-medium hidden sm:inline">הפצה</span>
                         </Button>
                         
                         {/* עריכה */}
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-muted transition-colors"
+                          className="flex-col h-auto py-2 px-1 sm:py-3 sm:px-2 gap-1 sm:gap-1.5 hover:bg-muted transition-colors"
                           title="עריכה"
                           onClick={() => window.open(`/create-questionnaire?id=${q.id}&mode=edit`, '_blank')}
                         >
-                          <Edit className="h-5 w-5 text-muted-foreground" />
-                          <span className="text-xs font-medium">עריכה</span>
+                          <Edit className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+                          <span className="text-xs font-medium hidden sm:inline">עריכה</span>
                         </Button>
                         
                         {/* שכפול */}
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-muted transition-colors"
+                          className="flex-col h-auto py-2 px-1 sm:py-3 sm:px-2 gap-1 sm:gap-1.5 hover:bg-muted transition-colors"
                           title="שכפול"
                           onClick={() => handleDuplicateQuestionnaire(q)}
                         >
-                          <Copy className="h-5 w-5 text-muted-foreground" />
-                          <span className="text-xs font-medium">שכפול</span>
+                          <Copy className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+                          <span className="text-xs font-medium hidden sm:inline">שכפול</span>
                         </Button>
                         
                         {/* נתונים */}
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-primary/10 transition-colors"
+                          className="flex-col h-auto py-2 px-1 sm:py-3 sm:px-2 gap-1 sm:gap-1.5 hover:bg-primary/10 transition-colors"
                           title="נתונים"
                           onClick={() => window.open(`/leads-responses?id=${q.id}&tab=analysis`, '_blank')}
                         >
-                          <BarChart3 className="h-5 w-5 text-primary" />
-                          <span className="text-xs font-medium">נתונים</span>
+                          <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                          <span className="text-xs font-medium hidden sm:inline">נתונים</span>
                         </Button>
                       </div>
                     </div>
@@ -379,41 +379,42 @@ const ContentInspiration = () => {
                           <div className="flex flex-wrap gap-1">
                             {q.sources.length > 0 ? (
                               q.sources.map((source, index) => {
-                                // צבעים מייצגים לרשתות חברתיות
-                                const getSourceColor = (sourceName: string) => {
+                                // לוגו מייצג לרשתות חברתיות
+                                const getSourceIcon = (sourceName: string) => {
                                   switch (sourceName.toLowerCase()) {
                                     case 'פייסבוק':
                                     case 'facebook':
-                                      return 'bg-blue-100 text-blue-800 border-blue-200';
+                                      return <Facebook className="h-3 w-3 text-blue-600" />;
                                     case 'אינסטגרם':
                                     case 'instagram':
-                                      return 'bg-purple-100 text-purple-800 border-purple-200';
+                                      return <Instagram className="h-3 w-3 text-pink-600" />;
                                     case 'לינקדאין':
                                     case 'linkedin':
-                                      return 'bg-blue-100 text-blue-900 border-blue-300';
+                                      return <Linkedin className="h-3 w-3 text-blue-700" />;
                                     case 'ווטסאפ':
                                     case 'whatsapp':
-                                      return 'bg-green-100 text-green-800 border-green-200';
+                                      return <MessagesSquare className="h-3 w-3 text-green-600" />;
                                     case 'אתר':
                                     case 'website':
-                                      return 'bg-pink-100 text-pink-800 border-pink-200';
+                                      return <Globe className="h-3 w-3 text-purple-600" />;
                                     case 'טיקטוק':
                                     case 'tiktok':
-                                      return 'bg-black text-white border-gray-800';
+                                      return <MessageCircle className="h-3 w-3 text-black" />;
                                     case 'טוויטר':
                                     case 'twitter':
-                                      return 'bg-sky-100 text-sky-800 border-sky-200';
+                                      return <MessageCircle className="h-3 w-3 text-sky-600" />;
                                     default:
-                                      return 'bg-gray-100 text-gray-800 border-gray-200';
+                                      return <FileText className="h-3 w-3 text-gray-600" />;
                                   }
                                 };
 
                                 return (
                                   <div 
                                     key={index} 
-                                    className={`px-2 py-1 rounded text-xs border ${getSourceColor(source.name)} flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity`}
+                                    className="bg-gray-100 text-gray-800 border border-gray-200 px-2 py-1 rounded text-xs flex items-center gap-1 cursor-pointer hover:bg-gray-200 transition-colors"
                                     onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=source&source=${encodeURIComponent(source.name)}`, '_blank')}
                                   >
+                                    {getSourceIcon(source.name)}
                                     <span>{source.name}</span>
                                     <span className="text-xs opacity-75">
                                       ({source.total || 0} / {source.new || 0})
@@ -428,7 +429,7 @@ const ContentInspiration = () => {
                         </div>
 
                         {/* שותפים */}
-                        <div className="bg-muted/50 rounded-lg p-3">
+                        <div className="bg-muted/30 rounded-lg p-3">
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
                               <Users className="h-4 w-4 text-primary" />
@@ -455,7 +456,7 @@ const ContentInspiration = () => {
                               q.partners.map((partner, index) => (
                                 <div 
                                   key={index} 
-                                  className="bg-secondary/10 text-secondary px-2 py-1 rounded text-xs flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity"
+                                  className="bg-gray-800 text-white px-2 py-1 rounded text-xs flex items-center gap-1 cursor-pointer hover:bg-gray-700 transition-colors"
                                   onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=partner&partner=${encodeURIComponent(partner.name)}`, '_blank')}
                                 >
                                   <span>{partner.name}</span>
