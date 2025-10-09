@@ -298,7 +298,7 @@ const ContentInspiration = () => {
                         size="sm" 
                         className="flex-col h-auto py-3 px-2 gap-2 hover:bg-blue-50 hover:text-blue-700 transition-colors"
                         title="עריכה"
-                        onClick={() => window.open(`/edit-questionnaire/${q.id}`, '_blank')}
+                        onClick={() => window.open(`/create-questionnaire?id=${q.id}&mode=edit`, '_blank')}
                       >
                         <Edit className="h-5 w-5" />
                         <span className="text-xs font-medium">עריכה</span>
@@ -310,7 +310,7 @@ const ContentInspiration = () => {
                         size="sm" 
                         className="flex-col h-auto py-3 px-2 gap-2 hover:bg-green-50 hover:text-green-700 transition-colors"
                         title="הפצה"
-                        onClick={() => window.open(`/distribute-questionnaire/${q.id}`, '_blank')}
+                        onClick={() => window.open(`/distribution?id=${q.id}`, '_blank')}
                       >
                         <Share2 className="h-5 w-5" />
                         <span className="text-xs font-medium">הפצה</span>
@@ -334,7 +334,7 @@ const ContentInspiration = () => {
                         size="sm" 
                         className="flex-col h-auto py-3 px-2 gap-2 hover:bg-purple-50 hover:text-purple-700 transition-colors"
                         title="סטטיסטיקה"
-                        onClick={() => window.open(`/response-analysis/${q.id}`, '_blank')}
+                        onClick={() => window.open(`/leads-responses?id=${q.id}`, '_blank')}
                       >
                         <BarChart3 className="h-5 w-5" />
                         <span className="text-xs font-medium">סטטיסטיקה</span>
