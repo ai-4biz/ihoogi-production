@@ -173,24 +173,30 @@ const ContentInspiration = () => {
 
   return (
     <MainLayout initialState="articles">
-      <div className="bg-background rounded-lg shadow-sm p-3 md:p-6" dir="rtl">
+      <div className="bg-gradient-to-br from-background to-muted/20 rounded-xl shadow-sm p-4 md:p-8" dir="rtl">
         {/* Back Button */}
-        <div className="flex items-center mb-4">
+        <div className="flex items-center mb-6">
           <Button 
             variant="ghost" 
             size="sm"
             onClick={() => window.history.back()}
-            className="text-muted-foreground hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground hover:bg-muted/50"
           >
             <ArrowRight className="ml-2 h-4 w-4" />
             חזור
           </Button>
         </div>
 
-        <h1 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 flex items-center justify-end">
-          <img src={questionnairesIcon} alt="שאלונים" className="h-6 w-6 md:h-8 md:w-8 mr-2" />
-          השאלונים שלי
-        </h1>
+        {/* Header with gradient background */}
+        <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-transparent rounded-xl p-6 mb-8 border border-primary/20">
+          <h1 className="text-2xl md:text-3xl font-bold flex items-center justify-end">
+            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center ml-3 shadow-lg">
+              <img src={questionnairesIcon} alt="שאלונים" className="h-6 w-6 brightness-0 invert" />
+            </div>
+            השאלונים שלי
+          </h1>
+          <p className="text-sm text-muted-foreground text-right mt-2">נהל, ערוך והפץ את השאלונים שלך במקום אחד</p>
+        </div>
         
         <div className="space-y-4">
           {questionnaires.length === 0 ? (
@@ -199,90 +205,106 @@ const ContentInspiration = () => {
               <p>אין שאלונים עדיין</p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-5">
               {questionnaires.map((q) => (
-                <Card key={q.id} className="border shadow-md hover:shadow-lg transition-all">
-                  <CardContent className="p-4 md:p-6">
-                    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <Card key={q.id} className="border-2 border-border/50 shadow-lg hover:shadow-xl hover:border-primary/30 transition-all duration-300 overflow-hidden bg-gradient-to-br from-white to-muted/10">
+                  <CardContent className="p-5 md:p-7">
+                    {/* Header Section */}
+                    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
                       {/* Right side: Status badge + Title */}
                       <div className="flex items-center gap-4 flex-1">
-                        {/* Status Badge */}
-                        <div className={`px-4 py-2 rounded-full text-sm font-medium ${q.status === 'active' ? 'bg-gradient-to-r from-primary to-primary/80 text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
-                          {q.status === 'active' ? 'פעיל' : 'כבוי'}
+                        {/* Status Badge with enhanced design */}
+                        <div className={`px-5 py-2.5 rounded-xl text-sm font-bold shadow-md ${q.status === 'active' ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' : 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-700'}`}>
+                          {q.status === 'active' ? '✓ פעיל' : '○ כבוי'}
                         </div>
 
-                        {/* Title */}
+                        {/* Title with icon */}
                         <div className="flex-1 text-right">
-                          <h3 className="text-lg font-bold text-foreground">{q.title}</h3>
+                          <h3 className="text-xl font-bold text-foreground flex items-center justify-end gap-2">
+                            <FileText className="h-5 w-5 text-primary" />
+                            {q.title}
+                          </h3>
                         </div>
                       </div>
 
-                      {/* Center: Stats in a row */}
-                      <div className="flex items-center gap-4 md:gap-6 text-sm">
-                        <div className="text-center">
-                          <span className="text-muted-foreground">לידים ({q.leads.total})</span>
+                      {/* Center: Stats in colorful boxes */}
+                      <div className="flex items-center gap-3 text-sm">
+                        <div className="bg-gradient-to-br from-blue-50 to-blue-100 px-4 py-2 rounded-lg border border-blue-200">
+                          <div className="text-center">
+                            <p className="text-xs text-blue-600 font-medium mb-1">לידים</p>
+                            <p className="text-lg font-bold text-blue-800">{q.leads.total}</p>
+                          </div>
                         </div>
-                        <div className="text-center">
-                          <span className="text-muted-foreground">חדשים ({q.leads.new})</span>
+                        <div className="bg-gradient-to-br from-green-50 to-green-100 px-4 py-2 rounded-lg border border-green-200">
+                          <div className="text-center">
+                            <p className="text-xs text-green-600 font-medium mb-1">חדשים</p>
+                            <p className="text-lg font-bold text-green-800">{q.leads.new}</p>
+                          </div>
                         </div>
                       </div>
 
-                      {/* Right side: Date */}
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Calendar className="h-4 w-4" />
-                        <span>{q.createdAt}</span>
+                      {/* Right side: Date with enhanced design */}
+                      <div className="flex items-center gap-2 text-sm bg-muted/50 px-4 py-2 rounded-lg">
+                        <Calendar className="h-4 w-4 text-primary" />
+                        <span className="font-medium">{q.createdAt}</span>
                       </div>
                     </div>
 
-                    {/* Two Narrow Colorful Information Boxes */}
-                    <div className="mt-4 pt-4 border-t">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
-                        {/* מקורות לידים - כחול */}
-                        <div className="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-3">
-                          <div className="flex items-center gap-2 mb-2">
-                            <div className="w-6 h-6 bg-blue-500 rounded-lg flex items-center justify-center">
-                              <Users className="h-3 w-3 text-white" />
+                    {/* Information Section with enhanced design */}
+                    <div className="mt-6 pt-5 border-t border-border/50">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {/* מקורות לידים - כחול עם shadow */}
+                        <div className="bg-gradient-to-br from-blue-50 via-blue-100 to-blue-50 border-2 border-blue-300 rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow">
+                          <div className="flex items-center gap-2 mb-3">
+                            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-md">
+                              <Users className="h-4 w-4 text-white" />
                             </div>
-                            <h4 className="font-semibold text-blue-800 text-sm">מקורות לידים</h4>
+                            <h4 className="font-bold text-blue-900 text-base">מקורות לידים</h4>
                           </div>
-                          <div className="flex flex-wrap gap-1">
+                          <div className="flex flex-wrap gap-2">
                             {q.sources.length > 0 ? (
                               q.sources.slice(0, 3).map((s, idx) => (
-                                <span key={idx} className="px-2 py-1 rounded-full bg-blue-200 text-blue-800 text-xs">
-                                  {s.name} {s.total}
-                                </span>
+                                <div key={idx} className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white border border-blue-200 shadow-sm">
+                                  {getSourceIcon(s.name)}
+                                  <span className="text-xs font-semibold text-blue-900">{s.name}</span>
+                                  <span className="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">{s.total}</span>
+                                </div>
                               ))
                             ) : (
-                              <span className="text-xs text-blue-600">אין מקורות</span>
+                              <span className="text-sm text-blue-600 italic">אין מקורות</span>
                             )}
                             {q.sources.length > 3 && (
-                              <span className="px-2 py-1 rounded-full bg-blue-200 text-blue-800 text-xs">
+                              <span className="px-3 py-1.5 rounded-lg bg-blue-200 text-blue-900 text-xs font-semibold">
                                 +{q.sources.length - 3} נוספים
                               </span>
                             )}
                           </div>
                         </div>
 
-                        {/* שותפים - סגול */}
-                        <div className="bg-gradient-to-r from-purple-50 to-purple-100 border border-purple-200 rounded-lg p-3">
-                          <div className="flex items-center gap-2 mb-2">
-                            <div className="w-6 h-6 bg-purple-500 rounded-lg flex items-center justify-center">
-                              <Users className="h-3 w-3 text-white" />
+                        {/* שותפים - סגול עם shadow */}
+                        <div className="bg-gradient-to-br from-purple-50 via-purple-100 to-purple-50 border-2 border-purple-300 rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow">
+                          <div className="flex items-center gap-2 mb-3">
+                            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center shadow-md">
+                              <Users className="h-4 w-4 text-white" />
                             </div>
-                            <h4 className="font-semibold text-purple-800 text-sm">שותפים</h4>
+                            <h4 className="font-bold text-purple-900 text-base">שותפים</h4>
                           </div>
-                          <div className="flex flex-wrap gap-1">
+                          <div className="flex flex-wrap gap-2">
                             {q.partners.length > 0 ? (
                               q.partners.slice(0, 3).map((p, idx) => (
-                                <span key={idx} className="px-2 py-1 rounded-full bg-purple-200 text-purple-800 text-xs">
-                                  {p.name} {p.total}
-                                </span>
+                                <div key={idx} className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white border border-purple-200 shadow-sm">
+                                  <div className="w-5 h-5 bg-gradient-to-br from-purple-400 to-purple-500 rounded-full flex items-center justify-center">
+                                    <span className="text-[10px] font-bold text-white">{p.name.charAt(0)}</span>
+                                  </div>
+                                  <span className="text-xs font-semibold text-purple-900">{p.name}</span>
+                                  <span className="text-xs font-bold text-purple-600 bg-purple-100 px-2 py-0.5 rounded-full">{p.total}</span>
+                                </div>
                               ))
                             ) : (
-                              <span className="text-xs text-purple-600">אין שותפים</span>
+                              <span className="text-sm text-purple-600 italic">אין שותפים</span>
                             )}
                             {q.partners.length > 3 && (
-                              <span className="px-2 py-1 rounded-full bg-purple-200 text-purple-800 text-xs">
+                              <span className="px-3 py-1.5 rounded-lg bg-purple-200 text-purple-900 text-xs font-semibold">
                                 +{q.partners.length - 3} נוספים
                               </span>
                             )}
@@ -291,66 +313,76 @@ const ContentInspiration = () => {
                       </div>
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="grid grid-cols-5 gap-3 mt-4 pt-4 border-t">
-                      {/* הצגת השאלון - צ'אט או טופס */}
+                    {/* Action Buttons with enhanced design */}
+                    <div className="grid grid-cols-5 gap-2 mt-6 pt-5 border-t border-border/50">
+                      {/* הצגת השאלון */}
                       <Button 
-                        variant="ghost" 
+                        variant="outline" 
                         size="sm" 
-                        className="flex-col h-auto py-3 px-2 gap-2 hover:bg-cyan-50 hover:text-cyan-700 transition-colors"
+                        className="flex-col h-auto py-4 px-3 gap-2 bg-gradient-to-br from-cyan-50 to-cyan-100 border-2 border-cyan-300 hover:from-cyan-100 hover:to-cyan-200 hover:border-cyan-400 hover:shadow-lg text-cyan-800 transition-all duration-200"
                         title="הצג שאלון"
                         onClick={() => window.open(`/questionnaire-view/${q.id}?mode=form`, '_blank')}
                       >
-                        <Eye className="h-5 w-5" />
-                        <span className="text-xs font-medium">הצגת שאלון</span>
+                        <div className="w-8 h-8 bg-cyan-500 rounded-lg flex items-center justify-center shadow-md">
+                          <Eye className="h-4 w-4 text-white" />
+                        </div>
+                        <span className="text-xs font-bold">הצגת שאלון</span>
                       </Button>
                       
                       {/* עריכה */}
                       <Button 
-                        variant="ghost" 
+                        variant="outline" 
                         size="sm" 
-                        className="flex-col h-auto py-3 px-2 gap-2 hover:bg-blue-50 hover:text-blue-700 transition-colors"
+                        className="flex-col h-auto py-4 px-3 gap-2 bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-300 hover:from-blue-100 hover:to-blue-200 hover:border-blue-400 hover:shadow-lg text-blue-800 transition-all duration-200"
                         title="עריכה"
                         onClick={() => window.open(`/create-questionnaire?id=${q.id}&mode=edit`, '_blank')}
                       >
-                        <Edit className="h-5 w-5" />
-                        <span className="text-xs font-medium">עריכה</span>
+                        <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center shadow-md">
+                          <Edit className="h-4 w-4 text-white" />
+                        </div>
+                        <span className="text-xs font-bold">עריכה</span>
                       </Button>
                       
                       {/* הפצה */}
                       <Button 
-                        variant="ghost" 
+                        variant="outline" 
                         size="sm" 
-                        className="flex-col h-auto py-3 px-2 gap-2 hover:bg-green-50 hover:text-green-700 transition-colors"
+                        className="flex-col h-auto py-4 px-3 gap-2 bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-300 hover:from-green-100 hover:to-green-200 hover:border-green-400 hover:shadow-lg text-green-800 transition-all duration-200"
                         title="הפצה"
                         onClick={() => window.open(`/distribution?id=${q.id}`, '_blank')}
                       >
-                        <Share2 className="h-5 w-5" />
-                        <span className="text-xs font-medium">הפצה</span>
+                        <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center shadow-md">
+                          <Share2 className="h-4 w-4 text-white" />
+                        </div>
+                        <span className="text-xs font-bold">הפצה</span>
                       </Button>
                       
                       {/* שכפול */}
                       <Button 
-                        variant="ghost" 
+                        variant="outline" 
                         size="sm" 
-                        className="flex-col h-auto py-3 px-2 gap-2 hover:bg-gray-50 hover:text-gray-700 transition-colors"
+                        className="flex-col h-auto py-4 px-3 gap-2 bg-gradient-to-br from-orange-50 to-orange-100 border-2 border-orange-300 hover:from-orange-100 hover:to-orange-200 hover:border-orange-400 hover:shadow-lg text-orange-800 transition-all duration-200"
                         title="שכפול"
                         onClick={() => handleDuplicateQuestionnaire(q)}
                       >
-                        <Copy className="h-5 w-5" />
-                        <span className="text-xs font-medium">שכפול</span>
+                        <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center shadow-md">
+                          <Copy className="h-4 w-4 text-white" />
+                        </div>
+                        <span className="text-xs font-bold">שכפול</span>
                       </Button>
                       
                       {/* סטטיסטיקה */}
                       <Button 
-                        variant="ghost" 
+                        variant="outline" 
                         size="sm" 
-                        className="flex-col h-auto py-3 px-2 gap-2 hover:bg-purple-50 hover:text-purple-700 transition-colors"
+                        className="flex-col h-auto py-4 px-3 gap-2 bg-gradient-to-br from-purple-50 to-purple-100 border-2 border-purple-300 hover:from-purple-100 hover:to-purple-200 hover:border-purple-400 hover:shadow-lg text-purple-800 transition-all duration-200"
                         title="סטטיסטיקה"
                         onClick={() => window.open(`/leads-responses?id=${q.id}&tab=analysis`, '_blank')}
                       >
-                        <BarChart3 className="h-5 w-5" />
-                        <span className="text-xs font-medium">סטטיסטיקה</span>
+                        <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center shadow-md">
+                          <BarChart3 className="h-4 w-4 text-white" />
+                        </div>
+                        <span className="text-xs font-bold">סטטיסטיקה</span>
                       </Button>
                     </div>
                   </CardContent>
