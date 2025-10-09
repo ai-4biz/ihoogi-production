@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>תגובות - Hoogi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../design-tokens/_tokens.css">
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Assistant', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-text-primary">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-lg">H</span>
+                    </div>
+                    <h1 class="text-xl font-bold text-text-primary">Hoogi</h1>
+                </div>
+                
+                <!-- User Menu -->
+                <div class="flex items-center gap-4">
+                    <div class="text-sm text-text-muted">
+                        שלום, <span class="font-medium text-text-primary">גיל ארביסמן</span>
+                    </div>
+                    <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                        <span class="text-white text-sm font-medium">ג</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Page Header -->
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-text-primary flex items-center gap-3">
+                    <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                    </svg>
+                    תגובות וניתוח
+                </h1>
+                <p class="text-lg text-text-muted mt-2">
+                    ניתוח מעמיק של כל התגובות והנתונים שלך
+                </p>
+            </div>
+            <div class="flex gap-3">
+                <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 h-10 px-4 border border-border bg-transparent text-text-primary hover:bg-accent">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    ייצא דוח
+                </button>
+                <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 h-10 px-4 bg-primary text-white hover:bg-primary-hover">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    דוח מותאם
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="border-b border-border mb-6">
+            <nav class="-mb-px flex space-x-8">
+                <button class="border-b-2 border-primary text-primary py-2 px-1 text-sm font-medium">
+                    סקירה כללית
+                </button>
+                <button class="border-b-2 border-transparent text-text-muted hover:text-text-primary hover:border-border py-2 px-1 text-sm font-medium">
+                    ניתוח מפורט
+                </button>
+                <button class="border-b-2 border-transparent text-text-muted hover:text-text-primary hover:border-border py-2 px-1 text-sm font-medium">
+                    השוואות
+                </button>
+                <button class="border-b-2 border-transparent text-text-muted hover:text-text-primary hover:border-border py-2 px-1 text-sm font-medium">
+                    מגמות
+                </button>
+            </nav>
+        </div>
+
+        <!-- Date Range Selector -->
+        <div class="flex flex-col md:flex-row gap-4 mb-6">
+            <div class="flex gap-2">
+                <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 h-10 px-4 bg-primary text-white">
+                    היום
+                </button>
+                <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 h-10 px-4 border border-border bg-transparent text-text-primary hover:bg-accent">
+                    השבוע
+                </button>
+                <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 h-10 px-4 border border-border bg-transparent text-text-primary hover:bg-accent">
+                    החודש
+                </button>
+                <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 h-10 px-4 border border-border bg-transparent text-text-primary hover:bg-accent">
+                    רבעון
+                </button>
+            </div>
+            
+            <div class="flex gap-2">
+                <input type="date" class="flex h-10 rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
+                <span class="flex items-center text-text-muted">עד</span>
+                <input type="date" class="flex h-10 rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
+            </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="rounded-lg border border-border bg-card p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-2 bg-primary-light rounded-lg">
+                        <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-xs font-medium text-success bg-success-light px-2 py-1 rounded-full">+12%</span>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-text-muted mb-1">סך תגובות</p>
+                    <p class="text-3xl font-bold text-text-primary">1,247</p>
+                </div>
+            </div>
+            
+            <div class="rounded-lg border border-border bg-card p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-2 bg-secondary-light rounded-lg">
+                        <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-xs font-medium text-success bg-success-light px-2 py-1 rounded-full">+8%</span>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-text-muted mb-1">לידים חדשים</p>
+                    <p class="text-3xl font-bold text-text-primary">156</p>
+                </div>
+            </div>
+            
+            <div class="rounded-lg border border-border bg-card p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-2 bg-accent-light rounded-lg">
+                        <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                        </svg>
+                    </div>
+                    <span class="text-xs font-medium text-success bg-success-light px-2 py-1 rounded-full">+15%</span>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-text-muted mb-1">שיעור המרה</p>
+                    <p class="text-3xl font-bold text-text-primary">12.5%</p>
+                </div>
+            </div>
+            
+            <div class="rounded-lg border border-border bg-card p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-2 bg-info-light rounded-lg">
+                        <svg class="w-6 h-6 text-info" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-xs font-medium text-error bg-error-light px-2 py-1 rounded-full">-3%</span>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-text-muted mb-1">זמן ממוצע</p>
+                    <p class="text-3xl font-bold text-text-primary">4:32</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Response Trend Chart -->
+            <div class="rounded-lg border border-border bg-card p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-semibold text-text-primary">מגמת תגובות</h3>
+                    <select class="flex h-8 rounded border border-border bg-background px-2 py-1 text-xs ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
+                        <option value="7d">7 ימים</option>
+                        <option value="30d">30 יום</option>
+                        <option value="90d">90 יום</option>
+                    </select>
+                </div>
+                <div class="h-64 bg-gradient-to-t from-primary-light to-transparent rounded-lg flex items-end justify-center p-4">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-text-primary mb-2">📊</div>
+                        <p class="text-sm text-text-muted">גרף מגמות התגובות</p>
+                        <p class="text-xs text-text-muted mt-1">(ויזואליזציה לדוגמה)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Response Sources -->
+            <div class="rounded-lg border border-border bg-card p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-semibold text-text-primary">מקורות תגובות</h3>
+                    <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded text-xs font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 h-6 px-2 border border-border bg-transparent text-text-primary hover:bg-accent">
+                        כל המקורות
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-3 h-3 bg-primary rounded-full"></div>
+                            <span class="text-sm text-text-primary">אימייל</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-medium text-text-primary">45%</span>
+                            <span class="text-xs text-text-muted">(562)</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-3 h-3 bg-secondary rounded-full"></div>
+                            <span class="text-sm text-text-primary">רשתות חברתיות</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-medium text-text-primary">32%</span>
+                            <span class="text-xs text-text-muted">(399)</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-3 h-3 bg-accent rounded-full"></div>
+                            <span class="text-sm text-text-primary">חיפוש</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-medium text-text-primary">18%</span>
+                            <span class="text-xs text-text-muted">(224)</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-3 h-3 bg-success rounded-full"></div>
+                            <span class="text-sm text-text-primary">הפניה</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-medium text-text-primary">5%</span>
+                            <span class="text-xs text-text-muted">(62)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question Analysis -->
+        <div class="rounded-lg border border-border bg-card p-6 shadow-sm mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-text-primary">ניתוח שאלות</h3>
+                <select class="flex h-10 rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
+                    <option value="">בחר שאלון</option>
+                    <option value="1">שאלון שיווק</option>
+                    <option value="2">שאלון משוב</option>
+                    <option value="3">שאלון הרשמה</option>
+                </select>
+            </div>
+            
+            <div class="space-y-6">
+                <!-- Question 1 -->
+                <div class="border border-border rounded-lg p-4">
+                    <h4 class="font-medium text-text-primary mb-3">איך שמעת עלינו?</h4>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-text-secondary">חיפוש בגוגל</span>
+                            <div class="flex items-center gap-3">
+                                <div class="w-32 bg-muted rounded-full h-2">
+                                    <div class="bg-primary h-2 rounded-full" style="width: 65%"></div>
+                                </div>
+                                <span class="text-sm font-medium text-text-primary w-8">65%</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-text-secondary">המלצת חבר</span>
+                            <div class="flex items-center gap-3">
+                                <div class="w-32 bg-muted rounded-full h-2">
+                                    <div class="bg-secondary h-2 rounded-full" style="width: 25%"></div>
+                                </div>
+                                <span class="text-sm font-medium text-text-primary w-8">25%</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-text-secondary">רשתות חברתיות</span>
+                            <div class="flex items-center gap-3">
+                                <div class="w-32 bg-muted rounded-full h-2">
+                                    <div class="bg-accent h-2 rounded-full" style="width: 10%"></div>
+                                </div>
+                                <span class="text-sm font-medium text-text-primary w-8">10%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="border border-border rounded-lg p-4">
+                    <h4 class="font-medium text-text-primary mb-3">מה רמת שביעות הרצון שלך?</h4>
+                    <div class="grid grid-cols-5 gap-2">
+                        <div class="text-center">
+                            <div class="w-full bg-error-light rounded-lg p-2 mb-2">
+                                <span class="text-xs font-medium text-error">1</span>
+                            </div>
+                            <span class="text-xs text-text-muted">מאוד לא מרוצה</span>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-full bg-warning-light rounded-lg p-2 mb-2">
+                                <span class="text-xs font-medium text-warning">2</span>
+                            </div>
+                            <span class="text-xs text-text-muted">לא מרוצה</span>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-full bg-secondary-light rounded-lg p-2 mb-2">
+                                <span class="text-xs font-medium text-secondary">3</span>
+                            </div>
+                            <span class="text-xs text-text-muted">ניטרלי</span>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-full bg-primary-light rounded-lg p-2 mb-2">
+                                <span class="text-xs font-medium text-primary">4</span>
+                            </div>
+                            <span class="text-xs text-text-muted">מרוצה</span>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-full bg-success-light rounded-lg p-2 mb-2">
+                                <span class="text-xs font-medium text-success">5</span>
+                            </div>
+                            <span class="text-xs text-text-muted">מאוד מרוצה</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Responses -->
+        <div class="rounded-lg border border-border bg-card p-6 shadow-sm">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-text-primary">תגובות אחרונות</h3>
+                <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 h-10 px-4 border border-border bg-transparent text-text-primary hover:bg-accent">
+                    צפה בכל התגובות
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <!-- Response 1 -->
+                <div class="flex items-center gap-4 p-4 border border-border rounded-lg">
+                    <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                        <span class="text-white text-sm font-medium">י</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <h4 class="font-medium text-text-primary">יוסי כהן</h4>
+                            <span class="text-xs text-text-muted">•</span>
+                            <span class="text-xs text-text-muted">שאלון שיווק</span>
+                            <span class="text-xs text-text-muted">•</span>
+                            <span class="text-xs text-text-muted">לפני שעה</span>
+                        </div>
+                        <p class="text-sm text-text-secondary">"השירות שלכם מעולה! המלצתי לחברים שלי..."</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <span class="inline-flex items-center gap-1 rounded-md border border-transparent bg-success px-2.5 py-0.5 text-xs font-semibold text-white">
+                            איכותי
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Response 2 -->
+                <div class="flex items-center gap-4 p-4 border border-border rounded-lg">
+                    <div class="w-10 h-10 bg-secondary rounded-full flex items-center justify-center">
+                        <span class="text-white text-sm font-medium">ש</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <h4 class="font-medium text-text-primary">שרה לוי</h4>
+                            <span class="text-xs text-text-muted">•</span>
+                            <span class="text-xs text-text-muted">שאלון משוב</span>
+                            <span class="text-xs text-text-muted">•</span>
+                            <span class="text-xs text-text-muted">לפני 3 שעות</span>
+                        </div>
+                        <p class="text-sm text-text-secondary">"היה טוב אבל יש מקום לשיפור במהירות התגובה..."</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <span class="inline-flex items-center gap-1 rounded-md border border-transparent bg-warning px-2.5 py-0.5 text-xs font-semibold text-white">
+                            בינוני
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Response 3 -->
+                <div class="flex items-center gap-4 p-4 border border-border rounded-lg">
+                    <div class="w-10 h-10 bg-accent rounded-full flex items-center justify-center">
+                        <span class="text-white text-sm font-medium">ד</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <h4 class="font-medium text-text-primary">דוד ישראלי</h4>
+                            <span class="text-xs text-text-muted">•</span>
+                            <span class="text-xs text-text-muted">שאלון הרשמה</span>
+                            <span class="text-xs text-text-muted">•</span>
+                            <span class="text-xs text-text-muted">לפני 5 שעות</span>
+                        </div>
+                        <p class="text-sm text-text-secondary">"מעוניין לקבל מידע נוסף על המוצרים שלכם"</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <span class="inline-flex items-center gap-1 rounded-md border border-transparent bg-info px-2.5 py-0.5 text-xs font-semibold text-white">
+                            חדש
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

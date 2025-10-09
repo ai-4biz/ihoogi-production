@@ -1,0 +1,289 @@
+<!-- ========================================
+     SELECT COMPONENT
+     ======================================== -->
+
+<!-- Basic Select -->
+<div class="space-y-2">
+  <label for="basic-select" class="text-sm font-medium text-text-primary">בחר אפשרות</label>
+  <select 
+    id="basic-select" 
+    class="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+  >
+    <option value="">בחר אפשרות...</option>
+    <option value="option1">אפשרות 1</option>
+    <option value="option2">אפשרות 2</option>
+    <option value="option3">אפשרות 3</option>
+  </select>
+</div>
+
+<!-- Select with Icon -->
+<div class="space-y-2">
+  <label for="icon-select" class="text-sm font-medium text-text-primary">קטגוריה</label>
+  <div class="relative">
+    <select 
+      id="icon-select" 
+      class="flex h-10 w-full appearance-none rounded-lg border border-border bg-background px-3 py-2 pr-10 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      <option value="">בחר קטגוריה...</option>
+      <option value="tech">טכנולוגיה</option>
+      <option value="business">עסקים</option>
+      <option value="health">בריאות</option>
+      <option value="education">חינוך</option>
+    </select>
+    <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+    </svg>
+  </div>
+</div>
+
+<!-- ========================================
+     SELECT SIZES
+     ======================================== -->
+
+<div class="space-y-4">
+  <h3 class="text-lg font-semibold text-text-primary">גדלי בחירה</h3>
+  
+  <!-- Small -->
+  <div class="space-y-2">
+    <label class="text-xs font-medium text-text-primary">קטן</label>
+    <select class="flex h-8 w-full rounded-md border border-border bg-background px-2 py-1 text-xs ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+      <option value="">קטן</option>
+      <option value="1">אפשרות 1</option>
+      <option value="2">אפשרות 2</option>
+    </select>
+  </div>
+  
+  <!-- Default -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">רגיל</label>
+    <select class="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+      <option value="">רגיל</option>
+      <option value="1">אפשרות 1</option>
+      <option value="2">אפשרות 2</option>
+    </select>
+  </div>
+  
+  <!-- Large -->
+  <div class="space-y-2">
+    <label class="text-base font-medium text-text-primary">גדול</label>
+    <select class="flex h-12 w-full rounded-lg border border-border bg-background px-4 py-3 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+      <option value="">גדול</option>
+      <option value="1">אפשרות 1</option>
+      <option value="2">אפשרות 2</option>
+    </select>
+  </div>
+</div>
+
+<!-- ========================================
+     SELECT STATES
+     ======================================== -->
+
+<div class="space-y-4">
+  <h3 class="text-lg font-semibold text-text-primary">מצבי בחירה</h3>
+  
+  <!-- Normal -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">רגיל</label>
+    <select class="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+      <option value="">בחר אפשרות</option>
+      <option value="1">אפשרות 1</option>
+      <option value="2">אפשרות 2</option>
+    </select>
+  </div>
+  
+  <!-- Focus State -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">מוקד</label>
+    <select class="flex h-10 w-full rounded-lg border border-primary bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ring-2 ring-primary ring-offset-2">
+      <option value="">בחירה עם מוקד</option>
+      <option value="1">אפשרות 1</option>
+      <option value="2">אפשרות 2</option>
+    </select>
+  </div>
+  
+  <!-- Error State -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">שגיאה</label>
+    <select class="flex h-10 w-full rounded-lg border border-error bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+      <option value="">בחירה עם שגיאה</option>
+      <option value="1">אפשרות 1</option>
+      <option value="2">אפשרות 2</option>
+    </select>
+    <p class="text-xs text-error">בחירה זו חובה</p>
+  </div>
+  
+  <!-- Success State -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">הצלחה</label>
+    <div class="relative">
+      <select class="flex h-10 w-full rounded-lg border border-success bg-background px-3 py-2 pr-10 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+        <option value="">בחירה תקינה</option>
+        <option value="1" selected>אפשרות 1</option>
+        <option value="2">אפשרות 2</option>
+      </select>
+      <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-success pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+      </svg>
+    </div>
+    <p class="text-xs text-success">נראה טוב!</p>
+  </div>
+  
+  <!-- Disabled State -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">מבוטל</label>
+    <select disabled class="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 cursor-not-allowed opacity-50">
+      <option value="">בחירה מבוטלת</option>
+      <option value="1">אפשרות 1</option>
+      <option value="2">אפשרות 2</option>
+    </select>
+  </div>
+  
+  <!-- Loading State -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">טוען</label>
+    <div class="relative">
+      <select disabled class="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 pr-10 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+        <option value="">טוען אפשרויות...</option>
+      </select>
+      <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-muted animate-spin pointer-events-none" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================
+     MULTIPLE SELECT
+     ======================================== -->
+
+<div class="space-y-4">
+  <h3 class="text-lg font-semibold text-text-primary">בחירה מרובה</h3>
+  
+  <!-- Basic Multiple Select -->
+  <div class="space-y-2">
+    <label for="multiple-select" class="text-sm font-medium text-text-primary">בחר מספר אפשרויות</label>
+    <select 
+      id="multiple-select" 
+      multiple 
+      size="4"
+      class="flex w-full rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      <option value="option1">אפשרות 1</option>
+      <option value="option2">אפשרות 2</option>
+      <option value="option3">אפשרות 3</option>
+      <option value="option4">אפשרות 4</option>
+      <option value="option5">אפשרות 5</option>
+    </select>
+    <p class="text-xs text-text-muted">החזק Ctrl (Cmd על Mac) כדי לבחור מספר אפשרויות</p>
+  </div>
+  
+  <!-- Custom Multiple Select with Tags -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">תגיות</label>
+    <div class="flex flex-wrap gap-2 min-h-[40px] w-full rounded-lg border border-border bg-background p-2 text-sm ring-offset-background focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2">
+      <!-- Selected Tags -->
+      <span class="inline-flex items-center gap-1 px-2 py-1 bg-primary text-white text-xs rounded-md">
+        טכנולוגיה
+        <button type="button" class="hover:text-red-200">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </span>
+      <span class="inline-flex items-center gap-1 px-2 py-1 bg-secondary text-white text-xs rounded-md">
+        עסקים
+        <button type="button" class="hover:text-red-200">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </span>
+      
+      <!-- Input for new tags -->
+      <input 
+        type="text" 
+        placeholder="הוסף תגית..."
+        class="flex-1 min-w-[120px] bg-transparent border-none outline-none text-sm placeholder:text-text-muted"
+      />
+    </div>
+  </div>
+</div>
+
+<!-- ========================================
+     SELECT WITH GROUPS
+     ======================================== -->
+
+<div class="space-y-4">
+  <h3 class="text-lg font-semibold text-text-primary">בחירה עם קבוצות</h3>
+  
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">קטגוריות</label>
+    <select class="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+      <option value="">בחר קטגוריה...</option>
+      <optgroup label="טכנולוגיה">
+        <option value="web">פיתוח אתרים</option>
+        <option value="mobile">פיתוח מובייל</option>
+        <option value="ai">בינה מלאכותית</option>
+      </optgroup>
+      <optgroup label="עסקים">
+        <option value="marketing">שיווק</option>
+        <option value="sales">מכירות</option>
+        <option value="finance">כספים</option>
+      </optgroup>
+      <optgroup label="חינוך">
+        <option value="online">למידה מקוונת</option>
+        <option value="workshop">סדנאות</option>
+        <option value="certification">הסמכות</option>
+      </optgroup>
+    </select>
+  </div>
+</div>
+
+<!-- ========================================
+     CUSTOM SELECT DROPDOWN
+     ======================================== -->
+
+<div class="space-y-4">
+  <h3 class="text-lg font-semibold text-text-primary">בחירה מותאמת אישית</h3>
+  
+  <!-- Custom Dropdown (Static for Demo) -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">בחירה מותאמת</label>
+    <div class="relative">
+      <button 
+        type="button"
+        class="flex h-10 w-full items-center justify-between rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        <span>בחר אפשרות</span>
+        <svg class="w-4 h-4 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </button>
+      
+      <!-- Dropdown Menu (Hidden by default) -->
+      <div class="absolute top-full left-0 right-0 z-50 mt-1 hidden rounded-lg border border-border bg-background shadow-lg">
+        <div class="py-1">
+          <button 
+            type="button"
+            class="flex w-full items-center px-3 py-2 text-sm hover:bg-accent"
+          >
+            אפשרות 1
+          </button>
+          <button 
+            type="button"
+            class="flex w-full items-center px-3 py-2 text-sm hover:bg-accent"
+          >
+            אפשרות 2
+          </button>
+          <button 
+            type="button"
+            class="flex w-full items-center px-3 py-2 text-sm hover:bg-accent"
+          >
+            אפשרות 3
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

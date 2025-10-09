@@ -1,0 +1,261 @@
+<!-- Dev Preview Only – don't ship -->
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI Sandbox Preview - Dev Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="design-tokens/_tokens.css">
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Assistant', sans-serif; }
+        .preview-iframe {
+            border: 2px solid var(--color-border-default);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .preview-iframe.no-border {
+            border: none;
+        }
+        .preview-iframe.rotated {
+            transform: rotate(90deg);
+            transform-origin: center;
+        }
+    </style>
+</head>
+<body class="bg-background-surface text-text-primary">
+    <!-- Header -->
+    <header class="bg-background-card shadow-sm border-b border-border-default sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-primary-default rounded-lg flex items-center justify-center">
+                        <span class="text-primary-foreground font-bold text-lg">H</span>
+                    </div>
+                    <h1 class="text-xl font-bold text-text-primary">UI Sandbox Preview</h1>
+                    <span class="text-xs text-text-muted bg-surface-secondary px-2 py-1 rounded">Dev Tool</span>
+                </div>
+                
+                <!-- Controls -->
+                <div class="flex items-center gap-4">
+                    <!-- Screen Selector -->
+                    <div class="flex items-center gap-2">
+                        <label class="text-sm font-medium text-text-secondary">מסך:</label>
+                        <select id="screenSelect" class="flex h-8 w-32 rounded-md border border-border-default bg-background-input px-2 py-1 text-sm ring-offset-background-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring-default focus-visible:ring-offset-2">
+                            <option value="leads.html">לידים</option>
+                            <option value="questionnaires.html">שאלונים</option>
+                            <option value="responses.html">תשובות</option>
+                            <option value="dashboard.html">דשבורד</option>
+                            <option value="profile.html">פרופיל</option>
+                            <option value="distribution.html">הפצה</option>
+                        </select>
+                    </div>
+
+                    <!-- Width Buttons -->
+                    <div class="flex items-center gap-1">
+                        <span class="text-sm font-medium text-text-secondary">רוחב:</span>
+                        <div class="flex gap-1">
+                            <button class="width-btn px-2 py-1 text-xs bg-surface-secondary hover:bg-surface-secondary-hover rounded" data-width="320">320</button>
+                            <button class="width-btn px-2 py-1 text-xs bg-surface-secondary hover:bg-surface-secondary-hover rounded" data-width="360">360</button>
+                            <button class="width-btn px-2 py-1 text-xs bg-surface-secondary hover:bg-surface-secondary-hover rounded" data-width="375">375</button>
+                            <button class="width-btn px-2 py-1 text-xs bg-surface-secondary hover:bg-surface-secondary-hover rounded" data-width="390">390</button>
+                            <button class="width-btn px-2 py-1 text-xs bg-surface-secondary hover:bg-surface-secondary-hover rounded" data-width="414">414</button>
+                            <button class="width-btn px-2 py-1 text-xs bg-surface-secondary hover:bg-surface-secondary-hover rounded" data-width="640">640</button>
+                            <button class="width-btn px-2 py-1 text-xs bg-surface-secondary hover:bg-surface-secondary-hover rounded" data-width="768">768</button>
+                            <button class="width-btn px-2 py-1 text-xs bg-surface-secondary hover:bg-surface-secondary-hover rounded" data-width="1024">1024</button>
+                            <button class="width-btn px-2 py-1 text-xs bg-surface-secondary hover:bg-surface-secondary-hover rounded" data-width="1280">1280</button>
+                            <button class="width-btn px-2 py-1 text-xs bg-surface-secondary hover:bg-surface-secondary-hover rounded" data-width="1440">1440</button>
+                        </div>
+                    </div>
+
+                    <!-- Tailwind Breakpoints -->
+                    <div class="flex items-center gap-1">
+                        <span class="text-sm font-medium text-text-secondary">Tailwind:</span>
+                        <div class="flex gap-1">
+                            <button class="breakpoint-btn px-2 py-1 text-xs bg-primary-default text-primary-foreground hover:bg-primary-dark rounded" data-width="640">sm</button>
+                            <button class="breakpoint-btn px-2 py-1 text-xs bg-primary-default text-primary-foreground hover:bg-primary-dark rounded" data-width="768">md</button>
+                            <button class="breakpoint-btn px-2 py-1 text-xs bg-primary-default text-primary-foreground hover:bg-primary-dark rounded" data-width="1024">lg</button>
+                            <button class="breakpoint-btn px-2 py-1 text-xs bg-primary-default text-primary-foreground hover:bg-primary-dark rounded" data-width="1280">xl</button>
+                        </div>
+                    </div>
+
+                    <!-- Rotate Button -->
+                    <button id="rotateBtn" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-8 px-3 bg-surface-secondary text-text-secondary hover:bg-surface-secondary-hover">
+                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        Rotate
+                    </button>
+
+                    <!-- Show Border Checkbox -->
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox" id="showBorder" class="rounded border-border-default">
+                        <span class="text-text-secondary">גבול</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="p-4">
+        <!-- Width Slider -->
+        <div class="bg-background-card rounded-lg shadow-sm p-4 mb-4">
+            <div class="flex items-center gap-4">
+                <label class="text-sm font-medium text-text-secondary">רוחב מותאם אישית:</label>
+                <input type="range" id="widthSlider" min="320" max="1600" value="1024" class="flex-1 h-2 bg-surface-secondary rounded-lg appearance-none cursor-pointer">
+                <span id="widthValue" class="text-sm font-mono text-text-primary min-w-16">1024px</span>
+            </div>
+        </div>
+
+        <!-- Preview Area -->
+        <div class="bg-background-card rounded-lg shadow-sm p-4">
+            <div class="flex justify-center">
+                <iframe 
+                    id="previewFrame" 
+                    src="screens/leads.html" 
+                    class="preview-iframe"
+                    style="width: 1024px; height: 768px;"
+                    frameborder="0">
+                </iframe>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Get elements
+        const screenSelect = document.getElementById('screenSelect');
+        const widthSlider = document.getElementById('widthSlider');
+        const widthValue = document.getElementById('widthValue');
+        const previewFrame = document.getElementById('previewFrame');
+        const rotateBtn = document.getElementById('rotateBtn');
+        const showBorder = document.getElementById('showBorder');
+        const widthButtons = document.querySelectorAll('.width-btn');
+        const breakpointButtons = document.querySelectorAll('.breakpoint-btn');
+
+        // State
+        let currentWidth = 1024;
+        let isRotated = false;
+
+        // Load from sessionStorage
+        function loadState() {
+            const savedScreen = sessionStorage.getItem('previewScreen');
+            const savedWidth = sessionStorage.getItem('previewWidth');
+            const savedRotated = sessionStorage.getItem('previewRotated');
+            
+            if (savedScreen) {
+                screenSelect.value = savedScreen;
+                updateScreen();
+            }
+            
+            if (savedWidth) {
+                currentWidth = parseInt(savedWidth);
+                widthSlider.value = currentWidth;
+                updateWidth();
+            }
+            
+            if (savedRotated === 'true') {
+                isRotated = true;
+                updateRotate();
+            }
+        }
+
+        // Save to sessionStorage
+        function saveState() {
+            sessionStorage.setItem('previewScreen', screenSelect.value);
+            sessionStorage.setItem('previewWidth', currentWidth.toString());
+            sessionStorage.setItem('previewRotated', isRotated.toString());
+        }
+
+        // Update screen
+        function updateScreen() {
+            previewFrame.src = `screens/${screenSelect.value}`;
+            saveState();
+        }
+
+        // Update width
+        function updateWidth() {
+            currentWidth = parseInt(widthSlider.value);
+            widthValue.textContent = `${currentWidth}px`;
+            
+            if (isRotated) {
+                previewFrame.style.width = `${Math.min(currentWidth, 800)}px`;
+                previewFrame.style.height = `${currentWidth}px`;
+            } else {
+                previewFrame.style.width = `${currentWidth}px`;
+                previewFrame.style.height = '768px';
+            }
+            
+            saveState();
+        }
+
+        // Update rotate
+        function updateRotate() {
+            if (isRotated) {
+                previewFrame.classList.add('rotated');
+                previewFrame.style.width = `${Math.min(currentWidth, 800)}px`;
+                previewFrame.style.height = `${currentWidth}px`;
+            } else {
+                previewFrame.classList.remove('rotated');
+                previewFrame.style.width = `${currentWidth}px`;
+                previewFrame.style.height = '768px';
+            }
+            saveState();
+        }
+
+        // Update border
+        function updateBorder() {
+            if (showBorder.checked) {
+                previewFrame.classList.remove('no-border');
+            } else {
+                previewFrame.classList.add('no-border');
+            }
+        }
+
+        // Event listeners
+        screenSelect.addEventListener('change', updateScreen);
+        widthSlider.addEventListener('input', updateWidth);
+        rotateBtn.addEventListener('click', () => {
+            isRotated = !isRotated;
+            updateRotate();
+        });
+        showBorder.addEventListener('change', updateBorder);
+
+        // Width buttons
+        widthButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const width = parseInt(btn.dataset.width);
+                currentWidth = width;
+                widthSlider.value = width;
+                updateWidth();
+            });
+        });
+
+        // Breakpoint buttons
+        breakpointButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const width = parseInt(btn.dataset.width);
+                currentWidth = width;
+                widthSlider.value = width;
+                updateWidth();
+            });
+        });
+
+        // Load URL parameters
+        function loadFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const screen = urlParams.get('screen');
+            if (screen) {
+                screenSelect.value = screen;
+                updateScreen();
+            }
+        }
+
+        // Initialize
+        loadFromURL();
+        loadState();
+        updateWidth();
+        updateBorder();
+    </script>
+</body>
+</html>

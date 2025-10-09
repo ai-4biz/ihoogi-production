@@ -1,0 +1,313 @@
+<!-- ========================================
+     INPUT COMPONENT
+     ======================================== -->
+
+<!-- Basic Input -->
+<div class="space-y-2">
+  <label for="basic-input" class="text-sm font-medium text-text-primary">שם מלא</label>
+  <input 
+    type="text" 
+    id="basic-input" 
+    placeholder="הכנס את השם המלא שלך"
+    class="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+  />
+</div>
+
+<!-- Input with Icon -->
+<div class="space-y-2">
+  <label for="icon-input" class="text-sm font-medium text-text-primary">אימייל</label>
+  <div class="relative">
+    <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+    </svg>
+    <input 
+      type="email" 
+      id="icon-input" 
+      placeholder="example@email.com"
+      class="flex h-10 w-full rounded-lg border border-border bg-background pr-10 pl-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    />
+  </div>
+</div>
+
+<!-- Input with Button -->
+<div class="space-y-2">
+  <label for="button-input" class="text-sm font-medium text-text-primary">חיפוש</label>
+  <div class="flex gap-0">
+    <input 
+      type="text" 
+      id="button-input" 
+      placeholder="חפש..."
+      class="flex h-10 flex-1 rounded-r-none rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    />
+    <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-l-none rounded-lg text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 bg-primary text-white hover:bg-primary-hover">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<!-- ========================================
+     INPUT SIZES
+     ======================================== -->
+
+<div class="space-y-4">
+  <h3 class="text-lg font-semibold text-text-primary">גדלי שדות</h3>
+  
+  <!-- Small -->
+  <div class="space-y-2">
+    <label class="text-xs font-medium text-text-primary">קטן</label>
+    <input 
+      type="text" 
+      placeholder="שדה קטן"
+      class="flex h-8 w-full rounded-md border border-border bg-background px-2 py-1 text-xs ring-offset-background file:border-0 file:bg-transparent file:text-xs file:font-medium placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    />
+  </div>
+  
+  <!-- Default -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">רגיל</label>
+    <input 
+      type="text" 
+      placeholder="שדה רגיל"
+      class="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    />
+  </div>
+  
+  <!-- Large -->
+  <div class="space-y-2">
+    <label class="text-base font-medium text-text-primary">גדול</label>
+    <input 
+      type="text" 
+      placeholder="שדה גדול"
+      class="flex h-12 w-full rounded-lg border border-border bg-background px-4 py-3 text-base ring-offset-background file:border-0 file:bg-transparent file:text-base file:font-medium placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    />
+  </div>
+</div>
+
+<!-- ========================================
+     INPUT STATES
+     ======================================== -->
+
+<div class="space-y-4">
+  <h3 class="text-lg font-semibold text-text-primary">מצבי שדות</h3>
+  
+  <!-- Normal -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">רגיל</label>
+    <input 
+      type="text" 
+      placeholder="שדה רגיל"
+      class="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    />
+  </div>
+  
+  <!-- Focus State -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">מוקד</label>
+    <input 
+      type="text" 
+      placeholder="שדה עם מוקד"
+      value="ערך לדוגמה"
+      class="flex h-10 w-full rounded-lg border border-primary bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ring-2 ring-primary ring-offset-2"
+    />
+  </div>
+  
+  <!-- Error State -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">שגיאה</label>
+    <input 
+      type="text" 
+      placeholder="שדה עם שגיאה"
+      class="flex h-10 w-full rounded-lg border border-error bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    />
+    <p class="text-xs text-error">שדה זה חובה</p>
+  </div>
+  
+  <!-- Success State -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">הצלחה</label>
+    <div class="relative">
+      <input 
+        type="text" 
+        placeholder="שדה תקין"
+        value="ערך תקין"
+        class="flex h-10 w-full rounded-lg border border-success bg-background px-3 py-2 pr-10 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+      />
+      <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+      </svg>
+    </div>
+    <p class="text-xs text-success">נראה טוב!</p>
+  </div>
+  
+  <!-- Disabled State -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">מבוטל</label>
+    <input 
+      type="text" 
+      placeholder="שדה מבוטל"
+      disabled
+      class="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 cursor-not-allowed opacity-50"
+    />
+  </div>
+  
+  <!-- Loading State -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">טוען</label>
+    <div class="relative">
+      <input 
+        type="text" 
+        placeholder="טוען..."
+        disabled
+        class="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 pr-10 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+      />
+      <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-muted animate-spin" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================
+     INPUT TYPES
+     ======================================== -->
+
+<div class="space-y-4">
+  <h3 class="text-lg font-semibold text-text-primary">סוגי שדות</h3>
+  
+  <!-- Text -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">טקסט</label>
+    <input 
+      type="text" 
+      placeholder="הכנס טקסט"
+      class="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    />
+  </div>
+  
+  <!-- Email -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">אימייל</label>
+    <input 
+      type="email" 
+      placeholder="example@email.com"
+      class="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    />
+  </div>
+  
+  <!-- Password -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">סיסמה</label>
+    <input 
+      type="password" 
+      placeholder="הכנס סיסמה"
+      class="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    />
+  </div>
+  
+  <!-- Number -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">מספר</label>
+    <input 
+      type="number" 
+      placeholder="הכנס מספר"
+      class="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    />
+  </div>
+  
+  <!-- Tel -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">טלפון</label>
+    <input 
+      type="tel" 
+      placeholder="050-1234567"
+      class="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    />
+  </div>
+  
+  <!-- URL -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">כתובת אתר</label>
+    <input 
+      type="url" 
+      placeholder="https://example.com"
+      class="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    />
+  </div>
+  
+  <!-- Date -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">תאריך</label>
+    <input 
+      type="date" 
+      class="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    />
+  </div>
+  
+  <!-- Time -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">שעה</label>
+    <input 
+      type="time" 
+      class="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    />
+  </div>
+  
+  <!-- File -->
+  <div class="space-y-2">
+    <label class="text-sm font-medium text-text-primary">קובץ</label>
+    <input 
+      type="file" 
+      class="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    />
+  </div>
+</div>
+
+<!-- ========================================
+     TEXTAREA
+     ======================================== -->
+
+<div class="space-y-4">
+  <h3 class="text-lg font-semibold text-text-primary">שדה טקסט ארוך</h3>
+  
+  <!-- Basic Textarea -->
+  <div class="space-y-2">
+    <label for="textarea-basic" class="text-sm font-medium text-text-primary">הודעה</label>
+    <textarea 
+      id="textarea-basic"
+      rows="4"
+      placeholder="הכנס את ההודעה שלך כאן..."
+      class="flex min-h-[80px] w-full rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    ></textarea>
+  </div>
+  
+  <!-- Textarea with Character Count -->
+  <div class="space-y-2">
+    <label for="textarea-count" class="text-sm font-medium text-text-primary">הודעה עם ספירת תווים</label>
+    <textarea 
+      id="textarea-count"
+      rows="4"
+      placeholder="הכנס את ההודעה שלך כאן..."
+      maxlength="500"
+      class="flex min-h-[80px] w-full rounded-lg border border-border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    ></textarea>
+    <div class="flex justify-between text-xs text-text-muted">
+      <span>עד 500 תווים</span>
+      <span>0/500</span>
+    </div>
+  </div>
+  
+  <!-- Textarea with Error -->
+  <div class="space-y-2">
+    <label for="textarea-error" class="text-sm font-medium text-text-primary">הודעה עם שגיאה</label>
+    <textarea 
+      id="textarea-error"
+      rows="4"
+      placeholder="הכנס את ההודעה שלך כאן..."
+      class="flex min-h-[80px] w-full rounded-lg border border-error bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    ></textarea>
+    <p class="text-xs text-error">הודעה זו חובה</p>
+  </div>
+</div>
