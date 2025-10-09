@@ -224,11 +224,11 @@ const ContentInspiration = () => {
                         
                         {/* Stats */}
                         <div className="flex gap-4">
-                          <div className="text-center">
+                          <div className="text-center cursor-pointer" onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=all`, '_blank')}>
                             <div className="text-2xl font-bold text-primary">{q.leads.total}</div>
                             <div className="text-xs text-muted-foreground">לידים סה"כ</div>
                           </div>
-                          <div className="text-center">
+                          <div className="text-center cursor-pointer" onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=new`, '_blank')}>
                             <div className="text-2xl font-bold text-green-600">{q.leads.new}</div>
                             <div className="text-xs text-muted-foreground">לידים חדשים</div>
                           </div>
@@ -245,6 +245,18 @@ const ContentInspiration = () => {
                     {/* חלק שני: כלי הפעולה */}
                     <div className="mb-6">
                       <div className="grid grid-cols-5 gap-2">
+                        {/* הצגה */}
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-primary/10 transition-colors"
+                          title="הצג שאלון"
+                          onClick={() => window.open(`/questionnaire-view/${q.id}?mode=form`, '_blank')}
+                        >
+                          <Eye className="h-5 w-5 text-primary" />
+                          <span className="text-xs font-medium">הצגה</span>
+                        </Button>
+                        
                         {/* הפצה */}
                         <Button 
                           variant="ghost" 
@@ -255,30 +267,6 @@ const ContentInspiration = () => {
                         >
                           <Share2 className="h-5 w-5 text-primary" />
                           <span className="text-xs font-medium">הפצה</span>
-                        </Button>
-                        
-                        {/* נתונים */}
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-primary/10 transition-colors"
-                          title="נתונים"
-                          onClick={() => window.open(`/leads-responses?id=${q.id}&tab=analysis`, '_blank')}
-                        >
-                          <BarChart3 className="h-5 w-5 text-primary" />
-                          <span className="text-xs font-medium">נתונים</span>
-                        </Button>
-                        
-                        {/* הצגה */}
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-muted transition-colors"
-                          title="הצג שאלון"
-                          onClick={() => window.open(`/questionnaire-view/${q.id}?mode=form`, '_blank')}
-                        >
-                          <Eye className="h-5 w-5 text-muted-foreground" />
-                          <span className="text-xs font-medium">הצגה</span>
                         </Button>
                         
                         {/* עריכה */}
@@ -304,17 +292,46 @@ const ContentInspiration = () => {
                           <Copy className="h-5 w-5 text-muted-foreground" />
                           <span className="text-xs font-medium">שכפול</span>
                         </Button>
+                        
+                        {/* נתונים */}
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="flex-col h-auto py-3 px-2 gap-1.5 hover:bg-primary/10 transition-colors"
+                          title="נתונים"
+                          onClick={() => window.open(`/leads-responses?id=${q.id}&tab=analysis`, '_blank')}
+                        >
+                          <BarChart3 className="h-5 w-5 text-primary" />
+                          <span className="text-xs font-medium">נתונים</span>
+                        </Button>
                       </div>
                     </div>
 
                     {/* חלק שלישי: נתונים - מקורות לידים ושותפים */}
                     <div className="pt-4 border-t">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-md mx-auto">
                         {/* מקורות לידים */}
                         <div className="bg-muted/50 rounded-lg p-3">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Users className="h-4 w-4 text-primary" />
-                            <h4 className="font-semibold text-sm">מקורות לידים</h4>
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <Users className="h-4 w-4 text-primary" />
+                              <h4 className="font-semibold text-sm">מקורות לידים</h4>
+                            </div>
+                            <div className="flex gap-2 text-xs">
+                              <span 
+                                className="cursor-pointer text-primary hover:underline"
+                                onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=source&source=all`, '_blank')}
+                              >
+                                {q.sources.reduce((sum, source) => sum + (source.total || 0), 0)} סה"כ
+                              </span>
+                              <span className="text-muted-foreground">/</span>
+                              <span 
+                                className="cursor-pointer text-green-600 hover:underline"
+                                onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=source&source=new`, '_blank')}
+                              >
+                                {q.sources.reduce((sum, source) => sum + (source.new || 0), 0)} חדשים
+                              </span>
+                            </div>
                           </div>
                           <div className="flex flex-wrap gap-1">
                             {q.sources.length > 0 ? (
@@ -349,7 +366,11 @@ const ContentInspiration = () => {
                                 };
 
                                 return (
-                                  <div key={index} className={`px-2 py-1 rounded text-xs border ${getSourceColor(source.name)} flex items-center gap-1`}>
+                                  <div 
+                                    key={index} 
+                                    className={`px-2 py-1 rounded text-xs border ${getSourceColor(source.name)} flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity`}
+                                    onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=source&source=${encodeURIComponent(source.name)}`, '_blank')}
+                                  >
                                     <span>{source.name}</span>
                                     <span className="text-xs opacity-75">
                                       ({source.total || 0} / {source.new || 0})
@@ -365,14 +386,35 @@ const ContentInspiration = () => {
 
                         {/* שותפים */}
                         <div className="bg-muted/50 rounded-lg p-3">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Users className="h-4 w-4 text-primary" />
-                            <h4 className="font-semibold text-sm">שותפים</h4>
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <Users className="h-4 w-4 text-primary" />
+                              <h4 className="font-semibold text-sm">שותפים</h4>
+                            </div>
+                            <div className="flex gap-2 text-xs">
+                              <span 
+                                className="cursor-pointer text-primary hover:underline"
+                                onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=partner&partner=all`, '_blank')}
+                              >
+                                {q.partners.reduce((sum, partner) => sum + (partner.total || 0), 0)} סה"כ
+                              </span>
+                              <span className="text-muted-foreground">/</span>
+                              <span 
+                                className="cursor-pointer text-green-600 hover:underline"
+                                onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=partner&partner=new`, '_blank')}
+                              >
+                                {q.partners.reduce((sum, partner) => sum + (partner.new || 0), 0)} חדשים
+                              </span>
+                            </div>
                           </div>
                           <div className="flex flex-wrap gap-1">
                             {q.partners.length > 0 ? (
                               q.partners.map((partner, index) => (
-                                <div key={index} className="bg-secondary/10 text-secondary px-2 py-1 rounded text-xs flex items-center gap-1">
+                                <div 
+                                  key={index} 
+                                  className="bg-secondary/10 text-secondary px-2 py-1 rounded text-xs flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity"
+                                  onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=partner&partner=${encodeURIComponent(partner.name)}`, '_blank')}
+                                >
                                   <span>{partner.name}</span>
                                   <span className="text-xs opacity-75">
                                     ({partner.total || 0} / {partner.new || 0})
