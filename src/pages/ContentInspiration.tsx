@@ -225,11 +225,11 @@ const ContentInspiration = () => {
                         {/* Stats */}
                         <div className="flex gap-4">
                           <div className="text-center">
-                            <div className="text-2xl font-bold text-foreground">{q.responses}</div>
+                            <div className="text-2xl font-bold text-foreground">{q.responses.total}</div>
                             <div className="text-xs text-muted-foreground">תגובות</div>
                           </div>
                           <div className="text-center">
-                            <div className="text-2xl font-bold text-primary">{q.leads}</div>
+                            <div className="text-2xl font-bold text-primary">{q.leads.total}</div>
                             <div className="text-xs text-muted-foreground">לידים</div>
                           </div>
                         </div>
@@ -238,7 +238,7 @@ const ContentInspiration = () => {
                       {/* Title */}
                       <div className="text-right">
                         <h3 className="font-semibold text-lg text-foreground mb-1">{q.title}</h3>
-                        <p className="text-sm text-muted-foreground">{q.description}</p>
+                        <p className="text-sm text-muted-foreground">נוצר ב-{q.createdAt}</p>
                       </div>
                     </div>
 
@@ -255,7 +255,7 @@ const ContentInspiration = () => {
                             {q.sources.length > 0 ? (
                               q.sources.map((source, index) => (
                                 <span key={index} className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">
-                                  {source}
+                                  {source.name}
                                 </span>
                               ))
                             ) : (
@@ -274,7 +274,7 @@ const ContentInspiration = () => {
                             {q.partners.length > 0 ? (
                               q.partners.map((partner, index) => (
                                 <span key={index} className="bg-secondary/10 text-secondary px-2 py-1 rounded text-xs">
-                                  {partner}
+                                  {partner.name}
                                 </span>
                               ))
                             ) : (
