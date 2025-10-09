@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
-import { FileText, Calendar, MessageSquare, Users, BarChart3, Edit, Copy, Share2, FileInput, QrCode, Facebook, MessagesSquare, ExternalLink, Instagram, Linkedin, Globe, Mail, Bot, Link as LinkIcon, MessageCircle, Eye } from "lucide-react";
+import { FileText, Calendar, MessageSquare, Users, BarChart3, Edit, Copy, Share2, FileInput, QrCode, Facebook, MessagesSquare, ExternalLink, Instagram, Linkedin, Globe, Mail, Bot, Link as LinkIcon, MessageCircle, Eye, ChevronDown } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import questionnairesIcon from "@/assets/questionnaires-icon-new.png";
 
@@ -185,9 +186,6 @@ const ContentInspiration = () => {
                           <span className="text-muted-foreground">לידים ({q.leads.total})</span>
                         </div>
                         <div className="text-center">
-                          <span className="text-muted-foreground">תגובות ({q.responses.total})</span>
-                        </div>
-                        <div className="text-center">
                           <span className="text-muted-foreground">חדשים ({q.leads.new})</span>
                         </div>
                       </div>
@@ -233,16 +231,9 @@ const ContentInspiration = () => {
                             <h4 className="font-semibold text-green-800">ערוצי הפצה</h4>
                           </div>
                           <div className="space-y-2">
-                            {q.automations.length > 0 ? (
-                              q.automations.map((a, idx) => (
-                                <div key={idx} className="flex items-center justify-between text-sm">
-                                  <span className="text-green-700">{a.type}</span>
-                                  <span className="text-green-600 font-medium">{a.method}</span>
-                                </div>
-                              ))
-                            ) : (
-                              <span className="text-xs text-green-600">אין ערוצי הפצה</span>
-                            )}
+                            <div className="text-center text-green-600 text-sm py-2">
+                              ערוצי הפצה פעילים
+                            </div>
                           </div>
                         </div>
 
@@ -273,20 +264,22 @@ const ContentInspiration = () => {
                     {/* Action Buttons */}
                     <div className="grid grid-cols-5 gap-3 mt-4 pt-4 border-t">
                       {/* הצגת השאלון - צ'אט או טופס */}
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="flex-col h-auto py-3 px-2 gap-2 hover:bg-cyan-50 hover:text-cyan-700 transition-colors"
-                        title={getViewMode(q.id) === 'form' ? 'הצג כטופס' : 'הצג כצ\'אט'}
-                        onClick={() => toggleQuestionnaireView(q.id)}
-                      >
-                        {getViewMode(q.id) === 'form' ? (
-                          <FileText className="h-5 w-5" />
-                        ) : (
-                          <MessageCircle className="h-5 w-5" />
-                        )}
-                        <span className="text-xs font-medium">{getViewMode(q.id) === 'form' ? 'טופס' : 'צ\'אט'}</span>
-                      </Button>
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center justify-center gap-1">
+                          <Eye className="h-5 w-5 text-cyan-600" />
+                          <ChevronDown className="h-3 w-3 text-cyan-600" />
+                        </div>
+                        <Select value={getViewMode(q.id)} onValueChange={(value) => setQuestionnaireViewMode(prev => ({...prev, [q.id.toString()]: value as 'form' | 'chat'}))}>
+                          <SelectTrigger className="h-8 text-xs border-cyan-200 bg-cyan-50 hover:bg-cyan-100">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="form">טופס</SelectItem>
+                            <SelectItem value="chat">צ'אט</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <span className="text-xs font-medium text-center text-cyan-700">הצגת שאלון</span>
+                      </div>
                       
                       {/* עריכה */}
                       <Button 
