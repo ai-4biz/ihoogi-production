@@ -42,16 +42,16 @@ const PreferencesTab = () => {
   };
   
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" dir="rtl">
       <Card className="p-6">
         <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-2">העדפות אוטומציה</h2>
-          <p className="text-gray-500">הגדרת העדפות להתראות ומענה אוטומטי</p>
+          <h2 className="text-xl font-semibold mb-2 text-right">העדפות אוטומציה</h2>
+          <p className="text-gray-500 text-right">הגדרת העדפות להתראות ומענה אוטומטי</p>
         </div>
         
         <div className="space-y-6">
           <div className="space-y-4">
-            <h3 className="font-medium text-lg">ערוצי התראה עבורי</h3>
+            <h3 className="font-medium text-lg text-right">ערוצי התראה עבורי</h3>
             
             <div className="space-y-3">
               <div className="flex items-center justify-between">
@@ -84,7 +84,7 @@ const PreferencesTab = () => {
           </div>
           
           <div className="space-y-4 pt-4 border-t">
-            <h3 className="font-medium text-lg">פרטי התקשרות</h3>
+            <h3 className="font-medium text-lg text-right">פרטי התקשרות</h3>
             
             <div className="space-y-3">
               <div className="space-y-2">
