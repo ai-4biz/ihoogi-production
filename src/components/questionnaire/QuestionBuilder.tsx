@@ -384,6 +384,27 @@ const QuestionBuilder = ({ onSave, onCancel }: QuestionBuilderProps) => {
           שמור שאלון
         </Button>
         <Button
+          onClick={() => {
+            // Show preview modal or navigate to preview
+            if (questions.length > 0) {
+              // Create a preview URL or trigger preview
+              const previewData = {
+                questions: questions,
+                mode: 'form' // default to form view
+              };
+              // Store in sessionStorage for preview
+              sessionStorage.setItem('questionnairePreview', JSON.stringify(previewData));
+              // Open preview in new tab
+              window.open('/questionnaire-view/preview?mode=form', '_blank');
+            }
+          }}
+          className="bg-orange-500 hover:bg-orange-600 text-white px-8"
+          size="lg"
+          disabled={questions.length === 0}
+        >
+          הצגת השאלון
+        </Button>
+        <Button
           onClick={onCancel}
           variant="outline"
           size="lg"

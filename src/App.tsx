@@ -59,6 +59,7 @@ const App = () => {
               <Route path="/my-hoogi" element={<MyHoogi />} />
               <Route path="/distribution" element={<Distribution />} />
               <Route path="/questionnaire-view/:id" element={<QuestionnaireView />} />
+              <Route path="/questionnaire-view/preview" element={<QuestionnaireView />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/login" element={<Login />} />
               <Route path="*" element={<NotFound />} />

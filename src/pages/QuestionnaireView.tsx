@@ -24,6 +24,35 @@ const QuestionnaireView: React.FC = () => {
   const [questionnaire, setQuestionnaire] = useState<QuestionnaireData | null>(null);
 
   useEffect(() => {
+    // Check if this is a preview from sessionStorage
+    if (id === 'preview') {
+      const previewData = sessionStorage.getItem('questionnairePreview');
+      if (previewData) {
+        try {
+          const data = JSON.parse(previewData);
+          const mockQuestionnaire: QuestionnaireData = {
+            id: 999,
+            title: "תצוגה מקדימה של השאלון",
+            description: "זוהי תצוגה מקדימה של השאלון שלך",
+            createdAt: new Date().toLocaleDateString('he-IL'),
+            questions: data.questions.map((q: any, index: number) => ({
+              id: index + 1,
+              text: q.title || `שאלה ${index + 1}`,
+              type: q.type === 'single-choice' || q.type === 'multiple-choice' ? 'multiple-choice' : 
+                    q.type === 'rating' ? 'rating' : 
+                    q.type === 'date' ? 'date' : 'text',
+              options: q.options || []
+            }))
+          };
+          setQuestionnaire(mockQuestionnaire);
+          setMode(data.mode || 'form');
+          return;
+        } catch (error) {
+          console.error('Error parsing preview data:', error);
+        }
+      }
+    }
+
     // Mock data - replace with actual API call
     const mockQuestionnaire: QuestionnaireData = {
       id: parseInt(id || '1'),
