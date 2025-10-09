@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
-import { FileText, Calendar, MessageSquare, Users, BarChart3, Edit, Copy, Share2, FileInput, QrCode, Facebook, MessagesSquare, ExternalLink, Instagram, Linkedin, Globe, Mail, Bot, Link as LinkIcon } from "lucide-react";
+import { FileText, Calendar, MessageSquare, Users, BarChart3, Edit, Copy, Share2, FileInput, QrCode, Facebook, MessagesSquare, ExternalLink, Instagram, Linkedin, Globe, Mail, Bot, Link as LinkIcon, MessageCircle } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import questionnairesIcon from "@/assets/questionnaires-icon-new.png";
 
@@ -42,6 +42,9 @@ interface Questionnaire {
 }
 
 const ContentInspiration = () => {
+  // State for questionnaire view mode (form or chat)
+  const [questionnaireViewMode, setQuestionnaireViewMode] = useState<{[key: string]: 'form' | 'chat'}>({});
+  
   const [questionnaires, setQuestionnaires] = useState<Questionnaire[]>([
     {
       id: 1,
@@ -133,6 +136,15 @@ const ContentInspiration = () => {
     const link = `${baseUrl}/questionnaire/${questionnaireId}/${type}`;
     window.open(link, '_blank');
   };
+
+  const toggleQuestionnaireView = (id: number) => {
+    setQuestionnaireViewMode(prev => ({
+      ...prev,
+      [id.toString()]: prev[id.toString()] === 'form' ? 'chat' : 'form'
+    }));
+  };
+
+  const getViewMode = (id: number) => questionnaireViewMode[id.toString()] || 'form';
 
   return (
     <MainLayout initialState="articles">
@@ -239,7 +251,21 @@ const ContentInspiration = () => {
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="grid grid-cols-4 gap-2 mt-4 pt-4 border-t">
+                    <div className="grid grid-cols-5 gap-2 mt-4 pt-4 border-t">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="flex-col h-auto py-2 px-1 gap-1 hover:bg-cyan-50 hover:text-cyan-700 transition-colors"
+                        title={getViewMode(q.id) === 'form' ? 'הצג כטופס' : 'הצג כצ\'אט'}
+                        onClick={() => toggleQuestionnaireView(q.id)}
+                      >
+                        {getViewMode(q.id) === 'form' ? (
+                          <FileText className="h-4 w-4" />
+                        ) : (
+                          <MessageCircle className="h-4 w-4" />
+                        )}
+                        <span className="text-xs">{getViewMode(q.id) === 'form' ? 'טופס' : 'צ\'אט'}</span>
+                      </Button>
                       <Button 
                         variant="ghost" 
                         size="sm" 
