@@ -297,8 +297,129 @@ const ContentInspiration = () => {
                       </div>
                     </div>
 
-                    {/* חלק שני: כלי הפעולה - מותאם לנייד */}
+                    {/* חלק שני: נתונים - מקורות לידים ושותפים - מותאם לנייד */}
                     <div className="mb-4 sm:mb-6">
+                      <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-3">
+                        {/* מקורות לידים */}
+                        <div className={`${getDataBackgroundColor(index)} rounded-lg p-3`}>
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <Users className="h-4 w-4 text-primary" />
+                              <h4 className="font-semibold text-sm">מקורות לידים</h4>
+                            </div>
+                            <div className="flex gap-2 text-xs">
+                              <span 
+                                className="cursor-pointer text-primary hover:underline"
+                                onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=source&source=all`, '_blank')}
+                              >
+                                {q.sources.reduce((sum, source) => sum + (source.total || 0), 0)} סה"כ
+                              </span>
+                              <span className="text-muted-foreground">/</span>
+                              <span 
+                                className="cursor-pointer text-green-600 hover:underline"
+                                onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=source&source=new`, '_blank')}
+                              >
+                                {q.sources.reduce((sum, source) => sum + (source.new || 0), 0)} חדשים
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex flex-wrap gap-1.5">
+                            {q.sources.length > 0 ? (
+                              q.sources.map((source, idx) => {
+                                const getSourceIcon = (sourceName: string) => {
+                                  switch (sourceName.toLowerCase()) {
+                                    case 'פייסבוק':
+                                    case 'facebook':
+                                      return <Facebook className="h-3 w-3 text-blue-600" />;
+                                    case 'אינסטגרם':
+                                    case 'instagram':
+                                      return <Instagram className="h-3 w-3 text-pink-600" />;
+                                    case 'לינקדאין':
+                                    case 'linkedin':
+                                      return <Linkedin className="h-3 w-3 text-blue-700" />;
+                                    case 'ווטסאפ':
+                                    case 'whatsapp':
+                                      return <MessagesSquare className="h-3 w-3 text-green-600" />;
+                                    case 'אתר':
+                                    case 'website':
+                                      return <Globe className="h-3 w-3 text-purple-600" />;
+                                    case 'טיקטוק':
+                                    case 'tiktok':
+                                      return <MessageCircle className="h-3 w-3 text-black" />;
+                                    case 'טוויטר':
+                                    case 'twitter':
+                                      return <MessageCircle className="h-3 w-3 text-sky-600" />;
+                                    default:
+                                      return <FileText className="h-3 w-3 text-gray-600" />;
+                                  }
+                                };
+                                return (
+                                  <div 
+                                    key={idx} 
+                                    className="bg-gray-100 text-gray-800 border border-gray-200 px-2 py-1.5 rounded text-xs flex items-center gap-1.5 cursor-pointer hover:bg-gray-200 transition-colors min-w-0 flex-shrink-0"
+                                    onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=source&source=${encodeURIComponent(source.name)}`, '_blank')}
+                                  >
+                                    {getSourceIcon(source.name)}
+                                    <span className="truncate">{source.name}</span>
+                                    <span className="text-xs opacity-75 flex-shrink-0">
+                                      ({source.total || 0} / {source.new || 0})
+                                    </span>
+                                  </div>
+                                );
+                              })
+                            ) : (
+                              <span className="text-muted-foreground text-xs">אין מקורות</span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* שותפים */}
+                        <div className={`${getDataBackgroundColor(index)} rounded-lg p-3`}>
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <Users className="h-4 w-4 text-primary" />
+                              <h4 className="font-semibold text-sm">שותפים</h4>
+                            </div>
+                            <div className="flex gap-2 text-xs">
+                              <span 
+                                className="cursor-pointer text-primary hover:underline"
+                                onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=partner&partner=all`, '_blank')}
+                              >
+                                {q.partners.reduce((sum, partner) => sum + (partner.total || 0), 0)} סה"כ
+                              </span>
+                              <span className="text-muted-foreground">/</span>
+                              <span 
+                                className="cursor-pointer text-green-600 hover:underline"
+                                onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=partner&partner=new`, '_blank')}
+                              >
+                                {q.partners.reduce((sum, partner) => sum + (partner.new || 0), 0)} חדשים
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex flex-wrap gap-1.5">
+                            {q.partners.length > 0 ? (
+                              q.partners.map((partner, idx) => (
+                                <div
+                                  key={idx}
+                                  className="bg-slate-100 text-slate-800 border border-slate-200 px-2 py-1.5 rounded text-xs flex items-center gap-1.5 cursor-pointer hover:bg-slate-200 transition-colors min-w-0 flex-shrink-0"
+                                  onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=partner&partner=${encodeURIComponent(partner.name)}`, '_blank')}
+                                >
+                                  <span className="truncate">{partner.name}</span>
+                                  <span className="text-xs opacity-75 flex-shrink-0">
+                                    ({partner.total || 0} / {partner.new || 0})
+                                  </span>
+                                </div>
+                              ))
+                            ) : (
+                              <span className="text-muted-foreground text-xs">אין שותפים</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* חלק שלישי: כלי הפעולה - מותאם לנייד */}
+                    <div className="pt-3 sm:pt-4 border-t">
                       {/* נייד - כפתור המבורגר */}
                       <div className="block sm:hidden">
                         <Button 
@@ -438,129 +559,6 @@ const ContentInspiration = () => {
                           <BarChart3 className="h-5 w-5 text-primary" />
                           <span className="text-xs font-medium">נתונים</span>
                         </Button>
-                      </div>
-                    </div>
-
-                    {/* חלק שלישי: נתונים - מקורות לידים ושותפים - מותאם לנייד */}
-                    <div className="pt-3 sm:pt-4 border-t">
-                      <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-3">
-                        {/* מקורות לידים */}
-                        <div className={`${getDataBackgroundColor(index)} rounded-lg p-3`}>
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center gap-2">
-                              <Users className="h-4 w-4 text-primary" />
-                              <h4 className="font-semibold text-sm">מקורות לידים</h4>
-                            </div>
-                            <div className="flex gap-2 text-xs">
-                              <span 
-                                className="cursor-pointer text-primary hover:underline"
-                                onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=source&source=all`, '_blank')}
-                              >
-                                {q.sources.reduce((sum, source) => sum + (source.total || 0), 0)} סה"כ
-                              </span>
-                              <span className="text-muted-foreground">/</span>
-                              <span 
-                                className="cursor-pointer text-green-600 hover:underline"
-                                onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=source&source=new`, '_blank')}
-                              >
-                                {q.sources.reduce((sum, source) => sum + (source.new || 0), 0)} חדשים
-                              </span>
-                        </div>
-                      </div>
-                        <div className="flex flex-wrap gap-1.5">
-                            {q.sources.length > 0 ? (
-                              q.sources.map((source, index) => {
-                                // לוגו מייצג לרשתות חברתיות
-                                const getSourceIcon = (sourceName: string) => {
-                                  switch (sourceName.toLowerCase()) {
-                                    case 'פייסבוק':
-                                    case 'facebook':
-                                      return <Facebook className="h-3 w-3 text-blue-600" />;
-                                    case 'אינסטגרם':
-                                    case 'instagram':
-                                      return <Instagram className="h-3 w-3 text-pink-600" />;
-                                    case 'לינקדאין':
-                                    case 'linkedin':
-                                      return <Linkedin className="h-3 w-3 text-blue-700" />;
-                                    case 'ווטסאפ':
-                                    case 'whatsapp':
-                                      return <MessagesSquare className="h-3 w-3 text-green-600" />;
-                                    case 'אתר':
-                                    case 'website':
-                                      return <Globe className="h-3 w-3 text-purple-600" />;
-                                    case 'טיקטוק':
-                                    case 'tiktok':
-                                      return <MessageCircle className="h-3 w-3 text-black" />;
-                                    case 'טוויטר':
-                                    case 'twitter':
-                                      return <MessageCircle className="h-3 w-3 text-sky-600" />;
-                                    default:
-                                      return <FileText className="h-3 w-3 text-gray-600" />;
-                                  }
-                                };
-
-                                return (
-                                  <div 
-                                    key={index} 
-                                    className="bg-gray-100 text-gray-800 border border-gray-200 px-2 py-1.5 rounded text-xs flex items-center gap-1.5 cursor-pointer hover:bg-gray-200 transition-colors min-w-0 flex-shrink-0"
-                                    onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=source&source=${encodeURIComponent(source.name)}`, '_blank')}
-                                  >
-                                    {getSourceIcon(source.name)}
-                                    <span className="truncate">{source.name}</span>
-                                    <span className="text-xs opacity-75 flex-shrink-0">
-                                      ({source.total || 0} / {source.new || 0})
-                              </span>
-                                  </div>
-                                );
-                              })
-                          ) : (
-                              <span className="text-muted-foreground text-xs">אין מקורות</span>
-                          )}
-                        </div>
-                      </div>
-
-                        {/* שותפים */}
-                        <div className={`${getDataBackgroundColor(index)} rounded-lg p-3`}>
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center gap-2">
-                              <Users className="h-4 w-4 text-primary" />
-                              <h4 className="font-semibold text-sm">שותפים</h4>
-                            </div>
-                            <div className="flex gap-2 text-xs">
-                              <span 
-                                className="cursor-pointer text-primary hover:underline"
-                                onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=partner&partner=all`, '_blank')}
-                              >
-                                {q.partners.reduce((sum, partner) => sum + (partner.total || 0), 0)} סה"כ
-                              </span>
-                              <span className="text-muted-foreground">/</span>
-                              <span 
-                                className="cursor-pointer text-green-600 hover:underline"
-                                onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=partner&partner=new`, '_blank')}
-                              >
-                                {q.partners.reduce((sum, partner) => sum + (partner.new || 0), 0)} חדשים
-                              </span>
-                            </div>
-                          </div>
-                          <div className="flex flex-wrap gap-1.5">
-                            {q.partners.length > 0 ? (
-                              q.partners.map((partner, index) => (
-                                <div 
-                                  key={index} 
-                                  className="bg-slate-100 text-slate-800 border border-slate-200 px-2 py-1.5 rounded text-xs flex items-center gap-1.5 cursor-pointer hover:bg-slate-200 transition-colors min-w-0 flex-shrink-0"
-                                  onClick={() => window.open(`/leads-responses?id=${q.id}&tab=leads&filter=partner&partner=${encodeURIComponent(partner.name)}`, '_blank')}
-                                >
-                                  <span className="truncate">{partner.name}</span>
-                                  <span className="text-xs opacity-75 flex-shrink-0">
-                                    ({partner.total || 0} / {partner.new || 0})
-                                  </span>
-                                </div>
-                              ))
-                            ) : (
-                              <span className="text-muted-foreground text-xs">אין שותפים</span>
-                            )}
-                          </div>
-                        </div>
                       </div>
                     </div>
                   </CardContent>
