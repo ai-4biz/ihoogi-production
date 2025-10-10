@@ -238,21 +238,8 @@ const ContentInspiration = () => {
           ) : (
             <div className="space-y-3 sm:space-y-4">
               {questionnaires.map((q, index) => {
-                const bgColors = [
-                  'bg-blue-50/40 border-blue-200/50',
-                  'bg-green-50/40 border-green-200/50',
-                  'bg-purple-50/40 border-purple-200/50',
-                  'bg-orange-50/40 border-orange-200/50',
-                  'bg-pink-50/40 border-pink-200/50',
-                  'bg-cyan-50/40 border-cyan-200/50',
-                  'bg-indigo-50/40 border-indigo-200/50',
-                  'bg-emerald-50/40 border-emerald-200/50',
-                ];
-                // לוודא שכל שאלון מקבל צבע שונה
-                const bgColor = bgColors[index % bgColors.length];
-                
                 return (
-                <Card key={q.id} className={`border shadow-sm hover:shadow-md transition-shadow ${bgColor}`}>
+                <Card key={q.id} className={`rounded-xl ${getCardBackgroundColor(index)} hover:shadow-lg transition-all`}>
                   <CardContent className="p-4 md:p-6">
                     
                     {/* חלק ראשון: כותרת השאלון - מותאם לנייד */}
