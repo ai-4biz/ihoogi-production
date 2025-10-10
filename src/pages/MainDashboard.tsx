@@ -188,7 +188,16 @@ const MainDashboard = () => {
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-3 md:gap-6 text-sm mr-auto md:mr-0">
+                  {/* Mobile: compact stats */}
+                  <div className="flex md:hidden items-center gap-2 text-xs flex-wrap">
+                    <span className="text-muted-foreground">{q.date}</span>
+                    <span className="bg-primary/10 text-primary px-2 py-1 rounded">לידים: {q.leads}</span>
+                    <span className="bg-secondary/10 text-secondary px-2 py-1 rounded">תגובות: {q.responses}</span>
+                    <span className="bg-purple-100 text-purple-600 px-2 py-1 rounded">חדשים: {q.new}</span>
+                  </div>
+                  
+                  {/* Desktop: full stats */}
+                  <div className="hidden md:flex items-center gap-6 text-sm">
                     <span className="text-muted-foreground">{q.date}</span>
                     <span className="text-muted-foreground">•</span>
                     <span className="text-primary font-medium">לידים ({q.leads})</span>

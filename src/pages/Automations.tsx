@@ -24,7 +24,7 @@ const Automations = () => {
 
   return (
     <MainLayout initialState="automations">
-      <div className="max-w-4xl mx-auto" dir="rtl">
+      <div className="max-w-4xl mx-auto p-3 md:p-6 lg:p-8" dir="rtl">
         {/* Back Button */}
         <div className="flex items-center mb-4">
           <Button 
@@ -39,8 +39,8 @@ const Automations = () => {
         </div>
 
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-right">אוטומציות</h1>
-          <p className="text-gray-500 text-right">ניהול אוטומציות והתראות</p>
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-right">אוטומציות</h1>
+          <p className="text-sm md:text-base text-gray-500 text-right">ניהול אוטומציות והתראות</p>
         </div>
         
         <Tabs 
@@ -49,28 +49,28 @@ const Automations = () => {
           onValueChange={(value) => setActiveTab(value as AutomationTab)}
           className="w-full"
         >
-          <TabsList className="grid grid-cols-3 gap-2 mb-6">
+          <TabsList className="grid grid-cols-3 gap-1 md:gap-2 mb-6 w-full">
             <TabsTrigger 
               value="triggers" 
-              className={cn("flex items-center gap-2", activeTab === "triggers" && "text-blue-500")}
+              className={cn("flex items-center gap-1 md:gap-2 text-xs md:text-sm", activeTab === "triggers" && "text-blue-500")}
             >
-              <Bell className="h-4 w-4" />
+              <Bell className="h-3 w-3 md:h-4 md:w-4" />
               <span>טריגרים</span>
             </TabsTrigger>
             
             <TabsTrigger 
               value="templates" 
-              className={cn("flex items-center gap-2", activeTab === "templates" && "text-green-500")}
+              className={cn("flex items-center gap-1 md:gap-2 text-xs md:text-sm", activeTab === "templates" && "text-green-500")}
             >
-              <Edit className="h-4 w-4" />
+              <Edit className="h-3 w-3 md:h-4 md:w-4" />
               <span>תבניות</span>
             </TabsTrigger>
             
             <TabsTrigger 
               value="prefs" 
-              className={cn("flex items-center gap-2", activeTab === "prefs" && "text-orange-500")}
+              className={cn("flex items-center gap-1 md:gap-2 text-xs md:text-sm", activeTab === "prefs" && "text-orange-500")}
             >
-              <Settings className="h-4 w-4" />
+              <Settings className="h-3 w-3 md:h-4 md:w-4" />
               <span>העדפות</span>
             </TabsTrigger>
           </TabsList>

@@ -16,7 +16,7 @@ const LeadsResponses = () => {
 
   return (
     <MainLayout initialState="leads">
-      <div className="bg-white rounded-lg shadow-sm p-4" dir="rtl">
+      <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 lg:p-8" dir="rtl">
         {/* Back Button */}
         <div className="flex items-center mb-4">
           <Button 
@@ -30,8 +30,8 @@ const LeadsResponses = () => {
           </Button>
         </div>
 
-        <h1 className="text-2xl font-bold mb-6 flex items-center justify-end">
-          <MessageSquare className="mr-2 h-6 w-6" />
+        <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-6 flex items-center justify-end">
+          <MessageSquare className="mr-2 h-5 w-5 md:h-6 md:w-6" />
           לידים ותשובות
         </h1>
         
