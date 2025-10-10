@@ -7,7 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
-import { Save, Plus, Clock, AlertCircle, Mail, MessageCircle, Smartphone } from "lucide-react";
+import { Save, Plus, Clock, AlertCircle, Mail, MessageCircle, Smartphone, Facebook, Instagram, Linkedin } from "lucide-react";
 
 interface QuestionnaireResponse {
   id: string;
@@ -16,6 +16,11 @@ interface QuestionnaireResponse {
     email: boolean;
     whatsapp: boolean;
     sms: boolean;
+  };
+  templates: {
+    email?: string;
+    whatsapp?: string;
+    sms?: string;
   };
   timing: "immediate" | "scheduled";
   scheduledTime?: {
@@ -46,6 +51,11 @@ const TriggersTab = () => {
       email: true,
       whatsapp: false,
       sms: false,
+    },
+    templates: {
+      email: "",
+      whatsapp: "",
+      sms: "",
     },
     timing: "immediate",
   });
@@ -158,9 +168,10 @@ const TriggersTab = () => {
 
           {questionnaireResponse.enabled && (
             <>
-              <div className="space-y-3">
-                <div className="grid grid-cols-3 gap-2 max-w-md mx-auto">
-                  <div className="flex flex-col items-center p-2 rounded-lg bg-green-50 border border-green-200 hover:bg-green-100 transition-colors cursor-pointer">
+              <div className="space-y-4">
+                {/* ערוצי מענה - רוחב מצומצם */}
+                <div className="flex justify-center gap-2 max-w-xs mx-auto">
+                  <div className="flex flex-col items-center p-2 rounded-lg bg-green-50 border border-green-200 hover:bg-green-100 transition-colors cursor-pointer flex-1">
                     <Checkbox
                       id="qr-email"
                       checked={questionnaireResponse.channels.email}
@@ -172,19 +183,19 @@ const TriggersTab = () => {
                     </div>
                     <Label htmlFor="qr-email" className="cursor-pointer text-xs font-medium text-green-800">מייל</Label>
                   </div>
-                  <div className="flex flex-col items-center p-2 rounded-lg bg-blue-50 border border-blue-200 hover:bg-blue-100 transition-colors cursor-pointer">
+                  <div className="flex flex-col items-center p-2 rounded-lg bg-green-50 border border-green-200 hover:bg-green-100 transition-colors cursor-pointer flex-1">
                     <Checkbox
                       id="qr-whatsapp"
                       checked={questionnaireResponse.channels.whatsapp}
                       onCheckedChange={() => toggleQuestionnaireChannel('whatsapp')}
                       className="mb-1"
                     />
-                    <div className="w-6 h-6 bg-blue-500 rounded-lg flex items-center justify-center mb-1">
+                    <div className="w-6 h-6 bg-green-500 rounded-lg flex items-center justify-center mb-1">
                       <MessageCircle className="h-3 w-3 text-white" />
                     </div>
-                    <Label htmlFor="qr-whatsapp" className="cursor-pointer text-xs font-medium text-blue-800">וואטסאפ</Label>
+                    <Label htmlFor="qr-whatsapp" className="cursor-pointer text-xs font-medium text-green-800">וואטסאפ</Label>
                   </div>
-                  <div className="flex flex-col items-center p-2 rounded-lg bg-purple-50 border border-purple-200 hover:bg-purple-100 transition-colors cursor-pointer">
+                  <div className="flex flex-col items-center p-2 rounded-lg bg-purple-50 border border-purple-200 hover:bg-purple-100 transition-colors cursor-pointer flex-1">
                     <Checkbox
                       id="qr-sms"
                       checked={questionnaireResponse.channels.sms}
@@ -197,10 +208,88 @@ const TriggersTab = () => {
                     <Label htmlFor="qr-sms" className="cursor-pointer text-xs font-medium text-purple-800">SMS</Label>
                   </div>
                 </div>
+
+                {/* בחירת תבניות */}
+                <div className="space-y-3 max-w-lg mx-auto">
+                  {questionnaireResponse.channels.email && (
+                    <div className="flex items-center gap-2">
+                      <Mail className="h-4 w-4 text-green-600" />
+                      <Label className="text-sm w-20">תבנית מייל</Label>
+                      <Select
+                        value={questionnaireResponse.templates.email}
+                        onValueChange={(value) =>
+                          setQuestionnaireResponse(prev => ({
+                            ...prev,
+                            templates: { ...prev.templates, email: value }
+                          }))
+                        }
+                      >
+                        <SelectTrigger className="flex-1">
+                          <SelectValue placeholder="בחר תבנית למייל" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="email_template_1">תבנית מייל 1</SelectItem>
+                          <SelectItem value="email_template_2">תבנית מייל 2</SelectItem>
+                          <SelectItem value="email_template_3">תבנית מייל 3</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+                  
+                  {questionnaireResponse.channels.whatsapp && (
+                    <div className="flex items-center gap-2">
+                      <MessageCircle className="h-4 w-4 text-green-600" />
+                      <Label className="text-sm w-20">תבנית וואטסאפ</Label>
+                      <Select
+                        value={questionnaireResponse.templates.whatsapp}
+                        onValueChange={(value) =>
+                          setQuestionnaireResponse(prev => ({
+                            ...prev,
+                            templates: { ...prev.templates, whatsapp: value }
+                          }))
+                        }
+                      >
+                        <SelectTrigger className="flex-1">
+                          <SelectValue placeholder="בחר תבנית לוואטסאפ" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="whatsapp_template_1">תבנית וואטסאפ 1</SelectItem>
+                          <SelectItem value="whatsapp_template_2">תבנית וואטסאפ 2</SelectItem>
+                          <SelectItem value="whatsapp_template_3">תבנית וואטסאפ 3</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+                  
+                  {questionnaireResponse.channels.sms && (
+                    <div className="flex items-center gap-2">
+                      <Smartphone className="h-4 w-4 text-purple-600" />
+                      <Label className="text-sm w-20">תבנית SMS</Label>
+                      <Select
+                        value={questionnaireResponse.templates.sms}
+                        onValueChange={(value) =>
+                          setQuestionnaireResponse(prev => ({
+                            ...prev,
+                            templates: { ...prev.templates, sms: value }
+                          }))
+                        }
+                      >
+                        <SelectTrigger className="flex-1">
+                          <SelectValue placeholder="בחר תבנית SMS" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="sms_template_1">תבנית SMS 1</SelectItem>
+                          <SelectItem value="sms_template_2">תבנית SMS 2</SelectItem>
+                          <SelectItem value="sms_template_3">תבנית SMS 3</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+                </div>
               </div>
 
-              <div className="space-y-3">
-                <Label className="font-medium">תזמון שליחה</Label>
+              <div className="space-y-3 max-w-lg mx-auto">
+                <Label className="font-medium text-right">תזמון שליחה</Label>
                 <Select
                   value={questionnaireResponse.timing}
                   onValueChange={(value: "immediate" | "scheduled") =>
