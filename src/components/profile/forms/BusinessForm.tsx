@@ -54,6 +54,17 @@ const BusinessForm = () => {
   };
 
   const handleSaveBusinessData = () => {
+    // Save branding data to localStorage for QuestionnaireView
+    const brandingData = {
+      primaryColor,
+      secondaryColor,
+      backgroundColor,
+      logoUrl: logoPreview,
+      profileImageUrl: avatarPreview,
+      businessName: businessData.businessName || 'העסק שלי'
+    };
+    localStorage.setItem('businessBranding', JSON.stringify(brandingData));
+    
     // In a real app, this would save to a backend
     toast.success("פרטי העסק נשמרו בהצלחה");
   };

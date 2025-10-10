@@ -22,8 +22,36 @@ const QuestionnaireView: React.FC = () => {
   const [searchParams] = useSearchParams();
   const [mode, setMode] = useState<'form' | 'chat'>(searchParams.get('mode') as 'form' || 'form');
   const [questionnaire, setQuestionnaire] = useState<QuestionnaireData | null>(null);
+  
+  // Get user branding data from localStorage (from BusinessForm)
+  const [brandingData, setBrandingData] = useState({
+    primaryColor: '#6366f1',
+    secondaryColor: '#8b5cf6',
+    backgroundColor: '#f8fafc',
+    logoUrl: '',
+    profileImageUrl: '',
+    businessName: 'העסק שלי'
+  });
 
   useEffect(() => {
+    // Load branding data from localStorage
+    try {
+      const savedBranding = localStorage.getItem('businessBranding');
+      if (savedBranding) {
+        const branding = JSON.parse(savedBranding);
+        setBrandingData({
+          primaryColor: branding.primaryColor || '#6366f1',
+          secondaryColor: branding.secondaryColor || '#8b5cf6',
+          backgroundColor: branding.backgroundColor || '#f8fafc',
+          logoUrl: branding.logoUrl || '',
+          profileImageUrl: branding.profileImageUrl || '',
+          businessName: branding.businessName || 'העסק שלי'
+        });
+      }
+    } catch (error) {
+      console.error('Error loading branding data:', error);
+    }
+    
     // Check if this is a preview from sessionStorage
     if (id === 'preview') {
       const previewData = sessionStorage.getItem('questionnairePreview');
@@ -95,11 +123,44 @@ const QuestionnaireView: React.FC = () => {
 
   const renderFormView = () => (
     <div className="space-y-6">
+      {/* Header with Logo and Profile */}
+      <Card className="border-2 shadow-lg" style={{ borderColor: brandingData.primaryColor, backgroundColor: brandingData.backgroundColor }}>
+        <CardContent className="p-8">
+          <div className="flex flex-col items-center gap-4 mb-6">
+            {brandingData.logoUrl && (
+              <img 
+                src={brandingData.logoUrl} 
+                alt="Logo" 
+                className="h-20 w-20 object-contain"
+              />
+            )}
+            <h2 className="text-2xl font-bold text-center" style={{ color: brandingData.primaryColor }}>
+              {brandingData.businessName}
+            </h2>
+            {brandingData.profileImageUrl && (
+              <img 
+                src={brandingData.profileImageUrl} 
+                alt="Profile" 
+                className="h-16 w-16 rounded-full object-cover border-4"
+                style={{ borderColor: brandingData.secondaryColor }}
+              />
+            )}
+          </div>
+          <h1 className="text-3xl font-bold text-center mb-2" style={{ color: brandingData.primaryColor }}>
+            {questionnaire?.title}
+          </h1>
+          <p className="text-center text-muted-foreground">
+            {questionnaire?.description}
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* Questions */}
       {questionnaire?.questions.map((question) => (
         <Card key={question.id} className="border shadow-sm">
           <CardContent className="p-6">
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-foreground">{question.text}</h3>
+              <h3 className="text-lg font-semibold" style={{ color: brandingData.primaryColor }}>{question.text}</h3>
               
               {question.type === 'multiple-choice' && question.options && (
                 <div className="space-y-2">
@@ -121,7 +182,19 @@ const QuestionnaireView: React.FC = () => {
                   {[1, 2, 3, 4, 5].map((rating) => (
                     <button
                       key={rating}
-                      className="w-10 h-10 rounded-full border border-border hover:bg-primary hover:text-primary-foreground transition-colors"
+                      className="w-10 h-10 rounded-full border-2 hover:text-white transition-colors"
+                      style={{ 
+                        borderColor: brandingData.primaryColor,
+                        color: brandingData.primaryColor
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = brandingData.primaryColor;
+                        e.currentTarget.style.color = 'white';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                        e.currentTarget.style.color = brandingData.primaryColor;
+                      }}
                     >
                       {rating}
                     </button>
@@ -155,7 +228,10 @@ const QuestionnaireView: React.FC = () => {
       ))}
       
       <div className="flex justify-center pt-6">
-        <Button className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-3">
+        <Button 
+          className="px-8 py-3 text-white hover:opacity-90 transition-opacity"
+          style={{ backgroundColor: brandingData.primaryColor }}
+        >
           שליחת השאלון
         </Button>
       </div>
@@ -164,15 +240,23 @@ const QuestionnaireView: React.FC = () => {
 
   const renderChatView = () => (
     <div className="space-y-4">
-      {/* Chat Header */}
-      <Card className="border shadow-sm">
-        <CardContent className="p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">ה</span>
-            </div>
-            <div>
-              <h3 className="font-semibold text-foreground">Hoogi Assistant</h3>
+      {/* Chat Header with Branding */}
+      <Card className="border-2 shadow-lg" style={{ borderColor: brandingData.primaryColor, backgroundColor: brandingData.backgroundColor }}>
+        <CardContent className="p-6">
+          <div className="flex flex-col items-center gap-4">
+            {brandingData.logoUrl ? (
+              <img 
+                src={brandingData.logoUrl} 
+                alt="Logo" 
+                className="h-16 w-16 object-contain"
+              />
+            ) : (
+              <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ backgroundColor: brandingData.primaryColor }}>
+                <span className="text-white font-bold text-2xl">ה</span>
+              </div>
+            )}
+            <div className="text-center">
+              <h3 className="font-bold text-xl" style={{ color: brandingData.primaryColor }}>{brandingData.businessName}</h3>
               <p className="text-sm text-muted-foreground">מסייע בשאלות ומידע</p>
             </div>
           </div>
@@ -183,34 +267,64 @@ const QuestionnaireView: React.FC = () => {
       <div className="space-y-4 max-h-96 overflow-y-auto">
         {/* Bot Message */}
         <div className="flex gap-3">
-          <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
-            <span className="text-primary-foreground text-sm">ה</span>
-          </div>
-          <div className="bg-muted rounded-lg p-3 max-w-xs">
+          {brandingData.profileImageUrl ? (
+            <img 
+              src={brandingData.profileImageUrl} 
+              alt="Assistant" 
+              className="w-8 h-8 rounded-full object-cover flex-shrink-0 border-2"
+              style={{ borderColor: brandingData.primaryColor }}
+            />
+          ) : (
+            <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: brandingData.primaryColor }}>
+              <span className="text-white text-sm font-bold">ה</span>
+            </div>
+          )}
+          <div className="rounded-lg p-3 max-w-xs" style={{ backgroundColor: brandingData.secondaryColor + '20', borderRight: `3px solid ${brandingData.secondaryColor}` }}>
             <p className="text-foreground">שלום! אני כאן לעזור לך למלא את השאלון. בואי נתחיל עם השאלה הראשונה...</p>
           </div>
         </div>
 
         {/* User Message */}
         <div className="flex gap-3 justify-end">
-          <div className="bg-primary text-primary-foreground rounded-lg p-3 max-w-xs">
+          <div className="rounded-lg p-3 max-w-xs text-white" style={{ backgroundColor: brandingData.primaryColor }}>
             <p>שלום! אני מוכן למלא את השאלון</p>
           </div>
           <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center flex-shrink-0">
-            <span className="text-muted-foreground text-sm">א</span>
+            <span className="text-muted-foreground text-sm font-bold">א</span>
           </div>
         </div>
 
         {/* Bot Message */}
         <div className="flex gap-3">
-          <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
-            <span className="text-primary-foreground text-sm">ה</span>
-          </div>
-          <div className="bg-muted rounded-lg p-3 max-w-xs">
+          {brandingData.profileImageUrl ? (
+            <img 
+              src={brandingData.profileImageUrl} 
+              alt="Assistant" 
+              className="w-8 h-8 rounded-full object-cover flex-shrink-0 border-2"
+              style={{ borderColor: brandingData.primaryColor }}
+            />
+          ) : (
+            <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: brandingData.primaryColor }}>
+              <span className="text-white text-sm font-bold">ה</span>
+            </div>
+          )}
+          <div className="rounded-lg p-3 max-w-xs" style={{ backgroundColor: brandingData.secondaryColor + '20', borderRight: `3px solid ${brandingData.secondaryColor}` }}>
             <p className="text-foreground">מהו תחום הפעילות העיקרי של העסק שלכם?</p>
             <div className="mt-2 space-y-1">
               {["ייעוץ עסקי", "שיווק דיגיטלי", "פיתוח תוכנה", "אחר"].map((option, index) => (
-                <button key={index} className="block w-full text-right p-2 hover:bg-background rounded transition-colors">
+                <button 
+                  key={index} 
+                  className="block w-full text-right p-2 rounded transition-colors hover:text-white"
+                  style={{ color: brandingData.primaryColor }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = brandingData.primaryColor;
+                    e.currentTarget.style.color = 'white';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = brandingData.primaryColor;
+                  }}
+                >
                   {option}
                 </button>
               ))}
@@ -224,9 +338,21 @@ const QuestionnaireView: React.FC = () => {
         <input 
           type="text" 
           placeholder="הקלד הודעה..."
-          className="flex-1 p-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          className="flex-1 p-3 border-2 rounded-lg focus:outline-none focus:ring-2 transition-all"
+          style={{ 
+            borderColor: brandingData.primaryColor + '40',
+          }}
+          onFocus={(e) => {
+            e.currentTarget.style.borderColor = brandingData.primaryColor;
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.borderColor = brandingData.primaryColor + '40';
+          }}
         />
-        <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+        <Button 
+          className="text-white hover:opacity-90 transition-opacity"
+          style={{ backgroundColor: brandingData.primaryColor }}
+        >
           שליחה
         </Button>
       </div>

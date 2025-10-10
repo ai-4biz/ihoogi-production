@@ -108,7 +108,15 @@ const MyHoogi = () => {
             <Card className="border-0 shadow-md bg-gradient-to-br from-primary/10 to-primary/5">
               <CardContent className="p-3 text-center">
                 <div className="text-2xl font-bold text-primary mb-1">180</div>
-                <div className="text-xs font-medium text-muted-foreground">סה"כ לידים שנותרו</div>
+                <div className="text-xs font-medium text-muted-foreground mb-2">סה"כ לידים שנותרו</div>
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  className="text-xs px-2 py-1 h-7 border-primary text-primary hover:bg-primary hover:text-white transition-colors"
+                  onClick={() => navigate('/profile?tab=subscription')}
+                >
+                  קניית לידים / שדרוג
+                </Button>
               </CardContent>
             </Card>
 
@@ -348,7 +356,8 @@ const MyHoogi = () => {
                 return (
                   <Card 
                     key={q.id} 
-                    className={`border ${borderColors[idx % 4]} shadow-md hover:shadow-lg transition-all bg-gradient-to-l ${gradients[idx % 4]}`}
+                    className={`border ${borderColors[idx % 4]} shadow-md hover:shadow-lg transition-all bg-gradient-to-l ${gradients[idx % 4]} cursor-pointer`}
+                    onClick={() => navigate('/content-inspiration')}
                   >
                     <CardContent className="p-4">
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -390,15 +399,36 @@ const MyHoogi = () => {
 
                         {/* Action Buttons */}
                         <div className="flex gap-2">
-                          <Button variant="outline" size="sm">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate(`/leads-responses?id=${q.id}&tab=analysis`);
+                            }}
+                          >
                             <BarChart3 className="h-4 w-4 ml-2" />
                             סטטיסטיקות
                           </Button>
-                          <Button variant="outline" size="sm">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate(`/create-questionnaire?id=${q.id}&mode=edit`);
+                            }}
+                          >
                             <Edit className="h-4 w-4 ml-2" />
                             עריכה
                           </Button>
-                          <Button variant="outline" size="sm">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate(`/distribution?id=${q.id}`);
+                            }}
+                          >
                             <Share2 className="h-4 w-4 ml-2" />
                             שיתוף
                           </Button>
