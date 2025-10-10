@@ -123,6 +123,19 @@ const ContentInspiration = () => {
     ];
     return colors[index % colors.length];
   };
+
+  // קבל צבע רקע כהה יותר לנתונים (ערוצים ושותפים)
+  const getDataBackgroundColor = (index: number) => {
+    const colors = [
+      'bg-blue-100/60',      // כחול כהה יותר
+      'bg-green-100/60',     // ירוק כהה יותר
+      'bg-purple-100/60',    // סגול כהה יותר
+      'bg-orange-100/60',    // כתום כהה יותר
+      'bg-pink-100/60',      // ורוד כהה יותר
+      'bg-cyan-100/60'       // ציאן כהה יותר
+    ];
+    return colors[index % colors.length];
+  };
   const getSourceIcon = (sourceName: string) => {
     switch (sourceName) {
       case "פייסבוק": return <Facebook className="h-4 w-4 text-blue-600" />;
@@ -434,7 +447,7 @@ const ContentInspiration = () => {
                     <div className="pt-3 sm:pt-4 border-t">
                       <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-3">
                         {/* מקורות לידים */}
-                        <div className="bg-muted/50 rounded-lg p-3">
+                        <div className={`${getDataBackgroundColor(index)} rounded-lg p-3`}>
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
                               <Users className="h-4 w-4 text-primary" />
@@ -509,7 +522,7 @@ const ContentInspiration = () => {
                       </div>
 
                         {/* שותפים */}
-                        <div className="bg-muted/30 rounded-lg p-3">
+                        <div className={`${getDataBackgroundColor(index)} rounded-lg p-3`}>
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
                               <Users className="h-4 w-4 text-primary" />

@@ -147,7 +147,7 @@ const Distribution = () => {
               <div className="bg-card rounded-xl p-4 md:p-6 mb-6 border border-border" dir="rtl">
                 <div className="mb-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-foreground">תבניות מענה אוטומטי</h3>
+                    <h3 className="text-lg font-semibold text-foreground">מענה אוטומטי</h3>
                     <Button 
                       variant="outline" 
                       size="sm" 
@@ -274,8 +274,8 @@ const Distribution = () => {
                   </div>
                 )}
 
-                {/* Add Template - only if less than 3 */}
-                {selectedTemplates.length < 3 && (
+                {/* Add Template - only if less than 3 and has available channels */}
+                {selectedTemplates.length < 3 && getUsedChannels().length < 3 && (
                   <div className="space-y-4">
                     <Label className="text-sm font-semibold">הוסף תבנית ({selectedTemplates.length}/3)</Label>
                     
@@ -314,6 +314,15 @@ const Distribution = () => {
                 )}
 
                 {!selectedSurveyId && <p className="mt-4 text-xs text-muted-foreground text-right">יש לבחור שאלון כדי להפעיל מענה אוטומטי.</p>}
+                
+                {/* Message when all channels are used */}
+                {selectedTemplates.length > 0 && getUsedChannels().length === 3 && selectedTemplates.length < 3 && (
+                  <div className="mt-4 p-3 bg-orange-50 rounded-lg border border-orange-200">
+                    <p className="text-sm text-orange-800 text-right">
+                      ⚠️ כל הערוצים בשימוש. מחק ערוץ או תבנית כדי להוסיף תבנית נוספת.
+                    </p>
+                  </div>
+                )}
 
                 {selectedTemplates.length > 0 && selectedSurveyId && (
                   <div className="mt-4 p-3 bg-primary/10 rounded-lg border border-primary/20">
