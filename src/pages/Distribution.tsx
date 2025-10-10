@@ -5,19 +5,14 @@ import SurveyPicker from "@/components/surveys/SurveyPicker";
 import QuickLinks from "@/components/surveys/QuickLinks";
 import PreviewPane from "@/components/surveys/PreviewPane";
 import { Button } from "@/components/ui/button";
-import { Plus, Mail, MessageCircle, Smartphone, ExternalLink, ArrowRight, Bell, Settings } from "lucide-react";
+import { Plus, Mail, MessageCircle, Smartphone, ExternalLink, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import TriggersTab from "@/components/automations/TriggersTab";
-import PreferencesTab from "@/components/automations/PreferencesTab";
 import automationTemplates from "@/lib/automationTemplates";
 const Distribution = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "response");
 
   // Mock surveys data
   const surveys = [{
@@ -34,14 +29,33 @@ const Distribution = () => {
   const [currentMode, setCurrentMode] = useState<"form" | "chat" | "qr" | null>(null);
   const [currentUrl, setCurrentUrl] = useState<string>("");
 
-  // Customer response settings
-  const [selectedTemplate, setSelectedTemplate] = useState<string>("");
-  const [enableWhatsApp, setEnableWhatsApp] = useState(false);
-  const [enableEmail, setEnableEmail] = useState(false);
-  const [enableSMS, setEnableSMS] = useState(false);
+  // Customer response settings - up to 3 templates
+  const [selectedTemplates, setSelectedTemplates] = useState<Array<{ id: string; channel: 'email' | 'whatsapp' | 'sms' }>>([]);
 
   // Get templates for lead trigger (questionnaire submissions)
   const templates = automationTemplates.getAll().filter(t => t.triggerType === "lead");
+  
+  // Helper functions for template management
+  const addTemplate = (templateId: string, channel: 'email' | 'whatsapp' | 'sms') => {
+    if (selectedTemplates.length >= 3) {
+      toast.error("ניתן לבחור עד 3 תבניות בלבד");
+      return;
+    }
+    if (selectedTemplates.some(t => t.channel === channel)) {
+      toast.error(`כבר קיימת תבנית ל${channel === 'email' ? 'מייל' : channel === 'whatsapp' ? 'וואטסאפ' : 'SMS'}`);
+      return;
+    }
+    setSelectedTemplates([...selectedTemplates, { id: templateId, channel }]);
+  };
+  
+  const removeTemplate = (index: number) => {
+    setSelectedTemplates(selectedTemplates.filter((_, i) => i !== index));
+  };
+  
+  const isChannelUsed = (channel: 'email' | 'whatsapp' | 'sms') => {
+    return selectedTemplates.some(t => t.channel === channel);
+  };
+  
   const handleBuildLink = (type: "form" | "chat" | "qr") => {
     if (!selectedSurveyId) {
       toast.error("בחר שאלון תחילה");
@@ -98,30 +112,7 @@ const Distribution = () => {
           
         </div>
 
-        {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid grid-cols-3 gap-2 mb-6" dir="rtl">
-            <TabsTrigger value="triggers" className="flex items-center gap-2">
-              <Bell className="h-4 w-4" />
-              <span>טריגר</span>
-            </TabsTrigger>
-            <TabsTrigger value="response" className="flex items-center gap-2">
-              <MessageCircle className="h-4 w-4" />
-              <span>מענה לקוחות</span>
-            </TabsTrigger>
-            <TabsTrigger value="preferences" className="flex items-center gap-2">
-              <Settings className="h-4 w-4" />
-              <span>העדפות</span>
-            </TabsTrigger>
-          </TabsList>
-
-          {/* Triggers Tab */}
-          <TabsContent value="triggers">
-            <TriggersTab />
-          </TabsContent>
-
-          {/* Response Tab */}
-          <TabsContent value="response">
+        {/* מענה לקוחות - ללא לשוניות */}
             <div className="bg-card rounded-2xl shadow-sm p-5 md:p-8 border border-border">
               {/* Survey Selection */}
               <div className="bg-muted/50 rounded-xl p-4 md:p-6 mb-6 border border-border">
@@ -129,102 +120,130 @@ const Distribution = () => {
               </div>
 
               {/* Customer Response Section */}
-              <div className="bg-card rounded-xl p-4 md:p-6 mb-6 border border-border">
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold text-foreground mb-4">ערוצי מענה אוטומטי ללקוח</h3>
-            </div>
+              <div className="bg-card rounded-xl p-4 md:p-6 mb-6 border border-border" dir="rtl">
+                <div className="mb-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-foreground">תבניות מענה אוטומטי</h3>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => navigate("/automations?tab=templates")} 
+                      className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90 border-primary"
+                    >
+                      <Plus className="h-4 w-4" />
+                      צור תבנית חדשה
+                      <ExternalLink className="h-3 w-3" />
+                    </Button>
+                  </div>
+                  <p className="text-sm text-muted-foreground text-right">
+                    ניתן לבחור עד 3 תבניות, כל אחת לערוץ שונה (מייל, וואטסאפ או SMS)
+                  </p>
+                </div>
 
-            {/* Template Selection */}
-            <div className="mb-4">
-              <div className="flex items-center justify-between mb-2">
-                <Label className="block text-sm font-semibold">בחר תבנית מענה ללקוח</Label>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => navigate("/automations?tab=templates")} 
-                  className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90 border-primary"
-                >
-                  <Plus className="h-4 w-4" />
-                  צור תבנית חדשה
-                  <ExternalLink className="h-3 w-3" />
-                </Button>
+                {/* Selected Templates Display */}
+                {selectedTemplates.length > 0 && (
+                  <div className="mb-4 space-y-2">
+                    <Label className="text-sm font-semibold">תבניות שנבחרו ({selectedTemplates.length}/3)</Label>
+                    <div className="space-y-2">
+                      {selectedTemplates.map((template, index) => {
+                        const templateData = templates.find(t => t.id === template.id);
+                        const channelIcon = template.channel === 'email' ? <Mail className="h-4 w-4" /> :
+                                          template.channel === 'whatsapp' ? <MessageCircle className="h-4 w-4" /> :
+                                          <Smartphone className="h-4 w-4" />;
+                        const channelColor = template.channel === 'email' ? 'bg-blue-50 border-blue-200 text-blue-800' :
+                                           template.channel === 'whatsapp' ? 'bg-green-50 border-green-200 text-green-800' :
+                                           'bg-purple-50 border-purple-200 text-purple-800';
+                        
+                        return (
+                          <div key={index} className={`flex items-center justify-between p-3 rounded-lg border ${channelColor}`}>
+                            <div className="flex items-center gap-2">
+                              {channelIcon}
+                              <span className="font-medium">{templateData?.name}</span>
+                            </div>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => removeTemplate(index)}
+                              className="text-destructive hover:text-destructive/80"
+                            >
+                              הסר
+                            </Button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Add Template - only if less than 3 */}
+                {selectedTemplates.length < 3 && (
+                  <div className="space-y-4">
+                    <Label className="text-sm font-semibold">הוסף תבנית ({selectedTemplates.length}/3)</Label>
+                    
+                    {/* Template Selection */}
+                    <div className="space-y-3">
+                      <div>
+                        <Label className="text-sm mb-2 block">בחר תבנית</Label>
+                        <Select 
+                          disabled={!selectedSurveyId}
+                          onValueChange={(templateId) => {
+                            const template = templates.find(t => t.id === templateId);
+                            if (template) {
+                              // Show channel selection after template is selected
+                              const channel = template.channel as 'email' | 'whatsapp' | 'sms';
+                              addTemplate(templateId, channel);
+                            }
+                          }}
+                        >
+                          <SelectTrigger className="bg-background border-border">
+                            <SelectValue placeholder={selectedSurveyId ? "בחר תבנית מענה" : "יש לבחור שאלון תחילה"} />
+                          </SelectTrigger>
+                          <SelectContent className="bg-popover z-50 border-border">
+                            {templates.map(template => {
+                              const channel = template.channel as 'email' | 'whatsapp' | 'sms';
+                              const isDisabled = isChannelUsed(channel);
+                              return (
+                                <SelectItem 
+                                  key={template.id} 
+                                  value={template.id}
+                                  disabled={isDisabled}
+                                >
+                                  {template.name} - {template.channel === "email" ? "מייל" : template.channel === "whatsapp" ? "WhatsApp" : "SMS"}
+                                  {isDisabled && " (בשימוש)"}
+                                </SelectItem>
+                              );
+                            })}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {!selectedSurveyId && <p className="mt-4 text-xs text-muted-foreground text-right">יש לבחור שאלון כדי להפעיל מענה אוטומטי.</p>}
+
+                {selectedTemplates.length > 0 && selectedSurveyId && (
+                  <div className="mt-4 p-3 bg-primary/10 rounded-lg border border-primary/20">
+                    <p className="text-sm text-foreground text-right">
+                      ✓ מענה אוטומטי יישלח בערוצים: {selectedTemplates.map(t => 
+                        t.channel === 'email' ? 'מייל' : 
+                        t.channel === 'whatsapp' ? 'וואטסאפ' : 'SMS'
+                      ).join(", ")}
+                    </p>
+                  </div>
+                )}
               </div>
-              <Select value={selectedTemplate} onValueChange={setSelectedTemplate}>
-                <SelectTrigger className="bg-background border-border" disabled={!selectedSurveyId}>
-                  <SelectValue placeholder={selectedSurveyId ? "בחר תבנית מענה" : "יש לבחור שאלון תחילה"} />
-                </SelectTrigger>
-                <SelectContent className="bg-popover z-50 border-border">
-                  {templates.map(template => <SelectItem key={template.id} value={template.id}>
-                      {template.name} - {template.channel === "email" ? "מייל" : template.channel === "whatsapp" ? "WhatsApp" : "SMS"}
-                    </SelectItem>)}
-                </SelectContent>
-              </Select>
-            </div>
 
-            {/* Channel Selection */}
-            <div className="space-y-3">
-              <Label className="block text-sm font-semibold mb-2">ערוצי מענה אוטומטי ללקוח</Label>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="flex flex-col items-center p-3 rounded-lg bg-green-50 border border-green-200 hover:bg-green-100 transition-colors cursor-pointer">
-                  <Checkbox id="whatsapp" checked={enableWhatsApp} onCheckedChange={checked => setEnableWhatsApp(checked as boolean)} disabled={!selectedSurveyId} className="mb-2" />
-                  <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center mb-2">
-                    <MessageCircle className="h-5 w-5 text-white" />
-                  </div>
-                  <Label htmlFor="whatsapp" className="text-center cursor-pointer">
-                    <span className="font-medium text-green-800 text-sm">WhatsApp</span>
-                  </Label>
-                </div>
-
-                <div className="flex flex-col items-center p-3 rounded-lg bg-blue-50 border border-blue-200 hover:bg-blue-100 transition-colors cursor-pointer">
-                  <Checkbox id="email" checked={enableEmail} onCheckedChange={checked => setEnableEmail(checked as boolean)} disabled={!selectedSurveyId} className="mb-2" />
-                  <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center mb-2">
-                    <Mail className="h-5 w-5 text-white" />
-                  </div>
-                  <Label htmlFor="email" className="text-center cursor-pointer">
-                    <span className="font-medium text-blue-800 text-sm">מייל</span>
-                  </Label>
-                </div>
-
-                <div className="flex flex-col items-center p-3 rounded-lg bg-purple-50 border border-purple-200 hover:bg-purple-100 transition-colors cursor-pointer">
-                  <Checkbox id="sms" checked={enableSMS} onCheckedChange={checked => setEnableSMS(checked as boolean)} disabled={!selectedSurveyId} className="mb-2" />
-                  <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center mb-2">
-                    <Smartphone className="h-5 w-5 text-white" />
-                  </div>
-                  <Label htmlFor="sms" className="text-center cursor-pointer">
-                    <span className="font-medium text-purple-800 text-sm">הודעת SMS</span>
-                  </Label>
-                </div>
+              {/* Quick Links Section */}
+              <div className="mb-6">
+                <QuickLinks currentUrl={currentUrl} onBuild={handleBuildLink} onCopy={handleCopyUrl} onPreview={handlePreviewLink} disabled={!selectedSurveyId} />
               </div>
-            </div>
-
-            {!selectedSurveyId && <p className="mt-4 text-xs text-muted-foreground">יש לבחור שאלון כדי להפעיל מענה אוטומטי.</p>}
-
-            {(enableWhatsApp || enableEmail || enableSMS) && selectedTemplate && selectedSurveyId && <div className="mt-4 p-3 bg-primary/10 rounded-lg border border-primary/20">
-                <p className="text-sm text-foreground">
-                  ✓ מענה אוטומטי יישלח ב-
-                  {[enableWhatsApp && "WhatsApp", enableEmail && "מייל", enableSMS && "SMS"].filter(Boolean).join(", ")}
-                </p>
-              </div>}
-          </div>
-
-          {/* Quick Links Section */}
-          <div className="mb-6">
-            <QuickLinks currentUrl={currentUrl} onBuild={handleBuildLink} onCopy={handleCopyUrl} onPreview={handlePreviewLink} disabled={!selectedSurveyId} />
-          </div>
 
               {/* Preview Section */}
               {currentMode && currentUrl && <div className="mt-6 md:mt-8 animate-fade-in">
                   <PreviewPane mode={currentMode} url={currentUrl} />
                 </div>}
             </div>
-          </TabsContent>
-
-          {/* Preferences Tab */}
-          <TabsContent value="preferences">
-            <PreferencesTab />
-          </TabsContent>
-        </Tabs>
 
       </div>
     </MainLayout>;
