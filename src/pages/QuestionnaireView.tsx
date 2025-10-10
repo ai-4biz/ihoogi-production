@@ -127,85 +127,88 @@ const QuestionnaireView: React.FC = () => {
 
   const renderFormView = () => (
     <div className="space-y-6">
-      {/* Header - Ultra Compact (1/3 width) */}
+      {/* Header - 4 Quarters Layout */}
       <div className="flex justify-center">
         <Card className="border shadow-sm w-full max-w-sm" style={{ borderColor: brandingData.primaryColor + '20', backgroundColor: brandingData.backgroundColor }}>
           <CardContent className="p-3">
-            {/* Top Row: Logo (left) + Profile (right) */}
-            <div className="flex items-start justify-between mb-2">
-              {/* Logo - Left */}
-              {brandingData.logoUrl ? (
-                <img 
-                  src={brandingData.logoUrl} 
-                  alt="Logo" 
-                  className="h-8 w-8 object-contain rounded"
-                />
-              ) : (
-                <div className="w-8 h-8 rounded flex items-center justify-center" style={{ backgroundColor: brandingData.primaryColor }}>
-                  <span className="text-white font-bold text-xs">ה</span>
-                </div>
-              )}
+            <div className="grid grid-cols-4 gap-2">
+              {/* Left Quarter (1/4): Logo */}
+              <div className="col-span-1 flex items-start justify-center">
+                {brandingData.logoUrl ? (
+                  <img 
+                    src={brandingData.logoUrl} 
+                    alt="Logo" 
+                    className="h-12 w-12 object-contain rounded border"
+                    style={{ borderColor: brandingData.primaryColor + '30' }}
+                  />
+                ) : (
+                  <div className="h-12 w-12" />
+                )}
+              </div>
               
-              {/* Profile - Right */}
-              {brandingData.profileImageUrl ? (
-                <img 
-                  src={brandingData.profileImageUrl} 
-                  alt="Profile" 
-                  className="h-8 w-8 rounded-full object-cover border"
-                  style={{ borderColor: brandingData.secondaryColor }}
-                />
-              ) : (
-                <div className="w-8 h-8 rounded-full flex items-center justify-center border" style={{ backgroundColor: brandingData.primaryColor, borderColor: brandingData.secondaryColor }}>
-                  <span className="text-white font-bold text-xs">ה</span>
+              {/* Middle 2 Quarters (2/4): Title, Description, Image, Link */}
+              <div className="col-span-2 flex flex-col items-center justify-start">
+                {/* Title */}
+                <div className="text-center mb-1 w-full">
+                  <h2 className="font-bold text-sm leading-tight" style={{ color: brandingData.primaryColor }}>{brandingData.businessName}</h2>
+                  <h1 className="font-semibold text-xs mt-0.5 leading-tight" style={{ color: brandingData.primaryColor }}>{questionnaire?.title}</h1>
                 </div>
-              )}
-            </div>
-            
-            {/* Title - Center */}
-            <div className="text-center mb-1">
-              <h2 className="font-bold text-sm" style={{ color: brandingData.primaryColor }}>{brandingData.businessName}</h2>
-              <h1 className="font-semibold text-xs mt-1" style={{ color: brandingData.primaryColor }}>{questionnaire?.title}</h1>
-            </div>
-            
-            {/* Description */}
-            {questionnaire?.description && (
-              <p className="text-xs text-center text-muted-foreground mb-2">
-                {questionnaire.description}
-              </p>
-            )}
-            
-            {/* Image - Below Description */}
-            {brandingData.images && brandingData.images.length > 0 && (
-              <div className="mb-2">
-                <img 
-                  src={brandingData.images[0]}
-                  alt="תמונה"
-                  className="h-20 w-full object-cover rounded border"
-                  style={{ borderColor: brandingData.primaryColor + '30' }}
-                />
+                
+                {/* Description */}
+                {questionnaire?.description && (
+                  <p className="text-xs text-center text-muted-foreground mb-1.5 w-full">
+                    {questionnaire.description}
+                  </p>
+                )}
+                
+                {/* Image - Below Description */}
+                {brandingData.images && brandingData.images.length > 0 && (
+                  <div className="mb-1.5 w-full">
+                    <img 
+                      src={brandingData.images[0]}
+                      alt="תמונה"
+                      className="h-16 w-full object-cover rounded border"
+                      style={{ borderColor: brandingData.primaryColor + '30' }}
+                    />
+                  </div>
+                )}
+                
+                {/* Link - Small & Centered */}
+                {brandingData.links && brandingData.links.length > 0 && (
+                  <div className="flex justify-center w-full">
+                    <a 
+                      href={brandingData.links[0]}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border hover:underline transition-all"
+                      style={{ 
+                        borderColor: brandingData.secondaryColor + '40',
+                        color: brandingData.secondaryColor
+                      }}
+                    >
+                      <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" />
+                      </svg>
+                      קישור
+                    </a>
+                  </div>
+                )}
               </div>
-            )}
-            
-            {/* Link - Small & Centered */}
-            {brandingData.links && brandingData.links.length > 0 && (
-              <div className="flex justify-center">
-                <a 
-                  href={brandingData.links[0]}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full border hover:underline transition-all"
-                  style={{ 
-                    borderColor: brandingData.secondaryColor + '40',
-                    color: brandingData.secondaryColor
-                  }}
-                >
-                  <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" />
-                  </svg>
-                  קישור
-                </a>
+              
+              {/* Right Quarter (1/4): Profile */}
+              <div className="col-span-1 flex items-start justify-center">
+                {brandingData.profileImageUrl ? (
+                  <img 
+                    src={brandingData.profileImageUrl} 
+                    alt="Profile" 
+                    className="h-12 w-12 rounded-full object-cover border-2"
+                    style={{ borderColor: brandingData.secondaryColor }}
+                  />
+                ) : (
+                  <div className="h-12 w-12" />
+                )}
               </div>
-            )}
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -295,84 +298,87 @@ const QuestionnaireView: React.FC = () => {
 
   const renderChatView = () => (
     <div className="space-y-4">
-      {/* Chat Header - Ultra Compact (1/3 width) */}
+      {/* Chat Header - 4 Quarters Layout */}
       <div className="flex justify-center">
         <Card className="border shadow-sm w-full max-w-sm" style={{ borderColor: brandingData.primaryColor + '20', backgroundColor: brandingData.backgroundColor }}>
           <CardContent className="p-3">
-            {/* Top Row: Logo (left) + Profile (right) */}
-            <div className="flex items-start justify-between mb-2">
-              {/* Logo - Left */}
-              {brandingData.logoUrl ? (
-                <img 
-                  src={brandingData.logoUrl} 
-                  alt="Logo" 
-                  className="h-8 w-8 object-contain rounded"
-                />
-              ) : (
-                <div className="w-8 h-8 rounded flex items-center justify-center" style={{ backgroundColor: brandingData.primaryColor }}>
-                  <span className="text-white font-bold text-xs">ה</span>
-                </div>
-              )}
+            <div className="grid grid-cols-4 gap-2">
+              {/* Left Quarter (1/4): Logo */}
+              <div className="col-span-1 flex items-start justify-center">
+                {brandingData.logoUrl ? (
+                  <img 
+                    src={brandingData.logoUrl} 
+                    alt="Logo" 
+                    className="h-12 w-12 object-contain rounded border"
+                    style={{ borderColor: brandingData.primaryColor + '30' }}
+                  />
+                ) : (
+                  <div className="h-12 w-12" />
+                )}
+              </div>
               
-              {/* Profile - Right */}
-              {brandingData.profileImageUrl ? (
-                <img 
-                  src={brandingData.profileImageUrl} 
-                  alt="Profile" 
-                  className="h-8 w-8 rounded-full object-cover border"
-                  style={{ borderColor: brandingData.secondaryColor }}
-                />
-              ) : (
-                <div className="w-8 h-8 rounded-full flex items-center justify-center border" style={{ backgroundColor: brandingData.primaryColor, borderColor: brandingData.secondaryColor }}>
-                  <span className="text-white font-bold text-xs">ה</span>
+              {/* Middle 2 Quarters (2/4): Title, Description, Image, Link */}
+              <div className="col-span-2 flex flex-col items-center justify-start">
+                {/* Title */}
+                <div className="text-center mb-1 w-full">
+                  <h3 className="font-bold text-sm leading-tight" style={{ color: brandingData.primaryColor }}>{brandingData.businessName}</h3>
                 </div>
-              )}
-            </div>
-            
-            {/* Title - Center */}
-            <div className="text-center mb-2">
-              <h3 className="font-bold text-sm" style={{ color: brandingData.primaryColor }}>{brandingData.businessName}</h3>
-            </div>
-            
-            {/* Description */}
-            {questionnaire?.description && (
-              <p className="text-xs text-center text-muted-foreground mb-2">
-                {questionnaire.description}
-              </p>
-            )}
-            
-            {/* Image - Below Description */}
-            {brandingData.images && brandingData.images.length > 0 && (
-              <div className="mb-2 flex justify-center">
-                <img 
-                  src={brandingData.images[0]}
-                  alt="תמונה"
-                  className="h-20 w-full object-cover rounded border"
-                  style={{ borderColor: brandingData.primaryColor + '30' }}
-                />
+                
+                {/* Description */}
+                {questionnaire?.description && (
+                  <p className="text-xs text-center text-muted-foreground mb-1.5 w-full">
+                    {questionnaire.description}
+                  </p>
+                )}
+                
+                {/* Image - Below Description */}
+                {brandingData.images && brandingData.images.length > 0 && (
+                  <div className="mb-1.5 w-full">
+                    <img 
+                      src={brandingData.images[0]}
+                      alt="תמונה"
+                      className="h-16 w-full object-cover rounded border"
+                      style={{ borderColor: brandingData.primaryColor + '30' }}
+                    />
+                  </div>
+                )}
+                
+                {/* Link - Small & Centered */}
+                {brandingData.links && brandingData.links.length > 0 && (
+                  <div className="flex justify-center w-full">
+                    <a 
+                      href={brandingData.links[0]}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border hover:underline transition-all"
+                      style={{ 
+                        borderColor: brandingData.secondaryColor + '40',
+                        color: brandingData.secondaryColor
+                      }}
+                    >
+                      <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" />
+                      </svg>
+                      קישור
+                    </a>
+                  </div>
+                )}
               </div>
-            )}
-            
-            {/* Links - Small & Centered */}
-            {brandingData.links && brandingData.links.length > 0 && (
-              <div className="flex justify-center">
-                <a 
-                  href={brandingData.links[0]}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full border hover:underline transition-all"
-                  style={{ 
-                    borderColor: brandingData.secondaryColor + '40',
-                    color: brandingData.secondaryColor
-                  }}
-                >
-                  <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" />
-                  </svg>
-                  קישור
-                </a>
+              
+              {/* Right Quarter (1/4): Profile */}
+              <div className="col-span-1 flex items-start justify-center">
+                {brandingData.profileImageUrl ? (
+                  <img 
+                    src={brandingData.profileImageUrl} 
+                    alt="Profile" 
+                    className="h-12 w-12 rounded-full object-cover border-2"
+                    style={{ borderColor: brandingData.secondaryColor }}
+                  />
+                ) : (
+                  <div className="h-12 w-12" />
+                )}
               </div>
-            )}
+            </div>
           </CardContent>
         </Card>
       </div>
