@@ -25,12 +25,14 @@ const QuestionnaireView: React.FC = () => {
   
   // Get user branding data from localStorage (from BusinessForm)
   const [brandingData, setBrandingData] = useState({
-    primaryColor: '#6366f1',
-    secondaryColor: '#8b5cf6',
-    backgroundColor: '#f8fafc',
-    logoUrl: '',
-    profileImageUrl: '',
-    businessName: 'העסק שלי'
+    primaryColor: '#22c55e',      // ירוק
+    secondaryColor: '#f97316',    // כתום
+    backgroundColor: '#f3e8ff',   // סגול בהיר
+    logoUrl: '/hoogi-new-avatar.png',  // לוגו דוגמה
+    profileImageUrl: '/hoogi-new-avatar.png',  // פרופיל דוגמה
+    businessName: 'העסק שלי - דוגמה',
+    links: ['https://example.com/info', 'https://example.com/services'],  // קישורים
+    images: ['/hoogi-new-avatar.png']  // תמונות
   });
 
   useEffect(() => {
@@ -40,12 +42,14 @@ const QuestionnaireView: React.FC = () => {
       if (savedBranding) {
         const branding = JSON.parse(savedBranding);
         setBrandingData({
-          primaryColor: branding.primaryColor || '#6366f1',
-          secondaryColor: branding.secondaryColor || '#8b5cf6',
-          backgroundColor: branding.backgroundColor || '#f8fafc',
-          logoUrl: branding.logoUrl || '',
-          profileImageUrl: branding.profileImageUrl || '',
-          businessName: branding.businessName || 'העסק שלי'
+          primaryColor: branding.primaryColor || '#22c55e',
+          secondaryColor: branding.secondaryColor || '#f97316',
+          backgroundColor: branding.backgroundColor || '#f3e8ff',
+          logoUrl: branding.logoUrl || '/hoogi-new-avatar.png',
+          profileImageUrl: branding.profileImageUrl || '/hoogi-new-avatar.png',
+          businessName: branding.businessName || 'העסק שלי - דוגמה',
+          links: branding.links || ['https://example.com/info', 'https://example.com/services'],
+          images: branding.images || ['/hoogi-new-avatar.png']
         });
       }
     } catch (error) {
@@ -152,6 +156,58 @@ const QuestionnaireView: React.FC = () => {
           <p className="text-center text-muted-foreground">
             {questionnaire?.description}
           </p>
+          
+          {/* Links and Images Section */}
+          {(brandingData.links?.length > 0 || brandingData.images?.length > 0) && (
+            <div className="mt-6 pt-6 border-t border-border/50">
+              <h3 className="text-lg font-semibold text-center mb-4" style={{ color: brandingData.secondaryColor }}>
+                מידע נוסף
+              </h3>
+              
+              {/* Links */}
+              {brandingData.links && brandingData.links.length > 0 && (
+                <div className="mb-4">
+                  <p className="text-sm font-medium mb-2 text-center">קישורים שימושיים:</p>
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    {brandingData.links.map((link, idx) => (
+                      <a 
+                        key={idx}
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm px-3 py-1.5 rounded-lg border-2 hover:shadow-md transition-all"
+                        style={{ 
+                          borderColor: brandingData.secondaryColor,
+                          color: brandingData.secondaryColor,
+                          backgroundColor: `${brandingData.secondaryColor}10`
+                        }}
+                      >
+                        🔗 {link.length > 30 ? link.substring(0, 30) + '...' : link}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* Images */}
+              {brandingData.images && brandingData.images.length > 0 && (
+                <div>
+                  <p className="text-sm font-medium mb-2 text-center">תמונות:</p>
+                  <div className="flex flex-wrap gap-3 justify-center">
+                    {brandingData.images.map((img, idx) => (
+                      <img 
+                        key={idx}
+                        src={img}
+                        alt={`תמונה ${idx + 1}`}
+                        className="h-20 w-20 object-cover rounded-lg border-2 shadow-sm hover:shadow-md transition-shadow"
+                        style={{ borderColor: brandingData.primaryColor }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -259,6 +315,53 @@ const QuestionnaireView: React.FC = () => {
               <h3 className="font-bold text-xl" style={{ color: brandingData.primaryColor }}>{brandingData.businessName}</h3>
               <p className="text-sm text-muted-foreground">מסייע בשאלות ומידע</p>
             </div>
+            
+            {/* Links and Images in Chat Header */}
+            {(brandingData.links?.length > 0 || brandingData.images?.length > 0) && (
+              <div className="mt-4 pt-4 border-t border-border/30 w-full">
+                {/* Links */}
+                {brandingData.links && brandingData.links.length > 0 && (
+                  <div className="mb-3">
+                    <p className="text-xs font-medium mb-2 text-center">קישורים שימושיים:</p>
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      {brandingData.links.map((link, idx) => (
+                        <a 
+                          key={idx}
+                          href={link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs px-2 py-1 rounded border hover:shadow-sm transition-all"
+                          style={{ 
+                            borderColor: brandingData.secondaryColor,
+                            color: brandingData.secondaryColor
+                          }}
+                        >
+                          🔗 {link.length > 25 ? link.substring(0, 25) + '...' : link}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                {/* Images */}
+                {brandingData.images && brandingData.images.length > 0 && (
+                  <div>
+                    <p className="text-xs font-medium mb-2 text-center">גלריה:</p>
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      {brandingData.images.map((img, idx) => (
+                        <img 
+                          key={idx}
+                          src={img}
+                          alt={`תמונה ${idx + 1}`}
+                          className="h-12 w-12 object-cover rounded border"
+                          style={{ borderColor: brandingData.primaryColor }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
