@@ -55,7 +55,7 @@ const NavigationButtons = ({
     {
       id: "create-questionnaire",
       emoji: "📝",
-      label: "צור שאלון",
+      label: "שאלון חדש",
       state: "root" as ViewState,
       active: window.location.pathname === "/create-questionnaire",
       color: "green",
@@ -72,7 +72,7 @@ const NavigationButtons = ({
     {
       id: "automations",
       emoji: "🎧",
-      label: "מענה לקוחות",
+      label: "אוטומציות",
       state: "automations" as ViewState,
       active: currentState === "automations",
       color: "red"

@@ -114,12 +114,12 @@ const ContentInspiration = () => {
 
   const getCardBackgroundColor = (index: number) => {
     const colors = [
-      'bg-blue-50/30 border-blue-200/50',
-      'bg-green-50/30 border-green-200/50', 
-      'bg-purple-50/30 border-purple-200/50',
-      'bg-orange-50/30 border-orange-200/50',
-      'bg-pink-50/30 border-pink-200/50',
-      'bg-cyan-50/30 border-cyan-200/50'
+      'bg-blue-50/40 border-blue-300 border-2 shadow-md shadow-blue-100',
+      'bg-green-50/40 border-green-300 border-2 shadow-md shadow-green-100', 
+      'bg-purple-50/40 border-purple-300 border-2 shadow-md shadow-purple-100',
+      'bg-orange-50/40 border-orange-300 border-2 shadow-md shadow-orange-100',
+      'bg-pink-50/40 border-pink-300 border-2 shadow-md shadow-pink-100',
+      'bg-cyan-50/40 border-cyan-300 border-2 shadow-md shadow-cyan-100'
     ];
     return colors[index % colors.length];
   };
@@ -213,10 +213,21 @@ const ContentInspiration = () => {
           </Button>
         </div>
 
-        <h1 className="text-2xl md:text-3xl font-bold mb-6 flex items-center justify-end">
-          <img src={questionnairesIcon} alt="שאלונים" className="h-7 w-7 md:h-8 md:w-8 ml-3" />
-          השאלונים שלי
-        </h1>
+        {/* Header with Title and New Questionnaire Button */}
+        <div className="flex items-center justify-between mb-6">
+          <Button 
+            onClick={() => window.location.href = '/create-questionnaire'}
+            className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2"
+          >
+            <Plus className="h-5 w-5" />
+            שאלון חדש
+          </Button>
+          
+          <h1 className="text-2xl md:text-3xl font-bold flex items-center">
+            <img src={questionnairesIcon} alt="שאלונים" className="h-7 w-7 md:h-8 md:w-8 ml-3" />
+            השאלונים שלי
+          </h1>
+        </div>
         
         <div className="space-y-4">
           {questionnaires.length === 0 ? (
