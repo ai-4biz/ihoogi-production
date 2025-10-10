@@ -23,6 +23,7 @@ import Subscriptions from "./pages/Subscriptions";
 import MyHoogi from "./pages/MyHoogi";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
+import TermsOfService from "./pages/TermsOfService";
 import SurveysPage from "./pages/surveys/index";
 import Distribution from "./pages/Distribution";
 import QuestionnaireView from "./pages/QuestionnaireView";
@@ -62,6 +63,7 @@ const App = () => {
               <Route path="/questionnaire-view/preview" element={<QuestionnaireView />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

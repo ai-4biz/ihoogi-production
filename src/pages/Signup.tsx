@@ -124,8 +124,23 @@ const Signup = () => {
             </div>
 
             <div className="flex items-start gap-2">
-              <Checkbox id="terms" checked={formData.termsAccepted} onCheckedChange={(c) => setFormData({ ...formData, termsAccepted: c as boolean })} />
-              <Label htmlFor="terms" className="text-sm cursor-pointer">אני מסכים/ה לתנאי השימוש והתקנון</Label>
+              <Checkbox 
+                id="terms" 
+                checked={formData.termsAccepted} 
+                onCheckedChange={(c) => setFormData({ ...formData, termsAccepted: c as boolean })}
+                required 
+              />
+              <Label htmlFor="terms" className="text-sm cursor-pointer">
+                אני מסכים/ה ל
+                <button 
+                  type="button"
+                  onClick={() => window.open('/terms-of-service', '_blank')}
+                  className="text-primary hover:underline mx-1 font-semibold"
+                >
+                  תנאי השימוש והתקנון
+                </button>
+                <span className="text-destructive">*</span>
+              </Label>
             </div>
             <div className="flex items-start gap-2">
               <Checkbox id="marketing" checked={formData.marketingAccepted} onCheckedChange={(c) => setFormData({ ...formData, marketingAccepted: c as boolean })} />
