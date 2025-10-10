@@ -127,89 +127,88 @@ const QuestionnaireView: React.FC = () => {
 
   const renderFormView = () => (
     <div className="space-y-6">
-      {/* Header with Logo and Profile */}
-      <Card className="border-2 shadow-lg" style={{ borderColor: brandingData.primaryColor, backgroundColor: brandingData.backgroundColor }}>
-        <CardContent className="p-8">
-          <div className="flex flex-col items-center gap-4 mb-6">
-            {brandingData.logoUrl && (
-              <img 
-                src={brandingData.logoUrl} 
-                alt="Logo" 
-                className="h-20 w-20 object-contain"
-              />
-            )}
-            <h2 className="text-2xl font-bold text-center" style={{ color: brandingData.primaryColor }}>
-              {brandingData.businessName}
-            </h2>
-            {brandingData.profileImageUrl && (
-              <img 
-                src={brandingData.profileImageUrl} 
-                alt="Profile" 
-                className="h-16 w-16 rounded-full object-cover border-4"
-                style={{ borderColor: brandingData.secondaryColor }}
-              />
-            )}
-          </div>
-          <h1 className="text-3xl font-bold text-center mb-2" style={{ color: brandingData.primaryColor }}>
-            {questionnaire?.title}
-          </h1>
-          <p className="text-center text-muted-foreground">
-            {questionnaire?.description}
-          </p>
-          
-          {/* Links and Images Section */}
-          {(brandingData.links?.length > 0 || brandingData.images?.length > 0) && (
-            <div className="mt-6 pt-6 border-t border-border/50">
-              <h3 className="text-lg font-semibold text-center mb-4" style={{ color: brandingData.secondaryColor }}>
-                מידע נוסף
-              </h3>
-              
-              {/* Links */}
-              {brandingData.links && brandingData.links.length > 0 && (
-                <div className="mb-4">
-                  <p className="text-sm font-medium mb-2 text-center">קישורים שימושיים:</p>
-                  <div className="flex flex-wrap gap-2 justify-center">
-                    {brandingData.links.map((link, idx) => (
-                      <a 
-                        key={idx}
-                        href={link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm px-3 py-1.5 rounded-lg border-2 hover:shadow-md transition-all"
-                        style={{ 
-                          borderColor: brandingData.secondaryColor,
-                          color: brandingData.secondaryColor,
-                          backgroundColor: `${brandingData.secondaryColor}10`
-                        }}
-                      >
-                        🔗 {link.length > 30 ? link.substring(0, 30) + '...' : link}
-                      </a>
-                    ))}
-                  </div>
+      {/* Header - Ultra Compact (1/3 width) */}
+      <div className="flex justify-center">
+        <Card className="border shadow-sm w-full max-w-sm" style={{ borderColor: brandingData.primaryColor + '20', backgroundColor: brandingData.backgroundColor }}>
+          <CardContent className="p-3">
+            {/* Top Row: Logo (left) + Profile (right) */}
+            <div className="flex items-start justify-between mb-2">
+              {/* Logo - Left */}
+              {brandingData.logoUrl ? (
+                <img 
+                  src={brandingData.logoUrl} 
+                  alt="Logo" 
+                  className="h-8 w-8 object-contain rounded"
+                />
+              ) : (
+                <div className="w-8 h-8 rounded flex items-center justify-center" style={{ backgroundColor: brandingData.primaryColor }}>
+                  <span className="text-white font-bold text-xs">ה</span>
                 </div>
               )}
               
-              {/* Images */}
-              {brandingData.images && brandingData.images.length > 0 && (
-                <div>
-                  <p className="text-sm font-medium mb-2 text-center">תמונות:</p>
-                  <div className="flex flex-wrap gap-3 justify-center">
-                    {brandingData.images.map((img, idx) => (
-                      <img 
-                        key={idx}
-                        src={img}
-                        alt={`תמונה ${idx + 1}`}
-                        className="h-20 w-20 object-cover rounded-lg border-2 shadow-sm hover:shadow-md transition-shadow"
-                        style={{ borderColor: brandingData.primaryColor }}
-                      />
-                    ))}
-                  </div>
+              {/* Profile - Right */}
+              {brandingData.profileImageUrl ? (
+                <img 
+                  src={brandingData.profileImageUrl} 
+                  alt="Profile" 
+                  className="h-8 w-8 rounded-full object-cover border"
+                  style={{ borderColor: brandingData.secondaryColor }}
+                />
+              ) : (
+                <div className="w-8 h-8 rounded-full flex items-center justify-center border" style={{ backgroundColor: brandingData.primaryColor, borderColor: brandingData.secondaryColor }}>
+                  <span className="text-white font-bold text-xs">ה</span>
                 </div>
               )}
             </div>
-          )}
-        </CardContent>
-      </Card>
+            
+            {/* Title - Center */}
+            <div className="text-center mb-1">
+              <h2 className="font-bold text-sm" style={{ color: brandingData.primaryColor }}>{brandingData.businessName}</h2>
+              <h1 className="font-semibold text-xs mt-1" style={{ color: brandingData.primaryColor }}>{questionnaire?.title}</h1>
+            </div>
+            
+            {/* Description */}
+            {questionnaire?.description && (
+              <p className="text-xs text-center text-muted-foreground mb-2">
+                {questionnaire.description}
+              </p>
+            )}
+            
+            {/* Image - Below Description */}
+            {brandingData.images && brandingData.images.length > 0 && (
+              <div className="mb-2">
+                <img 
+                  src={brandingData.images[0]}
+                  alt="תמונה"
+                  className="h-20 w-full object-cover rounded border"
+                  style={{ borderColor: brandingData.primaryColor + '30' }}
+                />
+              </div>
+            )}
+            
+            {/* Link - Small & Centered */}
+            {brandingData.links && brandingData.links.length > 0 && (
+              <div className="flex justify-center">
+                <a 
+                  href={brandingData.links[0]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full border hover:underline transition-all"
+                  style={{ 
+                    borderColor: brandingData.secondaryColor + '40',
+                    color: brandingData.secondaryColor
+                  }}
+                >
+                  <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" />
+                  </svg>
+                  קישור
+                </a>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Questions */}
       {questionnaire?.questions.map((question) => (
@@ -296,99 +295,87 @@ const QuestionnaireView: React.FC = () => {
 
   const renderChatView = () => (
     <div className="space-y-4">
-      {/* Chat Header - Compact & Elegant */}
-      <Card className="border shadow-sm hover:shadow-md transition-shadow" style={{ borderColor: brandingData.primaryColor + '30', backgroundColor: brandingData.backgroundColor }}>
-        <CardContent className="p-4">
-          {/* Top Row: Logo (left) + Title + Profile (right) */}
-          <div className="flex items-center justify-between mb-3">
-            {/* Logo - Left */}
-            <div className="flex-shrink-0">
+      {/* Chat Header - Ultra Compact (1/3 width) */}
+      <div className="flex justify-center">
+        <Card className="border shadow-sm w-full max-w-sm" style={{ borderColor: brandingData.primaryColor + '20', backgroundColor: brandingData.backgroundColor }}>
+          <CardContent className="p-3">
+            {/* Top Row: Logo (left) + Profile (right) */}
+            <div className="flex items-start justify-between mb-2">
+              {/* Logo - Left */}
               {brandingData.logoUrl ? (
                 <img 
                   src={brandingData.logoUrl} 
                   alt="Logo" 
-                  className="h-10 w-10 object-contain rounded-lg shadow-sm"
+                  className="h-8 w-8 object-contain rounded"
                 />
               ) : (
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: brandingData.primaryColor }}>
-                  <span className="text-white font-bold text-sm">ה</span>
+                <div className="w-8 h-8 rounded flex items-center justify-center" style={{ backgroundColor: brandingData.primaryColor }}>
+                  <span className="text-white font-bold text-xs">ה</span>
+                </div>
+              )}
+              
+              {/* Profile - Right */}
+              {brandingData.profileImageUrl ? (
+                <img 
+                  src={brandingData.profileImageUrl} 
+                  alt="Profile" 
+                  className="h-8 w-8 rounded-full object-cover border"
+                  style={{ borderColor: brandingData.secondaryColor }}
+                />
+              ) : (
+                <div className="w-8 h-8 rounded-full flex items-center justify-center border" style={{ backgroundColor: brandingData.primaryColor, borderColor: brandingData.secondaryColor }}>
+                  <span className="text-white font-bold text-xs">ה</span>
                 </div>
               )}
             </div>
             
             {/* Title - Center */}
-            <div className="flex-1 text-center px-3">
-              <h3 className="font-bold text-base" style={{ color: brandingData.primaryColor }}>{brandingData.businessName}</h3>
-              <p className="text-xs text-muted-foreground mt-0.5">מסייע בשאלות ומידע</p>
+            <div className="text-center mb-2">
+              <h3 className="font-bold text-sm" style={{ color: brandingData.primaryColor }}>{brandingData.businessName}</h3>
             </div>
             
-            {/* Profile - Right */}
-            <div className="flex-shrink-0">
-              {brandingData.profileImageUrl ? (
+            {/* Description */}
+            {questionnaire?.description && (
+              <p className="text-xs text-center text-muted-foreground mb-2">
+                {questionnaire.description}
+              </p>
+            )}
+            
+            {/* Image - Below Description */}
+            {brandingData.images && brandingData.images.length > 0 && (
+              <div className="mb-2 flex justify-center">
                 <img 
-                  src={brandingData.profileImageUrl} 
-                  alt="Profile" 
-                  className="h-10 w-10 rounded-full object-cover border-2 shadow-sm"
-                  style={{ borderColor: brandingData.secondaryColor }}
+                  src={brandingData.images[0]}
+                  alt="תמונה"
+                  className="h-20 w-full object-cover rounded border"
+                  style={{ borderColor: brandingData.primaryColor + '30' }}
                 />
-              ) : (
-                <div className="w-10 h-10 rounded-full flex items-center justify-center border-2 shadow-sm" style={{ backgroundColor: brandingData.primaryColor, borderColor: brandingData.secondaryColor }}>
-                  <span className="text-white font-bold text-sm">ה</span>
-                </div>
-              )}
-            </div>
-          </div>
-          
-          {/* Description (if questionnaire exists) */}
-          {questionnaire?.description && (
-            <p className="text-xs text-center text-muted-foreground mb-3 px-2">
-              {questionnaire.description}
-            </p>
-          )}
-          
-          {/* Links - Compact Buttons */}
-          {brandingData.links && brandingData.links.length > 0 && (
-            <div className="mb-3">
-              <div className="flex flex-wrap gap-2 justify-center">
-                {brandingData.links.map((link, idx) => (
-                  <a 
-                    key={idx}
-                    href={link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border hover:shadow-sm transition-all font-medium"
-                    style={{ 
-                      borderColor: brandingData.secondaryColor,
-                      color: brandingData.secondaryColor,
-                      backgroundColor: brandingData.secondaryColor + '10'
-                    }}
-                  >
-                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" />
-                    </svg>
-                    קישור {idx + 1}
-                  </a>
-                ))}
               </div>
-            </div>
-          )}
-          
-          {/* Images - Below Description */}
-          {brandingData.images && brandingData.images.length > 0 && (
-            <div className="flex flex-wrap gap-2 justify-center">
-              {brandingData.images.map((img, idx) => (
-                <img 
-                  key={idx}
-                  src={img}
-                  alt={`תמונה ${idx + 1}`}
-                  className="h-16 w-16 object-cover rounded-lg border shadow-sm hover:shadow-md transition-shadow"
-                  style={{ borderColor: brandingData.primaryColor + '50' }}
-                />
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+            )}
+            
+            {/* Links - Small & Centered */}
+            {brandingData.links && brandingData.links.length > 0 && (
+              <div className="flex justify-center">
+                <a 
+                  href={brandingData.links[0]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full border hover:underline transition-all"
+                  style={{ 
+                    borderColor: brandingData.secondaryColor + '40',
+                    color: brandingData.secondaryColor
+                  }}
+                >
+                  <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" />
+                  </svg>
+                  קישור
+                </a>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Chat Messages */}
       <div className="space-y-4 max-h-96 overflow-y-auto">
