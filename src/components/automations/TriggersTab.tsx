@@ -139,57 +139,62 @@ const TriggersTab = () => {
         </div>
 
         <div className="space-y-4">
+          {/* שורה אחת: כותרת + סטטוס */}
           <div className="flex items-center justify-between pb-3 border-b">
-            <Label htmlFor="questionnaire-enabled" className="font-medium text-right">הפעל מענה אוטומטי</Label>
-            <Switch
-              id="questionnaire-enabled"
-              checked={questionnaireResponse.enabled}
-              onCheckedChange={(checked) =>
-                setQuestionnaireResponse(prev => ({ ...prev, enabled: checked }))
-              }
-            />
+            <div className="flex-1">
+              <Label className="font-medium text-right">ערוצי מענה</Label>
+            </div>
+            <div className="flex items-center gap-3">
+              <Label htmlFor="questionnaire-enabled" className="font-medium text-sm text-muted-foreground">הפעל מענה אוטומטי</Label>
+              <Switch
+                id="questionnaire-enabled"
+                checked={questionnaireResponse.enabled}
+                onCheckedChange={(checked) =>
+                  setQuestionnaireResponse(prev => ({ ...prev, enabled: checked }))
+                }
+              />
+            </div>
           </div>
 
           {questionnaireResponse.enabled && (
             <>
               <div className="space-y-3">
-                <Label className="font-medium text-right">ערוצי מענה</Label>
-                <div className="grid grid-cols-3 gap-3">
-                  <div className="flex flex-col items-center p-3 rounded-lg bg-green-50 border border-green-200 hover:bg-green-100 transition-colors cursor-pointer">
+                <div className="grid grid-cols-3 gap-2 max-w-md mx-auto">
+                  <div className="flex flex-col items-center p-2 rounded-lg bg-green-50 border border-green-200 hover:bg-green-100 transition-colors cursor-pointer">
                     <Checkbox
                       id="qr-email"
                       checked={questionnaireResponse.channels.email}
                       onCheckedChange={() => toggleQuestionnaireChannel('email')}
-                      className="mb-2"
+                      className="mb-1"
                     />
-                    <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center mb-2">
-                      <Mail className="h-4 w-4 text-white" />
+                    <div className="w-6 h-6 bg-green-500 rounded-lg flex items-center justify-center mb-1">
+                      <Mail className="h-3 w-3 text-white" />
                     </div>
-                    <Label htmlFor="qr-email" className="cursor-pointer text-sm font-medium text-green-800">מייל</Label>
+                    <Label htmlFor="qr-email" className="cursor-pointer text-xs font-medium text-green-800">מייל</Label>
                   </div>
-                  <div className="flex flex-col items-center p-3 rounded-lg bg-blue-50 border border-blue-200 hover:bg-blue-100 transition-colors cursor-pointer">
+                  <div className="flex flex-col items-center p-2 rounded-lg bg-blue-50 border border-blue-200 hover:bg-blue-100 transition-colors cursor-pointer">
                     <Checkbox
                       id="qr-whatsapp"
                       checked={questionnaireResponse.channels.whatsapp}
                       onCheckedChange={() => toggleQuestionnaireChannel('whatsapp')}
-                      className="mb-2"
+                      className="mb-1"
                     />
-                    <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center mb-2">
-                      <MessageCircle className="h-4 w-4 text-white" />
+                    <div className="w-6 h-6 bg-blue-500 rounded-lg flex items-center justify-center mb-1">
+                      <MessageCircle className="h-3 w-3 text-white" />
                     </div>
-                    <Label htmlFor="qr-whatsapp" className="cursor-pointer text-sm font-medium text-blue-800">וואטסאפ</Label>
+                    <Label htmlFor="qr-whatsapp" className="cursor-pointer text-xs font-medium text-blue-800">וואטסאפ</Label>
                   </div>
-                  <div className="flex flex-col items-center p-3 rounded-lg bg-purple-50 border border-purple-200 hover:bg-purple-100 transition-colors cursor-pointer">
+                  <div className="flex flex-col items-center p-2 rounded-lg bg-purple-50 border border-purple-200 hover:bg-purple-100 transition-colors cursor-pointer">
                     <Checkbox
                       id="qr-sms"
                       checked={questionnaireResponse.channels.sms}
                       onCheckedChange={() => toggleQuestionnaireChannel('sms')}
-                      className="mb-2"
+                      className="mb-1"
                     />
-                    <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center mb-2">
-                      <Smartphone className="h-4 w-4 text-white" />
+                    <div className="w-6 h-6 bg-purple-500 rounded-lg flex items-center justify-center mb-1">
+                      <Smartphone className="h-3 w-3 text-white" />
                     </div>
-                    <Label htmlFor="qr-sms" className="cursor-pointer text-sm font-medium text-purple-800">SMS</Label>
+                    <Label htmlFor="qr-sms" className="cursor-pointer text-xs font-medium text-purple-800">SMS</Label>
                   </div>
                 </div>
               </div>

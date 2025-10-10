@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { FileText, Plus, Users, Edit, Copy, BarChart3, Share2, Calendar, TrendingUp, AlertCircle, Zap } from "lucide-react";
+import { FileText, Plus, Users, Edit, Copy, BarChart3, Share2, Calendar, TrendingUp, AlertCircle, Zap, Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import MainLayout from "@/components/layout/MainLayout";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
@@ -399,6 +399,17 @@ const MyHoogi = () => {
 
                         {/* Action Buttons */}
                         <div className="flex gap-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              window.open(`/questionnaire-view/${q.id}?mode=form`, '_blank');
+                            }}
+                          >
+                            <Eye className="h-4 w-4 ml-2" />
+                            הצגה
+                          </Button>
                           <Button 
                             variant="outline" 
                             size="sm"

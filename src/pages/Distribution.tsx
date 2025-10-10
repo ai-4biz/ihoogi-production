@@ -1,18 +1,23 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import MainLayout from "@/components/layout/MainLayout";
 import SurveyPicker from "@/components/surveys/SurveyPicker";
 import QuickLinks from "@/components/surveys/QuickLinks";
 import PreviewPane from "@/components/surveys/PreviewPane";
 import { Button } from "@/components/ui/button";
-import { Plus, Mail, MessageCircle, Smartphone, ExternalLink, ArrowRight } from "lucide-react";
+import { Plus, Mail, MessageCircle, Smartphone, ExternalLink, ArrowRight, Bell, Settings } from "lucide-react";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import TriggersTab from "@/components/automations/TriggersTab";
+import PreferencesTab from "@/components/automations/PreferencesTab";
 import automationTemplates from "@/lib/automationTemplates";
 const Distribution = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "response");
 
   // Mock surveys data
   const surveys = [{
@@ -93,15 +98,38 @@ const Distribution = () => {
           
         </div>
 
-        {/* Main Content Card */}
-        <div className="bg-card rounded-2xl shadow-sm p-5 md:p-8 border border-border">
-          {/* Survey Selection */}
-          <div className="bg-muted/50 rounded-xl p-4 md:p-6 mb-6 border border-border">
-            <SurveyPicker value={selectedSurveyId} onChange={setSelectedSurveyId} options={surveys} />
-          </div>
+        {/* Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid grid-cols-3 gap-2 mb-6" dir="rtl">
+            <TabsTrigger value="triggers" className="flex items-center gap-2">
+              <Bell className="h-4 w-4" />
+              <span>טריגר</span>
+            </TabsTrigger>
+            <TabsTrigger value="response" className="flex items-center gap-2">
+              <MessageCircle className="h-4 w-4" />
+              <span>מענה לקוחות</span>
+            </TabsTrigger>
+            <TabsTrigger value="preferences" className="flex items-center gap-2">
+              <Settings className="h-4 w-4" />
+              <span>העדפות</span>
+            </TabsTrigger>
+          </TabsList>
 
-          {/* Customer Response Section */}
-          <div className="bg-card rounded-xl p-4 md:p-6 mb-6 border border-border">
+          {/* Triggers Tab */}
+          <TabsContent value="triggers">
+            <TriggersTab />
+          </TabsContent>
+
+          {/* Response Tab */}
+          <TabsContent value="response">
+            <div className="bg-card rounded-2xl shadow-sm p-5 md:p-8 border border-border">
+              {/* Survey Selection */}
+              <div className="bg-muted/50 rounded-xl p-4 md:p-6 mb-6 border border-border">
+                <SurveyPicker value={selectedSurveyId} onChange={setSelectedSurveyId} options={surveys} />
+              </div>
+
+              {/* Customer Response Section */}
+              <div className="bg-card rounded-xl p-4 md:p-6 mb-6 border border-border">
             <div className="mb-4">
               <h3 className="text-lg font-semibold text-foreground mb-4">ערוצי מענה אוטומטי ללקוח</h3>
             </div>
@@ -185,11 +213,18 @@ const Distribution = () => {
             <QuickLinks currentUrl={currentUrl} onBuild={handleBuildLink} onCopy={handleCopyUrl} onPreview={handlePreviewLink} disabled={!selectedSurveyId} />
           </div>
 
-          {/* Preview Section */}
-          {currentMode && currentUrl && <div className="mt-6 md:mt-8 animate-fade-in">
-              <PreviewPane mode={currentMode} url={currentUrl} />
-            </div>}
-        </div>
+              {/* Preview Section */}
+              {currentMode && currentUrl && <div className="mt-6 md:mt-8 animate-fade-in">
+                  <PreviewPane mode={currentMode} url={currentUrl} />
+                </div>}
+            </div>
+          </TabsContent>
+
+          {/* Preferences Tab */}
+          <TabsContent value="preferences">
+            <PreferencesTab />
+          </TabsContent>
+        </Tabs>
 
       </div>
     </MainLayout>;

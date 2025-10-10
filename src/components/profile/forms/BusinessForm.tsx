@@ -575,14 +575,14 @@ const BusinessForm = () => {
               </div>
             </div>
 
-            {/* העלאת קבצי PDF */}
+            {/* העלאת קבצי PDF ותמונות */}
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground text-right">העלה מסמכים (PDF)</p>
+              <p className="text-sm text-muted-foreground text-right">העלה מסמכים ותמונות (PDF, JPG, PNG)</p>
               <div>
                 <input
                   type="file"
                   id="pdf-upload"
-                  accept=".pdf"
+                  accept=".pdf,.jpg,.jpeg,.png,.gif,.webp"
                   multiple
                   onChange={handleFileUpload}
                   className="hidden"
@@ -594,7 +594,7 @@ const BusinessForm = () => {
                   className="w-full bg-green-50 border-green-200 hover:bg-green-100"
                 >
                   <Upload className="h-4 w-4 ml-2" />
-                  העלה קבצי PDF
+                  העלה קבצים ותמונות
                 </Button>
               </div>
             </div>
@@ -617,21 +617,30 @@ const BusinessForm = () => {
                       </button>
                     </Badge>
                   ))}
-                  {/* קבצי PDF */}
-                  {uploadedFiles.map((file, index) => (
-                    <Badge key={`file-${index}`} className="bg-red-100 text-red-800 hover:bg-red-200 flex items-center gap-2 px-3 py-1">
-                      <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
-                      </svg>
-                      {file.name}
-                      <button 
-                        onClick={() => handleRemoveFile(index)}
-                        className="hover:text-red-900 transition-colors"
-                      >
-                        <Trash className="h-3 w-3" />
-                      </button>
-                    </Badge>
-                  ))}
+                  {/* קבצים */}
+                  {uploadedFiles.map((file, index) => {
+                    const isImage = file.type.startsWith('image/');
+                    return (
+                      <Badge key={`file-${index}`} className={`${isImage ? 'bg-purple-100 text-purple-800 hover:bg-purple-200' : 'bg-red-100 text-red-800 hover:bg-red-200'} flex items-center gap-2 px-3 py-1`}>
+                        {isImage ? (
+                          <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+                          </svg>
+                        ) : (
+                          <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
+                          </svg>
+                        )}
+                        {file.name.length > 20 ? file.name.substring(0, 20) + '...' : file.name}
+                        <button 
+                          onClick={() => handleRemoveFile(index)}
+                          className="hover:text-red-900 transition-colors"
+                        >
+                          <Trash className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    );
+                  })}
                 </div>
               </div>
             )}
