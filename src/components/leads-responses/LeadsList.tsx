@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { 
   Mail, Phone, MessageCircle, Edit, 
-  Calendar, Search, ArrowUpRight, Trash2, StickyNote, Tag
+  Calendar, Search, ArrowUpRight, Trash2, StickyNote, Tag, Download
 } from "lucide-react";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
@@ -458,6 +458,38 @@ const LeadsList = ({ searchQuery }: LeadsListProps) => {
             }}
           >
             אפס
+          </Button>
+
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="h-9 shrink-0 gap-2"
+            onClick={() => {
+              // Export to Excel logic
+              const csvContent = [
+                ['שם', 'אימייל', 'טלפון', 'תאריך', 'סטטוס', 'ערוץ', 'סוג אוטומציה', 'שותף'],
+                ...filteredLeads.map(lead => [
+                  lead.name,
+                  lead.email,
+                  lead.phone,
+                  lead.date,
+                  leadStatuses[lead.id] || lead.status,
+                  lead.source,
+                  lead.automationType,
+                  lead.partner || 'ללא'
+                ])
+              ].map(row => row.join(',')).join('\n');
+              
+              const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+              const link = document.createElement('a');
+              link.href = URL.createObjectURL(blob);
+              link.download = `leads_${new Date().toISOString().split('T')[0]}.csv`;
+              link.click();
+              toast.success('הקובץ יוצא בהצלחה!');
+            }}
+          >
+            <Download className="h-4 w-4" />
+            ייצוא Excel
           </Button>
         </div>
       </div>
