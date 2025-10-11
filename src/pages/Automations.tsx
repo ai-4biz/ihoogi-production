@@ -14,7 +14,7 @@ type AutomationTab = "triggers" | "templates" | "prefs";
 const Automations = () => {
   const [searchParams] = useSearchParams();
   const tabParam = searchParams.get("tab") as AutomationTab;
-  const [activeTab, setActiveTab] = useState<AutomationTab>(tabParam || "triggers");
+  const [activeTab, setActiveTab] = useState<AutomationTab>(tabParam || "templates");
 
   useEffect(() => {
     if (tabParam && ["triggers", "templates", "prefs"].includes(tabParam)) {
@@ -44,26 +44,26 @@ const Automations = () => {
         </div>
         
         <Tabs 
-          defaultValue="triggers" 
+          defaultValue="templates" 
           value={activeTab}
           onValueChange={(value) => setActiveTab(value as AutomationTab)}
           className="w-full"
         >
           <TabsList className="grid grid-cols-3 gap-1 md:gap-2 mb-6 w-full">
             <TabsTrigger 
-              value="triggers" 
-              className={cn("flex items-center gap-1 md:gap-2 text-xs md:text-sm", activeTab === "triggers" && "text-blue-500")}
-            >
-              <Bell className="h-3 w-3 md:h-4 md:w-4" />
-              <span>טריגרים</span>
-            </TabsTrigger>
-            
-            <TabsTrigger 
               value="templates" 
               className={cn("flex items-center gap-1 md:gap-2 text-xs md:text-sm", activeTab === "templates" && "text-green-500")}
             >
               <Edit className="h-3 w-3 md:h-4 md:w-4" />
               <span>תבניות</span>
+            </TabsTrigger>
+            
+            <TabsTrigger 
+              value="triggers" 
+              className={cn("flex items-center gap-1 md:gap-2 text-xs md:text-sm", activeTab === "triggers" && "text-blue-500")}
+            >
+              <Bell className="h-3 w-3 md:h-4 md:w-4" />
+              <span>טריגרים</span>
             </TabsTrigger>
             
             <TabsTrigger 
@@ -75,12 +75,12 @@ const Automations = () => {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="triggers" className="mt-2">
-            <TriggersTab />
-          </TabsContent>
-          
           <TabsContent value="templates" className="mt-2">
             <TemplatesTab />
+          </TabsContent>
+          
+          <TabsContent value="triggers" className="mt-2">
+            <TriggersTab />
           </TabsContent>
           
           <TabsContent value="prefs" className="mt-2">
