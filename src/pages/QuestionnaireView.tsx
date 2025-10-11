@@ -127,19 +127,15 @@ const QuestionnaireView: React.FC = () => {
 
   const renderFormView = () => (
     <div className="space-y-6">
-      {/* Header - Modern Clean Design */}
+      {/* Header - Clean Design Without Borders */}
       <div className="flex justify-center items-start gap-6 mb-8">
-        {/* Logo - Left */}
+        {/* Logo - Left - No Border */}
         {brandingData.logoUrl && (
-          <div className="flex-shrink-0 transform transition-all hover:scale-105">
+          <div className="flex-shrink-0">
             <img 
               src={brandingData.logoUrl} 
               alt="Logo" 
-              className="h-32 w-32 object-contain rounded-lg shadow-lg"
-              style={{ 
-                border: `3px solid ${brandingData.primaryColor}`,
-                background: `linear-gradient(135deg, ${brandingData.backgroundColor}40 0%, white 100%)`
-              }}
+              className="h-32 w-32 object-contain"
             />
           </div>
         )}
@@ -148,56 +144,44 @@ const QuestionnaireView: React.FC = () => {
         <div className="flex-1 max-w-2xl">
           {/* Gradient Header Bar */}
           <div 
-            className="h-1 w-full rounded-full mb-4 shadow-sm"
+            className="h-1 w-full rounded-full mb-4"
             style={{ 
               background: `linear-gradient(90deg, ${brandingData.primaryColor} 0%, ${brandingData.secondaryColor} 100%)`
             }}
           />
           
-          {/* Title Section */}
+          {/* Title Section - No Borders */}
           <div className="text-center mb-4">
             <h2 
-              className="font-bold text-2xl leading-tight mb-2 drop-shadow-sm" 
+              className="font-bold text-2xl leading-tight mb-2" 
               style={{ color: brandingData.primaryColor }}
             >
               {brandingData.businessName}
             </h2>
             <h1 
               className="font-semibold text-xl leading-tight" 
-              style={{ 
-                color: brandingData.secondaryColor,
-                textShadow: `0 1px 2px ${brandingData.secondaryColor}20`
-              }}
+              style={{ color: brandingData.secondaryColor }}
             >
               {questionnaire?.title}
             </h1>
           </div>
           
-          {/* Description with Subtle Background */}
+          {/* Description - No Border */}
           {questionnaire?.description && (
-            <div 
-              className="text-center p-4 rounded-xl mb-4 shadow-sm"
-              style={{ 
-                backgroundColor: `${brandingData.backgroundColor}30`,
-                borderRight: `4px solid ${brandingData.secondaryColor}`
-              }}
-            >
+            <div className="text-center p-4 mb-4">
               <p className="text-base text-gray-700 leading-relaxed">
                 {questionnaire.description}
               </p>
             </div>
           )}
           
-          {/* Image with Modern Frame */}
+          {/* Image - No Border */}
           {brandingData.images && brandingData.images.length > 0 && (
-            <div className="mb-4 overflow-hidden rounded-2xl shadow-lg">
+            <div className="mb-4 overflow-hidden rounded-2xl">
               <img 
                 src={brandingData.images[0]}
                 alt="תמונה"
-                className="w-full h-48 object-cover transform transition-all hover:scale-105"
-                style={{ 
-                  borderBottom: `4px solid ${brandingData.primaryColor}`
-                }}
+                className="w-full h-48 object-cover"
               />
             </div>
           )}
@@ -209,7 +193,7 @@ const QuestionnaireView: React.FC = () => {
                 href={brandingData.links[0]}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium shadow-lg hover:shadow-xl transform transition-all hover:scale-105 text-white"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium text-white"
                 style={{ 
                   background: `linear-gradient(135deg, ${brandingData.primaryColor} 0%, ${brandingData.secondaryColor} 100%)`
                 }}
@@ -223,17 +207,13 @@ const QuestionnaireView: React.FC = () => {
           )}
         </div>
         
-        {/* Profile - Right */}
+        {/* Profile - Right - No Border */}
         {brandingData.profileImageUrl && (
-          <div className="flex-shrink-0 transform transition-all hover:scale-105">
+          <div className="flex-shrink-0">
             <img 
               src={brandingData.profileImageUrl} 
               alt="Profile" 
-              className="h-32 w-32 rounded-full object-cover shadow-lg"
-              style={{ 
-                border: `4px solid ${brandingData.secondaryColor}`,
-                boxShadow: `0 8px 16px ${brandingData.secondaryColor}30`
-              }}
+              className="h-32 w-32 rounded-full object-cover"
             />
           </div>
         )}
@@ -329,19 +309,15 @@ const QuestionnaireView: React.FC = () => {
       borderRadius: '12px',
       border: `1px solid ${brandingData.secondaryColor}30`
     }}>
-      {/* Chat Header - Modern Clean Design */}
+      {/* Chat Header - Clean Design Without Borders */}
       <div className="flex justify-center items-start gap-6 mb-8">
-        {/* Logo - Left */}
+        {/* Logo - Left - No Border */}
         {brandingData.logoUrl && (
-          <div className="flex-shrink-0 transform transition-all hover:scale-105">
+          <div className="flex-shrink-0">
             <img 
               src={brandingData.logoUrl} 
               alt="Logo" 
-              className="h-32 w-32 object-contain rounded-lg shadow-lg"
-              style={{ 
-                border: `3px solid ${brandingData.primaryColor}`,
-                background: `linear-gradient(135deg, ${brandingData.backgroundColor}40 0%, white 100%)`
-              }}
+              className="h-32 w-32 object-contain"
             />
           </div>
         )}
@@ -350,47 +326,38 @@ const QuestionnaireView: React.FC = () => {
         <div className="flex-1 max-w-2xl">
           {/* Gradient Header Bar */}
           <div 
-            className="h-1 w-full rounded-full mb-4 shadow-sm"
+            className="h-1 w-full rounded-full mb-4"
             style={{ 
               background: `linear-gradient(90deg, ${brandingData.primaryColor} 0%, ${brandingData.secondaryColor} 100%)`
             }}
           />
           
-          {/* Title Section */}
+          {/* Title Section - No Borders */}
           <div className="text-center mb-4">
             <h2 
-              className="font-bold text-2xl leading-tight mb-2 drop-shadow-sm" 
+              className="font-bold text-2xl leading-tight mb-2" 
               style={{ color: brandingData.primaryColor }}
             >
               {brandingData.businessName}
             </h2>
           </div>
           
-          {/* Description with Subtle Background */}
+          {/* Description - No Border */}
           {questionnaire?.description && (
-            <div 
-              className="text-center p-4 rounded-xl mb-4 shadow-sm"
-              style={{ 
-                backgroundColor: `${brandingData.backgroundColor}30`,
-                borderRight: `4px solid ${brandingData.secondaryColor}`
-              }}
-            >
+            <div className="text-center p-4 mb-4">
               <p className="text-base text-gray-700 leading-relaxed">
                 {questionnaire.description}
               </p>
             </div>
           )}
           
-          {/* Image with Modern Frame */}
+          {/* Image - No Border */}
           {brandingData.images && brandingData.images.length > 0 && (
-            <div className="mb-4 overflow-hidden rounded-2xl shadow-lg">
+            <div className="mb-4 overflow-hidden rounded-2xl">
               <img 
                 src={brandingData.images[0]}
                 alt="תמונה"
-                className="w-full h-48 object-cover transform transition-all hover:scale-105"
-                style={{ 
-                  borderBottom: `4px solid ${brandingData.primaryColor}`
-                }}
+                className="w-full h-48 object-cover"
               />
             </div>
           )}
@@ -402,7 +369,7 @@ const QuestionnaireView: React.FC = () => {
                 href={brandingData.links[0]}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium shadow-lg hover:shadow-xl transform transition-all hover:scale-105 text-white"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium text-white"
                 style={{ 
                   background: `linear-gradient(135deg, ${brandingData.primaryColor} 0%, ${brandingData.secondaryColor} 100%)`
                 }}
@@ -416,17 +383,13 @@ const QuestionnaireView: React.FC = () => {
           )}
         </div>
         
-        {/* Profile - Right */}
+        {/* Profile - Right - No Border */}
         {brandingData.profileImageUrl && (
-          <div className="flex-shrink-0 transform transition-all hover:scale-105">
+          <div className="flex-shrink-0">
             <img 
               src={brandingData.profileImageUrl} 
               alt="Profile" 
-              className="h-32 w-32 rounded-full object-cover shadow-lg"
-              style={{ 
-                border: `4px solid ${brandingData.secondaryColor}`,
-                boxShadow: `0 8px 16px ${brandingData.secondaryColor}30`
-              }}
+              className="h-32 w-32 rounded-full object-cover"
             />
           </div>
         )}
