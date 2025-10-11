@@ -12,6 +12,14 @@ export const mockLeads = [
     automationType: "AI",
     questionnaire: "טופס צור קשר",
     partner: "דני כהן",
+    templateName: "תבנית תשובה אוטומטית ארוכה מאוד שתהיה חתוכה",
+    commission: {
+      type: "percentage",
+      value: 15,
+      frequency: "monthly",
+      paymentTerms: "תשלום ב-15 לחודש",
+      additionalInfo: "עמלה מינימלית של 500 ש״ח לחודש"
+    },
     questionnaireAnswers: {
       "שם מלא": "דני לוי",
       "אימייל": "dani@example.com",
@@ -32,6 +40,14 @@ export const mockLeads = [
     automationType: "תבנית",
     questionnaire: "טופס צור קשר",
     partner: "יעל לוי",
+    templateName: "תבנית תגובה מהירה",
+    commission: {
+      type: "fixed",
+      value: 200,
+      frequency: "per_lead",
+      paymentTerms: "תשלום מיידי עם סגירת ליד",
+      additionalInfo: "עמלה קבועה לכל ליד מוצלח"
+    },
     questionnaireAnswers: {
       "שם מלא": "שירה כהן",
       "אימייל": "shira@example.com",
@@ -52,6 +68,7 @@ export const mockLeads = [
     automationType: "משולב",
     questionnaire: "טופס צור קשר",
     partner: "",
+    templateName: "תבנית משולבת AI",
     questionnaireAnswers: {
       "שם מלא": "יוסי אברהם",
       "אימייל": "yossi@example.com",
@@ -72,6 +89,14 @@ export const mockLeads = [
     automationType: "תבנית",
     questionnaire: "טופס צור קשר",
     partner: "רון אבני",
+    templateName: "תבנית שיווק דיגיטלי מתקדמת עם AI",
+    commission: {
+      type: "percentage",
+      value: 12,
+      frequency: "monthly",
+      paymentTerms: "תשלום ב-1 לחודש",
+      additionalInfo: "עמלה משתנה לפי ביצועים"
+    },
     questionnaireAnswers: {
       "שם מלא": "מיכל שרון",
       "אימייל": "michal@example.com",
@@ -87,11 +112,19 @@ export const mockLeads = [
     phone: "058-5556666",
     message: "אני מחפש מישהו שיכול לעזור לנו עם אסטרטגיית שיווק לעסק חדש שאנחנו מקימים בתחום ההייטק.",
     date: "10.05.2025",
-    status: "closed",
+    status: "reminder",
     source: "Instagram",
-    automationType: "AI",
+    automationType: "תבנית",
     questionnaire: "טופס צור קשר",
     partner: "מיכל גרין",
+    templateName: "תבנית תזכורת אוטומטית",
+    commission: {
+      type: "hybrid",
+      value: { percentage: 10, fixed: 150 },
+      frequency: "monthly",
+      paymentTerms: "תשלום מעורב - עמלה + בונוס",
+      additionalInfo: "עמלה בסיסית + בונוס על ביצועים"
+    },
     questionnaireAnswers: {
       "שם מלא": "אריה גולן",
       "אימייל": "arie@example.com",

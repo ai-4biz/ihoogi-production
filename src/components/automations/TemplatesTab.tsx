@@ -27,7 +27,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
-import { Edit, Trash2, Star, Plus, ChevronDown } from "lucide-react";
+import { Edit, Trash2, Star, Plus, ChevronDown, Upload } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface Template {

@@ -127,81 +127,113 @@ const QuestionnaireView: React.FC = () => {
 
   const renderFormView = () => (
     <div className="space-y-6">
-      {/* Header - Logo, Purple Square, Profile */}
-      <div className="flex justify-center items-center gap-4">
+      {/* Header - Modern Clean Design */}
+      <div className="flex justify-center items-start gap-6 mb-8">
         {/* Logo - Left */}
         {brandingData.logoUrl && (
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 transform transition-all hover:scale-105">
             <img 
               src={brandingData.logoUrl} 
               alt="Logo" 
-              className="h-32 w-32 object-contain rounded border"
-              style={{ borderColor: brandingData.primaryColor + '30' }}
+              className="h-32 w-32 object-contain rounded-lg shadow-lg"
+              style={{ 
+                border: `3px solid ${brandingData.primaryColor}`,
+                background: `linear-gradient(135deg, ${brandingData.backgroundColor}40 0%, white 100%)`
+              }}
             />
           </div>
         )}
         
-        {/* Purple Square - Center */}
-        <Card className="border shadow-sm w-full max-w-sm" style={{ borderColor: brandingData.primaryColor + '20', backgroundColor: brandingData.backgroundColor }}>
-          <CardContent className="p-3">
-            <div className="flex flex-col items-center justify-center">
-              {/* Title */}
-              <div className="text-center mb-1 w-full">
-                <h2 className="font-bold text-sm leading-tight" style={{ color: brandingData.primaryColor }}>{brandingData.businessName}</h2>
-                <h1 className="font-semibold text-xs mt-0.5 leading-tight" style={{ color: brandingData.primaryColor }}>{questionnaire?.title}</h1>
-              </div>
-              
-              {/* Description */}
-              {questionnaire?.description && (
-                <p className="text-xs text-center text-muted-foreground mb-1.5 w-full">
-                  {questionnaire.description}
-                </p>
-              )}
-              
-              {/* Image - Below Description */}
-              {brandingData.images && brandingData.images.length > 0 && (
-                <div className="mb-1.5 w-full">
-                  <img 
-                    src={brandingData.images[0]}
-                    alt="תמונה"
-                    className="h-16 w-full object-cover rounded border"
-                    style={{ borderColor: brandingData.primaryColor + '30' }}
-                  />
-                </div>
-              )}
-              
-              {/* Link - Small & Centered */}
-              {brandingData.links && brandingData.links.length > 0 && (
-                <div className="flex justify-center w-full">
-                  <a 
-                    href={brandingData.links[0]}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border hover:underline transition-all"
-                    style={{ 
-                      borderColor: brandingData.secondaryColor + '40',
-                      color: brandingData.secondaryColor
-                    }}
-                  >
-                    <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" />
-                    </svg>
-                    קישור
-                  </a>
-                </div>
-              )}
+        {/* Center Content - No Box, Clean Layout */}
+        <div className="flex-1 max-w-2xl">
+          {/* Gradient Header Bar */}
+          <div 
+            className="h-1 w-full rounded-full mb-4 shadow-sm"
+            style={{ 
+              background: `linear-gradient(90deg, ${brandingData.primaryColor} 0%, ${brandingData.secondaryColor} 100%)`
+            }}
+          />
+          
+          {/* Title Section */}
+          <div className="text-center mb-4">
+            <h2 
+              className="font-bold text-2xl leading-tight mb-2 drop-shadow-sm" 
+              style={{ color: brandingData.primaryColor }}
+            >
+              {brandingData.businessName}
+            </h2>
+            <h1 
+              className="font-semibold text-xl leading-tight" 
+              style={{ 
+                color: brandingData.secondaryColor,
+                textShadow: `0 1px 2px ${brandingData.secondaryColor}20`
+              }}
+            >
+              {questionnaire?.title}
+            </h1>
+          </div>
+          
+          {/* Description with Subtle Background */}
+          {questionnaire?.description && (
+            <div 
+              className="text-center p-4 rounded-xl mb-4 shadow-sm"
+              style={{ 
+                backgroundColor: `${brandingData.backgroundColor}30`,
+                borderRight: `4px solid ${brandingData.secondaryColor}`
+              }}
+            >
+              <p className="text-base text-gray-700 leading-relaxed">
+                {questionnaire.description}
+              </p>
             </div>
-          </CardContent>
-        </Card>
+          )}
+          
+          {/* Image with Modern Frame */}
+          {brandingData.images && brandingData.images.length > 0 && (
+            <div className="mb-4 overflow-hidden rounded-2xl shadow-lg">
+              <img 
+                src={brandingData.images[0]}
+                alt="תמונה"
+                className="w-full h-48 object-cover transform transition-all hover:scale-105"
+                style={{ 
+                  borderBottom: `4px solid ${brandingData.primaryColor}`
+                }}
+              />
+            </div>
+          )}
+          
+          {/* Link with Modern Button Style */}
+          {brandingData.links && brandingData.links.length > 0 && (
+            <div className="flex justify-center">
+              <a 
+                href={brandingData.links[0]}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium shadow-lg hover:shadow-xl transform transition-all hover:scale-105 text-white"
+                style={{ 
+                  background: `linear-gradient(135deg, ${brandingData.primaryColor} 0%, ${brandingData.secondaryColor} 100%)`
+                }}
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" />
+                </svg>
+                למידע נוסף
+              </a>
+            </div>
+          )}
+        </div>
         
         {/* Profile - Right */}
         {brandingData.profileImageUrl && (
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 transform transition-all hover:scale-105">
             <img 
               src={brandingData.profileImageUrl} 
               alt="Profile" 
-              className="h-32 w-32 rounded-full object-cover border-2"
-              style={{ borderColor: brandingData.secondaryColor }}
+              className="h-32 w-32 rounded-full object-cover shadow-lg"
+              style={{ 
+                border: `4px solid ${brandingData.secondaryColor}`,
+                boxShadow: `0 8px 16px ${brandingData.secondaryColor}30`
+              }}
             />
           </div>
         )}
@@ -297,80 +329,104 @@ const QuestionnaireView: React.FC = () => {
       borderRadius: '12px',
       border: `1px solid ${brandingData.secondaryColor}30`
     }}>
-      {/* Chat Header - Logo, Purple Square, Profile */}
-      <div className="flex justify-center items-center gap-4">
+      {/* Chat Header - Modern Clean Design */}
+      <div className="flex justify-center items-start gap-6 mb-8">
         {/* Logo - Left */}
         {brandingData.logoUrl && (
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 transform transition-all hover:scale-105">
             <img 
               src={brandingData.logoUrl} 
               alt="Logo" 
-              className="h-32 w-32 object-contain rounded border"
-              style={{ borderColor: brandingData.primaryColor + '30' }}
+              className="h-32 w-32 object-contain rounded-lg shadow-lg"
+              style={{ 
+                border: `3px solid ${brandingData.primaryColor}`,
+                background: `linear-gradient(135deg, ${brandingData.backgroundColor}40 0%, white 100%)`
+              }}
             />
           </div>
         )}
         
-        {/* Purple Square - Center */}
-        <Card className="border shadow-sm w-full max-w-sm" style={{ borderColor: brandingData.primaryColor + '20', backgroundColor: brandingData.backgroundColor }}>
-          <CardContent className="p-3">
-            <div className="flex flex-col items-center justify-center">
-              {/* Title */}
-              <div className="text-center mb-1 w-full">
-                <h3 className="font-bold text-sm leading-tight" style={{ color: brandingData.primaryColor }}>{brandingData.businessName}</h3>
-              </div>
-              
-              {/* Description */}
-              {questionnaire?.description && (
-                <p className="text-xs text-center text-muted-foreground mb-1.5 w-full">
-                  {questionnaire.description}
-                </p>
-              )}
-              
-              {/* Image - Below Description */}
-              {brandingData.images && brandingData.images.length > 0 && (
-                <div className="mb-1.5 w-full">
-                  <img 
-                    src={brandingData.images[0]}
-                    alt="תמונה"
-                    className="h-16 w-full object-cover rounded border"
-                    style={{ borderColor: brandingData.primaryColor + '30' }}
-                  />
-                </div>
-              )}
-              
-              {/* Link - Small & Centered */}
-              {brandingData.links && brandingData.links.length > 0 && (
-                <div className="flex justify-center w-full">
-                  <a 
-                    href={brandingData.links[0]}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border hover:underline transition-all"
-                    style={{ 
-                      borderColor: brandingData.secondaryColor + '40',
-                      color: brandingData.secondaryColor
-                    }}
-                  >
-                    <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" />
-                    </svg>
-                    קישור
-                  </a>
-                </div>
-              )}
+        {/* Center Content - No Box, Clean Layout */}
+        <div className="flex-1 max-w-2xl">
+          {/* Gradient Header Bar */}
+          <div 
+            className="h-1 w-full rounded-full mb-4 shadow-sm"
+            style={{ 
+              background: `linear-gradient(90deg, ${brandingData.primaryColor} 0%, ${brandingData.secondaryColor} 100%)`
+            }}
+          />
+          
+          {/* Title Section */}
+          <div className="text-center mb-4">
+            <h2 
+              className="font-bold text-2xl leading-tight mb-2 drop-shadow-sm" 
+              style={{ color: brandingData.primaryColor }}
+            >
+              {brandingData.businessName}
+            </h2>
+          </div>
+          
+          {/* Description with Subtle Background */}
+          {questionnaire?.description && (
+            <div 
+              className="text-center p-4 rounded-xl mb-4 shadow-sm"
+              style={{ 
+                backgroundColor: `${brandingData.backgroundColor}30`,
+                borderRight: `4px solid ${brandingData.secondaryColor}`
+              }}
+            >
+              <p className="text-base text-gray-700 leading-relaxed">
+                {questionnaire.description}
+              </p>
             </div>
-          </CardContent>
-        </Card>
+          )}
+          
+          {/* Image with Modern Frame */}
+          {brandingData.images && brandingData.images.length > 0 && (
+            <div className="mb-4 overflow-hidden rounded-2xl shadow-lg">
+              <img 
+                src={brandingData.images[0]}
+                alt="תמונה"
+                className="w-full h-48 object-cover transform transition-all hover:scale-105"
+                style={{ 
+                  borderBottom: `4px solid ${brandingData.primaryColor}`
+                }}
+              />
+            </div>
+          )}
+          
+          {/* Link with Modern Button Style */}
+          {brandingData.links && brandingData.links.length > 0 && (
+            <div className="flex justify-center">
+              <a 
+                href={brandingData.links[0]}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium shadow-lg hover:shadow-xl transform transition-all hover:scale-105 text-white"
+                style={{ 
+                  background: `linear-gradient(135deg, ${brandingData.primaryColor} 0%, ${brandingData.secondaryColor} 100%)`
+                }}
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" />
+                </svg>
+                למידע נוסף
+              </a>
+            </div>
+          )}
+        </div>
         
         {/* Profile - Right */}
         {brandingData.profileImageUrl && (
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 transform transition-all hover:scale-105">
             <img 
               src={brandingData.profileImageUrl} 
               alt="Profile" 
-              className="h-32 w-32 rounded-full object-cover border-2"
-              style={{ borderColor: brandingData.secondaryColor }}
+              className="h-32 w-32 rounded-full object-cover shadow-lg"
+              style={{ 
+                border: `4px solid ${brandingData.secondaryColor}`,
+                boxShadow: `0 8px 16px ${brandingData.secondaryColor}30`
+              }}
             />
           </div>
         )}

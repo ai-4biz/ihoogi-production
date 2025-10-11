@@ -37,6 +37,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { mockLeads } from "./data/mockData";
 import LeadDetailCard from "./LeadDetailCard";
 import QuestionnaireAnswersDialog from "./QuestionnaireAnswersDialog";
@@ -59,7 +60,18 @@ const LeadsList = ({ searchQuery }: LeadsListProps) => {
   const [answersDialogOpen, setAnswersDialogOpen] = useState(false);
   const [selectedLeadForAnswers, setSelectedLeadForAnswers] = useState<number | null>(null);
   const [partnerDialogOpen, setPartnerDialogOpen] = useState(false);
-  const [selectedPartner, setSelectedPartner] = useState<{ name: string; total: number; new: number } | null>(null);
+  const [selectedPartner, setSelectedPartner] = useState<{ 
+    name: string; 
+    total: number; 
+    new: number; 
+    commission?: {
+      type: "percentage" | "fixed" | "hybrid";
+      value: number | { percentage: number; fixed: number };
+      frequency: "monthly" | "per_lead" | "quarterly";
+      paymentTerms: string;
+      additionalInfo?: string;
+    };
+  } | null>(null);
   
   // Filter states
   const [filterText, setFilterText] = useState("");
@@ -123,7 +135,16 @@ const LeadsList = ({ searchQuery }: LeadsListProps) => {
     const total = partnerLeads.length;
     const newLeads = partnerLeads.filter(lead => lead.status === "new").length;
     
-    setSelectedPartner({ name: partnerName, total, new: newLeads });
+    // Get commission data from first lead with this partner
+    const leadWithCommission = partnerLeads.find(lead => lead.commission);
+    const commission = leadWithCommission?.commission;
+    
+    setSelectedPartner({ 
+      name: partnerName, 
+      total, 
+      new: newLeads,
+      commission 
+    });
     setPartnerDialogOpen(true);
   };
 
@@ -491,13 +512,17 @@ const LeadsList = ({ searchQuery }: LeadsListProps) => {
                     </Badge>
                   </div>
 
-                  {/* Row 2: Channel + Questionnaire + View Answers */}
+                  {/* Row 2: Channel + Questionnaire + Template + View Answers */}
                   <div className="flex items-center gap-1.5 text-[10px]">
                     <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4 bg-purple-50 border-purple-200 text-purple-700">
                       {lead.source}
                     </Badge>
                     <span className="text-muted-foreground">•</span>
                     <span className="text-muted-foreground truncate">טופס צור קשר</span>
+                    <span className="text-muted-foreground">•</span>
+                    <span className="text-muted-foreground truncate max-w-[80px]" title={lead.templateName || "ללא תבנית"}>
+                      {lead.templateName || "ללא תבנית"}
+                    </span>
                     <span className="text-muted-foreground">•</span>
                     <button 
                       onClick={(e) => {
@@ -613,6 +638,7 @@ const LeadsList = ({ searchQuery }: LeadsListProps) => {
                 </TableHead>
                 <TableHead className="w-[180px] p-2">שם לקוח</TableHead>
                 <TableHead className="w-[140px] p-2">שאלון</TableHead>
+                <TableHead className="w-[120px] p-2">תבנית</TableHead>
                 <TableHead className="w-[100px] p-2">שותף</TableHead>
                 <TableHead className="w-[80px] p-2">ערוץ</TableHead>
                 <TableHead className="w-[120px] p-2">סטטוס</TableHead>
@@ -663,6 +689,12 @@ const LeadsList = ({ searchQuery }: LeadsListProps) => {
                         טופס צור קשר
                         <ArrowUpRight className="h-3 w-3" />
                       </button>
+                    </TableCell>
+
+                    <TableCell className="p-2">
+                      <div className="text-sm truncate max-w-[120px]" title={lead.templateName || "ללא תבנית"}>
+                        {lead.templateName || "ללא תבנית"}
+                      </div>
                     </TableCell>
 
                     <TableCell className="p-2">
@@ -725,18 +757,61 @@ const LeadsList = ({ searchQuery }: LeadsListProps) => {
                     </TableCell>
                     
                     <TableCell className="p-2" onClick={(e) => e.stopPropagation()}>
-                      <Badge 
-                        variant="outline" 
-                        className={`text-xs ${
-                          lead.automationType === "AI" 
-                            ? "bg-blue-50 border-blue-200 text-blue-700" 
-                            : lead.automationType === "תבנית"
-                            ? "bg-green-50 border-green-200 text-green-700"
-                            : "bg-orange-50 border-orange-200 text-orange-700"
-                        }`}
-                      >
-                        {lead.automationType}
-                      </Badge>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Badge 
+                              variant="outline" 
+                              className={`text-xs cursor-help ${
+                                lead.automationType === "AI" 
+                                  ? "bg-blue-50 border-blue-200 text-blue-700" 
+                                  : lead.automationType === "תבנית"
+                                  ? "bg-green-50 border-green-200 text-green-700"
+                                  : "bg-orange-50 border-orange-200 text-orange-700"
+                              }`}
+                            >
+                              {lead.automationType}
+                            </Badge>
+                          </TooltipTrigger>
+                          <TooltipContent side="left" className="max-w-xs" dir="rtl">
+                            <div className="space-y-2 text-sm">
+                              <div className="font-semibold border-b pb-1">{lead.templateName || "ללא תבנית"}</div>
+                              <div className="space-y-1">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-muted-foreground">סוג תבנית:</span>
+                                  <Badge variant="outline" className="text-xs">
+                                    {lead.automationType}
+                                  </Badge>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <span className="text-muted-foreground">מענה:</span>
+                                  <span className="font-medium">
+                                    {currentStatus === "reminder" ? "תזכורת" : "שאלון"}
+                                  </span>
+                                </div>
+                                {currentStatus === "reminder" && (
+                                  <>
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-muted-foreground">סטטוס:</span>
+                                      <Badge variant="secondary" className="text-xs">
+                                        {getLeadStatusLabel(currentStatus)}
+                                      </Badge>
+                                    </div>
+                                    {currentSubStatus && (
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-muted-foreground">תת-סטטוס:</span>
+                                        <Badge variant="secondary" className="text-xs">
+                                          {currentSubStatus}
+                                        </Badge>
+                                      </div>
+                                    )}
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </TableCell>
                     
                     <TableCell className="p-2">

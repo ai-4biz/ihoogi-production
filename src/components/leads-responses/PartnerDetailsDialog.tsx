@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, TrendingUp, Users, Mail, Phone, Globe } from "lucide-react";
+import { Calendar, TrendingUp, Users, Mail, Phone, Globe, DollarSign, Clock, FileText } from "lucide-react";
 
 interface Partner {
   name: string;
@@ -12,6 +12,13 @@ interface Partner {
   website?: string;
   startDate?: string;
   description?: string;
+  commission?: {
+    type: "percentage" | "fixed" | "hybrid";
+    value: number | { percentage: number; fixed: number };
+    frequency: "monthly" | "per_lead" | "quarterly";
+    paymentTerms: string;
+    additionalInfo?: string;
+  };
   performance?: {
     month: string;
     leads: number;
@@ -34,6 +41,13 @@ const PartnerDetailsDialog = ({ partner, open, onOpenChange }: PartnerDetailsDia
     website: "www.partner-site.com",
     startDate: "01.01.2025",
     description: "שותף עסקי מוביל בתחום השיווק הדיגיטלי עם התמחות בקידום ברשתות חברתיות",
+    commission: partner.commission || {
+      type: "percentage" as const,
+      value: 15,
+      frequency: "monthly" as const,
+      paymentTerms: "תשלום ב-15 לחודש",
+      additionalInfo: "עמלה מינימלית של 500 ש״ח לחודש"
+    },
     performance: [
       { month: "ינואר", leads: 12 },
       { month: "פברואר", leads: 18 },
@@ -55,7 +69,7 @@ const PartnerDetailsDialog = ({ partner, open, onOpenChange }: PartnerDetailsDia
 
         <div className="space-y-6">
           {/* Key Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card className="border-2 border-primary/20 bg-primary/5">
               <CardContent className="pt-6 text-center">
                 <div className="text-4xl font-bold text-primary mb-2">{mockPartner.total}</div>
@@ -76,6 +90,20 @@ const PartnerDetailsDialog = ({ partner, open, onOpenChange }: PartnerDetailsDia
                   {Math.round((mockPartner.new / mockPartner.total) * 100)}%
                 </div>
                 <div className="text-sm text-muted-foreground">שיעור המרה</div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 border-blue-500/20 bg-blue-50">
+              <CardContent className="pt-6 text-center">
+                <div className="text-2xl font-bold text-blue-600 mb-2">
+                  {mockPartner.commission.type === "percentage" 
+                    ? `${mockPartner.commission.value}%`
+                    : mockPartner.commission.type === "fixed"
+                    ? `${mockPartner.commission.value} ש״ח`
+                    : `${(mockPartner.commission.value as any).percentage}% + ${(mockPartner.commission.value as any).fixed} ש״ח`
+                  }
+                </div>
+                <div className="text-sm text-muted-foreground">עמלה</div>
               </CardContent>
             </Card>
           </div>
@@ -129,6 +157,70 @@ const PartnerDetailsDialog = ({ partner, open, onOpenChange }: PartnerDetailsDia
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     {mockPartner.description}
                   </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Commission Details */}
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-2 mb-4">
+                <DollarSign className="h-5 w-5 text-primary" />
+                <h3 className="text-lg font-semibold">פרטי העמלה</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground">סוג עמלה:</span>
+                    <Badge variant="outline">
+                      {mockPartner.commission.type === "percentage" && "אחוזים"}
+                      {mockPartner.commission.type === "fixed" && "סכום קבוע"}
+                      {mockPartner.commission.type === "hybrid" && "מעורב"}
+                    </Badge>
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <DollarSign className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground">ערך:</span>
+                    <span className="font-semibold">
+                      {mockPartner.commission.type === "percentage" 
+                        ? `${mockPartner.commission.value}%`
+                        : mockPartner.commission.type === "fixed"
+                        ? `${mockPartner.commission.value} ש״ח`
+                        : `${(mockPartner.commission.value as any).percentage}% + ${(mockPartner.commission.value as any).fixed} ש״ח`
+                      }
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground">תדירות:</span>
+                    <Badge variant="outline">
+                      {mockPartner.commission.frequency === "monthly" && "חודשי"}
+                      {mockPartner.commission.frequency === "per_lead" && "חד פעמי"}
+                      {mockPartner.commission.frequency === "quarterly" && "רבעוני"}
+                    </Badge>
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground">תנאי תשלום:</span>
+                    <span className="text-sm">{mockPartner.commission.paymentTerms}</span>
+                  </div>
+                </div>
+              </div>
+              
+              {mockPartner.commission.additionalInfo && (
+                <div className="mt-4 p-3 bg-muted rounded-lg">
+                  <div className="flex items-center gap-2 mb-1">
+                    <FileText className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm font-medium">מידע נוסף:</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">{mockPartner.commission.additionalInfo}</p>
                 </div>
               )}
             </CardContent>
