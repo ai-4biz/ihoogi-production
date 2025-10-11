@@ -126,7 +126,12 @@ const QuestionnaireView: React.FC = () => {
   }, [id]);
 
   const renderFormView = () => (
-    <div className="space-y-6">
+    <div className="space-y-6" style={{ 
+      backgroundColor: brandingData.backgroundColor,
+      padding: '24px',
+      borderRadius: '16px',
+      minHeight: '100vh'
+    }}>
       {/* Header - Clean Design Without Borders */}
       <div className="flex justify-center items-start gap-6 mb-8">
         {/* Logo - Left - No Border */}
@@ -304,10 +309,10 @@ const QuestionnaireView: React.FC = () => {
 
   const renderChatView = () => (
     <div className="space-y-4" style={{ 
-      background: `linear-gradient(135deg, ${brandingData.secondaryColor}20 0%, ${brandingData.primaryColor}20 100%)`,
-      padding: '20px',
-      borderRadius: '12px',
-      border: `1px solid ${brandingData.secondaryColor}30`
+      backgroundColor: brandingData.backgroundColor,
+      padding: '24px',
+      borderRadius: '16px',
+      minHeight: '100vh'
     }}>
       {/* Chat Header - Clean Design Without Borders */}
       <div className="flex justify-center items-start gap-6 mb-8">
