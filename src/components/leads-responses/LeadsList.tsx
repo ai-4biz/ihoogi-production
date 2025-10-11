@@ -368,10 +368,33 @@ const LeadsList = ({ searchQuery }: LeadsListProps) => {
 
           <Button 
             size="sm" 
-            onClick={() => showComingSoon("ייצוא לאקסל (XLS)")}
-            className="h-9 shrink-0 px-3 bg-green-600 hover:bg-green-700 text-white"
+            onClick={() => {
+              // Export to Excel logic
+              const csvContent = [
+                ['שם', 'אימייל', 'טלפון', 'תאריך', 'סטטוס', 'ערוץ', 'סוג אוטומציה', 'שותף'],
+                ...filteredLeads.map(lead => [
+                  lead.name,
+                  lead.email,
+                  lead.phone,
+                  lead.date,
+                  leadStatuses[lead.id] || lead.status,
+                  lead.source,
+                  lead.automationType,
+                  lead.partner || 'ללא'
+                ])
+              ].map(row => row.join(',')).join('\n');
+              
+              const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+              const link = document.createElement('a');
+              link.href = URL.createObjectURL(blob);
+              link.download = `leads_${new Date().toISOString().split('T')[0]}.csv`;
+              link.click();
+              toast.success('הקובץ יוצא בהצלחה!');
+            }}
+            className="h-9 shrink-0 px-3 bg-green-600 hover:bg-green-700 text-white gap-1"
           >
-            <span className="text-xs font-medium">XLS</span>
+            <Download className="h-3 w-3" />
+            <span className="text-xs font-medium">Excel</span>
           </Button>
         </div>
 
@@ -444,6 +467,19 @@ const LeadsList = ({ searchQuery }: LeadsListProps) => {
             </SelectContent>
           </Select>
 
+          <Select value={filterPartner} onValueChange={setFilterPartner}>
+            <SelectTrigger className="w-[120px] h-9">
+              <SelectValue placeholder="שותף" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">הכל</SelectItem>
+              <SelectItem value="דני כהן">דני כהן</SelectItem>
+              <SelectItem value="יעל לוי">יעל לוי</SelectItem>
+              <SelectItem value="רון אבני">רון אבני</SelectItem>
+              <SelectItem value="מיכל גרין">מיכל גרין</SelectItem>
+            </SelectContent>
+          </Select>
+
           <Button 
             variant="outline" 
             size="sm"
@@ -455,15 +491,15 @@ const LeadsList = ({ searchQuery }: LeadsListProps) => {
               setFilterChannel("");
               setFilterStatus("");
               setFilterQuestionnaire("");
+              setFilterPartner("");
             }}
           >
             אפס
           </Button>
 
           <Button 
-            variant="outline" 
             size="sm"
-            className="h-9 shrink-0 gap-2"
+            className="h-9 shrink-0 gap-2 bg-green-600 hover:bg-green-700 text-white"
             onClick={() => {
               // Export to Excel logic
               const csvContent = [
