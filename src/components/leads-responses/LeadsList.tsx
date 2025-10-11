@@ -512,17 +512,13 @@ const LeadsList = ({ searchQuery }: LeadsListProps) => {
                     </Badge>
                   </div>
 
-                  {/* Row 2: Channel + Questionnaire + Template + View Answers */}
+                  {/* Row 2: Channel + Questionnaire + View Answers */}
                   <div className="flex items-center gap-1.5 text-[10px]">
                     <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4 bg-purple-50 border-purple-200 text-purple-700">
                       {lead.source}
                     </Badge>
                     <span className="text-muted-foreground">•</span>
                     <span className="text-muted-foreground truncate">טופס צור קשר</span>
-                    <span className="text-muted-foreground">•</span>
-                    <span className="text-muted-foreground truncate max-w-[80px]" title={lead.templateName || "ללא תבנית"}>
-                      {lead.templateName || "ללא תבנית"}
-                    </span>
                     <span className="text-muted-foreground">•</span>
                     <button 
                       onClick={(e) => {
@@ -638,7 +634,6 @@ const LeadsList = ({ searchQuery }: LeadsListProps) => {
                 </TableHead>
                 <TableHead className="w-[180px] p-2">שם לקוח</TableHead>
                 <TableHead className="w-[140px] p-2">שאלון</TableHead>
-                <TableHead className="w-[120px] p-2">תבנית</TableHead>
                 <TableHead className="w-[100px] p-2">שותף</TableHead>
                 <TableHead className="w-[80px] p-2">ערוץ</TableHead>
                 <TableHead className="w-[120px] p-2">סטטוס</TableHead>
@@ -689,12 +684,6 @@ const LeadsList = ({ searchQuery }: LeadsListProps) => {
                         טופס צור קשר
                         <ArrowUpRight className="h-3 w-3" />
                       </button>
-                    </TableCell>
-
-                    <TableCell className="p-2">
-                      <div className="text-sm truncate max-w-[120px]" title={lead.templateName || "ללא תבנית"}>
-                        {lead.templateName || "ללא תבנית"}
-                      </div>
                     </TableCell>
 
                     <TableCell className="p-2">
@@ -765,8 +754,12 @@ const LeadsList = ({ searchQuery }: LeadsListProps) => {
                               className={`text-xs cursor-help ${
                                 lead.automationType === "AI" 
                                   ? "bg-blue-50 border-blue-200 text-blue-700" 
-                                  : lead.automationType === "תבנית"
+                                  : lead.automationType === "AI משולב אישי"
+                                  ? "bg-purple-50 border-purple-200 text-purple-700"
+                                  : lead.automationType === "משוב אישי"
                                   ? "bg-green-50 border-green-200 text-green-700"
+                                  : lead.automationType === "סטנדרט"
+                                  ? "bg-gray-50 border-gray-200 text-gray-700"
                                   : "bg-orange-50 border-orange-200 text-orange-700"
                               }`}
                             >
@@ -778,7 +771,7 @@ const LeadsList = ({ searchQuery }: LeadsListProps) => {
                               <div className="font-semibold border-b pb-1">{lead.templateName || "ללא תבנית"}</div>
                               <div className="space-y-1">
                                 <div className="flex items-center gap-2">
-                                  <span className="text-muted-foreground">סוג תבנית:</span>
+                                  <span className="text-muted-foreground">סוג אוטומציה:</span>
                                   <Badge variant="outline" className="text-xs">
                                     {lead.automationType}
                                   </Badge>
