@@ -205,67 +205,63 @@ const TemplatesTab = () => {
 
   return (
     <TooltipProvider>
-      <div className="space-y-6">
-      {/* Standard Template Tab */}
-      <div className="flex justify-end mb-4">
-        <div className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium">
-          תבנית סטנדרט
-        </div>
+      <div className="space-y-6" dir="rtl">
+      {/* Create Template Button - Top */}
+      <div className="flex justify-start mb-4">
+        <Button 
+          onClick={handleCreateTemplate}
+          className="bg-primary text-primary-foreground hover:bg-primary/90"
+        >
+          <Plus className="h-4 w-4 ml-2" />
+          צור תבנית חדשה
+        </Button>
       </div>
-      
-      {/* Standard Email Template - Smaller Box */}
-      <Card className="p-4 bg-primary/5 border-primary/20 max-w-md mx-auto">
-        <div className="flex items-start justify-between mb-3">
-          <div>
-            <h2 className="text-lg font-semibold mb-1 flex items-center gap-2">
-              <Star className="h-4 w-4 text-primary" />
-              תבנית סטנדרטית
-            </h2>
-            <p className="text-muted-foreground text-xs">תבנית ברירת מחדל</p>
+
+      {/* Standard Template - Inline Editing */}
+      <Card className="p-6 bg-primary/5 border-primary/20" dir="rtl">
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <Star className="h-5 w-5 text-primary" />
+            <h2 className="text-xl font-semibold">תבנית סטנדרטית</h2>
+          </div>
+          <div className="bg-primary text-primary-foreground px-3 py-1 rounded-lg text-sm font-medium">
+            תבנית סטנדרט
           </div>
         </div>
-        <div className="space-y-2 bg-background p-3 rounded-md border">
-          <div>
-            <Label className="text-xs text-muted-foreground">נושא</Label>
-            <p className="font-medium text-sm">קיבלנו את השאלון שלך - {"{{businessName}}"}</p>
+        
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>נושא ההודעה</Label>
+              <Input 
+                value="קיבלנו את השאלון שלך - {{businessName}}"
+                className="text-right"
+                readOnly
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>ערוץ שליחה</Label>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" className="flex-1">מייל</Button>
+                <Button variant="outline" size="sm" className="flex-1">וואטסאפ</Button>
+              </div>
+            </div>
           </div>
-          <div>
-            <Label className="text-xs text-muted-foreground">תוכן</Label>
-            <p className="whitespace-pre-wrap text-xs leading-relaxed">
-              שלום {"{{firstName}}"},
-              {"\n"}
-              תודה שמילאת את השאלון שלנו.
-              {"\n"}
-              פנייתך התקבלה ואנו נחזור אליך בהקדם.
-              {"\n\n"}
-              בברכה,
-              {"\n"}
-              {"{{businessName}}"}
-            </p>
+          
+          <div className="space-y-2">
+            <Label>תוכן ההודעה (עד 2 שורות)</Label>
+            <Textarea 
+              value="שלום {{firstName}},\nתודה שמילאת את השאלון שלנו. פנייתך התקבלה ואנו נחזור אליך בהקדם."
+              className="min-h-[60px] max-h-[60px] resize-none text-right"
+              rows={2}
+            />
+            <p className="text-xs text-muted-foreground">מוגבל ל-2 שורות בלבד</p>
           </div>
-          <div className="pt-2">
-            <Button 
-              variant="outline" 
-              size="sm"
-              className="w-full text-xs"
-              onClick={() => {
-                // Edit standard template
-                setCurrentTemplate({
-                  id: "standard",
-                  name: "תבנית סטנדרטית",
-                  triggerType: "questionnaire",
-                  templateType: "standard",
-                  channel: "email",
-                  subject: "קיבלנו את השאלון שלך - {{businessName}}",
-                  body: "שלום {{firstName}},\n\nתודה שמילאת את השאלון שלנו.\nפנייתך התקבלה ואנו נחזור אליך בהקדם.\n\nבברכה,\n{{businessName}}",
-                  isDefault: true
-                });
-                setIsEditMode(true);
-                setIsDialogOpen(true);
-              }}
-            >
-              <Edit className="h-3 w-3 ml-1" />
-              ערוך תשובה (עד 2 שורות)
+          
+          <div className="flex justify-end">
+            <Button variant="outline" size="sm">
+              <Edit className="h-4 w-4 ml-2" />
+              ערוך תשובה
             </Button>
           </div>
         </div>
@@ -278,89 +274,79 @@ const TemplatesTab = () => {
           <p className="text-muted-foreground">צור תבניות מותאמות אישית למענה אוטומטי</p>
         </div>
 
-        {/* Inline Create Template Form */}
-        <div className="bg-gray-50 p-4 rounded-lg mb-6" dir="rtl">
-          <h3 className="font-medium text-right mb-4">יצירת תבנית חדשה</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* AI Template Options */}
+        <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg mb-6 border border-blue-200" dir="rtl">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+              <span className="text-white text-sm font-bold">AI</span>
+            </div>
+            <h3 className="text-lg font-semibold">תבנית AI</h3>
+          </div>
+          
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label>מיקום תגובת AI</Label>
+                <Select>
+                  <SelectTrigger className="text-right">
+                    <SelectValue placeholder="בחר מיקום" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="beginning">בתחילת התשובה</SelectItem>
+                    <SelectItem value="middle">באמצע התשובה</SelectItem>
+                    <SelectItem value="end">בסוף התשובה</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label>ערוצי שליחה</Label>
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" className="flex-1">מייל</Button>
+                  <Button variant="outline" size="sm" className="flex-1">וואטסאפ</Button>
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <Label>קישור (אופציונלי)</Label>
+                <Input 
+                  placeholder="https://example.com"
+                  className="text-right"
+                />
+              </div>
+            </div>
+            
             <div className="space-y-2">
-              <Label htmlFor="newTemplateName">שם התבנית</Label>
-              <Input 
-                id="newTemplateName"
-                placeholder="הכנס שם לתבנית"
-                className="text-right"
+              <Label>העלאת קובץ (אופציונלי)</Label>
+              <div className="flex gap-2">
+                <Input 
+                  type="file"
+                  accept="image/*,.pdf"
+                  className="flex-1"
+                />
+                <Button variant="outline" size="sm">
+                  <Upload className="h-4 w-4 ml-1" />
+                  בחר קובץ
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground">ניתן להעלות תמונות או מסמכי PDF</p>
+            </div>
+            
+            <div className="space-y-2">
+              <Label>הודעת AI מותאמת אישית</Label>
+              <Textarea 
+                placeholder="כתוב כאן את ההודעה שתופיע לפני או אחרי תגובת ה-AI..."
+                className="min-h-[80px] text-right"
+                rows={3}
               />
             </div>
             
-            <div className="space-y-2">
-              <Label htmlFor="newTemplateType">סוג התבנית</Label>
-              <Select>
-                <SelectTrigger className="text-right">
-                  <SelectValue placeholder="בחר סוג" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="standard">סטנדרטית</SelectItem>
-                  <SelectItem value="ai">AI</SelectItem>
-                  <SelectItem value="personal">פנייה אישית</SelectItem>
-                  <SelectItem value="combined">משולב</SelectItem>
-                  <SelectItem value="reminder">תזכורת</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="flex justify-end">
+              <Button className="bg-blue-500 text-white hover:bg-blue-600">
+                <Plus className="h-4 w-4 ml-2" />
+                צור תבנית AI
+              </Button>
             </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="newTemplateQuestionnaire">שאלון</Label>
-              <Select>
-                <SelectTrigger className="text-right">
-                  <SelectValue placeholder="בחר שאלון" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="questionnaire1">שאלון ייעוץ עסקי</SelectItem>
-                  <SelectItem value="questionnaire2">שאלון שירותים</SelectItem>
-                  <SelectItem value="questionnaire3">שאלון משוב</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="newTemplateReminder">תזכורת</Label>
-              <Select>
-                <SelectTrigger className="text-right">
-                  <SelectValue placeholder="בחר תזכורת" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">ללא תזכורת</SelectItem>
-                  <SelectItem value="reminder1">תזכורת יומית</SelectItem>
-                  <SelectItem value="reminder2">תזכורת שבועית</SelectItem>
-                  <SelectItem value="reminder3">תזכורת חודשית</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            {/* Reminder Status Selection - appears when reminder is selected */}
-            <div className="space-y-2">
-              <Label htmlFor="newTemplateReminderStatus">סטטוס ליד</Label>
-              <Select>
-                <SelectTrigger className="text-right">
-                  <SelectValue placeholder="בחר סטטוס" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="new">חדש</SelectItem>
-                  <SelectItem value="contacted">נצור קשר</SelectItem>
-                  <SelectItem value="qualified">מוכשר</SelectItem>
-                  <SelectItem value="closed">סגור</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          
-          <div className="mt-4 flex justify-end">
-            <Button 
-              onClick={handleCreateTemplate}
-              className="bg-primary text-primary-foreground hover:bg-primary/90"
-            >
-              <Plus className="h-4 w-4 ml-2" />
-              צור תבנית
-            </Button>
           </div>
         </div>
 
@@ -512,6 +498,32 @@ const TemplatesTab = () => {
             </div>
 
             <div>
+              <Label htmlFor="template-channels">ערוצי שליחה</Label>
+              <div className="flex gap-2">
+                <Button 
+                  variant={currentTemplate?.channel === "email" ? "default" : "outline"} 
+                  size="sm" 
+                  className="flex-1"
+                  onClick={() => setCurrentTemplate(prev => 
+                    prev ? {...prev, channel: "email"} : null
+                  )}
+                >
+                  מייל
+                </Button>
+                <Button 
+                  variant={currentTemplate?.channel === "whatsapp" ? "default" : "outline"} 
+                  size="sm" 
+                  className="flex-1"
+                  onClick={() => setCurrentTemplate(prev => 
+                    prev ? {...prev, channel: "whatsapp"} : null
+                  )}
+                >
+                  וואטסאפ
+                </Button>
+              </div>
+            </div>
+
+            <div>
               <Label htmlFor="template-questionnaire">שאלון</Label>
               <Select 
                 value={currentTemplate?.questionnaireId || ""} 
@@ -602,6 +614,44 @@ const TemplatesTab = () => {
               />
               <p className="text-xs text-muted-foreground mt-1">
                 מוגבל ל-2 שורות בלבד
+              </p>
+            </div>
+
+            <div>
+              <Label htmlFor="template-link">קישור (אופציונלי)</Label>
+              <Input 
+                id="template-link"
+                value={currentTemplate?.imageUrl || ""} 
+                onChange={(e) => setCurrentTemplate(prev => 
+                  prev ? {...prev, imageUrl: e.target.value} : null
+                )} 
+                placeholder="https://example.com"
+                dir="rtl"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="template-file">העלאת קובץ (אופציונלי)</Label>
+              <Input 
+                id="template-file"
+                type="file"
+                accept="image/*,.pdf"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setCurrentTemplate(prev => 
+                      prev ? {...prev, fileUrl: file.name} : null
+                    );
+                    toast({
+                      title: "קובץ נבחר",
+                      description: `הקובץ ${file.name} נבחר בהצלחה`
+                    });
+                  }
+                }}
+                className="cursor-pointer"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                ניתן להעלות תמונות או מסמכי PDF
               </p>
             </div>
 
