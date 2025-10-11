@@ -40,6 +40,8 @@ interface Template {
   body: string;
   imageUrl?: string;
   fileUrl?: string;
+  questionnaireId?: string;
+  reminderStatus?: string;
   leadStatus?: string;
   isDefault: boolean;
 }
@@ -204,27 +206,34 @@ const TemplatesTab = () => {
   return (
     <TooltipProvider>
       <div className="space-y-6">
-      {/* Standard Email Template */}
-      <Card className="p-6 bg-primary/5 border-primary/20">
-        <div className="flex items-start justify-between mb-4">
+      {/* Standard Template Tab */}
+      <div className="flex justify-end mb-4">
+        <div className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium">
+          תבנית סטנדרט
+        </div>
+      </div>
+      
+      {/* Standard Email Template - Smaller Box */}
+      <Card className="p-4 bg-primary/5 border-primary/20 max-w-md mx-auto">
+        <div className="flex items-start justify-between mb-3">
           <div>
-            <h2 className="text-xl font-semibold mb-2 flex items-center gap-2">
-              <Star className="h-5 w-5 text-primary" />
-              תבנית סטנדרטית למייל
+            <h2 className="text-lg font-semibold mb-1 flex items-center gap-2">
+              <Star className="h-4 w-4 text-primary" />
+              תבנית סטנדרטית
             </h2>
-            <p className="text-muted-foreground text-sm">תבנית ברירת מחדל למענה אוטומטי בדוא"ל</p>
+            <p className="text-muted-foreground text-xs">תבנית ברירת מחדל</p>
           </div>
         </div>
-        <div className="space-y-3 bg-background p-4 rounded-md border">
+        <div className="space-y-2 bg-background p-3 rounded-md border">
           <div>
             <Label className="text-xs text-muted-foreground">נושא</Label>
-            <p className="font-medium">קיבלנו את השאלון שלך - {"{{businessName}}"}</p>
+            <p className="font-medium text-sm">קיבלנו את השאלון שלך - {"{{businessName}}"}</p>
           </div>
           <div>
-            <Label className="text-xs text-muted-foreground">תוכן ההודעה</Label>
-            <p className="whitespace-pre-wrap text-sm">
+            <Label className="text-xs text-muted-foreground">תוכן</Label>
+            <p className="whitespace-pre-wrap text-xs leading-relaxed">
               שלום {"{{firstName}}"},
-              {"\n\n"}
+              {"\n"}
               תודה שמילאת את השאלון שלנו.
               {"\n"}
               פנייתך התקבלה ואנו נחזור אליך בהקדם.
@@ -233,6 +242,31 @@ const TemplatesTab = () => {
               {"\n"}
               {"{{businessName}}"}
             </p>
+          </div>
+          <div className="pt-2">
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="w-full text-xs"
+              onClick={() => {
+                // Edit standard template
+                setCurrentTemplate({
+                  id: "standard",
+                  name: "תבנית סטנדרטית",
+                  triggerType: "questionnaire",
+                  templateType: "standard",
+                  channel: "email",
+                  subject: "קיבלנו את השאלון שלך - {{businessName}}",
+                  body: "שלום {{firstName}},\n\nתודה שמילאת את השאלון שלנו.\nפנייתך התקבלה ואנו נחזור אליך בהקדם.\n\nבברכה,\n{{businessName}}",
+                  isDefault: true
+                });
+                setIsEditMode(true);
+                setIsDialogOpen(true);
+              }}
+            >
+              <Edit className="h-3 w-3 ml-1" />
+              ערוך תשובה (עד 2 שורות)
+            </Button>
           </div>
         </div>
       </Card>
@@ -244,18 +278,95 @@ const TemplatesTab = () => {
           <p className="text-muted-foreground">צור תבניות מותאמות אישית למענה אוטומטי</p>
         </div>
 
+        {/* Inline Create Template Form */}
+        <div className="bg-gray-50 p-4 rounded-lg mb-6" dir="rtl">
+          <h3 className="font-medium text-right mb-4">יצירת תבנית חדשה</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="newTemplateName">שם התבנית</Label>
+              <Input 
+                id="newTemplateName"
+                placeholder="הכנס שם לתבנית"
+                className="text-right"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="newTemplateType">סוג התבנית</Label>
+              <Select>
+                <SelectTrigger className="text-right">
+                  <SelectValue placeholder="בחר סוג" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="standard">סטנדרטית</SelectItem>
+                  <SelectItem value="ai">AI</SelectItem>
+                  <SelectItem value="personal">פנייה אישית</SelectItem>
+                  <SelectItem value="combined">משולב</SelectItem>
+                  <SelectItem value="reminder">תזכורת</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="newTemplateQuestionnaire">שאלון</Label>
+              <Select>
+                <SelectTrigger className="text-right">
+                  <SelectValue placeholder="בחר שאלון" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="questionnaire1">שאלון ייעוץ עסקי</SelectItem>
+                  <SelectItem value="questionnaire2">שאלון שירותים</SelectItem>
+                  <SelectItem value="questionnaire3">שאלון משוב</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="newTemplateReminder">תזכורת</Label>
+              <Select>
+                <SelectTrigger className="text-right">
+                  <SelectValue placeholder="בחר תזכורת" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">ללא תזכורת</SelectItem>
+                  <SelectItem value="reminder1">תזכורת יומית</SelectItem>
+                  <SelectItem value="reminder2">תזכורת שבועית</SelectItem>
+                  <SelectItem value="reminder3">תזכורת חודשית</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            {/* Reminder Status Selection - appears when reminder is selected */}
+            <div className="space-y-2">
+              <Label htmlFor="newTemplateReminderStatus">סטטוס ליד</Label>
+              <Select>
+                <SelectTrigger className="text-right">
+                  <SelectValue placeholder="בחר סטטוס" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="new">חדש</SelectItem>
+                  <SelectItem value="contacted">נצור קשר</SelectItem>
+                  <SelectItem value="qualified">מוכשר</SelectItem>
+                  <SelectItem value="closed">סגור</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          
+          <div className="mt-4 flex justify-end">
+            <Button 
+              onClick={handleCreateTemplate}
+              className="bg-primary text-primary-foreground hover:bg-primary/90"
+            >
+              <Plus className="h-4 w-4 ml-2" />
+              צור תבנית
+            </Button>
+          </div>
+        </div>
+
         <div className="border rounded-md mb-6" dir="rtl">
           <div className="p-4 border-b flex items-center justify-between bg-gray-50">
             <h3 className="font-medium text-right">תבניות קיימות</h3>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={handleCreateTemplate} 
-              className="flex items-center bg-primary text-primary-foreground hover:bg-primary/90 border-primary"
-            >
-              <Plus className="h-4 w-4 ml-2" />
-              תבנית חדשה
-            </Button>
           </div>
           
           <div className="divide-y">
@@ -400,6 +511,45 @@ const TemplatesTab = () => {
               </Select>
             </div>
 
+            <div>
+              <Label htmlFor="template-questionnaire">שאלון</Label>
+              <Select 
+                value={currentTemplate?.questionnaireId || ""} 
+                onValueChange={(value) => setCurrentTemplate(prev => 
+                  prev ? {...prev, questionnaireId: value} : null
+                )}
+              >
+                <SelectTrigger id="template-questionnaire" className="w-full">
+                  <SelectValue placeholder="בחר שאלון" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="questionnaire1">שאלון ייעוץ עסקי</SelectItem>
+                  <SelectItem value="questionnaire2">שאלון שירותים</SelectItem>
+                  <SelectItem value="questionnaire3">שאלון משוב</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label htmlFor="template-reminder">תזכורת</Label>
+              <Select 
+                value={currentTemplate?.reminderStatus || ""} 
+                onValueChange={(value) => setCurrentTemplate(prev => 
+                  prev ? {...prev, reminderStatus: value} : null
+                )}
+              >
+                <SelectTrigger id="template-reminder" className="w-full">
+                  <SelectValue placeholder="בחר תזכורת" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">ללא תזכורת</SelectItem>
+                  <SelectItem value="daily">תזכורת יומית</SelectItem>
+                  <SelectItem value="weekly">תזכורת שבועית</SelectItem>
+                  <SelectItem value="monthly">תזכורת חודשית</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             {currentTemplate?.templateType === "reminder" && (
               <div>
                 <Label htmlFor="lead-status">סטטוס ליד</Label>
@@ -438,17 +588,21 @@ const TemplatesTab = () => {
             </div>
 
             <div>
-              <Label htmlFor="message-body">גוף ההודעה</Label>
+              <Label htmlFor="message-body">גוף ההודעה (עד 2 שורות)</Label>
               <Textarea 
                 id="message-body"
                 value={currentTemplate?.body || ""} 
                 onChange={(e) => setCurrentTemplate(prev => 
                   prev ? {...prev, body: e.target.value} : null
                 )} 
-                className="min-h-[150px]"
-                placeholder="הזן את תוכן ההודעה"
+                className="min-h-[60px] max-h-[60px] resize-none"
+                placeholder="הזן את תוכן ההודעה (עד 2 שורות)"
                 dir="rtl"
+                rows={2}
               />
+              <p className="text-xs text-muted-foreground mt-1">
+                מוגבל ל-2 שורות בלבד
+              </p>
             </div>
 
             {currentTemplate?.templateType !== 'standard' && (
