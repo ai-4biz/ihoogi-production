@@ -26,6 +26,11 @@ const SurveysPage = () => {
       responsesThisMonth: 15,
       templateName: "תבנית מענה סטנדרטית",
       templateSentCount: 12,
+      templates: [
+        { name: "תבנית מענה סטנדרטית", sentCount: 12 },
+        { name: "תבנית AI מותאמת", sentCount: 8 },
+        { name: "תבנית תזכורת", sentCount: 5 }
+      ],
       sources: [
         { name: "פייסבוק", total: 15, new: 5, icon: Facebook, color: "bg-blue-500" },
         { name: "אינסטגרם", total: 12, new: 4, icon: Instagram, color: "bg-pink-500" },
@@ -54,6 +59,11 @@ const SurveysPage = () => {
       responsesThisMonth: 45,
       templateName: "מענה AI מותאם",
       templateSentCount: 28,
+      templates: [
+        { name: "מענה AI מותאם", sentCount: 28 },
+        { name: "תבנית משולבת אישית", sentCount: 15 },
+        { name: "תבנית תזכורת שבועית", sentCount: 7 }
+      ],
       sources: [
         { name: "פייסבוק", total: 20, new: 8, icon: Facebook, color: "bg-blue-500" },
         { name: "אינסטגרם", total: 15, new: 6, icon: Instagram, color: "bg-pink-500" },
@@ -251,19 +261,24 @@ const SurveysPage = () => {
                         </div>
                       </div>
 
-                      {/* Template Info */}
+                      {/* Automated Customer Response */}
                       <div className="space-y-3">
-                        <h4 className="text-sm font-semibold text-gray-700">תבנית מענה:</h4>
-                        <div 
-                          className="flex items-center gap-2 p-3 rounded-lg bg-gradient-to-r from-cyan-50 to-blue-50 border border-cyan-200 hover:border-cyan-300 transition-colors cursor-pointer"
-                          onClick={() => navigate('/create-template')}
-                        >
-                          <FileText className="h-5 w-5 text-cyan-600" />
-                          <div className="flex-1">
-                            <div className="font-medium text-cyan-900">{q.templateName}</div>
-                            <div className="text-sm text-cyan-700">{q.templateSentCount} הודעות נשלחו</div>
-                          </div>
-                          <Edit className="h-4 w-4 text-cyan-600" />
+                        <h4 className="text-sm font-semibold text-gray-700">מענה לקוח אוטומטי:</h4>
+                        <div className="space-y-2">
+                          {q.templates?.map((template, index) => (
+                            <div 
+                              key={index}
+                              className="flex items-center gap-2 p-3 rounded-lg bg-gradient-to-r from-cyan-50 to-blue-50 border border-cyan-200 hover:border-cyan-300 transition-colors cursor-pointer"
+                              onClick={() => navigate('/create-template')}
+                            >
+                              <FileText className="h-5 w-5 text-cyan-600" />
+                              <div className="flex-1">
+                                <div className="font-medium text-cyan-900">{template.name}</div>
+                                <div className="text-sm text-cyan-700">{template.sentCount} הודעות נשלחו</div>
+                              </div>
+                              <Edit className="h-4 w-4 text-cyan-600" />
+                            </div>
+                          ))}
                         </div>
                       </div>
 
