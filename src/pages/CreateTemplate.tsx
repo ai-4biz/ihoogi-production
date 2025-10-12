@@ -212,20 +212,22 @@ const CreateTemplate = () => {
             onValueChange={(value) => setActiveTab(value as "templates" | "notifications")}
             className="w-full mb-6"
           >
-            <TabsList className="grid grid-cols-2 gap-1 md:gap-2 mb-6 w-full">
+            <TabsList className="grid grid-cols-2 gap-1 md:gap-2 mb-4 md:mb-6 w-full">
               <TabsTrigger 
                 value="notifications" 
-                className="flex items-center justify-start gap-1 md:gap-2 text-xs md:text-sm text-right"
+                className="flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm text-right px-2 md:px-4 py-2 md:py-3"
               >
                 <Bell className="h-3 w-3 md:h-4 md:w-4" />
-                <span>ההתראות שלי</span>
+                <span className="hidden sm:inline">ההתראות שלי</span>
+                <span className="sm:hidden">התראות</span>
               </TabsTrigger>
               
               <TabsTrigger 
                 value="templates" 
-                className="flex items-center justify-end gap-1 md:gap-2 text-xs md:text-sm text-right"
+                className="flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm text-right px-2 md:px-4 py-2 md:py-3"
               >
-                <span>מענה ללקוחות</span>
+                <span className="hidden sm:inline">מענה ללקוחות</span>
+                <span className="sm:hidden">מענה</span>
                 <Edit className="h-3 w-3 md:h-4 md:w-4" />
               </TabsTrigger>
             </TabsList>
@@ -874,15 +876,15 @@ const CreateTemplate = () => {
                     <h2 className="text-xl font-semibold">הגדרות תזמון</h2>
                   </div>
                   
-                  <div className="space-y-6">
+                  <div className="space-y-4 md:space-y-6">
                     {/* תדירות התראות */}
                     <div className="space-y-2">
-                      <Label className="text-base font-medium">תדירות התראות</Label>
+                      <Label className="text-sm md:text-base font-medium">תדירות התראות</Label>
                       <Select 
                         value={notificationTiming.frequency} 
                         onValueChange={(value) => setNotificationTiming(prev => ({ ...prev, frequency: value }))}
                       >
-                        <SelectTrigger className="text-right">
+                        <SelectTrigger className="text-right text-sm md:text-base">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -972,38 +974,38 @@ const CreateTemplate = () => {
                     <p className="text-gray-500 text-right">בחר איך לקבל התראות</p>
                   </div>
                   
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-200">
-                      <div className="flex items-center gap-3">
-                        <Mail className="h-5 w-5 text-green-600" />
-                        <div>
-                          <span className="text-base font-medium">התראות בדואר אלקטרוני</span>
+                  <div className="space-y-3 md:space-y-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 md:p-4 bg-green-50 rounded-xl border border-green-200 gap-3">
+                      <div className="flex items-center gap-2 md:gap-3">
+                        <Mail className="h-4 w-4 md:h-5 md:w-5 text-green-600 flex-shrink-0" />
+                        <div className="min-w-0">
+                          <span className="text-sm md:text-base font-medium">התראות בדואר אלקטרוני</span>
                           <p className="text-xs text-green-600 mt-1">אין הגבלות על כמות ההתראות</p>
                         </div>
                       </div>
-                      <Switch defaultChecked className="scale-110" />
+                      <Switch defaultChecked className="scale-110 flex-shrink-0" />
                     </div>
                     
-                    <div className="flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-200">
-                      <div className="flex items-center gap-3">
-                        <MessageCircle className="h-5 w-5 text-green-600" />
-                        <div>
-                          <span className="text-base font-medium">התראות בוואטסאפ</span>
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 md:p-4 bg-gray-50 rounded-xl border border-gray-200 gap-3">
+                      <div className="flex items-center gap-2 md:gap-3">
+                        <MessageCircle className="h-4 w-4 md:h-5 md:w-5 text-gray-600 flex-shrink-0" />
+                        <div className="min-w-0">
+                          <span className="text-sm md:text-base font-medium">התראות בוואטסאפ</span>
                           <p className="text-xs text-orange-600 mt-1">⚠️ מוגבל - יסגר אוטומטית בסיום מכסת ההתראות</p>
                         </div>
                       </div>
-                      <Switch className="scale-110" />
+                      <Switch className="scale-110 flex-shrink-0" />
                     </div>
                     
-                    <div className="flex items-center justify-between p-4 bg-purple-50 rounded-xl border border-purple-200">
-                      <div className="flex items-center gap-3">
-                        <MessageCircle className="h-5 w-5 text-purple-600" />
-                        <div>
-                          <span className="text-base font-medium">התראות בהודעה</span>
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 md:p-4 bg-purple-50 rounded-xl border border-purple-200 gap-3">
+                      <div className="flex items-center gap-2 md:gap-3">
+                        <MessageCircle className="h-4 w-4 md:h-5 md:w-5 text-purple-600 flex-shrink-0" />
+                        <div className="min-w-0">
+                          <span className="text-sm md:text-base font-medium">התראות בהודעה</span>
                           <p className="text-xs text-orange-600 mt-1">⚠️ מוגבל - יסגר אוטומטית בסיום מכסת ההתראות</p>
                         </div>
                       </div>
-                      <Switch className="scale-110" />
+                      <Switch className="scale-110 flex-shrink-0" />
                     </div>
                   </div>
                 </div>
