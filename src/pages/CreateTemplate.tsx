@@ -837,35 +837,7 @@ const CreateTemplate = () => {
                 )}
               </div>
 
-              {/* Action buttons */}
-              <div className="flex justify-center gap-4 mt-8 mb-4">
-                <Button 
-                  onClick={handleSaveTemplate}
-                  className="bg-primary hover:bg-primary/90 text-white shadow-lg px-12 py-6 text-lg font-semibold rounded-xl"
-                  size="lg"
-                >
-                  שמירה
-                </Button>
-                <Button 
-                  onClick={() => navigate("/automations")}
-                  className="bg-secondary hover:bg-secondary/90 text-white shadow-lg px-12 py-6 text-lg font-semibold rounded-xl"
-                  size="lg"
-                >
-                  לאוטומציות
-                </Button>
-              </div>
 
-              {/* Example template button */}
-              <div className="flex justify-center mt-4">
-                <Button 
-                  variant="outline"
-                  onClick={createExampleTemplate}
-                  className="border-dashed border-2 border-muted-foreground/25 hover:border-muted-foreground/50 text-muted-foreground hover:text-foreground"
-                >
-                  <FileText className="h-4 w-4 ml-2" />
-                  צור תבנית לדוגמה
-                </Button>
-              </div>
             </TabsContent>
 
             <TabsContent value="notifications" className="mt-2">
