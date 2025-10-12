@@ -281,12 +281,6 @@ const CreateTemplate = () => {
                             <Sparkles className="h-4 w-4 text-purple-500" />
                           </div>
                         </SelectItem>
-                        <SelectItem value="reminder" disabled>
-                          <div className="flex items-center justify-end gap-2">
-                            <span>תזכורת (לעתיד)</span>
-                            <Clock className="h-4 w-4 text-orange-500" />
-                          </div>
-                        </SelectItem>
                       </SelectContent>
                     </Select>
                     <p className="text-xs text-muted-foreground mt-1 text-right">
