@@ -27,6 +27,7 @@ import TermsOfService from "./pages/TermsOfService";
 import SurveysPage from "./pages/surveys/index";
 import Distribution from "./pages/Distribution";
 import QuestionnaireView from "./pages/QuestionnaireView";
+import CreateTemplate from "./pages/CreateTemplate";
 import { UserProvider } from "@/hooks/use-user";
 
 const queryClient = new QueryClient();
@@ -59,6 +60,7 @@ const App = () => {
               <Route path="/subscriptions" element={<Subscriptions />} />
               <Route path="/my-hoogi" element={<MyHoogi />} />
               <Route path="/distribution" element={<Distribution />} />
+              <Route path="/create-template" element={<CreateTemplate />} />
               <Route path="/questionnaire-view/:id" element={<QuestionnaireView />} />
               <Route path="/questionnaire-view/preview" element={<QuestionnaireView />} />
               <Route path="/signup" element={<Signup />} />

@@ -78,6 +78,15 @@ const NavigationButtons = ({
       color: "red"
     },
     {
+      id: "create-template",
+      emoji: "🎨",
+      label: "האוטומציות שלי",
+      state: "root" as ViewState,
+      active: window.location.pathname === "/create-template",
+      color: "violet",
+      onClick: () => navigate("/create-template")
+    },
+    {
       id: "contact",
       emoji: "✉️",
       label: "צור קשר",
