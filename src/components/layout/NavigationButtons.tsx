@@ -31,9 +31,10 @@ const NavigationButtons = ({
       id: "articles",
       emoji: "📚",
       label: "השאלונים שלי",
-      state: "articles" as ViewState,
-      active: currentState === "articles",
-      color: "indigo"
+      state: "root" as ViewState,
+      active: window.location.pathname === "/surveys",
+      color: "indigo",
+      onClick: () => navigate("/surveys")
     },
     {
       id: "distribution",
