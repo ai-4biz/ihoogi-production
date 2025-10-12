@@ -204,6 +204,9 @@ const SurveysPage = () => {
                       {/* Title */}
                       <div className="space-y-2">
                         <h3 className="text-2xl font-bold text-foreground leading-tight">{q.title}</h3>
+                        <div className="bg-yellow-200 p-2 rounded text-sm">
+                          📋 תבניות מענה: תבנית סטנדרטית (12), AI מותאמת (8), תזכורת (5)
+                        </div>
                         <div className="flex items-center gap-4 text-sm">
                           <div className="flex items-center gap-1">
                             <Users className="h-4 w-4 text-green-600" />
