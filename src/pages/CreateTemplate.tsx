@@ -410,62 +410,79 @@ const CreateTemplate = () => {
               </div>
             )}
 
-            {/* התאמת התבנית לערוצים - לכל סוגי המענה פרט לסטנדרט */}
-            {templateType !== "standard" && (
-              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 md:p-6 shadow-sm border border-blue-200 hover:shadow-md transition-shadow">
-                <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-foreground">התאמת התבנית לערוצים</h3>
+            {/* התאמת התבנית לערוצים - לכל הסוגים */}
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 md:p-6 shadow-sm border border-blue-200 hover:shadow-md transition-shadow">
+              <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-foreground">התאמת התבנית לערוצים</h3>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <Button 
+                  variant={selectedChannels.includes("general") ? "default" : "outline"}
+                  className={`${selectedChannels.includes("general") ? "bg-gray-600 hover:bg-gray-700 border-gray-600" : "border-gray-300 text-gray-700 hover:bg-gray-50"}`}
+                  onClick={() => handleChannelToggle("general")}
+                >
+                  <FileText className="h-4 w-4 ml-2" />
+                  כללי
+                </Button>
                 
-                {/* AI - בחירה מרובה */}
-                {templateType === "ai" ? (
-                  <div className="flex gap-3">
-                    <Button 
-                      variant={selectedChannels.includes("message") ? "default" : "outline"}
-                      className={`flex-1 ${selectedChannels.includes("message") ? "bg-purple-600 hover:bg-purple-700 border-purple-600" : "border-purple-300 text-purple-700 hover:bg-purple-50"}`}
-                      onClick={() => handleChannelToggle("message")}
-                    >
-                      <MessageCircle className="h-4 w-4 ml-2" />
-                      הודעה כללי
-                    </Button>
-                    <Button 
-                      variant={selectedChannels.includes("whatsapp") ? "default" : "outline"}
-                      className={`flex-1 ${selectedChannels.includes("whatsapp") ? "bg-green-600 hover:bg-green-700 border-green-600" : "border-green-300 text-green-700 hover:bg-green-50"}`}
-                      onClick={() => handleChannelToggle("whatsapp")}
-                    >
-                      <MessageCircle className="h-4 w-4 ml-2" />
-                      וואטסאפ
-                    </Button>
-                    <Button 
-                      variant={selectedChannels.includes("email") ? "default" : "outline"}
-                      className={`flex-1 ${selectedChannels.includes("email") ? "bg-blue-600 hover:bg-blue-700 border-blue-600" : "border-blue-300 text-blue-700 hover:bg-blue-50"}`}
-                      onClick={() => handleChannelToggle("email")}
-                    >
-                      <Mail className="h-4 w-4 ml-2" />
-                      מייל
-                    </Button>
-                  </div>
-                ) : (
-                  /* Personal / Combined - בחירה יחידה */
-                  <div className="flex gap-3">
-                    <Button 
-                      variant={singleChannel === "whatsapp" ? "default" : "outline"}
-                      className={`flex-1 ${singleChannel === "whatsapp" ? "bg-green-600 hover:bg-green-700 border-green-600" : "border-green-300 text-green-700 hover:bg-green-50"}`}
-                      onClick={() => setSingleChannel("whatsapp")}
-                    >
-                      <MessageCircle className="h-4 w-4 ml-2" />
-                      וואטסאפ
-                    </Button>
-                    <Button 
-                      variant={singleChannel === "email" ? "default" : "outline"}
-                      className={`flex-1 ${singleChannel === "email" ? "bg-blue-600 hover:bg-blue-700 border-blue-600" : "border-blue-300 text-blue-700 hover:bg-blue-50"}`}
-                      onClick={() => setSingleChannel("email")}
-                    >
-                      <Mail className="h-4 w-4 ml-2" />
-                      מייל
-                    </Button>
-                  </div>
-                )}
+                <Button 
+                  variant={selectedChannels.includes("message") ? "default" : "outline"}
+                  className={`${selectedChannels.includes("message") ? "bg-purple-600 hover:bg-purple-700 border-purple-600" : "border-purple-300 text-purple-700 hover:bg-purple-50"}`}
+                  onClick={() => handleChannelToggle("message")}
+                >
+                  <MessageCircle className="h-4 w-4 ml-2" />
+                  הודעה
+                </Button>
+                
+                <Button 
+                  variant={selectedChannels.includes("whatsapp") ? "default" : "outline"}
+                  className={`${selectedChannels.includes("whatsapp") ? "bg-green-600 hover:bg-green-700 border-green-600" : "border-green-300 text-green-700 hover:bg-green-50"}`}
+                  onClick={() => handleChannelToggle("whatsapp")}
+                >
+                  <MessageCircle className="h-4 w-4 ml-2" />
+                  וואטסאפ
+                </Button>
+                
+                <Button 
+                  variant={selectedChannels.includes("email") ? "default" : "outline"}
+                  className={`${selectedChannels.includes("email") ? "bg-blue-600 hover:bg-blue-700 border-blue-600" : "border-blue-300 text-blue-700 hover:bg-blue-50"}`}
+                  onClick={() => handleChannelToggle("email")}
+                >
+                  <Mail className="h-4 w-4 ml-2" />
+                  מייל
+                </Button>
               </div>
-            )}
+              
+              {/* דמו של התבנית */}
+              {selectedChannels.length > 0 && (
+                <div className="mt-6 p-4 bg-white rounded-lg border border-gray-200">
+                  <h4 className="text-sm font-medium mb-3 text-gray-700">דמו של התבנית לפי הערוצים שנבחרו:</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {selectedChannels.map((channel) => (
+                      <div key={channel} className="p-3 bg-gray-50 rounded-lg border">
+                        <div className="flex items-center gap-2 mb-2">
+                          {channel === "general" && <FileText className="h-4 w-4 text-gray-600" />}
+                          {channel === "message" && <MessageCircle className="h-4 w-4 text-purple-600" />}
+                          {channel === "whatsapp" && <MessageCircle className="h-4 w-4 text-green-600" />}
+                          {channel === "email" && <Mail className="h-4 w-4 text-blue-600" />}
+                          <span className="text-sm font-medium">
+                            {channel === "general" && "כללי"}
+                            {channel === "message" && "הודעה"}
+                            {channel === "whatsapp" && "וואטסאפ"}
+                            {channel === "email" && "מייל"}
+                          </span>
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          {templateType === "standard" && "תבנית סטנדרטית"}
+                          {templateType === "ai" && "תבנית AI"}
+                          {templateType === "personal" && "משוב אישי"}
+                          {templateType === "combined" && "AI משולב אישי"}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* תוכן ההודעה - לא סטנדרט */}
             {templateType !== "standard" && (
