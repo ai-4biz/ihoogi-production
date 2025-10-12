@@ -293,53 +293,48 @@ const CreateTemplate = () => {
                 value="templates" 
                 className="flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm text-right px-2 md:px-4 py-2 md:py-3"
               >
-                <span className="hidden sm:inline">מענה ללקוחות</span>
-                <span className="sm:hidden">מענה</span>
+                <span className="hidden sm:inline">יצירת תבנית למענה לקוח</span>
+                <span className="sm:hidden">יצירת תבנית</span>
                 <Edit className="h-3 w-3 md:h-4 md:w-4" />
               </TabsTrigger>
             </TabsList>
 
             <TabsContent value="templates" className="mt-2">
-              {/* Edit Template Selector */}
-              <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-xl p-4 md:p-6 shadow-sm border border-green-200 mb-6">
-                <div className="space-y-4">
+              {/* Edit Mode Indicator */}
+              {isEditMode && (
+                <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-xl p-4 md:p-6 shadow-sm border border-green-200 mb-6">
                   <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <div className="flex-1">
                       <h3 className="text-base md:text-lg font-semibold text-foreground mb-2 text-right">
-                        {isEditMode ? "עריכת תבנית" : "יצירת תבנית חדשה"}
+                        עריכת תבנית
                       </h3>
                       <p className="text-sm text-gray-600 text-right">
-                        {isEditMode 
-                          ? "אתה עורך תבנית קיימת. ניתן לשנות את כל השדות ולשמור את השינויים."
-                          : "צור תבנית חדשה. לעריכת תבנית קיימת, עבור ללשונית 'התבניות שלי' ולחץ על 'ערוך'."}
+                        אתה עורך תבנית קיימת. ניתן לשנות את כל השדות ולשמור את השינויים.
                       </p>
                     </div>
-                    {isEditMode && (
-                      <Button 
-                        variant="outline"
-                        onClick={() => {
-                          setIsEditMode(false);
-                          setEditingTemplateId(null);
-                          setTemplateName("");
-                          setTemplateType("standard");
-                          setResponseType("new_customer");
-                          setSelectedChannels([]);
-                          setEmailSubject("");
-                          setEmailBody("");
-                          setMessageBody("");
-                          setCustomAiMessage("");
-                          toast.info("מצב עריכה בוטל - ניתן ליצור תבנית חדשה");
-                        }}
-                        className="flex items-center gap-2"
-                      >
-                        <Plus className="h-4 w-4" />
-                        צור תבנית חדשה
-                      </Button>
-                    )}
+                    <Button 
+                      variant="outline"
+                      onClick={() => {
+                        setIsEditMode(false);
+                        setEditingTemplateId(null);
+                        setTemplateName("");
+                        setTemplateType("standard");
+                        setResponseType("new_customer");
+                        setSelectedChannels([]);
+                        setEmailSubject("");
+                        setEmailBody("");
+                        setMessageBody("");
+                        setCustomAiMessage("");
+                        toast.info("מצב עריכה בוטל - ניתן ליצור תבנית חדשה");
+                      }}
+                      className="flex items-center gap-2"
+                    >
+                      <Plus className="h-4 w-4" />
+                      צור תבנית חדשה
+                    </Button>
                   </div>
-                  
                 </div>
-              </div>
+              )}
 
               {/* Main form section */}
               <div className="space-y-4 md:space-y-6 mb-6">

@@ -24,6 +24,8 @@ const SurveysPage = () => {
       leadsThisMonth: 20,
       newResponses: 2,
       responsesThisMonth: 15,
+      templateName: "תבנית מענה סטנדרטית",
+      templateSentCount: 12,
       sources: [
         { name: "פייסבוק", total: 15, new: 5, icon: Facebook, color: "bg-blue-500" },
         { name: "אינסטגרם", total: 12, new: 4, icon: Instagram, color: "bg-pink-500" },
@@ -50,6 +52,8 @@ const SurveysPage = () => {
       leadsThisMonth: 32,
       newResponses: 7,
       responsesThisMonth: 45,
+      templateName: "מענה AI מותאם",
+      templateSentCount: 28,
       sources: [
         { name: "פייסבוק", total: 20, new: 8, icon: Facebook, color: "bg-blue-500" },
         { name: "אינסטגרם", total: 15, new: 6, icon: Instagram, color: "bg-pink-500" },
@@ -203,6 +207,22 @@ const SurveysPage = () => {
                             <TrendingUp className="h-4 w-4 text-purple-600" />
                             <span className="text-purple-700 font-medium">לידים ({q.leadsThisMonth})</span>
                           </div>
+                        </div>
+                      </div>
+
+                      {/* Template Info */}
+                      <div className="space-y-2">
+                        <h4 className="text-sm font-semibold text-gray-700">תבנית מענה:</h4>
+                        <div 
+                          className="flex items-center gap-2 p-3 rounded-lg bg-gradient-to-r from-cyan-50 to-blue-50 border border-cyan-200 hover:border-cyan-300 transition-colors cursor-pointer"
+                          onClick={() => navigate('/create-template')}
+                        >
+                          <FileText className="h-5 w-5 text-cyan-600" />
+                          <div className="flex-1">
+                            <div className="font-medium text-cyan-900">{q.templateName}</div>
+                            <div className="text-sm text-cyan-700">{q.templateSentCount} הודעות נשלחו</div>
+                          </div>
+                          <Edit className="h-4 w-4 text-cyan-600" />
                         </div>
                       </div>
 
