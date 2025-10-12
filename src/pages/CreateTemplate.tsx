@@ -93,6 +93,10 @@ const CreateTemplate = () => {
   // Tab state
   const [activeTab, setActiveTab] = useState<"templates" | "notifications" | "my-templates">("templates");
   
+  // Edit mode state
+  const [editingTemplateId, setEditingTemplateId] = useState<number | null>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+  
   // Notification timing state
   const [notificationTiming, setNotificationTiming] = useState({
     frequency: "daily", // hourly, daily, every3days, weekly, monthly
@@ -128,6 +132,32 @@ const CreateTemplate = () => {
   const handleShowDemo = (channel: string) => {
     setSelectedChannelForDemo(channel);
     setShowDemoModal(true);
+  };
+
+  // Load template for editing
+  const loadTemplateForEdit = (template: any) => {
+    setTemplateName(template.name);
+    setTemplateType(template.type);
+    setResponseType(template.responseType || "new_customer");
+    setSelectedChannels(template.channels || []);
+    setEmailSubject(template.subject || "");
+    setEmailBody(template.body || "");
+    setAiInstructions(template.aiInstructions || "");
+    setPersonalText(template.personalText || "");
+    setAiPosition(template.aiPosition || "beginning");
+    setReminderDelay(template.reminderDelay || "immediate");
+    setReminderTime(template.reminderTime || "09:00");
+    setReminderDays(template.reminderDays || "");
+    setLeadStatus(template.leadStatus || "");
+    setLeadSubStatus(template.leadSubStatus || "");
+    
+    if (template.design) {
+      setDesign(template.design);
+    }
+    
+    setEditingTemplateId(template.id);
+    setIsEditMode(true);
+    setActiveTab("templates");
   };
 
   const handleSaveTemplate = () => {
@@ -246,6 +276,106 @@ const CreateTemplate = () => {
             </TabsList>
 
             <TabsContent value="templates" className="mt-2">
+              {/* Edit Template Selector */}
+              <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-xl p-4 md:p-6 shadow-sm border border-green-200 mb-6">
+                <div className="space-y-4">
+                  <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                    <div className="flex-1">
+                      <h3 className="text-base md:text-lg font-semibold text-foreground mb-2 text-right">
+                        {isEditMode ? "עריכת תבנית" : "יצירת תבנית חדשה"}
+                      </h3>
+                      <p className="text-sm text-gray-600 text-right">
+                        {isEditMode 
+                          ? "אתה עורך תבנית קיימת. ניתן לשנות את כל השדות ולשמור את השינויים."
+                          : "צור תבנית חדשה או בחר תבנית קיימת לעריכה."}
+                      </p>
+                    </div>
+                    {isEditMode && (
+                      <Button 
+                        variant="outline"
+                        onClick={() => {
+                          setIsEditMode(false);
+                          setEditingTemplateId(null);
+                          setTemplateName("");
+                          setTemplateType("standard");
+                          setResponseType("new_customer");
+                          setSelectedChannels([]);
+                          setEmailSubject("");
+                          setEmailBody("");
+                          toast.info("מצב עריכה בוטל - ניתן ליצור תבנית חדשה");
+                        }}
+                        className="flex items-center gap-2"
+                      >
+                        <Plus className="h-4 w-4" />
+                        צור תבנית חדשה
+                      </Button>
+                    )}
+                  </div>
+                  
+                  {!isEditMode && (
+                    <div className="flex items-center gap-3">
+                      <Label className="text-sm font-medium text-right whitespace-nowrap">בחר תבנית לעריכה:</Label>
+                      <Select 
+                        onValueChange={(value) => {
+                          if (value) {
+                            const mockTemplates = [
+                              {
+                                id: 1,
+                                name: "תבנית מענה סטנדרטית",
+                                type: "standard",
+                                channels: ["email"],
+                                responseType: "new_customer",
+                                subject: "תודה על פנייתך",
+                                body: "שלום, נשמח לעזור לך",
+                                aiInstructions: "",
+                                personalText: "",
+                                aiPosition: "beginning",
+                                reminderDelay: "immediate",
+                                reminderTime: "09:00",
+                                reminderDays: "",
+                                leadStatus: "",
+                                leadSubStatus: "",
+                                design: {}
+                              },
+                              {
+                                id: 2,
+                                name: "מענה AI מותאם",
+                                type: "ai",
+                                channels: ["email", "whatsapp"],
+                                responseType: "new_customer",
+                                subject: "מענה אוטומטי",
+                                body: "תוכן AI",
+                                aiInstructions: "תן מענה מקצועי וידידותי",
+                                personalText: "",
+                                aiPosition: "beginning",
+                                reminderDelay: "immediate",
+                                reminderTime: "09:00",
+                                reminderDays: "",
+                                leadStatus: "",
+                                leadSubStatus: "",
+                                design: {}
+                              }
+                            ];
+                            const template = mockTemplates.find(t => t.id.toString() === value);
+                            if (template) {
+                              loadTemplateForEdit(template);
+                            }
+                          }
+                        }}
+                      >
+                        <SelectTrigger className="w-full md:w-[400px] text-right">
+                          <SelectValue placeholder="בחר תבנית..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1">תבנית מענה סטנדרטית</SelectItem>
+                          <SelectItem value="2">מענה AI מותאם</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               {/* Main form section */}
               <div className="space-y-4 md:space-y-6 mb-6">
 
@@ -865,14 +995,14 @@ const CreateTemplate = () => {
                   }}
                   className="px-8 py-3 text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl"
                 >
-                  שמור תבנית
+                  {isEditMode ? "עדכן תבנית" : "שמור תבנית"}
                 </Button>
               </div>
             </TabsContent>
 
             <TabsContent value="my-templates" className="mt-2">
               {/* My Templates Content */}
-              <MyTemplatesTab />
+              <MyTemplatesTab onEditTemplate={loadTemplateForEdit} />
             </TabsContent>
 
             <TabsContent value="notifications" className="mt-2">
@@ -1260,7 +1390,11 @@ const CreateTemplate = () => {
 };
 
 // My Templates Tab Component
-const MyTemplatesTab: React.FC = () => {
+interface MyTemplatesTabProps {
+  onEditTemplate: (template: any) => void;
+}
+
+const MyTemplatesTab: React.FC<MyTemplatesTabProps> = ({ onEditTemplate }) => {
   const [templates, setTemplates] = useState([
     {
       id: 1,
@@ -1344,8 +1478,7 @@ const MyTemplatesTab: React.FC = () => {
   };
 
   const handleEdit = (template: any) => {
-    // Navigate to edit mode
-    console.log("Edit template:", template.id);
+    onEditTemplate(template);
   };
 
   const handleDelete = (templateId: number) => {
