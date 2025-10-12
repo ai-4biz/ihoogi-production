@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { 
   Plus, 
   Sparkles, 
@@ -23,7 +24,8 @@ import {
   Clock,
   Users,
   Edit,
-  Eye
+  Eye,
+  Bell
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -83,6 +85,9 @@ const CreateTemplate = () => {
   const [showDemoModal, setShowDemoModal] = useState(false);
   const [selectedChannelForDemo, setSelectedChannelForDemo] = useState<string>("");
   const [profileFile, setProfileFile] = useState<string>("");
+  
+  // Tab state
+  const [activeTab, setActiveTab] = useState<"templates" | "notifications">("templates");
   const [documentFile, setDocumentFile] = useState<string>("");
   
   // Include logo/profile checkboxes
@@ -194,7 +199,32 @@ const CreateTemplate = () => {
 
 
         <div className="max-w-4xl mx-auto w-full">
-          {/* Main form section */}
+          {/* Tabs */}
+          <Tabs 
+            value={activeTab}
+            onValueChange={(value) => setActiveTab(value as "templates" | "notifications")}
+            className="w-full mb-6"
+          >
+            <TabsList className="grid grid-cols-2 gap-1 md:gap-2 mb-6 w-full">
+              <TabsTrigger 
+                value="templates" 
+                className="flex items-center gap-1 md:gap-2 text-xs md:text-sm"
+              >
+                <Edit className="h-3 w-3 md:h-4 md:w-4" />
+                <span>מענה ללקוחות</span>
+              </TabsTrigger>
+              
+              <TabsTrigger 
+                value="notifications" 
+                className="flex items-center gap-1 md:gap-2 text-xs md:text-sm"
+              >
+                <Bell className="h-3 w-3 md:h-4 md:w-4" />
+                <span>ההתראות שלי</span>
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="templates" className="mt-2">
+              {/* Main form section */}
           <div className="space-y-4 md:space-y-6 mb-6">
 
             {/* פרטים בסיסיים */}
@@ -816,6 +846,101 @@ const CreateTemplate = () => {
               צור תבנית לדוגמה
             </Button>
           </div>
+            </TabsContent>
+
+            <TabsContent value="notifications" className="mt-2">
+              {/* Notifications content */}
+              <div className="space-y-6">
+                {/* Header */}
+                <div className="text-center mb-8">
+                  <div className="flex items-center justify-center gap-3 mb-4">
+                    <Bell className="h-8 w-8 text-blue-500" />
+                    <h1 className="text-2xl md:text-3xl font-bold text-foreground">ההתראות שלי</h1>
+                  </div>
+                  <p className="text-gray-500 text-lg">ניהול התראות והגדרות תזמון</p>
+                </div>
+
+                {/* Notification Channels */}
+                <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 shadow-sm border border-blue-200 mb-6">
+                  <div className="mb-6">
+                    <h2 className="text-xl font-semibold mb-2 text-right">ערוצי התראה</h2>
+                    <p className="text-gray-500 text-right">בחר איך לקבל התראות</p>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-4 bg-blue-50 rounded-xl border border-blue-200">
+                      <div className="flex items-center gap-3">
+                        <Bell className="h-5 w-5 text-blue-600" />
+                        <span className="text-base font-medium">התראות באפליקציה</span>
+                      </div>
+                      <Switch defaultChecked className="scale-110" />
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-200">
+                      <div className="flex items-center gap-3">
+                        <Mail className="h-5 w-5 text-green-600" />
+                        <span className="text-base font-medium">התראות בדואר אלקטרוני</span>
+                      </div>
+                      <Switch defaultChecked className="scale-110" />
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-200">
+                      <div className="flex items-center gap-3">
+                        <MessageCircle className="h-5 w-5 text-green-600" />
+                        <span className="text-base font-medium">התראות בוואטסאפ</span>
+                      </div>
+                      <Switch className="scale-110" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Contact Information */}
+                <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl p-6 shadow-sm border border-border mb-6">
+                  <div className="mb-6">
+                    <h2 className="text-xl font-semibold mb-2 text-right">פרטי התקשרות</h2>
+                    <p className="text-gray-500 text-right">כתובות לקבלת התראות</p>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="email-address" className="text-base font-medium">כתובת דואר אלקטרוני</Label>
+                      <Input 
+                        id="email-address"
+                        type="email"
+                        defaultValue="user@example.com"
+                        placeholder="user@example.com"
+                        className="text-base p-3 border-2 focus:border-blue-500"
+                        dir="ltr"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="whatsapp-number" className="text-base font-medium">מספר וואטסאפ</Label>
+                      <Input 
+                        id="whatsapp-number"
+                        type="tel"
+                        defaultValue="+972501234567"
+                        placeholder="+972501234567"
+                        className="text-base p-3 border-2 focus:border-green-500"
+                        dir="ltr"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Save Button */}
+                <div className="flex justify-center">
+                  <Button 
+                    onClick={() => toast.success("התרעות נשמרו")}
+                    className="px-12 py-3 text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg"
+                  >
+                    <Bell className="ml-2 h-5 w-5" />
+                    שמירת הגדרות התראות
+                  </Button>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
 
