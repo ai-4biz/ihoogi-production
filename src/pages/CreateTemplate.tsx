@@ -88,6 +88,13 @@ const CreateTemplate = () => {
   
   // Tab state
   const [activeTab, setActiveTab] = useState<"templates" | "notifications">("templates");
+  
+  // Notification timing state
+  const [notificationTiming, setNotificationTiming] = useState({
+    frequency: "daily", // hourly, daily, every3days, weekly, monthly
+    time: "09:00",
+    enabled: true
+  });
   const [documentFile, setDocumentFile] = useState<string>("");
   
   // Include logo/profile checkboxes
@@ -208,15 +215,15 @@ const CreateTemplate = () => {
             <TabsList className="grid grid-cols-2 gap-1 md:gap-2 mb-6 w-full">
               <TabsTrigger 
                 value="templates" 
-                className="flex items-center gap-1 md:gap-2 text-xs md:text-sm text-right"
+                className="flex items-center justify-end gap-1 md:gap-2 text-xs md:text-sm text-right"
               >
-                <Edit className="h-3 w-3 md:h-4 md:w-4" />
                 <span>מענה ללקוחות</span>
+                <Edit className="h-3 w-3 md:h-4 md:w-4" />
               </TabsTrigger>
               
               <TabsTrigger 
                 value="notifications" 
-                className="flex items-center gap-1 md:gap-2 text-xs md:text-sm text-right"
+                className="flex items-center justify-start gap-1 md:gap-2 text-xs md:text-sm text-right"
               >
                 <Bell className="h-3 w-3 md:h-4 md:w-4" />
                 <span>ההתראות שלי</span>
@@ -860,6 +867,59 @@ const CreateTemplate = () => {
                   <p className="text-gray-500 text-lg">ניהול התראות והגדרות תזמון</p>
                 </div>
 
+                {/* Timing Settings */}
+                <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 shadow-sm border border-blue-200 mb-6">
+                  <div className="flex items-center gap-3 mb-6">
+                    <Clock className="h-6 w-6 text-blue-600" />
+                    <h2 className="text-xl font-semibold">הגדרות תזמון</h2>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-base font-medium">תדירות התראות</Label>
+                      <Select 
+                        value={notificationTiming.frequency} 
+                        onValueChange={(value) => setNotificationTiming(prev => ({ ...prev, frequency: value }))}
+                      >
+                        <SelectTrigger className="text-right">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="hourly">שעתי</SelectItem>
+                          <SelectItem value="daily">יומי</SelectItem>
+                          <SelectItem value="every3days">כל 3 ימים</SelectItem>
+                          <SelectItem value="weekly">שבועי</SelectItem>
+                          <SelectItem value="monthly">חודשי</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label className="text-base font-medium">שעת שליחה</Label>
+                      <Input 
+                        type="time"
+                        value={notificationTiming.time}
+                        onChange={(e) => setNotificationTiming(prev => ({ ...prev, time: e.target.value }))}
+                        className="text-base p-3 text-right"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label className="text-base font-medium">הפעל התראות</Label>
+                      <div className="flex items-center justify-end gap-3 p-3 bg-white rounded-lg border">
+                        <Switch 
+                          checked={notificationTiming.enabled}
+                          onCheckedChange={(checked) => setNotificationTiming(prev => ({ ...prev, enabled: checked }))}
+                          className="scale-110"
+                        />
+                        <span className="text-sm font-medium">
+                          {notificationTiming.enabled ? "מופעל" : "מבוטל"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Notification Channels */}
                 <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 shadow-sm border border-blue-200 mb-6">
                   <div className="mb-6">
@@ -931,7 +991,11 @@ const CreateTemplate = () => {
                 {/* Save Button */}
                 <div className="flex justify-center">
                   <Button 
-                    onClick={() => toast.success("התרעות נשמרו")}
+                    onClick={() => {
+                      toast.success("התרעות נשמרו", {
+                        description: `תזמון: ${notificationTiming.frequency} בשעה ${notificationTiming.time}`
+                      });
+                    }}
                     className="px-12 py-3 text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg"
                   >
                     <Bell className="ml-2 h-5 w-5" />
