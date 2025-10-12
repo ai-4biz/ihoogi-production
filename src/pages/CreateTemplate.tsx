@@ -57,6 +57,7 @@ const CreateTemplate = () => {
   // Message content
   const [emailSubject, setEmailSubject] = useState("");
   const [messageBody, setMessageBody] = useState("");
+  const [emailBody, setEmailBody] = useState("");
   
   // Standard template specific
   const [responseType, setResponseType] = useState<"new_customer" | "reminder">("new_customer");
@@ -136,28 +137,51 @@ const CreateTemplate = () => {
 
   // Load template for editing
   const loadTemplateForEdit = (template: any) => {
-    setTemplateName(template.name);
-    setTemplateType(template.type);
+    console.log("Loading template for edit:", template);
+    
+    setTemplateName(template.name || "");
+    setTemplateType(template.type || "standard");
     setResponseType(template.responseType || "new_customer");
     setSelectedChannels(template.channels || []);
     setEmailSubject(template.subject || "");
-    setEmailBody(template.body || "");
-    setAiInstructions(template.aiInstructions || "");
-    setPersonalText(template.personalText || "");
-    setAiPosition(template.aiPosition || "beginning");
-    setReminderDelay(template.reminderDelay || "immediate");
-    setReminderTime(template.reminderTime || "09:00");
-    setReminderDays(template.reminderDays || "");
-    setLeadStatus(template.leadStatus || "");
-    setLeadSubStatus(template.leadSubStatus || "");
+    setMessageBody(template.body || "");
+    setCustomAiMessage(template.aiInstructions || "");
+    
+    if (template.aiPosition) {
+      setAiPosition(template.aiPosition);
+    }
+    
+    if (template.reminderDelay) {
+      setReminderDelay(template.reminderDelay);
+    }
+    
+    if (template.reminderTime) {
+      setReminderTime(template.reminderTime);
+    }
+    
+    if (template.reminderDays) {
+      setReminderDays(template.reminderDays);
+    }
+    
+    if (template.leadStatus) {
+      setLeadStatus(template.leadStatus);
+    }
+    
+    if (template.leadSubStatus) {
+      setLeadSubStatus(template.leadSubStatus);
+    }
     
     if (template.design) {
-      setDesign(template.design);
+      setTemplateDesign(template.design);
     }
     
     setEditingTemplateId(template.id);
     setIsEditMode(true);
     setActiveTab("templates");
+    
+    toast.success("תבנית נטענה לעריכה", {
+      description: `תבנית "${template.name}" מוכנה לעריכה`
+    });
   };
 
   const handleSaveTemplate = () => {
@@ -302,6 +326,8 @@ const CreateTemplate = () => {
                           setSelectedChannels([]);
                           setEmailSubject("");
                           setEmailBody("");
+                          setMessageBody("");
+                          setCustomAiMessage("");
                           toast.info("מצב עריכה בוטל - ניתן ליצור תבנית חדשה");
                         }}
                         className="flex items-center gap-2"
