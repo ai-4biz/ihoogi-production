@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { 
   Plus, 
   Sparkles, 
@@ -21,7 +22,8 @@ import {
   Star,
   Clock,
   Users,
-  Edit
+  Edit,
+  Eye
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -76,6 +78,10 @@ const CreateTemplate = () => {
   
   // File uploads
   const [logoFile, setLogoFile] = useState<string>("");
+  
+  // Demo modal
+  const [showDemoModal, setShowDemoModal] = useState(false);
+  const [selectedChannelForDemo, setSelectedChannelForDemo] = useState<string>("");
   const [profileFile, setProfileFile] = useState<string>("");
   const [documentFile, setDocumentFile] = useState<string>("");
   
@@ -94,6 +100,11 @@ const CreateTemplate = () => {
         ? prev.filter(c => c !== channel)
         : [...prev, channel]
     );
+  };
+
+  const handleShowDemo = (channel: string) => {
+    setSelectedChannelForDemo(channel);
+    setShowDemoModal(true);
   };
 
   const handleSaveTemplate = () => {
@@ -506,6 +517,17 @@ const CreateTemplate = () => {
                 
                 <div className="space-y-4">
                   <div>
+                    <Label htmlFor="email-subject-combined" className="text-sm font-medium mb-2 block">נושא</Label>
+                    <Input
+                      id="email-subject-combined"
+                      placeholder="נושא ההודעה..."
+                      value={emailSubject}
+                      onChange={(e) => setEmailSubject(e.target.value)}
+                      className="text-base"
+                    />
+                  </div>
+
+                  <div>
                     <Label htmlFor="ai-position" className="text-sm font-medium mb-2 block">מיקום תגובת AI</Label>
                     <Select value={aiPosition} onValueChange={(value: any) => setAiPosition(value)}>
                       <SelectTrigger className="text-right">
@@ -544,94 +566,6 @@ const CreateTemplate = () => {
               </div>
             )}
 
-            {/* עיצוב התבנית - רק למשולב */}
-            {templateType === "combined" && (
-              <div className="bg-gradient-to-br from-pink-50 to-pink-100 rounded-xl p-4 md:p-6 shadow-sm border border-pink-200 hover:shadow-md transition-shadow">
-                <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-foreground">עיצוב התבנית</h3>
-                
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                      <Label htmlFor="primary-color" className="text-sm font-medium mb-2 block">צבע ראשי</Label>
-                      <div className="flex gap-2">
-                        <Input
-                          id="primary-color"
-                          type="color"
-                          value={templateDesign.primaryColor}
-                          onChange={(e) => setTemplateDesign(prev => ({ ...prev, primaryColor: e.target.value }))}
-                          className="w-12 h-10 p-1"
-                        />
-                        <Input
-                          value={templateDesign.primaryColor}
-                          onChange={(e) => setTemplateDesign(prev => ({ ...prev, primaryColor: e.target.value }))}
-                          className="flex-1 text-base"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="secondary-color" className="text-sm font-medium mb-2 block">צבע משני</Label>
-                      <div className="flex gap-2">
-                        <Input
-                          id="secondary-color"
-                          type="color"
-                          value={templateDesign.secondaryColor}
-                          onChange={(e) => setTemplateDesign(prev => ({ ...prev, secondaryColor: e.target.value }))}
-                          className="w-12 h-10 p-1"
-                        />
-                        <Input
-                          value={templateDesign.secondaryColor}
-                          onChange={(e) => setTemplateDesign(prev => ({ ...prev, secondaryColor: e.target.value }))}
-                          className="flex-1 text-base"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="background-color" className="text-sm font-medium mb-2 block">צבע רקע</Label>
-                      <div className="flex gap-2">
-                        <Input
-                          id="background-color"
-                          type="color"
-                          value={templateDesign.backgroundColor}
-                          onChange={(e) => setTemplateDesign(prev => ({ ...prev, backgroundColor: e.target.value }))}
-                          className="w-12 h-10 p-1"
-                        />
-                        <Input
-                          value={templateDesign.backgroundColor}
-                          onChange={(e) => setTemplateDesign(prev => ({ ...prev, backgroundColor: e.target.value }))}
-                          className="flex-1 text-base"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="logo-url" className="text-sm font-medium mb-2 block">קישור ללוגו</Label>
-                      <Input
-                        id="logo-url"
-                        placeholder="https://example.com/logo.png"
-                        value={templateDesign.logoUrl}
-                        onChange={(e) => setTemplateDesign(prev => ({ ...prev, logoUrl: e.target.value }))}
-                        className="text-base"
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="profile-url" className="text-sm font-medium mb-2 block">קישור לתמונת פרופיל</Label>
-                      <Input
-                        id="profile-url"
-                        placeholder="https://example.com/profile.png"
-                        value={templateDesign.profileImageUrl}
-                        onChange={(e) => setTemplateDesign(prev => ({ ...prev, profileImageUrl: e.target.value }))}
-                        className="text-base"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Logo, Profile and Brand Colors section */}
@@ -776,7 +710,7 @@ const CreateTemplate = () => {
                       </div>
                       
                       {/* Preview content based on template type */}
-                      <div className="text-sm text-gray-700">
+                      <div className="text-sm text-gray-700 mb-3">
                         {templateType === "standard" && (
                           <div>
                             <div className="font-medium mb-1">תודה על מילוי השאלון!</div>
@@ -802,6 +736,17 @@ const CreateTemplate = () => {
                           </div>
                         )}
                       </div>
+                      
+                      {/* Show demo button */}
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => handleShowDemo(channel)}
+                        className="w-full flex items-center justify-center gap-2 text-xs"
+                      >
+                        <Eye className="h-3 w-3" />
+                        הצג דמו
+                      </Button>
                     </div>
                   ))}
                 </div>
@@ -840,6 +785,169 @@ const CreateTemplate = () => {
           </div>
         </div>
       </div>
+
+      {/* Demo Modal */}
+      <Dialog open={showDemoModal} onOpenChange={setShowDemoModal}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-right">
+              דמו - {selectedChannelForDemo === "general" && "כללי"}
+              {selectedChannelForDemo === "message" && "הודעה"}
+              {selectedChannelForDemo === "whatsapp" && "וואטסאפ"}
+              {selectedChannelForDemo === "email" && "מייל"}
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            {/* Channel header */}
+            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+              {selectedChannelForDemo === "general" && <FileText className="h-5 w-5 text-gray-600" />}
+              {selectedChannelForDemo === "message" && <MessageCircle className="h-5 w-5 text-purple-600" />}
+              {selectedChannelForDemo === "whatsapp" && <MessageCircle className="h-5 w-5 text-green-600" />}
+              {selectedChannelForDemo === "email" && <Mail className="h-5 w-5 text-blue-600" />}
+              <span className="font-medium">
+                {selectedChannelForDemo === "general" && "כללי"}
+                {selectedChannelForDemo === "message" && "הודעה"}
+                {selectedChannelForDemo === "whatsapp" && "וואטסאפ"}
+                {selectedChannelForDemo === "email" && "מייל"}
+              </span>
+            </div>
+
+            {/* Template type */}
+            <div className="text-sm text-gray-500">
+              {templateType === "standard" && "תבנית סטנדרטית"}
+              {templateType === "ai" && "תבנית AI"}
+              {templateType === "personal" && "משוב אישי"}
+              {templateType === "combined" && "AI משולב אישי"}
+            </div>
+
+            {/* Demo content based on template type */}
+            <div className="border rounded-lg p-4 bg-white">
+              {templateType === "standard" && (
+                <div className="space-y-3">
+                  <div className="font-medium text-lg">תודה על מילוי השאלון!</div>
+                  <div className="text-gray-600">התשובות שלך התקבלו בהצלחה ונבדקות על ידי הצוות שלנו.</div>
+                  <div className="text-gray-600">נחזור אליך בהקדם האפשרי.</div>
+                </div>
+              )}
+              
+              {templateType === "ai" && (
+                <div className="space-y-3">
+                  {emailSubject && <div className="font-medium text-lg">{emailSubject}</div>}
+                  <div className="text-gray-600">תגובת AI מותאמת אישית על בסיס התשובות שלך:</div>
+                  <div className="bg-blue-50 p-3 rounded-lg">
+                    <div className="text-sm text-blue-800">
+                      "תבסס על התשובות שלך, אני רואה שיש לך עניין בתחום... 
+                      אני ממליץ לך להתמקד ב... וניתן לך מידע נוסף על..."
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {templateType === "personal" && (
+                <div className="space-y-3">
+                  {emailSubject && <div className="font-medium text-lg">{emailSubject}</div>}
+                  <div className="text-gray-600">משוב אישי מותאם:</div>
+                  <div className="bg-green-50 p-3 rounded-lg">
+                    <div className="text-sm text-green-800">
+                      {messageBody || "הודעה אישית מותאמת לפי התשובות שלך..."}
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {templateType === "combined" && (
+                <div className="space-y-3">
+                  {emailSubject && <div className="font-medium text-lg">{emailSubject}</div>}
+                  <div className="text-gray-600">שילוב של AI ומשוב אישי:</div>
+                  
+                  {aiPosition === "start" && (
+                    <div className="space-y-3">
+                      <div className="bg-blue-50 p-3 rounded-lg">
+                        <div className="text-sm text-blue-800 font-medium">חלק AI:</div>
+                        <div className="text-sm text-blue-700">
+                          {customAiMessage || "תגובת AI מותאמת אישית..."}
+                        </div>
+                      </div>
+                      <div className="bg-green-50 p-3 rounded-lg">
+                        <div className="text-sm text-green-800 font-medium">חלק אישי:</div>
+                        <div className="text-sm text-green-700">
+                          {messageBody || "הודעה אישית..."}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {aiPosition === "middle" && (
+                    <div className="space-y-3">
+                      <div className="bg-green-50 p-3 rounded-lg">
+                        <div className="text-sm text-green-800 font-medium">חלק אישי:</div>
+                        <div className="text-sm text-green-700">
+                          {messageBody || "הודעה אישית..."}
+                        </div>
+                      </div>
+                      <div className="bg-blue-50 p-3 rounded-lg">
+                        <div className="text-sm text-blue-800 font-medium">חלק AI:</div>
+                        <div className="text-sm text-blue-700">
+                          {customAiMessage || "תגובת AI מותאמת אישית..."}
+                        </div>
+                      </div>
+                      <div className="bg-green-50 p-3 rounded-lg">
+                        <div className="text-sm text-green-800 font-medium">חלק אישי:</div>
+                        <div className="text-sm text-green-700">
+                          {messageBody || "הודעה אישית..."}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {aiPosition === "end" && (
+                    <div className="space-y-3">
+                      <div className="bg-green-50 p-3 rounded-lg">
+                        <div className="text-sm text-green-800 font-medium">חלק אישי:</div>
+                        <div className="text-sm text-green-700">
+                          {messageBody || "הודעה אישית..."}
+                        </div>
+                      </div>
+                      <div className="bg-blue-50 p-3 rounded-lg">
+                        <div className="text-sm text-blue-800 font-medium">חלק AI:</div>
+                        <div className="text-sm text-blue-700">
+                          {customAiMessage || "תגובת AI מותאמת אישית..."}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Channel-specific formatting */}
+            {selectedChannelForDemo === "email" && (
+              <div className="text-xs text-gray-500 bg-gray-50 p-2 rounded">
+                📧 פורמט מייל - כולל נושא, תוכן מובנה ותחתית
+              </div>
+            )}
+            
+            {selectedChannelForDemo === "whatsapp" && (
+              <div className="text-xs text-gray-500 bg-gray-50 p-2 rounded">
+                💬 פורמט וואטסאפ - הודעה קצרה וידידותית
+              </div>
+            )}
+            
+            {selectedChannelForDemo === "message" && (
+              <div className="text-xs text-gray-500 bg-gray-50 p-2 rounded">
+                📱 פורמט הודעה - תצוגה מותאמת למכשיר נייד
+              </div>
+            )}
+            
+            {selectedChannelForDemo === "general" && (
+              <div className="text-xs text-gray-500 bg-gray-50 p-2 rounded">
+                📄 פורמט כללי - תצוגה אוניברסלית
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </MainLayout>
   );
 };
