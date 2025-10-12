@@ -321,22 +321,8 @@ const CreateTemplate = () => {
                 <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-foreground">הגדרות תזכורת</h3>
                 
                 <div className="space-y-4">
-                  {/* תבנית וסטטוס ליד */}
+                  {/* סטטוס ותת סטטוס באותה שורה */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="reminder-template" className="text-sm font-medium mb-2 block">בחר תבנית</Label>
-                      <Select>
-                        <SelectTrigger className="text-right">
-                          <SelectValue placeholder="בחר תבנית" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="template1">תבנית תזכורת 1</SelectItem>
-                          <SelectItem value="template2">תבנית תזכורת 2</SelectItem>
-                          <SelectItem value="template3">תבנית תזכורת 3</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
                     <div>
                       <Label htmlFor="lead-status" className="text-sm font-medium mb-2 block">סטטוס ליד <span className="text-red-500">*</span></Label>
                       <Select value={leadStatus} onValueChange={setLeadStatus}>
@@ -354,122 +340,72 @@ const CreateTemplate = () => {
                         </SelectContent>
                       </Select>
                     </div>
+                    
+                    <div>
+                      <Label htmlFor="lead-sub-status" className="text-sm font-medium mb-2 block">תת סטטוס ליד</Label>
+                      <Select value={leadSubStatus} onValueChange={setLeadSubStatus}>
+                        <SelectTrigger className="text-right">
+                          <SelectValue placeholder="בחר תת סטטוס" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="hot">חם</SelectItem>
+                          <SelectItem value="warm">פושר</SelectItem>
+                          <SelectItem value="cold">קר</SelectItem>
+                          <SelectItem value="not-interested">לא מעוניין</SelectItem>
+                          <SelectItem value="callback">להתקשר שוב</SelectItem>
+                          <SelectItem value="meeting-scheduled">פגישה נקבעה</SelectItem>
+                          <SelectItem value="proposal-sent">הצעה נשלחה</SelectItem>
+                          <SelectItem value="negotiating">במשא ומתן</SelectItem>
+                          <SelectItem value="won">זכייה</SelectItem>
+                          <SelectItem value="lost">הפסד</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
 
                   {/* תזמון שליחה */}
                   <div>
                     <Label htmlFor="timing-type" className="text-sm font-medium mb-2 block">תזמון שליחה</Label>
-                    <Select>
+                    <Select value={reminderDelay} onValueChange={setReminderDelay}>
                       <SelectTrigger className="text-right">
-                        <SelectValue placeholder="תזמן זמן מותאם" />
+                        <SelectValue placeholder="בחר תזמון" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="custom">תזמן זמן מותאם</SelectItem>
                         <SelectItem value="immediate">מיידי</SelectItem>
-                        <SelectItem value="scheduled">מתוזמן</SelectItem>
+                        <SelectItem value="custom">תזמן זמן מותאם</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   
-                  {/* מספר ימים ושעת שליחה */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="reminder-days" className="text-sm font-medium mb-2 block">מספר ימים</Label>
-                      <Input
-                        id="reminder-days"
-                        type="number"
-                        placeholder="1"
-                        value={reminderDays}
-                        onChange={(e) => setReminderDays(parseInt(e.target.value) || 0)}
-                        className="text-base"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="reminder-time" className="text-sm font-medium mb-2 block">שעת שליחה</Label>
-                      <div className="relative">
+                  {/* מספר ימים ושעת שליחה - רק אם בחרו "תזמן זמן מותאם" */}
+                  {reminderDelay === "custom" && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="reminder-days" className="text-sm font-medium mb-2 block">מספר ימים</Label>
                         <Input
-                          id="reminder-time"
-                          type="time"
-                          value={reminderTime}
-                          onChange={(e) => setReminderTime(e.target.value)}
-                          className="text-base pr-10"
+                          id="reminder-days"
+                          type="number"
+                          placeholder="1"
+                          value={reminderDays}
+                          onChange={(e) => setReminderDays(parseInt(e.target.value) || 0)}
+                          className="text-base"
                         />
-                        <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      </div>
+                      <div>
+                        <Label htmlFor="reminder-time" className="text-sm font-medium mb-2 block">שעת שליחה</Label>
+                        <div className="relative">
+                          <Input
+                            id="reminder-time"
+                            type="time"
+                            value={reminderTime}
+                            onChange={(e) => setReminderTime(e.target.value)}
+                            className="text-base pr-10"
+                          />
+                          <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  
-                  {/* תת סטטוס ליד */}
-                  <div>
-                    <Label htmlFor="lead-sub-status" className="text-sm font-medium mb-2 block">תת סטטוס ליד</Label>
-                    <Select value={leadSubStatus} onValueChange={setLeadSubStatus}>
-                      <SelectTrigger className="text-right">
-                        <SelectValue placeholder="בחר תת סטטוס" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="hot">חם</SelectItem>
-                        <SelectItem value="warm">חמים</SelectItem>
-                        <SelectItem value="cold">קר</SelectItem>
-                        <SelectItem value="follow-up">מעקב</SelectItem>
-                        <SelectItem value="not-interested">לא מעוניין</SelectItem>
-                        <SelectItem value="callback-requested">מבקש חזרה</SelectItem>
-                        <SelectItem value="price-sensitive">רגיש למחיר</SelectItem>
-                        <SelectItem value="decision-maker">מחליט</SelectItem>
-                        <SelectItem value="influencer">משפיע</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  {/* ערוצי תזכורת */}
-                  <div>
-                    <Label className="text-sm font-medium mb-2 block">ערוצי תזכורת</Label>
-                    <div className="flex gap-3">
-                      <div className="flex items-center gap-2">
-                        <Checkbox 
-                          id="email-reminder" 
-                          checked={selectedChannels.includes("email")}
-                          onCheckedChange={(checked) => {
-                            if (checked) {
-                              handleChannelToggle("email");
-                            } else {
-                              handleChannelToggle("email");
-                            }
-                          }}
-                        />
-                        <Label htmlFor="email-reminder" className="text-sm font-medium">מייל</Label>
-                      </div>
-                      
-                      <div className="flex items-center gap-2">
-                        <Checkbox 
-                          id="whatsapp-reminder" 
-                          checked={selectedChannels.includes("whatsapp")}
-                          onCheckedChange={(checked) => {
-                            if (checked) {
-                              handleChannelToggle("whatsapp");
-                            } else {
-                              handleChannelToggle("whatsapp");
-                            }
-                          }}
-                        />
-                        <Label htmlFor="whatsapp-reminder" className="text-sm font-medium">וואטסאפ</Label>
-                      </div>
-                      
-                      <div className="flex items-center gap-2">
-                        <Checkbox 
-                          id="message-reminder" 
-                          checked={selectedChannels.includes("message")}
-                          onCheckedChange={(checked) => {
-                            if (checked) {
-                              handleChannelToggle("message");
-                            } else {
-                              handleChannelToggle("message");
-                            }
-                          }}
-                        />
-                        <Label htmlFor="message-reminder" className="text-sm font-medium">הודעה</Label>
-                      </div>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
             )}
@@ -484,7 +420,7 @@ const CreateTemplate = () => {
                   <div className="flex gap-3">
                     <Button 
                       variant={selectedChannels.includes("message") ? "default" : "outline"}
-                      className="flex-1"
+                      className={`flex-1 ${selectedChannels.includes("message") ? "bg-purple-600 hover:bg-purple-700 border-purple-600" : "border-purple-300 text-purple-700 hover:bg-purple-50"}`}
                       onClick={() => handleChannelToggle("message")}
                     >
                       <MessageCircle className="h-4 w-4 ml-2" />
@@ -492,7 +428,7 @@ const CreateTemplate = () => {
                     </Button>
                     <Button 
                       variant={selectedChannels.includes("whatsapp") ? "default" : "outline"}
-                      className="flex-1"
+                      className={`flex-1 ${selectedChannels.includes("whatsapp") ? "bg-green-600 hover:bg-green-700 border-green-600" : "border-green-300 text-green-700 hover:bg-green-50"}`}
                       onClick={() => handleChannelToggle("whatsapp")}
                     >
                       <MessageCircle className="h-4 w-4 ml-2" />
@@ -500,7 +436,7 @@ const CreateTemplate = () => {
                     </Button>
                     <Button 
                       variant={selectedChannels.includes("email") ? "default" : "outline"}
-                      className="flex-1"
+                      className={`flex-1 ${selectedChannels.includes("email") ? "bg-blue-600 hover:bg-blue-700 border-blue-600" : "border-blue-300 text-blue-700 hover:bg-blue-50"}`}
                       onClick={() => handleChannelToggle("email")}
                     >
                       <Mail className="h-4 w-4 ml-2" />
@@ -512,7 +448,7 @@ const CreateTemplate = () => {
                   <div className="flex gap-3">
                     <Button 
                       variant={singleChannel === "whatsapp" ? "default" : "outline"}
-                      className="flex-1"
+                      className={`flex-1 ${singleChannel === "whatsapp" ? "bg-green-600 hover:bg-green-700 border-green-600" : "border-green-300 text-green-700 hover:bg-green-50"}`}
                       onClick={() => setSingleChannel("whatsapp")}
                     >
                       <MessageCircle className="h-4 w-4 ml-2" />
@@ -520,7 +456,7 @@ const CreateTemplate = () => {
                     </Button>
                     <Button 
                       variant={singleChannel === "email" ? "default" : "outline"}
-                      className="flex-1"
+                      className={`flex-1 ${singleChannel === "email" ? "bg-blue-600 hover:bg-blue-700 border-blue-600" : "border-blue-300 text-blue-700 hover:bg-blue-50"}`}
                       onClick={() => setSingleChannel("email")}
                     >
                       <Mail className="h-4 w-4 ml-2" />
