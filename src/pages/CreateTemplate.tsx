@@ -429,8 +429,8 @@ const CreateTemplate = () => {
             )}
 
 
-            {/* תוכן ההודעה - לא סטנדרט */}
-            {templateType !== "standard" && (
+            {/* תוכן ההודעה - לא סטנדרט ולא משולב */}
+            {templateType !== "standard" && templateType !== "combined" && (
               <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 md:p-6 shadow-sm border border-green-200 hover:shadow-md transition-shadow">
                 <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-foreground">תוכן ההודעה</h3>
                 
