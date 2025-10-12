@@ -452,36 +452,6 @@ const CreateTemplate = () => {
                 </Button>
               </div>
               
-              {/* דמו של התבנית */}
-              {selectedChannels.length > 0 && (
-                <div className="mt-6 p-4 bg-white rounded-lg border border-gray-200">
-                  <h4 className="text-sm font-medium mb-3 text-gray-700">דמו של התבנית לפי הערוצים שנבחרו:</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {selectedChannels.map((channel) => (
-                      <div key={channel} className="p-3 bg-gray-50 rounded-lg border">
-                        <div className="flex items-center gap-2 mb-2">
-                          {channel === "general" && <FileText className="h-4 w-4 text-gray-600" />}
-                          {channel === "message" && <MessageCircle className="h-4 w-4 text-purple-600" />}
-                          {channel === "whatsapp" && <MessageCircle className="h-4 w-4 text-green-600" />}
-                          {channel === "email" && <Mail className="h-4 w-4 text-blue-600" />}
-                          <span className="text-sm font-medium">
-                            {channel === "general" && "כללי"}
-                            {channel === "message" && "הודעה"}
-                            {channel === "whatsapp" && "וואטסאפ"}
-                            {channel === "email" && "מייל"}
-                          </span>
-                        </div>
-                        <div className="text-xs text-gray-500">
-                          {templateType === "standard" && "תבנית סטנדרטית"}
-                          {templateType === "ai" && "תבנית AI"}
-                          {templateType === "personal" && "משוב אישי"}
-                          {templateType === "combined" && "AI משולב אישי"}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* תוכן ההודעה - לא סטנדרט */}
@@ -774,6 +744,69 @@ const CreateTemplate = () => {
               </div>
             </div>
           </div>
+
+          {/* דוגמא למענה לפי הערוצים שנבחרו */}
+          {selectedChannels.length > 0 && (
+            <div className="mb-6">
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4 md:p-6 shadow-sm border border-purple-200 hover:shadow-md transition-shadow">
+                <h3 className="text-base md:text-lg font-semibold mb-4 text-foreground">דוגמא למענה לפי הערוצים שנבחרו</h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {selectedChannels.map((channel) => (
+                    <div key={channel} className="p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
+                      <div className="flex items-center gap-2 mb-3">
+                        {channel === "general" && <FileText className="h-5 w-5 text-gray-600" />}
+                        {channel === "message" && <MessageCircle className="h-5 w-5 text-purple-600" />}
+                        {channel === "whatsapp" && <MessageCircle className="h-5 w-5 text-green-600" />}
+                        {channel === "email" && <Mail className="h-5 w-5 text-blue-600" />}
+                        <span className="text-sm font-semibold">
+                          {channel === "general" && "כללי"}
+                          {channel === "message" && "הודעה"}
+                          {channel === "whatsapp" && "וואטסאפ"}
+                          {channel === "email" && "מייל"}
+                        </span>
+                      </div>
+                      
+                      <div className="text-xs text-gray-500 mb-3">
+                        {templateType === "standard" && "תבנית סטנדרטית"}
+                        {templateType === "ai" && "תבנית AI"}
+                        {templateType === "personal" && "משוב אישי"}
+                        {templateType === "combined" && "AI משולב אישי"}
+                      </div>
+                      
+                      {/* Preview content based on template type */}
+                      <div className="text-sm text-gray-700">
+                        {templateType === "standard" && (
+                          <div>
+                            <div className="font-medium mb-1">תודה על מילוי השאלון!</div>
+                            <div className="text-gray-500">התשובות שלך התקבלו בהצלחה</div>
+                          </div>
+                        )}
+                        {templateType === "ai" && (
+                          <div>
+                            <div className="font-medium mb-1">תגובת AI מותאמת אישית</div>
+                            <div className="text-gray-500">על בסיס התשובות שלך</div>
+                          </div>
+                        )}
+                        {templateType === "personal" && (
+                          <div>
+                            <div className="font-medium mb-1">משוב אישי</div>
+                            <div className="text-gray-500">הודעה מותאמת אישית</div>
+                          </div>
+                        )}
+                        {templateType === "combined" && (
+                          <div>
+                            <div className="font-medium mb-1">AI + משוב אישי</div>
+                            <div className="text-gray-500">שילוב של בינה מלאכותית ומשוב אישי</div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Action buttons */}
           <div className="flex justify-center gap-4 mt-8 mb-4">
