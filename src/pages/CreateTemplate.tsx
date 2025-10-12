@@ -214,19 +214,19 @@ const CreateTemplate = () => {
           >
             <TabsList className="grid grid-cols-2 gap-1 md:gap-2 mb-6 w-full">
               <TabsTrigger 
-                value="templates" 
-                className="flex items-center justify-end gap-1 md:gap-2 text-xs md:text-sm text-right"
-              >
-                <span>מענה ללקוחות</span>
-                <Edit className="h-3 w-3 md:h-4 md:w-4" />
-              </TabsTrigger>
-              
-              <TabsTrigger 
                 value="notifications" 
                 className="flex items-center justify-start gap-1 md:gap-2 text-xs md:text-sm text-right"
               >
                 <Bell className="h-3 w-3 md:h-4 md:w-4" />
                 <span>ההתראות שלי</span>
+              </TabsTrigger>
+              
+              <TabsTrigger 
+                value="templates" 
+                className="flex items-center justify-end gap-1 md:gap-2 text-xs md:text-sm text-right"
+              >
+                <span>מענה ללקוחות</span>
+                <Edit className="h-3 w-3 md:h-4 md:w-4" />
               </TabsTrigger>
             </TabsList>
 
@@ -299,18 +299,18 @@ const CreateTemplate = () => {
                     <Label className="text-sm font-medium mb-2 block text-right">סוג המענה <span className="text-red-500">*</span></Label>
                     <div className="flex gap-3">
                       <Button 
-                        variant={responseType === "new_customer" ? "default" : "outline"}
-                        className="flex-1"
-                        onClick={() => setResponseType("new_customer")}
-                      >
-                        מענה ללקוח חדש
-                      </Button>
-                      <Button 
                         variant={responseType === "reminder" ? "default" : "outline"}
                         className="flex-1"
                         onClick={() => setResponseType("reminder")}
                       >
                         תזכורת
+                      </Button>
+                      <Button 
+                        variant={responseType === "new_customer" ? "default" : "outline"}
+                        className="flex-1"
+                        onClick={() => setResponseType("new_customer")}
+                      >
+                        מענה ללקוח חדש
                       </Button>
                     </div>
                   </div>
@@ -513,18 +513,30 @@ const CreateTemplate = () => {
                       </div>
                     )}
 
-                    {/* גוף ההודעה - רק ל-personal (לא AI) */}
+                    {/* כותרת וגוף ההודעה - רק ל-personal (לא AI) */}
                     {templateType === "personal" && (
-                      <div>
-                        <Label htmlFor="message-body" className="text-sm font-medium mb-2 block text-right">גוף ההודעה</Label>
-                        <Textarea
-                          id="message-body"
-                          placeholder="הקלד את תוכן ההודעה...\n\nניתן להשתמש במשתנים:\n{{firstName}} - שם פרטי\n{{lastName}} - שם משפחה\n{{businessName}} - שם העסק\n{{date}} - תאריך"
-                          value={messageBody}
-                          onChange={(e) => setMessageBody(e.target.value)}
-                          className="min-h-[120px] text-base resize-none text-right"
-                        />
-                      </div>
+                      <>
+                        <div>
+                          <Label htmlFor="personal-subject" className="text-sm font-medium mb-2 block text-right">כותרת</Label>
+                          <Input
+                            id="personal-subject"
+                            placeholder="הקלד כותרת..."
+                            value={emailSubject}
+                            onChange={(e) => setEmailSubject(e.target.value)}
+                            className="text-base text-right"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="message-body" className="text-sm font-medium mb-2 block text-right">גוף ההודעה</Label>
+                          <Textarea
+                            id="message-body"
+                            placeholder="הקלד את תוכן ההודעה...\n\nניתן להשתמש במשתנים:\n{{firstName}} - שם פרטי\n{{lastName}} - שם משפחה\n{{businessName}} - שם העסק\n{{date}} - תאריך"
+                            value={messageBody}
+                            onChange={(e) => setMessageBody(e.target.value)}
+                            className="min-h-[120px] text-base resize-none text-right"
+                          />
+                        </div>
+                      </>
                     )}
                   </div>
                 </div>
