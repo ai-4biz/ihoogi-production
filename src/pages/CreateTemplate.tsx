@@ -25,7 +25,11 @@ import {
   Users,
   Edit,
   Eye,
-  Bell
+  Bell,
+  Trash2,
+  MessageSquare,
+  Copy,
+  MoreVertical
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -87,7 +91,7 @@ const CreateTemplate = () => {
   const [profileFile, setProfileFile] = useState<string>("");
   
   // Tab state
-  const [activeTab, setActiveTab] = useState<"templates" | "notifications">("templates");
+  const [activeTab, setActiveTab] = useState<"templates" | "notifications" | "my-templates">("templates");
   
   // Notification timing state
   const [notificationTiming, setNotificationTiming] = useState({
@@ -209,10 +213,10 @@ const CreateTemplate = () => {
           {/* Tabs */}
           <Tabs 
             value={activeTab}
-            onValueChange={(value) => setActiveTab(value as "templates" | "notifications")}
+            onValueChange={(value) => setActiveTab(value as "templates" | "notifications" | "my-templates")}
             className="w-full mb-6"
           >
-            <TabsList className="grid grid-cols-2 gap-1 md:gap-2 mb-4 md:mb-6 w-full">
+            <TabsList className="grid grid-cols-3 gap-1 md:gap-2 mb-4 md:mb-6 w-full">
               <TabsTrigger 
                 value="notifications" 
                 className="flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm text-right px-2 md:px-4 py-2 md:py-3"
@@ -220,6 +224,15 @@ const CreateTemplate = () => {
                 <Bell className="h-3 w-3 md:h-4 md:w-4" />
                 <span className="hidden sm:inline">ההתראות שלי</span>
                 <span className="sm:hidden">התראות</span>
+              </TabsTrigger>
+              
+              <TabsTrigger 
+                value="my-templates" 
+                className="flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm text-right px-2 md:px-4 py-2 md:py-3"
+              >
+                <FileText className="h-3 w-3 md:h-4 md:w-4" />
+                <span className="hidden sm:inline">התבניות שלי</span>
+                <span className="sm:hidden">תבניות</span>
               </TabsTrigger>
               
               <TabsTrigger 
@@ -857,6 +870,11 @@ const CreateTemplate = () => {
               </div>
             </TabsContent>
 
+            <TabsContent value="my-templates" className="mt-2">
+              {/* My Templates Content */}
+              <MyTemplatesTab />
+            </TabsContent>
+
             <TabsContent value="notifications" className="mt-2">
               {/* Notifications content */}
               <div className="space-y-6">
@@ -1238,6 +1256,296 @@ const CreateTemplate = () => {
       </Dialog>
 
     </MainLayout>
+  );
+};
+
+// My Templates Tab Component
+const MyTemplatesTab: React.FC = () => {
+  const [templates, setTemplates] = useState([
+    {
+      id: 1,
+      name: "תבנית מענה סטנדרטית",
+      type: "standard",
+      channels: ["email"],
+      status: "active",
+      createdAt: "2024-01-15",
+      lastUsed: "2024-01-20",
+      usageCount: 45,
+      notes: "תבנית בסיסית למענה ללקוחות"
+    },
+    {
+      id: 2,
+      name: "מענה AI מותאם",
+      type: "ai",
+      channels: ["email", "whatsapp"],
+      status: "active",
+      createdAt: "2024-01-10",
+      lastUsed: "2024-01-22",
+      usageCount: 23,
+      notes: "מענה אוטומטי עם בינה מלאכותית"
+    },
+    {
+      id: 3,
+      name: "תבנית תזכורת שבועית",
+      type: "reminder",
+      channels: ["whatsapp", "message"],
+      status: "inactive",
+      createdAt: "2024-01-05",
+      lastUsed: "2024-01-18",
+      usageCount: 12,
+      notes: "תזכורת אוטומטית ללקוחות"
+    },
+    {
+      id: 4,
+      name: "מענה משולב אישי",
+      type: "combined",
+      channels: ["email", "whatsapp", "message"],
+      status: "active",
+      createdAt: "2024-01-12",
+      lastUsed: "2024-01-21",
+      usageCount: 67,
+      notes: "שילוב של AI ומענה אישי"
+    }
+  ]);
+
+  const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
+  const [showNotesDialog, setShowNotesDialog] = useState(false);
+  const [notes, setNotes] = useState("");
+
+  const getTypeLabel = (type: string) => {
+    switch (type) {
+      case "standard": return "סטנדרט";
+      case "ai": return "AI";
+      case "personal": return "משוב אישי";
+      case "combined": return "AI משולב";
+      case "reminder": return "תזכורת";
+      default: return type;
+    }
+  };
+
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case "standard": return "bg-gray-100 text-gray-800 border-gray-200";
+      case "ai": return "bg-blue-100 text-blue-800 border-blue-200";
+      case "personal": return "bg-green-100 text-green-800 border-green-200";
+      case "combined": return "bg-purple-100 text-purple-800 border-purple-200";
+      case "reminder": return "bg-orange-100 text-orange-800 border-orange-200";
+      default: return "bg-gray-100 text-gray-800 border-gray-200";
+    }
+  };
+
+  const getChannelIcon = (channel: string) => {
+    switch (channel) {
+      case "email": return <Mail className="h-3 w-3 text-green-600" />;
+      case "whatsapp": return <MessageCircle className="h-3 w-3 text-green-600" />;
+      case "message": return <MessageSquare className="h-3 w-3 text-blue-600" />;
+      default: return <FileText className="h-3 w-3 text-gray-600" />;
+    }
+  };
+
+  const handleEdit = (template: any) => {
+    // Navigate to edit mode
+    console.log("Edit template:", template.id);
+  };
+
+  const handleDelete = (templateId: number) => {
+    if (confirm("האם אתה בטוח שברצונך למחוק תבנית זו?")) {
+      setTemplates(templates.filter(t => t.id !== templateId));
+      toast.success("התבנית נמחקה בהצלחה");
+    }
+  };
+
+  const handleDuplicate = (template: any) => {
+    const newTemplate = {
+      ...template,
+      id: Date.now(),
+      name: `${template.name} (עותק)`,
+      createdAt: new Date().toISOString().split('T')[0],
+      usageCount: 0
+    };
+    setTemplates([...templates, newTemplate]);
+    toast.success("התבנית הוכפלה בהצלחה");
+  };
+
+  const handleShowNotes = (template: any) => {
+    setSelectedTemplate(template);
+    setNotes(template.notes);
+    setShowNotesDialog(true);
+  };
+
+  const handleSaveNotes = () => {
+    if (selectedTemplate) {
+      setTemplates(templates.map(t => 
+        t.id === selectedTemplate.id ? { ...t, notes } : t
+      ));
+      setShowNotesDialog(false);
+      toast.success("ההערות נשמרו בהצלחה");
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="text-right mb-8">
+        <div className="flex items-center justify-end gap-3 mb-4">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">התבניות שלי</h1>
+          <FileText className="h-8 w-8 text-blue-500" />
+        </div>
+        <p className="text-gray-500 text-lg text-right">ניהול תבניות המענה שלך</p>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div className="bg-blue-50 p-4 rounded-lg text-center">
+          <div className="text-2xl font-bold text-blue-600">{templates.length}</div>
+          <div className="text-sm text-gray-600">סך התבניות</div>
+        </div>
+        <div className="bg-green-50 p-4 rounded-lg text-center">
+          <div className="text-2xl font-bold text-green-600">
+            {templates.filter(t => t.status === 'active').length}
+          </div>
+          <div className="text-sm text-gray-600">פעילות</div>
+        </div>
+        <div className="bg-purple-50 p-4 rounded-lg text-center">
+          <div className="text-2xl font-bold text-purple-600">
+            {templates.reduce((sum, t) => sum + t.usageCount, 0)}
+          </div>
+          <div className="text-sm text-gray-600">סך שימושים</div>
+        </div>
+        <div className="bg-orange-50 p-4 rounded-lg text-center">
+          <div className="text-2xl font-bold text-orange-600">
+            {Math.round(templates.reduce((sum, t) => sum + t.usageCount, 0) / templates.length) || 0}
+          </div>
+          <div className="text-sm text-gray-600">ממוצע שימושים</div>
+        </div>
+      </div>
+
+      {/* Templates List */}
+      <div className="space-y-4">
+        {templates.map((template) => (
+          <div key={template.id} className="bg-white border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              {/* Template Info */}
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-2">
+                  <h3 className="text-lg font-semibold text-right">{template.name}</h3>
+                  <span className={`px-2 py-1 rounded-full text-xs border ${getTypeColor(template.type)}`}>
+                    {getTypeLabel(template.type)}
+                  </span>
+                  <span className={`px-2 py-1 rounded-full text-xs ${
+                    template.status === 'active' 
+                      ? 'bg-green-100 text-green-800 border border-green-200' 
+                      : 'bg-gray-100 text-gray-800 border border-gray-200'
+                  }`}>
+                    {template.status === 'active' ? 'פעיל' : 'לא פעיל'}
+                  </span>
+                </div>
+                
+                <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
+                  <div className="flex items-center gap-1">
+                    {template.channels.map((channel, index) => (
+                      <div key={index} className="flex items-center gap-1">
+                        {getChannelIcon(channel)}
+                        <span>{channel}</span>
+                        {index < template.channels.length - 1 && <span>,</span>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-500">
+                  <div>
+                    <span className="font-medium">נוצר:</span> {template.createdAt}
+                  </div>
+                  <div>
+                    <span className="font-medium">שימוש אחרון:</span> {template.lastUsed}
+                  </div>
+                  <div>
+                    <span className="font-medium">סך שימושים:</span> {template.usageCount}
+                  </div>
+                  <div>
+                    <span className="font-medium">הערות:</span> {template.notes ? '✓' : 'אין'}
+                  </div>
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex flex-wrap gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => handleEdit(template)}
+                  className="flex items-center gap-2"
+                >
+                  <Edit className="h-4 w-4" />
+                  ערוך
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => handleDuplicate(template)}
+                  className="flex items-center gap-2"
+                >
+                  <Copy className="h-4 w-4" />
+                  הכפל
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => handleShowNotes(template)}
+                  className="flex items-center gap-2"
+                >
+                  <MessageSquare className="h-4 w-4" />
+                  הערות
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => handleDelete(template.id)}
+                  className="flex items-center gap-2 text-red-600 hover:text-red-700"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  מחק
+                </Button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Notes Dialog */}
+      <Dialog open={showNotesDialog} onOpenChange={setShowNotesDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-right">
+              הערות לתבנית: {selectedTemplate?.name}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label className="text-right">הערות</Label>
+              <Textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="הוסף הערות לתבנית..."
+                className="text-right min-h-[120px]"
+              />
+            </div>
+            <div className="flex gap-4 justify-end">
+              <Button variant="outline" onClick={() => setShowNotesDialog(false)}>
+                ביטול
+              </Button>
+              <Button onClick={handleSaveNotes}>
+                שמור הערות
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 };
 
