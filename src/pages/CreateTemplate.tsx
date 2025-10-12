@@ -467,7 +467,7 @@ const CreateTemplate = () => {
                 
                   <div className="space-y-4">
                     {/* כותרת - תמיד מוצג למייל */}
-                    {(singleChannel === "email" || selectedChannels.includes("email")) && (
+                    {(singleChannel === "email" || selectedChannels.includes("email")) && templateType === "ai" && (
                       <div>
                         <div className="flex items-center justify-end gap-2 mb-2">
                           <div className="flex items-center gap-2">
@@ -488,6 +488,20 @@ const CreateTemplate = () => {
                             className="text-base text-right"
                           />
                         )}
+                      </div>
+                    )}
+                    
+                    {/* כותרת פשוטה למענה אישי */}
+                    {(singleChannel === "email" || selectedChannels.includes("email")) && templateType === "personal" && (
+                      <div>
+                        <Label htmlFor="email-subject-personal" className="text-sm font-medium mb-2 block text-right">כותרת</Label>
+                        <Input
+                          id="email-subject-personal"
+                          placeholder="הקלד כותרת..."
+                          value={emailSubject}
+                          onChange={(e) => setEmailSubject(e.target.value)}
+                          className="text-base text-right"
+                        />
                       </div>
                     )}
 
