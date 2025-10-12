@@ -861,25 +861,25 @@ const CreateTemplate = () => {
               {/* Notifications content */}
               <div className="space-y-6">
                 {/* Header */}
-                <div className="text-center mb-8">
-                  <div className="flex items-center justify-center gap-3 mb-4">
-                    <Bell className="h-8 w-8 text-blue-500" />
+                <div className="text-right mb-8">
+                  <div className="flex items-center justify-end gap-3 mb-4">
                     <h1 className="text-2xl md:text-3xl font-bold text-foreground">ההתראות שלי</h1>
+                    <Bell className="h-8 w-8 text-blue-500" />
                   </div>
-                  <p className="text-gray-500 text-lg">ניהול התראות והגדרות תזמון</p>
+                  <p className="text-gray-500 text-lg text-right">ניהול התראות והגדרות תזמון</p>
                 </div>
 
                 {/* Timing Settings */}
                 <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 shadow-sm border border-blue-200 mb-6">
-                  <div className="flex items-center gap-3 mb-6">
+                  <div className="flex items-center justify-end gap-3 mb-6">
+                    <h2 className="text-xl font-semibold text-right">הגדרות תזמון</h2>
                     <Clock className="h-6 w-6 text-blue-600" />
-                    <h2 className="text-xl font-semibold">הגדרות תזמון</h2>
                   </div>
                   
                   <div className="space-y-4 md:space-y-6">
                     {/* תדירות התראות */}
                     <div className="space-y-2">
-                      <Label className="text-sm md:text-base font-medium">תדירות התראות</Label>
+                      <Label className="text-sm md:text-base font-medium text-right">תדירות התראות</Label>
                       <Select 
                         value={notificationTiming.frequency} 
                         onValueChange={(value) => setNotificationTiming(prev => ({ ...prev, frequency: value }))}
@@ -899,7 +899,7 @@ const CreateTemplate = () => {
                     {/* כמה פעמים ביום - רק ליומי וכל 3 ימים */}
                     {(notificationTiming.frequency === "daily" || notificationTiming.frequency === "every3days") && (
                       <div className="space-y-2">
-                        <Label className="text-base font-medium">כמה פעמים ביום</Label>
+                        <Label className="text-base font-medium text-right">כמה פעמים ביום</Label>
                         <Select 
                           value={notificationTiming.dailyFrequency || "1"} 
                           onValueChange={(value) => setNotificationTiming(prev => ({ ...prev, dailyFrequency: value }))}
@@ -922,7 +922,7 @@ const CreateTemplate = () => {
 
                     {/* שעות שליחה */}
                     <div className="space-y-2">
-                      <Label className="text-base font-medium">
+                      <Label className="text-base font-medium text-right">
                         {(notificationTiming.frequency === "daily" || notificationTiming.frequency === "every3days") 
                           ? "שעות שליחה" 
                           : "שעת שליחה"}
@@ -952,7 +952,7 @@ const CreateTemplate = () => {
                     
                     {/* הפעל התראות */}
                     <div className="space-y-2">
-                      <Label className="text-base font-medium">הפעל התראות</Label>
+                      <Label className="text-base font-medium text-right">הפעל התראות</Label>
                       <div className="flex items-center justify-end gap-3 p-3 bg-white rounded-lg border">
                         <Switch 
                           checked={notificationTiming.enabled}
