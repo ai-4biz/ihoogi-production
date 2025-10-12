@@ -208,7 +208,7 @@ const CreateTemplate = () => {
             <TabsList className="grid grid-cols-2 gap-1 md:gap-2 mb-6 w-full">
               <TabsTrigger 
                 value="templates" 
-                className="flex items-center gap-1 md:gap-2 text-xs md:text-sm"
+                className="flex items-center gap-1 md:gap-2 text-xs md:text-sm text-right"
               >
                 <Edit className="h-3 w-3 md:h-4 md:w-4" />
                 <span>מענה ללקוחות</span>
@@ -216,7 +216,7 @@ const CreateTemplate = () => {
               
               <TabsTrigger 
                 value="notifications" 
-                className="flex items-center gap-1 md:gap-2 text-xs md:text-sm"
+                className="flex items-center gap-1 md:gap-2 text-xs md:text-sm text-right"
               >
                 <Bell className="h-3 w-3 md:h-4 md:w-4" />
                 <span>ההתראות שלי</span>
