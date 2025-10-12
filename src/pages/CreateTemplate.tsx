@@ -89,6 +89,10 @@ const CreateTemplate = () => {
   const [includeLogo, setIncludeLogo] = useState(true);
   const [includeProfile, setIncludeProfile] = useState(true);
   
+  // AI decision buttons
+  const [aiDecideForAI, setAiDecideForAI] = useState(true);
+  const [aiDecideForCombined, setAiDecideForCombined] = useState(true);
+  
   // Mock data from user profile
   const businessName = "gil.arbisman";
   const subCategory = "יעוץ עסקי";
@@ -445,13 +449,24 @@ const CreateTemplate = () => {
                   {/* הנחיות AI - רק ל-AI */}
                   {templateType === "ai" && (
                     <div>
-                      <Label htmlFor="ai-instructions" className="text-sm font-medium mb-2 block">הנחיות AI</Label>
+                      <div className="flex items-center justify-between mb-2">
+                        <Label htmlFor="ai-instructions" className="text-sm font-medium">הנחיות AI</Label>
+                        <div className="flex items-center gap-2">
+                          <Switch
+                            checked={aiDecideForAI}
+                            onCheckedChange={setAiDecideForAI}
+                            className="scale-75"
+                          />
+                          <span className="text-xs text-gray-600">תן ל-i hoogi להחליט בשבילך</span>
+                        </div>
+                      </div>
                       <Textarea
                         id="ai-instructions"
-                        placeholder="תן הנחיות ל-AI איך לכתוב את ההודעה...\n\nלדוגמה:\n- כתוב בצורה חמה ומזמינה\n- הדגש את היתרונות שלנו\n- סיים בקריאה לפעולה"
+                        placeholder={aiDecideForAI ? "i hoogi יחליט על ההנחיות עבורך..." : "תן הנחיות ל-AI איך לכתוב את ההודעה...\n\nלדוגמה:\n- כתוב בצורה חמה ומזמינה\n- הדגש את היתרונות שלנו\n- סיים בקריאה לפעולה"}
                         value={customAiMessage}
                         onChange={(e) => setCustomAiMessage(e.target.value)}
                         className="min-h-[120px] text-base resize-none"
+                        readOnly={aiDecideForAI}
                       />
                     </div>
                   )}
@@ -542,13 +557,24 @@ const CreateTemplate = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="ai-instructions-combined" className="text-sm font-medium mb-2 block">הוראות ל-AI</Label>
+                    <div className="flex items-center justify-between mb-2">
+                      <Label htmlFor="ai-instructions-combined" className="text-sm font-medium">הוראות ל-AI</Label>
+                      <div className="flex items-center gap-2">
+                        <Switch
+                          checked={aiDecideForCombined}
+                          onCheckedChange={setAiDecideForCombined}
+                          className="scale-75"
+                        />
+                        <span className="text-xs text-gray-600">תן ל-i hoogi להחליט בשבילך</span>
+                      </div>
+                    </div>
                     <Textarea
                       id="ai-instructions-combined"
-                      placeholder="תן הנחיות ל-AI איך לכתוב את החלק שלו בהודעה...\n\nלדוגמה:\n- כתוב בצורה חמה ומזמינה\n- הדגש את היתרונות שלנו\n- סיים בקריאה לפעולה"
+                      placeholder={aiDecideForCombined ? "i hoogi יחליט על ההנחיות עבורך..." : "תן הנחיות ל-AI איך לכתוב את החלק שלו בהודעה...\n\nלדוגמה:\n- כתוב בצורה חמה ומזמינה\n- הדגש את היתרונות שלנו\n- סיים בקריאה לפעולה"}
                       value={customAiMessage}
                       onChange={(e) => setCustomAiMessage(e.target.value)}
                       className="min-h-[100px] text-base resize-none"
+                      readOnly={aiDecideForCombined}
                     />
                   </div>
 
