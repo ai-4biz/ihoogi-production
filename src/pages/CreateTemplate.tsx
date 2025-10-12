@@ -896,8 +896,8 @@ const CreateTemplate = () => {
                       </Select>
                     </div>
 
-                    {/* כמה פעמים ביום - רק ליומי וכל 3 ימים */}
-                    {(notificationTiming.frequency === "daily" || notificationTiming.frequency === "every3days") && (
+                    {/* כמה פעמים ביום - רק ליומי */}
+                    {notificationTiming.frequency === "daily" && (
                       <div className="space-y-2">
                         <Label className="text-base font-medium text-right">כמה פעמים ביום</Label>
                         <Select 
@@ -923,13 +923,11 @@ const CreateTemplate = () => {
                     {/* שעות שליחה */}
                     <div className="space-y-2">
                       <Label className="text-base font-medium text-right">
-                        {(notificationTiming.frequency === "daily" || notificationTiming.frequency === "every3days") 
-                          ? "שעות שליחה" 
-                          : "שעת שליחה"}
+                        {notificationTiming.frequency === "daily" ? "שעות שליחה" : "שעת שליחה"}
                       </Label>
                       <div className="space-y-2">
-                        {(notificationTiming.frequency === "daily" || notificationTiming.frequency === "every3days") ? (
-                          // מספר שעות לפי כמה פעמים ביום
+                        {notificationTiming.frequency === "daily" ? (
+                          // מספר שעות לפי כמה פעמים ביום - רק ליומי
                           Array.from({ length: parseInt(notificationTiming.dailyFrequency || "1") }, (_, i) => (
                             <Input 
                               key={i}
@@ -939,7 +937,7 @@ const CreateTemplate = () => {
                             />
                           ))
                         ) : (
-                          // שעה אחת לשבועי/חודשי
+                          // שעה אחת לכל השאר (כל 3 ימים, שבועי, חודשי)
                           <Input 
                             type="time"
                             value={notificationTiming.time}
