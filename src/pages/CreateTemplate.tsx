@@ -311,7 +311,7 @@ const CreateTemplate = () => {
                       <p className="text-sm text-gray-600 text-right">
                         {isEditMode 
                           ? "אתה עורך תבנית קיימת. ניתן לשנות את כל השדות ולשמור את השינויים."
-                          : "צור תבנית חדשה או בחר תבנית קיימת לעריכה."}
+                          : "צור תבנית חדשה. לעריכת תבנית קיימת, עבור ללשונית 'התבניות שלי' ולחץ על 'ערוך'."}
                       </p>
                     </div>
                     {isEditMode && (
@@ -338,67 +338,6 @@ const CreateTemplate = () => {
                     )}
                   </div>
                   
-                  {!isEditMode && (
-                    <div className="flex items-center gap-3">
-                      <Label className="text-sm font-medium text-right whitespace-nowrap">בחר תבנית לעריכה:</Label>
-                      <Select 
-                        onValueChange={(value) => {
-                          if (value) {
-                            const mockTemplates = [
-                              {
-                                id: 1,
-                                name: "תבנית מענה סטנדרטית",
-                                type: "standard",
-                                channels: ["email"],
-                                responseType: "new_customer",
-                                subject: "תודה על פנייתך",
-                                body: "שלום, נשמח לעזור לך",
-                                aiInstructions: "",
-                                personalText: "",
-                                aiPosition: "beginning",
-                                reminderDelay: "immediate",
-                                reminderTime: "09:00",
-                                reminderDays: "",
-                                leadStatus: "",
-                                leadSubStatus: "",
-                                design: {}
-                              },
-                              {
-                                id: 2,
-                                name: "מענה AI מותאם",
-                                type: "ai",
-                                channels: ["email", "whatsapp"],
-                                responseType: "new_customer",
-                                subject: "מענה אוטומטי",
-                                body: "תוכן AI",
-                                aiInstructions: "תן מענה מקצועי וידידותי",
-                                personalText: "",
-                                aiPosition: "beginning",
-                                reminderDelay: "immediate",
-                                reminderTime: "09:00",
-                                reminderDays: "",
-                                leadStatus: "",
-                                leadSubStatus: "",
-                                design: {}
-                              }
-                            ];
-                            const template = mockTemplates.find(t => t.id.toString() === value);
-                            if (template) {
-                              loadTemplateForEdit(template);
-                            }
-                          }
-                        }}
-                      >
-                        <SelectTrigger className="w-full md:w-[400px] text-right">
-                          <SelectValue placeholder="בחר תבנית..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="1">תבנית מענה סטנדרטית</SelectItem>
-                          <SelectItem value="2">מענה AI מותאם</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  )}
                 </div>
               </div>
 
