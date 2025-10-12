@@ -833,6 +833,26 @@ const CreateTemplate = () => {
               </div>
 
 
+              {/* Save/Cancel buttons - רק בלשונית התבניות */}
+              <div className="mt-8 flex flex-col md:flex-row gap-3 md:gap-4 justify-center">
+                <Button 
+                  variant="outline" 
+                  onClick={() => navigate(-1)}
+                  className="px-8 py-3 text-base font-medium"
+                >
+                  ביטול
+                </Button>
+                <Button 
+                  onClick={() => {
+                    toast.success("תבנית נשמרה בהצלחה!", {
+                      description: `תבנית "${templateName}" נשמרה וזמינה לשימוש`
+                    });
+                  }}
+                  className="px-8 py-3 text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl"
+                >
+                  שמור תבנית
+                </Button>
+              </div>
             </TabsContent>
 
             <TabsContent value="notifications" className="mt-2">
@@ -854,7 +874,8 @@ const CreateTemplate = () => {
                     <h2 className="text-xl font-semibold">הגדרות תזמון</h2>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="space-y-6">
+                    {/* תדירות התראות */}
                     <div className="space-y-2">
                       <Label className="text-base font-medium">תדירות התראות</Label>
                       <Select 
@@ -865,7 +886,6 @@ const CreateTemplate = () => {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="hourly">שעתי</SelectItem>
                           <SelectItem value="daily">יומי</SelectItem>
                           <SelectItem value="every3days">כל 3 ימים</SelectItem>
                           <SelectItem value="weekly">שבועי</SelectItem>
@@ -873,38 +893,62 @@ const CreateTemplate = () => {
                         </SelectContent>
                       </Select>
                     </div>
-                    
+
+                    {/* כמה פעמים ביום - רק ליומי וכל 3 ימים */}
+                    {(notificationTiming.frequency === "daily" || notificationTiming.frequency === "every3days") && (
+                      <div className="space-y-2">
+                        <Label className="text-base font-medium">כמה פעמים ביום</Label>
+                        <Select 
+                          value={notificationTiming.dailyFrequency || "1"} 
+                          onValueChange={(value) => setNotificationTiming(prev => ({ ...prev, dailyFrequency: value }))}
+                        >
+                          <SelectTrigger className="text-right">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="1">פעם אחת</SelectItem>
+                            <SelectItem value="2">פעמיים</SelectItem>
+                            <SelectItem value="3">3 פעמים</SelectItem>
+                            <SelectItem value="4">4 פעמים</SelectItem>
+                            <SelectItem value="6">6 פעמים</SelectItem>
+                            <SelectItem value="8">8 פעמים</SelectItem>
+                            <SelectItem value="12">12 פעמים</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    )}
+
+                    {/* שעות שליחה */}
                     <div className="space-y-2">
-                      <Label className="text-base font-medium">כמה פעמים ביום</Label>
-                      <Select 
-                        value={notificationTiming.dailyFrequency || "1"} 
-                        onValueChange={(value) => setNotificationTiming(prev => ({ ...prev, dailyFrequency: value }))}
-                      >
-                        <SelectTrigger className="text-right">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="1">פעם אחת</SelectItem>
-                          <SelectItem value="2">פעמיים</SelectItem>
-                          <SelectItem value="3">3 פעמים</SelectItem>
-                          <SelectItem value="4">4 פעמים</SelectItem>
-                          <SelectItem value="6">6 פעמים</SelectItem>
-                          <SelectItem value="8">8 פעמים</SelectItem>
-                          <SelectItem value="12">12 פעמים</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Label className="text-base font-medium">
+                        {(notificationTiming.frequency === "daily" || notificationTiming.frequency === "every3days") 
+                          ? "שעות שליחה" 
+                          : "שעת שליחה"}
+                      </Label>
+                      <div className="space-y-2">
+                        {(notificationTiming.frequency === "daily" || notificationTiming.frequency === "every3days") ? (
+                          // מספר שעות לפי כמה פעמים ביום
+                          Array.from({ length: parseInt(notificationTiming.dailyFrequency || "1") }, (_, i) => (
+                            <Input 
+                              key={i}
+                              type="time"
+                              placeholder={`שעה ${i + 1}`}
+                              className="text-base p-3 text-right"
+                            />
+                          ))
+                        ) : (
+                          // שעה אחת לשבועי/חודשי
+                          <Input 
+                            type="time"
+                            value={notificationTiming.time}
+                            onChange={(e) => setNotificationTiming(prev => ({ ...prev, time: e.target.value }))}
+                            className="text-base p-3 text-right"
+                          />
+                        )}
+                      </div>
                     </div>
                     
-                    <div className="space-y-2">
-                      <Label className="text-base font-medium">שעת שליחה</Label>
-                      <Input 
-                        type="time"
-                        value={notificationTiming.time}
-                        onChange={(e) => setNotificationTiming(prev => ({ ...prev, time: e.target.value }))}
-                        className="text-base p-3 text-right"
-                      />
-                    </div>
-                    
+                    {/* הפעל התראות */}
                     <div className="space-y-2">
                       <Label className="text-base font-medium">הפעל התראות</Label>
                       <div className="flex items-center justify-end gap-3 p-3 bg-white rounded-lg border">
@@ -1192,26 +1236,6 @@ const CreateTemplate = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Save/Cancel buttons */}
-      <div className="mt-8 flex flex-col md:flex-row gap-3 md:gap-4 justify-center">
-        <Button 
-          variant="outline" 
-          onClick={() => navigate(-1)}
-          className="px-8 py-3 text-base font-medium"
-        >
-          ביטול
-        </Button>
-        <Button 
-          onClick={() => {
-            toast.success("תבנית נשמרה בהצלחה!", {
-              description: `תבנית "${templateName}" נשמרה וזמינה לשימוש`
-            });
-          }}
-          className="px-8 py-3 text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl"
-        >
-          שמור תבנית
-        </Button>
-      </div>
     </MainLayout>
   );
 };
