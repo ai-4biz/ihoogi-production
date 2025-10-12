@@ -806,8 +806,8 @@ const CreateTemplate = () => {
                   ))}
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
           {/* Action buttons */}
           <div className="flex justify-center gap-4 mt-8 mb-4">
