@@ -973,18 +973,13 @@ const CreateTemplate = () => {
                   </div>
                   
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between p-4 bg-blue-50 rounded-xl border border-blue-200">
-                      <div className="flex items-center gap-3">
-                        <Bell className="h-5 w-5 text-blue-600" />
-                        <span className="text-base font-medium">התראות באפליקציה</span>
-                      </div>
-                      <Switch defaultChecked className="scale-110" />
-                    </div>
-                    
                     <div className="flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-200">
                       <div className="flex items-center gap-3">
                         <Mail className="h-5 w-5 text-green-600" />
-                        <span className="text-base font-medium">התראות בדואר אלקטרוני</span>
+                        <div>
+                          <span className="text-base font-medium">התראות בדואר אלקטרוני</span>
+                          <p className="text-xs text-green-600 mt-1">אין הגבלות על כמות ההתראות</p>
+                        </div>
                       </div>
                       <Switch defaultChecked className="scale-110" />
                     </div>
@@ -992,7 +987,10 @@ const CreateTemplate = () => {
                     <div className="flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-200">
                       <div className="flex items-center gap-3">
                         <MessageCircle className="h-5 w-5 text-green-600" />
-                        <span className="text-base font-medium">התראות בוואטסאפ</span>
+                        <div>
+                          <span className="text-base font-medium">התראות בוואטסאפ</span>
+                          <p className="text-xs text-orange-600 mt-1">⚠️ מוגבל - יסגר אוטומטית בסיום מכסת ההתראות</p>
+                        </div>
                       </div>
                       <Switch className="scale-110" />
                     </div>
@@ -1000,7 +998,10 @@ const CreateTemplate = () => {
                     <div className="flex items-center justify-between p-4 bg-purple-50 rounded-xl border border-purple-200">
                       <div className="flex items-center gap-3">
                         <MessageCircle className="h-5 w-5 text-purple-600" />
-                        <span className="text-base font-medium">התראות בהודעה</span>
+                        <div>
+                          <span className="text-base font-medium">התראות בהודעה</span>
+                          <p className="text-xs text-orange-600 mt-1">⚠️ מוגבל - יסגר אוטומטית בסיום מכסת ההתראות</p>
+                        </div>
                       </div>
                       <Switch className="scale-110" />
                     </div>
