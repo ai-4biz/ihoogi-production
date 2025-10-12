@@ -46,9 +46,9 @@ const NotificationsTab = () => {
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-3 mb-4">
           <AlertTriangle className="h-8 w-8 text-red-500" />
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">ההתרעות שלי</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">מענה אוטומטי ללקוחות</h1>
         </div>
-        <p className="text-gray-500 text-lg">ניהול התראות והגדרות אוטומציה</p>
+        <p className="text-gray-500 text-lg">הגדרות מענה אוטומטי ללקוחות וניהול התראות</p>
       </div>
 
       {/* Main Card */}
