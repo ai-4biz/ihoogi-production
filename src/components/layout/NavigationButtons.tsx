@@ -96,6 +96,15 @@ const NavigationButtons = ({
       onClick: () => navigate("/notifications")
     },
     {
+      id: "partners",
+      emoji: "🤝",
+      label: "ניהול שותפים",
+      state: "root" as ViewState,
+      active: window.location.pathname === "/partners",
+      color: "purple",
+      onClick: () => navigate("/partners")
+    },
+    {
       id: "contact",
       emoji: "✉️",
       label: "צור קשר",
