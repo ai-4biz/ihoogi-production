@@ -111,7 +111,7 @@ const SurveysPage = () => {
           {/* Header */}
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
-              <h1 className="text-4xl font-bold text-foreground mb-2">השאלונים שלי - TEST</h1>
+              <h1 className="text-4xl font-bold text-foreground mb-2">השאלונים שלי</h1>
               <p className="text-muted-foreground text-lg">נהל והפץ את השאלונים שלך</p>
             </div>
             <Button 
@@ -265,24 +265,22 @@ const SurveysPage = () => {
                         </div>
                       </div>
 
-                      {/* Templates */}
-                      <div className="space-y-3 p-4 bg-red-100 border-2 border-red-500 rounded-lg">
-                        <h4 className="text-sm font-semibold text-gray-700">תבניות מענה (נראה?):</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                          {console.log('Templates for questionnaire:', q.id, q.templates)}
-                          {q.templates?.map((template, index) => (
-                            <div 
-                              key={index}
-                              className="flex items-center gap-2 p-3 rounded-lg bg-gradient-to-r from-cyan-50 to-blue-50 border border-cyan-200 hover:border-cyan-300 transition-colors cursor-pointer"
-                              onClick={() => navigate('/create-template')}
-                            >
-                              <FileText className="h-4 w-4 text-cyan-600" />
-                              <div className="flex-1 min-w-0">
-                                <div className="text-xs font-medium text-cyan-900 truncate">{template.name}</div>
-                                <div className="text-xs text-cyan-700">{template.sentCount} נשלחו</div>
-                              </div>
-                            </div>
-                          ))}
+                      {/* תבניות מענה - חדש */}
+                      <div className="space-y-3">
+                        <h4 className="text-sm font-semibold text-gray-700">תבניות מענה:</h4>
+                        <div className="flex flex-wrap gap-2">
+                          <div className="flex items-center gap-2 p-2 bg-blue-100 rounded-lg border border-blue-300">
+                            <FileText className="h-4 w-4 text-blue-600" />
+                            <span className="text-sm text-blue-800">תבנית סטנדרטית (12)</span>
+                          </div>
+                          <div className="flex items-center gap-2 p-2 bg-green-100 rounded-lg border border-green-300">
+                            <FileText className="h-4 w-4 text-green-600" />
+                            <span className="text-sm text-green-800">AI מותאמת (8)</span>
+                          </div>
+                          <div className="flex items-center gap-2 p-2 bg-purple-100 rounded-lg border border-purple-300">
+                            <FileText className="h-4 w-4 text-purple-600" />
+                            <span className="text-sm text-purple-800">תזכורת (5)</span>
+                          </div>
                         </div>
                       </div>
 
