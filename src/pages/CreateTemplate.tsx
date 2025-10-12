@@ -93,6 +93,9 @@ const CreateTemplate = () => {
   const [aiDecideForAI, setAiDecideForAI] = useState(true);
   const [aiDecideForCombined, setAiDecideForCombined] = useState(true);
   
+  // Title checkbox
+  const [includeTitle, setIncludeTitle] = useState(true);
+  
   // Mock data from user profile
   const businessName = "gil.arbisman";
   const subCategory = "יעוץ עסקי";
@@ -124,7 +127,7 @@ const CreateTemplate = () => {
     }
 
     if (templateType !== "standard" && !emailSubject.trim()) {
-      toast.error("נא להזין נושא למייל");
+      toast.error("נא להזין כותרת למייל");
       return;
     }
 
@@ -293,7 +296,7 @@ const CreateTemplate = () => {
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label className="text-sm font-medium">נושא ההודעה</Label>
+                      <Label className="text-sm font-medium">כותרת ההודעה</Label>
                       <Input 
                         value="קיבלנו את השאלון שלך - {{businessName}}"
                         className="text-right bg-gray-50"
@@ -432,17 +435,28 @@ const CreateTemplate = () => {
                 <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-foreground">תוכן ההודעה</h3>
                 
                 <div className="space-y-4">
-                  {/* נושא - תמיד מוצג למייל */}
+                  {/* כותרת - תמיד מוצג למייל */}
                   {(singleChannel === "email" || selectedChannels.includes("email")) && (
                     <div>
-                      <Label htmlFor="email-subject" className="text-sm font-medium mb-2 block">נושא</Label>
-                      <Input
-                        id="email-subject"
-                        placeholder="הקלד נושא למייל..."
-                        value={emailSubject}
-                        onChange={(e) => setEmailSubject(e.target.value)}
-                        className="text-base"
-                      />
+                      <div className="flex items-center justify-end gap-2 mb-2">
+                        <Label htmlFor="email-subject" className="text-sm font-medium">כותרת</Label>
+                        <div className="flex items-center gap-2">
+                          <Checkbox 
+                            checked={includeTitle} 
+                            onCheckedChange={setIncludeTitle}
+                            className="w-4 h-4"
+                          />
+                        </div>
+                      </div>
+                      {includeTitle && (
+                        <Input
+                          id="email-subject"
+                          placeholder="הקלד כותרת למייל..."
+                          value={emailSubject}
+                          onChange={(e) => setEmailSubject(e.target.value)}
+                          className="text-base"
+                        />
+                      )}
                     </div>
                   )}
 
@@ -532,14 +546,25 @@ const CreateTemplate = () => {
                 
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="email-subject-combined" className="text-sm font-medium mb-2 block">נושא</Label>
-                    <Input
-                      id="email-subject-combined"
-                      placeholder="נושא ההודעה..."
-                      value={emailSubject}
-                      onChange={(e) => setEmailSubject(e.target.value)}
-                      className="text-base"
-                    />
+                    <div className="flex items-center justify-end gap-2 mb-2">
+                      <Label htmlFor="email-subject-combined" className="text-sm font-medium">כותרת</Label>
+                      <div className="flex items-center gap-2">
+                        <Checkbox 
+                          checked={includeTitle} 
+                          onCheckedChange={setIncludeTitle}
+                          className="w-4 h-4"
+                        />
+                      </div>
+                    </div>
+                    {includeTitle && (
+                      <Input
+                        id="email-subject-combined"
+                        placeholder="כותרת ההודעה..."
+                        value={emailSubject}
+                        onChange={(e) => setEmailSubject(e.target.value)}
+                        className="text-base"
+                      />
+                    )}
                   </div>
 
                   <div>
@@ -771,7 +796,7 @@ const CreateTemplate = () => {
                         className="w-full flex items-center justify-center gap-2 text-xs"
                       >
                         <Eye className="h-3 w-3" />
-                        הצג דמו
+                        הצג דוגמא
                       </Button>
                     </div>
                   ))}
@@ -950,7 +975,7 @@ const CreateTemplate = () => {
             {/* Channel-specific formatting */}
             {selectedChannelForDemo === "email" && (
               <div className="text-xs text-gray-500 bg-gray-50 p-2 rounded">
-                📧 פורמט מייל - כולל נושא, תוכן מובנה ותחתית
+                📧 פורמט מייל - כולל כותרת, תוכן מובנה ותחתית
               </div>
             )}
             
