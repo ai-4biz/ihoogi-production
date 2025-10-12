@@ -491,19 +491,6 @@ const CreateTemplate = () => {
                       </div>
                     )}
                     
-                    {/* כותרת פשוטה למענה אישי */}
-                    {(singleChannel === "email" || selectedChannels.includes("email")) && templateType === "personal" && (
-                      <div>
-                        <Label htmlFor="email-subject-personal" className="text-sm font-medium mb-2 block text-right">כותרת</Label>
-                        <Input
-                          id="email-subject-personal"
-                          placeholder="הקלד כותרת..."
-                          value={emailSubject}
-                          onChange={(e) => setEmailSubject(e.target.value)}
-                          className="text-base text-right"
-                        />
-                      </div>
-                    )}
 
                     {/* הנחיות AI - רק ל-AI */}
                     {templateType === "ai" && (
