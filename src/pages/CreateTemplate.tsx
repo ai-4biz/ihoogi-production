@@ -854,7 +854,7 @@ const CreateTemplate = () => {
                     <h2 className="text-xl font-semibold">הגדרות תזמון</h2>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div className="space-y-2">
                       <Label className="text-base font-medium">תדירות התראות</Label>
                       <Select 
@@ -870,6 +870,27 @@ const CreateTemplate = () => {
                           <SelectItem value="every3days">כל 3 ימים</SelectItem>
                           <SelectItem value="weekly">שבועי</SelectItem>
                           <SelectItem value="monthly">חודשי</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label className="text-base font-medium">כמה פעמים ביום</Label>
+                      <Select 
+                        value={notificationTiming.dailyFrequency || "1"} 
+                        onValueChange={(value) => setNotificationTiming(prev => ({ ...prev, dailyFrequency: value }))}
+                      >
+                        <SelectTrigger className="text-right">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1">פעם אחת</SelectItem>
+                          <SelectItem value="2">פעמיים</SelectItem>
+                          <SelectItem value="3">3 פעמים</SelectItem>
+                          <SelectItem value="4">4 פעמים</SelectItem>
+                          <SelectItem value="6">6 פעמים</SelectItem>
+                          <SelectItem value="8">8 פעמים</SelectItem>
+                          <SelectItem value="12">12 פעמים</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -931,6 +952,14 @@ const CreateTemplate = () => {
                       </div>
                       <Switch className="scale-110" />
                     </div>
+                    
+                    <div className="flex items-center justify-between p-4 bg-purple-50 rounded-xl border border-purple-200">
+                      <div className="flex items-center gap-3">
+                        <MessageCircle className="h-5 w-5 text-purple-600" />
+                        <span className="text-base font-medium">התראות בהודעה</span>
+                      </div>
+                      <Switch className="scale-110" />
+                    </div>
                   </div>
                 </div>
 
@@ -962,6 +991,18 @@ const CreateTemplate = () => {
                         defaultValue="+972501234567"
                         placeholder="+972501234567"
                         className="text-base p-3 border-2 focus:border-green-500"
+                        dir="ltr"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="message-number" className="text-base font-medium">מספר להודעה</Label>
+                      <Input 
+                        id="message-number"
+                        type="tel"
+                        defaultValue="+972501234567"
+                        placeholder="+972501234567"
+                        className="text-base p-3 border-2 focus:border-purple-500"
                         dir="ltr"
                       />
                     </div>
