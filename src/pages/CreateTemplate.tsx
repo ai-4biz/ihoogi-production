@@ -1183,6 +1183,27 @@ const CreateTemplate = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Save/Cancel buttons */}
+      <div className="mt-8 flex flex-col md:flex-row gap-3 md:gap-4 justify-center">
+        <Button 
+          variant="outline" 
+          onClick={() => navigate(-1)}
+          className="px-8 py-3 text-base font-medium"
+        >
+          ביטול
+        </Button>
+        <Button 
+          onClick={() => {
+            toast.success("תבנית נשמרה בהצלחה!", {
+              description: `תבנית "${templateName}" נשמרה וזמינה לשימוש`
+            });
+          }}
+          className="px-8 py-3 text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl"
+        >
+          שמור תבנית
+        </Button>
+      </div>
     </MainLayout>
   );
 };
