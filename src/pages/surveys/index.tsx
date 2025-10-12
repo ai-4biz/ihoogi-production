@@ -217,6 +217,10 @@ const SurveysPage = () => {
                             <TrendingUp className="h-4 w-4 text-purple-600" />
                             <span className="text-purple-700 font-medium">לידים ({q.leadsThisMonth})</span>
                           </div>
+                          <div className="flex items-center gap-1">
+                            <FileText className="h-4 w-4 text-cyan-600" />
+                            <span className="text-cyan-700 font-medium">תבניות ({q.templates?.length || 0})</span>
+                          </div>
                         </div>
                       </div>
 
@@ -261,22 +265,21 @@ const SurveysPage = () => {
                         </div>
                       </div>
 
-                      {/* Automated Customer Response */}
+                      {/* Templates */}
                       <div className="space-y-3">
-                        <h4 className="text-sm font-semibold text-gray-700">מענה לקוח אוטומטי:</h4>
-                        <div className="space-y-2">
+                        <h4 className="text-sm font-semibold text-gray-700">תבניות מענה:</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                           {q.templates?.map((template, index) => (
                             <div 
                               key={index}
                               className="flex items-center gap-2 p-3 rounded-lg bg-gradient-to-r from-cyan-50 to-blue-50 border border-cyan-200 hover:border-cyan-300 transition-colors cursor-pointer"
                               onClick={() => navigate('/create-template')}
                             >
-                              <FileText className="h-5 w-5 text-cyan-600" />
-                              <div className="flex-1">
-                                <div className="font-medium text-cyan-900">{template.name}</div>
-                                <div className="text-sm text-cyan-700">{template.sentCount} הודעות נשלחו</div>
+                              <FileText className="h-4 w-4 text-cyan-600" />
+                              <div className="flex-1 min-w-0">
+                                <div className="text-xs font-medium text-cyan-900 truncate">{template.name}</div>
+                                <div className="text-xs text-cyan-700">{template.sentCount} נשלחו</div>
                               </div>
-                              <Edit className="h-4 w-4 text-cyan-600" />
                             </div>
                           ))}
                         </div>
