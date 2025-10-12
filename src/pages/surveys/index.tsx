@@ -204,9 +204,23 @@ const SurveysPage = () => {
                       {/* Title */}
                       <div className="space-y-2">
                         <h3 className="text-2xl font-bold text-foreground leading-tight">{q.title}</h3>
-                        <div className="bg-yellow-200 p-2 rounded text-sm">
-                          📋 תבניות מענה: תבנית סטנדרטית (12), AI מותאמת (8), תזכורת (5)
-                        </div>
+                        {q.templates && q.templates.length > 0 && (
+                          <div className="bg-gradient-to-l from-orange-50 to-orange-100 border border-orange-200 p-3 rounded-lg text-sm text-right">
+                            <div className="flex items-start gap-2">
+                              <FileText className="h-4 w-4 text-orange-600 flex-shrink-0 mt-0.5" />
+                              <div className="flex-1">
+                                <span className="font-semibold text-orange-900">תבניות מענה מחוברות:</span>
+                                <div className="mt-1 space-y-1">
+                                  {q.templates.map((template, idx) => (
+                                    <div key={idx} className="text-orange-800">
+                                      • {template.name} <span className="text-orange-600">({template.sentCount} נשלחו)</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                         <div className="flex items-center gap-4 text-sm">
                           <div className="flex items-center gap-1">
                             <Users className="h-4 w-4 text-green-600" />
@@ -219,10 +233,6 @@ const SurveysPage = () => {
                           <div className="flex items-center gap-1">
                             <TrendingUp className="h-4 w-4 text-purple-600" />
                             <span className="text-purple-700 font-medium">לידים ({q.leadsThisMonth})</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <FileText className="h-4 w-4 text-orange-600" />
-                            <span className="text-orange-700 font-medium">תבניות (3)</span>
                           </div>
                         </div>
                       </div>
