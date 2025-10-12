@@ -1,15 +1,16 @@
 import { useState, useEffect } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"; 
 import MainLayout from "@/components/layout/MainLayout";
-import { Bell, Edit, Settings, ArrowRight } from "lucide-react";
+import { Bell, Edit, Settings, ArrowRight, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import TriggersTab from "@/components/automations/TriggersTab";
 import TemplatesTab from "@/components/automations/TemplatesTab";
 import PreferencesTab from "@/components/automations/PreferencesTab";
+import NotificationsTab from "@/components/automations/NotificationsTab";
 import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
-type AutomationTab = "triggers" | "templates" | "prefs";
+type AutomationTab = "triggers" | "templates" | "prefs" | "notifications";
 
 const Automations = () => {
   const [searchParams] = useSearchParams();
@@ -17,7 +18,7 @@ const Automations = () => {
   const [activeTab, setActiveTab] = useState<AutomationTab>(tabParam || "templates");
 
   useEffect(() => {
-    if (tabParam && ["triggers", "templates", "prefs"].includes(tabParam)) {
+    if (tabParam && ["triggers", "templates", "prefs", "notifications"].includes(tabParam)) {
       setActiveTab(tabParam);
     }
   }, [tabParam]);
@@ -49,7 +50,7 @@ const Automations = () => {
           onValueChange={(value) => setActiveTab(value as AutomationTab)}
           className="w-full"
         >
-          <TabsList className="grid grid-cols-3 gap-1 md:gap-2 mb-6 w-full">
+          <TabsList className="grid grid-cols-4 gap-1 md:gap-2 mb-6 w-full">
             <TabsTrigger 
               value="templates" 
               className={cn("flex items-center gap-1 md:gap-2 text-xs md:text-sm", activeTab === "templates" && "text-green-500")}
@@ -73,6 +74,14 @@ const Automations = () => {
               <Settings className="h-3 w-3 md:h-4 md:w-4" />
               <span>העדפות</span>
             </TabsTrigger>
+            
+            <TabsTrigger 
+              value="notifications" 
+              className={cn("flex items-center gap-1 md:gap-2 text-xs md:text-sm", activeTab === "notifications" && "text-red-500")}
+            >
+              <AlertTriangle className="h-3 w-3 md:h-4 md:w-4" />
+              <span>ההתרעות שלי</span>
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="templates" className="mt-2">
@@ -85,6 +94,10 @@ const Automations = () => {
           
           <TabsContent value="prefs" className="mt-2">
             <PreferencesTab />
+          </TabsContent>
+          
+          <TabsContent value="notifications" className="mt-2">
+            <NotificationsTab />
           </TabsContent>
         </Tabs>
       </div>
