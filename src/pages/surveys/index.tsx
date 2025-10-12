@@ -218,8 +218,8 @@ const SurveysPage = () => {
                             <span className="text-purple-700 font-medium">לידים ({q.leadsThisMonth})</span>
                           </div>
                           <div className="flex items-center gap-1">
-                            <FileText className="h-4 w-4 text-cyan-600" />
-                            <span className="text-cyan-700 font-medium">תבניות ({q.templates?.length || 0})</span>
+                            <FileText className="h-4 w-4 text-orange-600" />
+                            <span className="text-orange-700 font-medium">תבניות (3)</span>
                           </div>
                         </div>
                       </div>
@@ -265,24 +265,6 @@ const SurveysPage = () => {
                         </div>
                       </div>
 
-                      {/* תבניות מענה - חדש */}
-                      <div className="space-y-3">
-                        <h4 className="text-sm font-semibold text-gray-700">תבניות מענה:</h4>
-                        <div className="flex flex-wrap gap-2">
-                          <div className="flex items-center gap-2 p-2 bg-blue-100 rounded-lg border border-blue-300">
-                            <FileText className="h-4 w-4 text-blue-600" />
-                            <span className="text-sm text-blue-800">תבנית סטנדרטית (12)</span>
-                          </div>
-                          <div className="flex items-center gap-2 p-2 bg-green-100 rounded-lg border border-green-300">
-                            <FileText className="h-4 w-4 text-green-600" />
-                            <span className="text-sm text-green-800">AI מותאמת (8)</span>
-                          </div>
-                          <div className="flex items-center gap-2 p-2 bg-purple-100 rounded-lg border border-purple-300">
-                            <FileText className="h-4 w-4 text-purple-600" />
-                            <span className="text-sm text-purple-800">תזכורת (5)</span>
-                          </div>
-                        </div>
-                      </div>
 
                       {/* Automations */}
                       <div className="space-y-3">
