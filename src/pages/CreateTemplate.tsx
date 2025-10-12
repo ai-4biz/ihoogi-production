@@ -488,7 +488,7 @@ const CreateTemplate = () => {
                         {!aiDecideForTitle && (
                           <Input
                             id="email-subject"
-                            placeholder="הקלד כותרת למייל..."
+                            placeholder="הקלד כותרת..."
                             value={emailSubject}
                             onChange={(e) => setEmailSubject(e.target.value)}
                             className="text-base text-right"
@@ -542,42 +542,6 @@ const CreateTemplate = () => {
                 </div>
               )}
 
-              {/* הוספת קישור / תמונה - לא סטנדרט */}
-              {templateType !== "standard" && (
-                <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4 md:p-6 shadow-sm border border-purple-200 hover:shadow-md transition-shadow">
-                  <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-foreground text-right">הוספת קישור / תמונה</h3>
-                
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="link-url" className="text-sm font-medium mb-2 block text-right">קישור</Label>
-                      <Input
-                        id="link-url"
-                        placeholder="https://example.com"
-                        value={templateDesign.linkUrl}
-                        onChange={(e) => setTemplateDesign(prev => ({ ...prev, linkUrl: e.target.value }))}
-                        className="text-base text-right"
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="document-file" className="text-sm font-medium mb-2 block text-right">העלאת קובץ</Label>
-                      <Input
-                        id="document-file"
-                        type="file"
-                        accept="image/*,.pdf,.doc,.docx"
-                        className="cursor-pointer"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            setDocumentFile(file.name);
-                            setTemplateDesign(prev => ({ ...prev, documentUrl: file.name }));
-                          }
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
 
               {/* הגדרות AI משולב - רק למשולב */}
               {templateType === "combined" && (
@@ -599,7 +563,7 @@ const CreateTemplate = () => {
                       {!aiDecideForCombined && (
                         <Input
                           id="email-subject-combined"
-                          placeholder="כותרת ההודעה..."
+                          placeholder="הקלד כותרת..."
                           value={emailSubject}
                           onChange={(e) => setEmailSubject(e.target.value)}
                           className="text-base text-right"
@@ -717,6 +681,43 @@ const CreateTemplate = () => {
                   </div>
                 </div>
               </div>
+
+              {/* הוספת קישור / תמונה - לא סטנדרט */}
+              {templateType !== "standard" && (
+                <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4 md:p-6 shadow-sm border border-purple-200 hover:shadow-md transition-shadow">
+                  <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-foreground text-right">הוספת קישור / תמונה</h3>
+                
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="link-url" className="text-sm font-medium mb-2 block text-right">קישור</Label>
+                      <Input
+                        id="link-url"
+                        placeholder="https://example.com"
+                        value={templateDesign.linkUrl}
+                        onChange={(e) => setTemplateDesign(prev => ({ ...prev, linkUrl: e.target.value }))}
+                        className="text-base text-right"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="document-file" className="text-sm font-medium mb-2 block text-right">העלאת קובץ</Label>
+                      <Input
+                        id="document-file"
+                        type="file"
+                        accept="image/*,.pdf,.doc,.docx"
+                        className="cursor-pointer"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setDocumentFile(file.name);
+                            setTemplateDesign(prev => ({ ...prev, documentUrl: file.name }));
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* התאמת התבנית לערוצים + דוגמא */}
               <div className="mb-6">
