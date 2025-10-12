@@ -474,63 +474,60 @@ const CreateTemplate = () => {
               </div>
             )}
 
-            {/* בחירת ערוצים - AI */}
-            {templateType === "ai" && (
+            {/* התאמת התבנית לערוצים - לכל סוגי המענה פרט לסטנדרט */}
+            {templateType !== "standard" && (
               <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 md:p-6 shadow-sm border border-blue-200 hover:shadow-md transition-shadow">
-                <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-foreground">בחירת ערוצים</h3>
+                <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-foreground">התאמת התבנית לערוצים</h3>
                 
-                <div className="flex gap-3">
-                  <Button 
-                    variant={selectedChannels.includes("email") ? "default" : "outline"}
-                    className="flex-1"
-                    onClick={() => handleChannelToggle("email")}
-                  >
-                    <Mail className="h-4 w-4 ml-2" />
-                    מייל
-                  </Button>
-                  <Button 
-                    variant={selectedChannels.includes("whatsapp") ? "default" : "outline"}
-                    className="flex-1"
-                    onClick={() => handleChannelToggle("whatsapp")}
-                  >
-                    <MessageCircle className="h-4 w-4 ml-2" />
-                    וואטסאפ
-                  </Button>
-                  <Button 
-                    variant={selectedChannels.includes("message") ? "default" : "outline"}
-                    className="flex-1"
-                    onClick={() => handleChannelToggle("message")}
-                  >
-                    <MessageCircle className="h-4 w-4 ml-2" />
-                    הודעה כללית
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            {/* בחירת ערוץ - לא AI ולא סטנדרט */}
-            {templateType !== "ai" && templateType !== "standard" && (
-              <div className="bg-gradient-to-br from-secondary/5 to-secondary/10 rounded-xl p-4 md:p-6 shadow-sm border border-secondary/20 hover:shadow-md transition-shadow">
-                <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-foreground">בחירת ערוץ</h3>
-                
-                <div className="flex gap-3">
-                  <Button 
-                    variant={singleChannel === "email" ? "default" : "outline"}
-                    className="flex-1"
-                    onClick={() => setSingleChannel("email")}
-                  >
-                    <Mail className="h-4 w-4 ml-2" />
-                    מייל
-                  </Button>
-                  <Button 
-                    variant={singleChannel === "whatsapp" ? "default" : "outline"}
-                    className="flex-1"
-                    onClick={() => setSingleChannel("whatsapp")}
-                  >
-                    <MessageCircle className="h-4 w-4 ml-2" />
-                    וואטסאפ
-                  </Button>
-                </div>
+                {/* AI - בחירה מרובה */}
+                {templateType === "ai" ? (
+                  <div className="flex gap-3">
+                    <Button 
+                      variant={selectedChannels.includes("message") ? "default" : "outline"}
+                      className="flex-1"
+                      onClick={() => handleChannelToggle("message")}
+                    >
+                      <MessageCircle className="h-4 w-4 ml-2" />
+                      הודעה כללי
+                    </Button>
+                    <Button 
+                      variant={selectedChannels.includes("whatsapp") ? "default" : "outline"}
+                      className="flex-1"
+                      onClick={() => handleChannelToggle("whatsapp")}
+                    >
+                      <MessageCircle className="h-4 w-4 ml-2" />
+                      וואטסאפ
+                    </Button>
+                    <Button 
+                      variant={selectedChannels.includes("email") ? "default" : "outline"}
+                      className="flex-1"
+                      onClick={() => handleChannelToggle("email")}
+                    >
+                      <Mail className="h-4 w-4 ml-2" />
+                      מייל
+                    </Button>
+                  </div>
+                ) : (
+                  /* Personal / Combined - בחירה יחידה */
+                  <div className="flex gap-3">
+                    <Button 
+                      variant={singleChannel === "whatsapp" ? "default" : "outline"}
+                      className="flex-1"
+                      onClick={() => setSingleChannel("whatsapp")}
+                    >
+                      <MessageCircle className="h-4 w-4 ml-2" />
+                      וואטסאפ
+                    </Button>
+                    <Button 
+                      variant={singleChannel === "email" ? "default" : "outline"}
+                      className="flex-1"
+                      onClick={() => setSingleChannel("email")}
+                    >
+                      <Mail className="h-4 w-4 ml-2" />
+                      מייל
+                    </Button>
+                  </div>
+                )}
               </div>
             )}
 
@@ -540,9 +537,10 @@ const CreateTemplate = () => {
                 <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-foreground">תוכן ההודעה</h3>
                 
                 <div className="space-y-4">
+                  {/* נושא - תמיד מוצג למייל */}
                   {(singleChannel === "email" || selectedChannels.includes("email")) && (
                     <div>
-                      <Label htmlFor="email-subject" className="text-sm font-medium mb-2 block">נושא המייל</Label>
+                      <Label htmlFor="email-subject" className="text-sm font-medium mb-2 block">נושא</Label>
                       <Input
                         id="email-subject"
                         placeholder="הקלד נושא למייל..."
@@ -553,16 +551,33 @@ const CreateTemplate = () => {
                     </div>
                   )}
 
-                  <div>
-                    <Label htmlFor="message-body" className="text-sm font-medium mb-2 block">גוף ההודעה</Label>
-                    <Textarea
-                      id="message-body"
-                      placeholder="הקלד את תוכן ההודעה...\n\nניתן להשתמש במשתנים:\n{{firstName}} - שם פרטי\n{{lastName}} - שם משפחה\n{{businessName}} - שם העסק\n{{date}} - תאריך"
-                      value={messageBody}
-                      onChange={(e) => setMessageBody(e.target.value)}
-                      className="min-h-[120px] text-base resize-none"
-                    />
-                  </div>
+                  {/* הנחיות AI - רק ל-AI */}
+                  {templateType === "ai" && (
+                    <div>
+                      <Label htmlFor="ai-instructions" className="text-sm font-medium mb-2 block">הנחיות AI</Label>
+                      <Textarea
+                        id="ai-instructions"
+                        placeholder="תן הנחיות ל-AI איך לכתוב את ההודעה...\n\nלדוגמה:\n- כתוב בצורה חמה ומזמינה\n- הדגש את היתרונות שלנו\n- סיים בקריאה לפעולה"
+                        value={customAiMessage}
+                        onChange={(e) => setCustomAiMessage(e.target.value)}
+                        className="min-h-[120px] text-base resize-none"
+                      />
+                    </div>
+                  )}
+
+                  {/* גוף ההודעה - רק ל-personal (לא AI) */}
+                  {templateType === "personal" && (
+                    <div>
+                      <Label htmlFor="message-body" className="text-sm font-medium mb-2 block">גוף ההודעה</Label>
+                      <Textarea
+                        id="message-body"
+                        placeholder="הקלד את תוכן ההודעה...\n\nניתן להשתמש במשתנים:\n{{firstName}} - שם פרטי\n{{lastName}} - שם משפחה\n{{businessName}} - שם העסק\n{{date}} - תאריך"
+                        value={messageBody}
+                        onChange={(e) => setMessageBody(e.target.value)}
+                        className="min-h-[120px] text-base resize-none"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -625,13 +640,24 @@ const CreateTemplate = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="ai-instructions" className="text-sm font-medium mb-2 block">הוראות ל-AI</Label>
+                    <Label htmlFor="ai-instructions-combined" className="text-sm font-medium mb-2 block">הוראות ל-AI</Label>
                     <Textarea
-                      id="ai-instructions"
-                      placeholder="כתוב כאן הוראות מותאמות אישית לתגובת ה-AI..."
+                      id="ai-instructions-combined"
+                      placeholder="תן הנחיות ל-AI איך לכתוב את החלק שלו בהודעה...\n\nלדוגמה:\n- כתוב בצורה חמה ומזמינה\n- הדגש את היתרונות שלנו\n- סיים בקריאה לפעולה"
                       value={customAiMessage}
                       onChange={(e) => setCustomAiMessage(e.target.value)}
-                      className="min-h-[80px] text-base resize-none"
+                      className="min-h-[100px] text-base resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="personal-text-combined" className="text-sm font-medium mb-2 block">התוספת מלל אישי</Label>
+                    <Textarea
+                      id="personal-text-combined"
+                      placeholder="הקלד את החלק האישי שלך בהודעה...\n\nניתן להשתמש במשתנים:\n{{firstName}} - שם פרטי\n{{lastName}} - שם משפחה\n{{businessName}} - שם העסק\n{{date}} - תאריך"
+                      value={messageBody}
+                      onChange={(e) => setMessageBody(e.target.value)}
+                      className="min-h-[100px] text-base resize-none"
                     />
                   </div>
                 </div>
