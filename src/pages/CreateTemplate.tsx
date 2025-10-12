@@ -93,8 +93,8 @@ const CreateTemplate = () => {
   const [aiDecideForAI, setAiDecideForAI] = useState(true);
   const [aiDecideForCombined, setAiDecideForCombined] = useState(true);
   
-  // Title checkbox
-  const [includeTitle, setIncludeTitle] = useState(true);
+  // AI decision checkbox - controls both title and AI instructions
+  const [aiDecideForTitle, setAiDecideForTitle] = useState(true);
   
   // Mock data from user profile
   const businessName = "gil.arbisman";
@@ -439,16 +439,16 @@ const CreateTemplate = () => {
                   {(singleChannel === "email" || selectedChannels.includes("email")) && (
                     <div>
                       <div className="flex items-center justify-end gap-2 mb-2">
-                        <Label htmlFor="email-subject" className="text-sm font-medium">כותרת</Label>
                         <div className="flex items-center gap-2">
                           <Checkbox 
-                            checked={includeTitle} 
-                            onCheckedChange={setIncludeTitle}
+                            checked={aiDecideForTitle} 
+                            onCheckedChange={setAiDecideForTitle}
                             className="w-4 h-4"
                           />
+                          <span className="text-sm text-gray-600">תן ל-i hoogi להחליט בשבילך</span>
                         </div>
                       </div>
-                      {includeTitle && (
+                      {!aiDecideForTitle && (
                         <Input
                           id="email-subject"
                           placeholder="הקלד כותרת למייל..."
@@ -463,25 +463,16 @@ const CreateTemplate = () => {
                   {/* הנחיות AI - רק ל-AI */}
                   {templateType === "ai" && (
                     <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <Label htmlFor="ai-instructions" className="text-sm font-medium">הנחיות AI</Label>
-                        <div className="flex items-center gap-2">
-                          <Switch
-                            checked={aiDecideForAI}
-                            onCheckedChange={setAiDecideForAI}
-                            className="scale-75"
-                          />
-                          <span className="text-xs text-gray-600">תן ל-i hoogi להחליט בשבילך</span>
-                        </div>
-                      </div>
-                      <Textarea
-                        id="ai-instructions"
-                        placeholder={aiDecideForAI ? "i hoogi יחליט על ההנחיות עבורך..." : "תן הנחיות ל-AI איך לכתוב את ההודעה...\n\nלדוגמה:\n- כתוב בצורה חמה ומזמינה\n- הדגש את היתרונות שלנו\n- סיים בקריאה לפעולה"}
-                        value={customAiMessage}
-                        onChange={(e) => setCustomAiMessage(e.target.value)}
-                        className="min-h-[120px] text-base resize-none"
-                        readOnly={aiDecideForAI}
-                      />
+                      <Label htmlFor="ai-instructions" className="text-sm font-medium mb-2 block">הנחיות AI</Label>
+                      {!aiDecideForTitle && (
+                        <Textarea
+                          id="ai-instructions"
+                          placeholder="תן הנחיות ל-AI איך לכתוב את ההודעה...\n\nלדוגמה:\n- כתוב בצורה חמה ומזמינה\n- הדגש את היתרונות שלנו\n- סיים בקריאה לפעולה"
+                          value={customAiMessage}
+                          onChange={(e) => setCustomAiMessage(e.target.value)}
+                          className="min-h-[120px] text-base resize-none"
+                        />
+                      )}
                     </div>
                   )}
 
@@ -547,16 +538,16 @@ const CreateTemplate = () => {
                 <div className="space-y-4">
                   <div>
                     <div className="flex items-center justify-end gap-2 mb-2">
-                      <Label htmlFor="email-subject-combined" className="text-sm font-medium">כותרת</Label>
                       <div className="flex items-center gap-2">
                         <Checkbox 
-                          checked={includeTitle} 
-                          onCheckedChange={setIncludeTitle}
+                          checked={aiDecideForCombined} 
+                          onCheckedChange={setAiDecideForCombined}
                           className="w-4 h-4"
                         />
+                        <span className="text-sm text-gray-600">תן ל-i hoogi להחליט בשבילך</span>
                       </div>
                     </div>
-                    {includeTitle && (
+                    {!aiDecideForCombined && (
                       <Input
                         id="email-subject-combined"
                         placeholder="כותרת ההודעה..."
@@ -582,25 +573,16 @@ const CreateTemplate = () => {
                   </div>
 
                   <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <Label htmlFor="ai-instructions-combined" className="text-sm font-medium">הוראות ל-AI</Label>
-                      <div className="flex items-center gap-2">
-                        <Switch
-                          checked={aiDecideForCombined}
-                          onCheckedChange={setAiDecideForCombined}
-                          className="scale-75"
-                        />
-                        <span className="text-xs text-gray-600">תן ל-i hoogi להחליט בשבילך</span>
-                      </div>
-                    </div>
-                    <Textarea
-                      id="ai-instructions-combined"
-                      placeholder={aiDecideForCombined ? "i hoogi יחליט על ההנחיות עבורך..." : "תן הנחיות ל-AI איך לכתוב את החלק שלו בהודעה...\n\nלדוגמה:\n- כתוב בצורה חמה ומזמינה\n- הדגש את היתרונות שלנו\n- סיים בקריאה לפעולה"}
-                      value={customAiMessage}
-                      onChange={(e) => setCustomAiMessage(e.target.value)}
-                      className="min-h-[100px] text-base resize-none"
-                      readOnly={aiDecideForCombined}
-                    />
+                    <Label htmlFor="ai-instructions-combined" className="text-sm font-medium mb-2 block">הוראות ל-AI</Label>
+                    {!aiDecideForCombined && (
+                      <Textarea
+                        id="ai-instructions-combined"
+                        placeholder="תן הנחיות ל-AI איך לכתוב את החלק שלו בהודעה...\n\nלדוגמה:\n- כתוב בצורה חמה ומזמינה\n- הדגש את היתרונות שלנו\n- סיים בקריאה לפעולה"
+                        value={customAiMessage}
+                        onChange={(e) => setCustomAiMessage(e.target.value)}
+                        className="min-h-[100px] text-base resize-none"
+                      />
+                    )}
                   </div>
 
                   <div>
