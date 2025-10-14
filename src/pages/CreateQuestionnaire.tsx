@@ -10,8 +10,10 @@ import QuestionBuilder, { Question } from "@/components/questionnaire/QuestionBu
 import FormPreview from "@/components/questionnaire/FormPreview";
 import ChatPreview from "@/components/questionnaire/ChatPreview";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const CreateQuestionnaire = () => {
+  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isBuilderOpen, setIsBuilderOpen] = useState(false);
@@ -19,6 +21,31 @@ const CreateQuestionnaire = () => {
   const [previewMode, setPreviewMode] = useState<'none' | 'form' | 'chat'>('none');
   const [logoFile, setLogoFile] = useState<string>("");
   const [profileFile, setProfileFile] = useState<string>("");
+
+  // Check if user has customer response templates
+  const checkCustomerResponseTemplates = () => {
+    // Mock check - in real app this would check localStorage or API
+    const templates = localStorage.getItem('customer_response_templates');
+    return templates && JSON.parse(templates).length > 0;
+  };
+
+  const handleDistributionClick = () => {
+    if (checkCustomerResponseTemplates()) {
+      // User has templates, go to distribution
+      navigate('/distribution');
+    } else {
+      // No templates, show message and redirect to create template
+      toast.info("בואו ניצור מענה אישי ללקוחות שלך", {
+        description: "נעבור ליצירת תבנית מענה ללקוח חדש",
+        duration: 3000
+      });
+      
+      // Redirect after a short delay
+      setTimeout(() => {
+        navigate('/create-template');
+      }, 2000);
+    }
+  };
 
   // Mock data from user profile
   const businessName = "gil.arbisman";
@@ -301,7 +328,7 @@ const CreateQuestionnaire = () => {
             <Button 
               className="bg-secondary hover:bg-secondary/90 text-white shadow-lg px-12 py-6 text-lg font-semibold rounded-xl"
               size="lg"
-              onClick={() => navigate('/distribution')}
+              onClick={handleDistributionClick}
             >
               הפצה
             </Button>
