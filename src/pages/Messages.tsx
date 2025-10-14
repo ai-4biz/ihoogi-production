@@ -278,11 +278,11 @@ const Messages = () => {
                   {message.content}
                 </p>
               </div>
-              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 flex-shrink-0">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 flex-shrink-0">
                 <img 
                   src="/hoogi-new-avatar.png" 
                   alt="iHoogi" 
-                  className="w-5 h-5 object-contain"
+                  className="w-8 h-8 object-contain"
                 />
               </div>
             </div>
@@ -396,11 +396,11 @@ const Messages = () => {
                       {selectedMessage.content}
                     </p>
                   </div>
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 flex-shrink-0">
+                  <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 flex-shrink-0">
                     <img 
                       src="/hoogi-new-avatar.png" 
                       alt="iHoogi" 
-                      className="w-6 h-6 object-contain"
+                      className="w-10 h-10 object-contain"
                     />
                   </div>
                 </div>
