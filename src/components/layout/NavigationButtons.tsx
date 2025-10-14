@@ -166,7 +166,7 @@ const NavigationButtons = ({
   }
 
   return (
-    <div className="flex flex-col gap-3 mx-auto max-h-[calc(100vh-200px)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100" style={{ width: '176px' }}>
+    <div className="grid grid-cols-2 gap-3 mx-auto" style={{ width: '176px' }}>
       {buttons.map((button) => (
         <CircularButton
           key={button.id}
