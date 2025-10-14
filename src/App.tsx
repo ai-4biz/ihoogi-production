@@ -31,6 +31,7 @@ import CreateTemplate from "./pages/CreateTemplate";
 import Notifications from "./pages/Notifications";
 import PartnersManagement from "./pages/PartnersManagement";
 import Onboarding from "./pages/Onboarding";
+import Messages from "./pages/Messages";
 import { UserProvider } from "@/hooks/use-user";
 
 const queryClient = new QueryClient();
@@ -67,6 +68,7 @@ const App = () => {
               <Route path="/create-template" element={<CreateTemplate />} />
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/partners" element={<PartnersManagement />} />
+              <Route path="/messages" element={<Messages />} />
               <Route path="/questionnaire-view/:id" element={<QuestionnaireView />} />
               <Route path="/questionnaire-view/preview" element={<QuestionnaireView />} />
               <Route path="/signup" element={<Signup />} />
