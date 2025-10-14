@@ -30,6 +30,7 @@ import QuestionnaireView from "./pages/QuestionnaireView";
 import CreateTemplate from "./pages/CreateTemplate";
 import Notifications from "./pages/Notifications";
 import PartnersManagement from "./pages/PartnersManagement";
+import Onboarding from "./pages/Onboarding";
 import { UserProvider } from "@/hooks/use-user";
 
 const queryClient = new QueryClient();
@@ -42,6 +43,7 @@ const App = () => {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<MainDashboard />} />
+              <Route path="/onboarding" element={<Onboarding />} />
               <Route path="/main-dashboard" element={<MainDashboard />} />
               <Route path="/content-inspiration" element={<ContentInspiration />} />
               <Route path="/select-inspiration" element={<ContentInspiration />} />

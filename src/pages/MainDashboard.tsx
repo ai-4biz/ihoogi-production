@@ -2,9 +2,18 @@ import MainLayout from "@/components/layout/MainLayout";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Plus, MessageSquare, Users, TrendingUp, CheckCircle2, Clock, AlertCircle, FileText, ArrowRight } from "lucide-react";
+import { useEffect } from "react";
 
 const MainDashboard = () => {
   const navigate = useNavigate();
+
+  // Check if user has completed onboarding
+  useEffect(() => {
+    const onboardingCompleted = localStorage.getItem("onboarding_completed");
+    if (!onboardingCompleted) {
+      navigate("/onboarding");
+    }
+  }, [navigate]);
 
   // Mock data - should come from backend
   const userName = "gil.arbisman";
