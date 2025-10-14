@@ -78,15 +78,6 @@ const NavigationButtons = ({
       color: "red"
     },
     {
-      id: "create-template",
-      emoji: "🎨",
-      label: "האוטומציות שלי",
-      state: "root" as ViewState,
-      active: window.location.pathname === "/create-template",
-      color: "violet",
-      onClick: () => navigate("/create-template")
-    },
-    {
       id: "messages",
       emoji: "💬",
       label: "הודעות",
@@ -94,6 +85,15 @@ const NavigationButtons = ({
       active: window.location.pathname === "/messages",
       color: "cyan",
       onClick: () => navigate("/messages")
+    },
+    {
+      id: "create-template",
+      emoji: "🎨",
+      label: "האוטומציות שלי",
+      state: "root" as ViewState,
+      active: window.location.pathname === "/create-template",
+      color: "violet",
+      onClick: () => navigate("/create-template")
     },
     {
       id: "notifications",
@@ -166,8 +166,8 @@ const NavigationButtons = ({
   }
 
   return (
-    <div className="grid grid-cols-2 gap-3 mx-auto" style={{ width: '176px' }}>
-      {buttons.map((button) => (
+    <div className="grid grid-cols-3 gap-2 mx-auto" style={{ width: '200px' }}>
+      {buttons.slice(0, 12).map((button) => (
         <CircularButton
           key={button.id}
           id={button.id}
