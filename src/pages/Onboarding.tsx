@@ -13,7 +13,9 @@ const Onboarding = () => {
       number: 1,
       icon: User,
       title: "צרו את הפרופיל שלכם",
-      description: "ספרו לנו מי אתם, מה העסק שלכם, ומה הסגנון שמתאים לכם – ככה Hoogi תדע לבנות עבורכם חוויה שיווקית מותאמת אישית. 💡",
+      description: "ספרו לנו מי אתם, מה העסק שלכם, ומה הסגנון שמתאים לכם – ככה iHoogi תדע לבנות עבורכם חוויה שיווקית מותאמת אישית. 💡",
+      bgColor: "from-blue-50 to-cyan-50",
+      borderColor: "border-blue-200",
       action: () => navigate("/profile")
     },
     {
@@ -21,13 +23,17 @@ const Onboarding = () => {
       icon: FileText,
       title: "צרו שאלון חכם שמכין אתכם למכירה ממוקדת",
       description: "השאלון הופך את המתעניינים ללידים חמים – הוא שואל, ממקד ומאפשר לכם להגיע לשיחת המכירה כשאתם כבר צעד אחד קדימה. 🎯",
+      bgColor: "from-purple-50 to-pink-50",
+      borderColor: "border-purple-200",
       action: () => navigate("/my-hoogi")
     },
     {
       number: 3,
       icon: MessageSquare,
       title: "צרו תבנית מענה ללקוח",
-      description: "הגדירו איך Hoogi תדבר בשם העסק שלכם – באופן מקצועי, אישי ואוטומטי, שמייצר אמון וחיבור אמיתי עם הלקוח. 💬",
+      description: "הגדירו איך iHoogi תדבר בשם העסק שלכם – באופן מקצועי, אישי ואוטומטי, שמייצר אמון וחיבור אמיתי עם הלקוח. 💬",
+      bgColor: "from-orange-50 to-red-50",
+      borderColor: "border-orange-200",
       action: () => navigate("/create-template")
     },
     {
@@ -35,6 +41,8 @@ const Onboarding = () => {
       icon: Share2,
       title: "קבלו את הלינק שלכם לשיתוף",
       description: "בחרו איך תרצו שהלקוחות ימלאו את השאלון: כ־צ'אט אינטראקטיבי, טופס חכם, או קוד QR לסריקה – רק תבחרו, ושתפו בכל מקום שתרצו: וואטסאפ, אתר או רשתות חברתיות. 🚀",
+      bgColor: "from-green-50 to-teal-50",
+      borderColor: "border-green-200",
       action: () => navigate("/distribution")
     }
   ];
@@ -67,7 +75,7 @@ const Onboarding = () => {
             </div>
           </div>
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/60 mb-4">
-            ברוכים הבאים ל־Hoogi
+            ברוכים הבאים ל־iHoogi
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-6">
             המערכת שמדברת עם הלקוחות שלכם, מתזכרת אותם,
@@ -75,7 +83,7 @@ const Onboarding = () => {
             בואו נתחיל – זה קל, מהיר, וחכם. ⚡
           </p>
           <h2 className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/60 mb-6">
-            ✨ הצעדים הראשונים שלכם עם Hoogi
+            ✨ הצעדים הראשונים שלכם עם iHoogi
           </h2>
         </div>
 
@@ -88,7 +96,7 @@ const Onboarding = () => {
             return (
               <Card 
                 key={step.number}
-                className={`border shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer bg-card/50 backdrop-blur-sm ${isCompleted ? 'border-primary' : 'border-border hover:border-primary/50'}`}
+                className={`border shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer bg-gradient-to-l ${step.bgColor} ${step.borderColor} ${isCompleted ? 'border-primary' : 'hover:border-primary/50'}`}
                 onClick={() => handleStepClick(step.number, step.action)}
               >
                 <CardContent className="p-6 md:p-8">

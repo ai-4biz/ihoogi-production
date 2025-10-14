@@ -67,7 +67,7 @@ const MainLayout = ({
       {/* Mobile header with hamburger menu */}
       {isMobile && <div className="sticky top-0 z-30 bg-white shadow-sm w-full p-2 flex items-center">
           <NavigationDrawer open={mobileDrawerOpen} onOpenChange={setMobileDrawerOpen} currentState={currentState} handleStateChange={handleStateChange} user={user} />
-          <div className="flex-1 text-center font-medium">i hoogi</div>
+          <div className="flex-1 text-center font-medium">iHoogi</div>
         </div>}
 
       {/* Pane A - Left Drawer (Desktop) */}

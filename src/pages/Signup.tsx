@@ -32,9 +32,9 @@ const Signup = () => {
   });
 
   useEffect(() => {
-    document.title = "Hoogi – הרשמה";
+    document.title = "iHoogi – הרשמה";
     const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.setAttribute("content", "הרשמה ל-Hoogi – מערכת שאלונים חכמה שמקדמת סגירות");
+    if (meta) meta.setAttribute("content", "הרשמה ל-iHoogi – מערכת שאלונים חכמה שמקדמת סגירות");
   }, []);
 
   const benefits = [
@@ -56,10 +56,10 @@ const Signup = () => {
         {/* Header */}
         <div className="text-center mb-10">
           <div className="flex justify-center mb-4">
-            <img src="/hoogi-new-avatar.png" alt="לוגו Hoogi" className="h-24 w-24 object-contain animate-fade-in" />
+            <img src="/hoogi-new-avatar.png" alt="לוגו iHoogi" className="h-24 w-24 object-contain animate-fade-in" />
           </div>
           <h1 className="text-3xl md:text-5xl font-extrabold">
-            ברוכים הבאים ל-<span className="text-primary">Hoogi</span>
+            ברוכים הבאים ל-<span className="text-primary">iHoogi</span>
           </h1>
           <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
             מערכת שאלונים חכמה שמייצרת לידים חמים ומרכזת הכל במקום אחד – אוטומטית.

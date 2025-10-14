@@ -60,7 +60,7 @@ const ContentArea = ({ currentState, handleStateChange, isMobile, children }: Co
               className="w-32 h-32 mx-auto mb-6 animate-fade-in"
             />
             <h1 className="text-4xl md:text-6xl font-extrabold mb-4">
-              ברוכים הבאים ל-<span className="text-primary">Hoogi</span>
+              ברוכים הבאים ל-<span className="text-primary">iHoogi</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-12 max-w-3xl mx-auto">
               מערכת שאלונים חכמה שמייצרת לידים חמים, מרכזת הכל במקום אחד ומקדמת סגירות – אוטומטית.

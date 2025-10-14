@@ -22,9 +22,9 @@ const Login = () => {
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
 
   useEffect(() => {
-    document.title = "Hoogi – התחברות";
+    document.title = "iHoogi – התחברות";
     const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.setAttribute("content", "התחברות ל-Hoogi – כניסה מהירה, שכחתי סיסמה והחלפת סיסמה");
+    if (meta) meta.setAttribute("content", "התחברות ל-iHoogi – כניסה מהירה, שכחתי סיסמה והחלפת סיסמה");
   }, []);
 
   const handleLogin = (e: React.FormEvent) => {
@@ -63,10 +63,10 @@ const Login = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <img src="/hoogi-new-avatar.png" alt="לוגו Hoogi" className="h-24 w-24 object-contain animate-fade-in" />
+            <img src="/hoogi-new-avatar.png" alt="לוגו iHoogi" className="h-24 w-24 object-contain animate-fade-in" />
           </div>
           <h1 className="text-3xl md:text-4xl font-extrabold">
-            התחברות ל-<span className="text-primary">Hoogi</span>
+            התחברות ל-<span className="text-primary">iHoogi</span>
           </h1>
         </div>
 

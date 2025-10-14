@@ -80,7 +80,7 @@ const MyHoogi = () => {
               <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary/10 flex items-center justify-center">
                 <img 
                   src="/hoogi-new-avatar.png" 
-                  alt="Hoogi Avatar" 
+                  alt="iHoogi Avatar" 
                   className="w-12 h-12 md:w-16 md:h-16 object-contain"
                 />
               </div>
