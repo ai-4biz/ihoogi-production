@@ -3,10 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Copy, Eye, MessageSquare, Mail, Smartphone, Info, AlertTriangle, CheckCircle, Clock, Users, Star, Heart } from "lucide-react";
+import { Copy, Eye, MessageSquare, AlertTriangle, CheckCircle, Info, Lightbulb, BookOpen, Save, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 
-interface MessageTemplate {
+interface SystemMessage {
   id: string;
   type: string;
   title: string;
@@ -16,334 +16,402 @@ interface MessageTemplate {
   icon: any;
   color: string;
   bgColor: string;
+  borderColor: string;
   usage: string;
   variables: string[];
 }
 
 const Messages = () => {
-  const [selectedTemplate, setSelectedTemplate] = useState<MessageTemplate | null>(null);
+  const [selectedMessage, setSelectedMessage] = useState<SystemMessage | null>(null);
 
-  // סוגי הודעות שונים
-  const messageTemplates: MessageTemplate[] = [
-    // הודעות אינפורמציה
+  // הודעות מערכת למשתמש
+  const systemMessages: SystemMessage[] = [
+    // הודעות חובה
     {
-      id: "info-welcome",
-      type: "information",
-      title: "הודעת ברוכים הבאים",
-      description: "הודעה חמה ומזמינה ללקוח חדש",
-      content: `שלום {{firstName}}! 
+      id: "required-fields",
+      type: "required",
+      title: "תמלא שאלות חובה",
+      description: "הודעה כאשר משתמש לא מילא שדות חובה",
+      content: `שלום!
 
-ברוכים הבאים ל-{{businessName}} 🎉
+אני iHoogi, העוזר החכם שלך 🤖
 
-אנחנו שמחים לראות אותך כאן ונרגשים לעזור לך עם {{mainService}}.
+אני רואה שלא מילאת את כל השדות החובה בטופס. כדי שאוכל לעזור לך בצורה הטובה ביותר, נא למלא את השדות הבאים:
 
-האם תרצה לקבוע שיחת התייעצות חינם? זה יאפשר לנו להבין בדיוק מה אתה מחפש ולהציע לך את הפתרון המתאים ביותר.
+• {{missingField1}}
+• {{missingField2}}
+• {{missingField3}}
 
-ניתן לפנות אלינו:
-📞 {{phone}}
-📧 {{email}}
-💬 {{whatsapp}}
+זה יעזור לי להבין בדיוק מה אתה מחפש ולהציע לך את הפתרון המתאים ביותר.
 
-בברכה,
-צוות {{businessName}}`,
-      category: "information",
-      icon: Info,
-      color: "text-blue-600",
-      bgColor: "from-blue-50 to-blue-100",
-      usage: "שליחה אוטומטית ללקוח חדש",
-      variables: ["firstName", "businessName", "mainService", "phone", "email", "whatsapp"]
-    },
-    {
-      id: "info-service",
-      type: "information",
-      title: "מידע על השירותים",
-      description: "הודעה מפורטת על השירותים שהעסק מציע",
-      content: `שלום {{firstName}},
+תודה על הסבלנות! 😊
 
-תודה על התעניינותך בשירותים שלנו! 
-
-ב-{{businessName}} אנו מתמחים ב:
-• {{service1}}
-• {{service2}} 
-• {{service3}}
-
-כל שירות מותאם אישית לצרכים שלך ומבוצע על ידי מומחים מנוסים.
-
-האם תרצה לשמוע יותר על אחד מהשירותים שלנו?
-
-ניתן לפנות אלינו:
-📞 {{phone}}
-📧 {{email}}
-
-בברכה,
-{{businessName}}`,
-      category: "information",
-      icon: Info,
-      color: "text-blue-600",
-      bgColor: "from-blue-50 to-blue-100",
-      usage: "מענה על שאלות על שירותים",
-      variables: ["firstName", "businessName", "service1", "service2", "service3", "phone", "email"]
-    },
-
-    // הודעות השלמת מידע
-    {
-      id: "missing-info",
-      type: "missing-info",
-      title: "בקשה להשלמת פרטים",
-      description: "הודעה עדינה לבקשת מידע נוסף מהלקוח",
-      content: `שלום {{firstName}},
-
-תודה על הפנייה שלך! 
-
-כדי שנוכל לעזור לך בצורה הטובה ביותר, נשמח לקבל ממך כמה פרטים נוספים:
-
-• {{missingInfo1}}
-• {{missingInfo2}}
-• {{missingInfo3}}
-
-זה יעזור לנו להכין עבורך הצעה מותאמת אישית.
-
-ניתן לשלוח את הפרטים:
-📧 {{email}}
-💬 {{whatsapp}}
-
-תודה על הסבלנות,
-{{businessName}}`,
-      category: "missing-info",
+iHoogi`,
+      category: "required",
       icon: AlertTriangle,
-      color: "text-orange-600",
-      bgColor: "from-orange-50 to-orange-100",
-      usage: "כאשר חסרים פרטים מהלקוח",
-      variables: ["firstName", "missingInfo1", "missingInfo2", "missingInfo3", "email", "whatsapp", "businessName"]
+      color: "text-red-600",
+      bgColor: "from-red-50 to-red-100",
+      borderColor: "border-red-200",
+      usage: "כאשר משתמש לא מילא שדות חובה",
+      variables: ["missingField1", "missingField2", "missingField3"]
     },
     {
-      id: "follow-up",
-      type: "missing-info",
-      title: "מעקב אחר פנייה",
-      description: "הודעה לבקשת עדכון או מעקב",
-      content: `שלום {{firstName}},
+      id: "field-required",
+      type: "required",
+      title: "שדה זה חובה",
+      description: "הודעה עבור שדה ספציפי שחסר",
+      content: `שלום!
 
-אני רוצה לעדכן אותך על הסטטוס של הפנייה שלך מ-{{date}}.
+אני iHoogi, העוזר החכם שלך 🤖
 
-האם תוכל לעדכן אותנו:
-• איך התקדמת עם {{topic}}?
-• האם יש שאלות נוספות?
-• האם תרצה לקבוע פגישה?
+השדה "{{fieldName}}" הוא שדה חובה ולא ניתן להמשיך בלעדיו.
 
-אנחנו כאן לעזור בכל שלב!
+נא למלא את השדה כדי שאוכל לעזור לך להמשיך.
 
-ניתן לפנות אלינו:
-📞 {{phone}}
-📧 {{email}}
+תודה! 😊
 
-בברכה,
-{{businessName}}`,
-      category: "missing-info",
-      icon: Clock,
-      color: "text-orange-600",
-      bgColor: "from-orange-50 to-orange-100",
-      usage: "מעקב אחר לקוחות קיימים",
-      variables: ["firstName", "date", "topic", "phone", "email", "businessName"]
+iHoogi`,
+      category: "required",
+      icon: AlertTriangle,
+      color: "text-red-600",
+      bgColor: "from-red-50 to-red-100",
+      borderColor: "border-red-200",
+      usage: "שדה ספציפי שחסר",
+      variables: ["fieldName"]
     },
 
-    // הודעות תודה
+    // הודעות שמירה
     {
-      id: "thank-you",
-      type: "thank-you",
-      title: "הודעת תודה",
-      description: "הודעה חמה של תודה ללקוח",
-      content: `שלום {{firstName}},
+      id: "save-success",
+      type: "save",
+      title: "שמירה בוצעה בהצלחה",
+      description: "הודעה כאשר נתונים נשמרו בהצלחה",
+      content: `שלום!
 
-תודה רבה על האמון שלך ב-{{businessName}}! 🙏
+אני iHoogi, העוזר החכם שלך 🤖
 
-אנחנו מעריכים את הבחירה שלך בנו ומתחייבים לתת לך את השירות הטוב ביותר.
+הנתונים שלך נשמרו בהצלחה! ✅
 
-אם יש לך שאלות או צרכים נוספים, אנחנו כאן בשבילך.
+כל השינויים שעשית נשמרו במערכת ואני יכול לעזור לך להמשיך עם הצעד הבא.
 
-ניתן לפנות אלינו בכל עת:
-📞 {{phone}}
-📧 {{email}}
-💬 {{whatsapp}}
+אם יש לך שאלות או צרכים נוספים, אני כאן בשבילך!
 
-תודה שוב,
-צוות {{businessName}}`,
-      category: "thank-you",
-      icon: Heart,
-      color: "text-pink-600",
-      bgColor: "from-pink-50 to-pink-100",
-      usage: "אחרי רכישה או קבלת שירות",
-      variables: ["firstName", "businessName", "phone", "email", "whatsapp"]
-    },
-    {
-      id: "feedback",
-      type: "thank-you",
-      title: "בקשת משוב",
-      description: "הודעה לבקשת חוות דעת מהלקוח",
-      content: `שלום {{firstName}},
+תודה! 😊
 
-אנחנו מקווים שנהנית מהשירות שלנו! 
-
-המשוב שלך חשוב לנו מאוד ומעזור לנו להשתפר ולהציע שירות טוב יותר.
-
-האם תוכל לקחת דקה ולשתף אותנו בחוויה שלך?
-
-⭐ דרג אותנו: {{ratingLink}}
-📝 כתוב ביקורת: {{reviewLink}}
-
-תודה על הזמן שלך,
-{{businessName}}`,
-      category: "thank-you",
-      icon: Star,
-      color: "text-pink-600",
-      bgColor: "from-pink-50 to-pink-100",
-      usage: "בקשה לחוות דעת או דירוג",
-      variables: ["firstName", "ratingLink", "reviewLink", "businessName"]
-    },
-
-    // הודעות סטטוס
-    {
-      id: "status-update",
-      type: "status",
-      title: "עדכון סטטוס",
-      description: "הודעה לעדכון הלקוח על התקדמות",
-      content: `שלום {{firstName}},
-
-אני רוצה לעדכן אותך על ההתקדמות ב-{{projectName}}.
-
-✅ מה הושלם:
-{{completedTasks}}
-
-🔄 מה בתהליך:
-{{inProgressTasks}}
-
-📅 הצעדים הבאים:
-{{nextSteps}}
-
-אם יש שאלות או הערות, אנחנו כאן!
-
-ניתן לפנות אלינו:
-📞 {{phone}}
-📧 {{email}}
-
-בברכה,
-{{businessName}}`,
-      category: "status",
-      icon: CheckCircle,
+iHoogi`,
+      category: "save",
+      icon: Save,
       color: "text-green-600",
       bgColor: "from-green-50 to-green-100",
-      usage: "עדכון תקופתי על התקדמות פרויקט",
-      variables: ["firstName", "projectName", "completedTasks", "inProgressTasks", "nextSteps", "phone", "email", "businessName"]
+      borderColor: "border-green-200",
+      usage: "אחרי שמירה מוצלחת",
+      variables: []
     },
     {
-      id: "appointment",
-      type: "status",
-      title: "אישור פגישה",
-      description: "הודעה לאישור פגישה או שיחה",
-      content: `שלום {{firstName}},
+      id: "auto-save",
+      type: "save",
+      title: "שמירה אוטומטית",
+      description: "הודעה על שמירה אוטומטית של נתונים",
+      content: `שלום!
 
-פגישה שלנו נקבעה בהצלחה! 📅
+אני iHoogi, העוזר החכם שלך 🤖
 
-📅 תאריך: {{date}}
-🕐 שעה: {{time}}
-📍 מקום: {{location}}
-💬 נושא: {{subject}}
+שמרתי את הנתונים שלך אוטומטית! 💾
 
-אם יש צורך לשנות או לבטל, אנא הודע לנו מראש.
+כל מה שכתבת נשמר במערכת, אז אתה יכול להיות רגוע - אף מידע לא יאבד.
 
-מחכים לראות אותך!
+אני ממשיך לעקוב אחר השינויים שלך ולשמור הכל.
 
-ניתן לפנות אלינו:
-📞 {{phone}}
-📧 {{email}}
+תודה! 😊
 
-בברכה,
-{{businessName}}`,
-      category: "status",
-      icon: CheckCircle,
+iHoogi`,
+      category: "save",
+      icon: Save,
       color: "text-green-600",
       bgColor: "from-green-50 to-green-100",
-      usage: "אישור פגישות או שיחות",
-      variables: ["firstName", "date", "time", "location", "subject", "phone", "email", "businessName"]
+      borderColor: "border-green-200",
+      usage: "שמירה אוטומטית",
+      variables: []
     },
 
-    // הודעות שיווקיות
+    // הודעות התראה
     {
-      id: "offer",
-      type: "marketing",
-      title: "הצעת מחיר מיוחדת",
-      description: "הודעה שיווקית עם הצעה אטרקטיבית",
-      content: `שלום {{firstName}},
+      id: "attention",
+      type: "warning",
+      title: "שים לב",
+      description: "הודעה חשובה שמחייבת תשומת לב",
+      content: `שלום!
 
-יש לנו הצעה מיוחדת בשבילך! 🎉
+אני iHoogi, העוזר החכם שלך 🤖
 
-{{offerDescription}}
+יש לי הודעה חשובה עבורך:
 
-💰 המחיר הרגיל: {{regularPrice}}
-🔥 המחיר שלך: {{specialPrice}}
-⏰ תקף עד: {{expiryDate}}
+{{importantMessage}}
 
-זהו הצעה מוגבלת - רק ללקוחות נבחרים!
+זה חשוב שתשים לב לזה כי זה יכול להשפיע על התוצאות שלך.
 
-להזמנה או למידע נוסף:
-📞 {{phone}}
-📧 {{email}}
-💬 {{whatsapp}}
+אם יש לך שאלות, אני כאן לעזור!
 
-בברכה,
-{{businessName}}`,
-      category: "marketing",
-      icon: Users,
-      color: "text-purple-600",
-      bgColor: "from-purple-50 to-purple-100",
-      usage: "הצעות שיווקיות וקידומים",
-      variables: ["firstName", "offerDescription", "regularPrice", "specialPrice", "expiryDate", "phone", "email", "whatsapp", "businessName"]
+תודה! 😊
+
+iHoogi`,
+      category: "warning",
+      icon: AlertCircle,
+      color: "text-orange-600",
+      bgColor: "from-orange-50 to-orange-100",
+      borderColor: "border-orange-200",
+      usage: "הודעה חשובה שמחייבת תשומת לב",
+      variables: ["importantMessage"]
+    },
+    {
+      id: "system-maintenance",
+      type: "warning",
+      title: "תחזוקת מערכת",
+      description: "הודעה על תחזוקה מתוכננת",
+      content: `שלום!
+
+אני iHoogi, העוזר החכם שלך 🤖
+
+יש לי הודעה חשובה:
+
+המערכת תהיה בתחזוקה ב-{{maintenanceDate}} בין השעות {{startTime}} ל-{{endTime}}.
+
+בזמן הזה אני אהיה פחות זמין, אבל כל הנתונים שלך בטוחים ושמורים.
+
+אחרי התחזוקה אני אחזור לעבוד איתך בצורה עוד יותר טובה!
+
+תודה על ההבנה! 😊
+
+iHoogi`,
+      category: "warning",
+      icon: AlertCircle,
+      color: "text-orange-600",
+      bgColor: "from-orange-50 to-orange-100",
+      borderColor: "border-orange-200",
+      usage: "תחזוקה מתוכננת",
+      variables: ["maintenanceDate", "startTime", "endTime"]
+    },
+
+    // הודעות המלצה
+    {
+      id: "recommendation",
+      type: "recommendation",
+      title: "מומלץ",
+      description: "המלצה חכמה לשיפור התוצאות",
+      content: `שלום!
+
+אני iHoogi, העוזר החכם שלך 🤖
+
+יש לי המלצה חכמה בשבילך:
+
+{{recommendation}}
+
+זה יעזור לך לקבל תוצאות טובות יותר ויעילות גבוהה יותר.
+
+אני כאן אם תרצה הסבר נוסף או עזרה ביישום!
+
+תודה! 😊
+
+iHoogi`,
+      category: "recommendation",
+      icon: Lightbulb,
+      color: "text-yellow-600",
+      bgColor: "from-yellow-50 to-yellow-100",
+      borderColor: "border-yellow-200",
+      usage: "המלצה חכמה",
+      variables: ["recommendation"]
+    },
+    {
+      id: "tip",
+      type: "recommendation",
+      title: "טיפ",
+      description: "טיפ שימושי למשתמש",
+      content: `שלום!
+
+אני iHoogi, העוזר החכם שלך 🤖
+
+יש לי טיפ שימושי בשבילך:
+
+💡 {{tip}}
+
+זה יכול לעזור לך לחסוך זמן ולהשיג תוצאות טובות יותר.
+
+אם תרצה עוד טיפים או הסברים, אני כאן!
+
+תודה! 😊
+
+iHoogi`,
+      category: "recommendation",
+      icon: Lightbulb,
+      color: "text-yellow-600",
+      bgColor: "from-yellow-50 to-yellow-100",
+      borderColor: "border-yellow-200",
+      usage: "טיפ שימושי",
+      variables: ["tip"]
+    },
+
+    // הודעות הדרכה
+    {
+      id: "guide",
+      type: "guide",
+      title: "איך זה עובד",
+      description: "הסבר על אופן פעולת המערכת",
+      content: `שלום!
+
+אני iHoogi, העוזר החכם שלך 🤖
+
+בואו אני אסביר לך איך זה עובד:
+
+{{explanation}}
+
+זה יעזור לך להבין איך להשתמש במערכת בצורה הטובה ביותר.
+
+אם יש לך עוד שאלות, אני כאן לעזור!
+
+תודה! 😊
+
+iHoogi`,
+      category: "guide",
+      icon: BookOpen,
+      color: "text-blue-600",
+      bgColor: "from-blue-50 to-blue-100",
+      borderColor: "border-blue-200",
+      usage: "הסבר על אופן פעולה",
+      variables: ["explanation"]
+    },
+    {
+      id: "tutorial",
+      type: "guide",
+      title: "מדריך",
+      description: "מדריך צעד אחר צעד",
+      content: `שלום!
+
+אני iHoogi, העוזר החכם שלך 🤖
+
+בואו נעבור על זה יחד:
+
+{{tutorialSteps}}
+
+אני אעזור לך בכל שלב ואסביר אם משהו לא ברור.
+
+אם תרצה לחזור על חלק מסוים, רק תגיד לי!
+
+תודה! 😊
+
+iHoogi`,
+      category: "guide",
+      icon: BookOpen,
+      color: "text-blue-600",
+      bgColor: "from-blue-50 to-blue-100",
+      borderColor: "border-blue-200",
+      usage: "מדריך צעד אחר צעד",
+      variables: ["tutorialSteps"]
+    },
+
+    // הודעות מידע
+    {
+      id: "info",
+      type: "info",
+      title: "מידע",
+      description: "מידע חשוב למשתמש",
+      content: `שלום!
+
+אני iHoogi, העוזר החכם שלך 🤖
+
+יש לי מידע חשוב עבורך:
+
+{{information}}
+
+זה יעזור לך להבין טוב יותר איך המערכת עובדת.
+
+אם יש לך שאלות נוספות, אני כאן!
+
+תודה! 😊
+
+iHoogi`,
+      category: "info",
+      icon: Info,
+      color: "text-cyan-600",
+      bgColor: "from-cyan-50 to-cyan-100",
+      borderColor: "border-cyan-200",
+      usage: "מידע חשוב",
+      variables: ["information"]
+    },
+    {
+      id: "update",
+      type: "info",
+      title: "עדכון",
+      description: "הודעה על עדכון חדש",
+      content: `שלום!
+
+אני iHoogi, העוזר החכם שלך 🤖
+
+יש לי חדשות טובות!
+
+{{updateContent}}
+
+זה יעזור לך לקבל תוצאות עוד יותר טובות!
+
+אם יש לך שאלות על העדכון, אני כאן לעזור!
+
+תודה! 😊
+
+iHoogi`,
+      category: "info",
+      icon: Info,
+      color: "text-cyan-600",
+      bgColor: "from-cyan-50 to-cyan-100",
+      borderColor: "border-cyan-200",
+      usage: "עדכון חדש",
+      variables: ["updateContent"]
     }
   ];
 
   const categories = [
     { id: "all", label: "כל ההודעות", icon: MessageSquare },
-    { id: "information", label: "אינפורמציה", icon: Info, color: "text-blue-600" },
-    { id: "missing-info", label: "השלמת מידע", icon: AlertTriangle, color: "text-orange-600" },
-    { id: "thank-you", label: "תודה", icon: Heart, color: "text-pink-600" },
-    { id: "status", label: "סטטוס", icon: CheckCircle, color: "text-green-600" },
-    { id: "marketing", label: "שיווק", icon: Users, color: "text-purple-600" }
+    { id: "required", label: "חובה", icon: AlertTriangle, color: "text-red-600" },
+    { id: "save", label: "שמירה", icon: Save, color: "text-green-600" },
+    { id: "warning", label: "התראה", icon: AlertCircle, color: "text-orange-600" },
+    { id: "recommendation", label: "המלצה", icon: Lightbulb, color: "text-yellow-600" },
+    { id: "guide", label: "הדרכה", icon: BookOpen, color: "text-blue-600" },
+    { id: "info", label: "מידע", icon: Info, color: "text-cyan-600" }
   ];
 
   const [selectedCategory, setSelectedCategory] = useState("all");
 
-  const filteredTemplates = selectedCategory === "all" 
-    ? messageTemplates 
-    : messageTemplates.filter(template => template.category === selectedCategory);
+  const filteredMessages = selectedCategory === "all" 
+    ? systemMessages 
+    : systemMessages.filter(message => message.category === selectedCategory);
 
-  const handleCopyTemplate = (template: MessageTemplate) => {
-    navigator.clipboard.writeText(template.content);
+  const handleCopyMessage = (message: SystemMessage) => {
+    navigator.clipboard.writeText(message.content);
     toast.success("ההודעה הועתקה ללוח", {
-      description: `"${template.title}" הועתק בהצלחה`
+      description: `"${message.title}" הועתק בהצלחה`
     });
   };
 
-  const handlePreviewTemplate = (template: MessageTemplate) => {
-    setSelectedTemplate(template);
+  const handlePreviewMessage = (message: SystemMessage) => {
+    setSelectedMessage(message);
   };
 
-  const renderTemplateCard = (template: MessageTemplate) => {
-    const IconComponent = template.icon;
+  const renderMessageCard = (message: SystemMessage) => {
+    const IconComponent = message.icon;
     
     return (
-      <Card key={template.id} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+      <Card key={message.id} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <div className={`p-2 rounded-lg bg-gradient-to-br ${template.bgColor}`}>
-                <IconComponent className={`h-5 w-5 ${template.color}`} />
+              <div className={`p-2 rounded-lg bg-gradient-to-br ${message.bgColor} border ${message.borderColor}`}>
+                <IconComponent className={`h-5 w-5 ${message.color}`} />
               </div>
               <div>
-                <CardTitle className="text-lg">{template.title}</CardTitle>
-                <p className="text-sm text-muted-foreground mt-1">{template.description}</p>
+                <CardTitle className="text-lg">{message.title}</CardTitle>
+                <p className="text-sm text-muted-foreground mt-1">{message.description}</p>
               </div>
             </div>
             <Badge variant="outline" className="text-xs">
-              {template.usage}
+              {message.usage}
             </Badge>
           </div>
         </CardHeader>
@@ -351,20 +419,20 @@ const Messages = () => {
         <CardContent className="pt-0">
           <div className="bg-muted/50 rounded-lg p-3 mb-4">
             <p className="text-sm text-muted-foreground whitespace-pre-wrap line-clamp-3">
-              {template.content.substring(0, 150)}...
+              {message.content.substring(0, 150)}...
             </p>
           </div>
           
           <div className="flex items-center justify-between">
             <div className="flex gap-2">
-              {template.variables.slice(0, 3).map((variable, index) => (
+              {message.variables.slice(0, 3).map((variable, index) => (
                 <Badge key={index} variant="secondary" className="text-xs">
                   {`{{${variable}}}`}
                 </Badge>
               ))}
-              {template.variables.length > 3 && (
+              {message.variables.length > 3 && (
                 <Badge variant="secondary" className="text-xs">
-                  +{template.variables.length - 3} עוד
+                  +{message.variables.length - 3} עוד
                 </Badge>
               )}
             </div>
@@ -373,14 +441,14 @@ const Messages = () => {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => handlePreviewTemplate(template)}
+                onClick={() => handlePreviewMessage(message)}
               >
                 <Eye className="h-4 w-4" />
               </Button>
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => handleCopyTemplate(template)}
+                onClick={() => handleCopyMessage(message)}
               >
                 <Copy className="h-4 w-4" />
               </Button>
@@ -398,16 +466,16 @@ const Messages = () => {
         {/* Header */}
         <div className="text-center">
           <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent mb-4">
-            💬 ספריית הודעות
+            💬 הודעות מערכת
           </h1>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            אוסף של תבניות הודעות מוכנות לשימוש - הודעות אינפורמציה, השלמת מידע, תודה, סטטוס ועוד
+            אוסף של הודעות מערכת מוכנות לשימוש - הודעות חובה, שמירה, התראה, המלצות והדרכה
           </p>
         </div>
 
         {/* Categories */}
         <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-6 gap-2">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-7 gap-2">
             {categories.map((category) => {
               const IconComponent = category.icon;
               return (
@@ -425,44 +493,58 @@ const Messages = () => {
 
           <TabsContent value={selectedCategory} className="mt-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredTemplates.map(renderTemplateCard)}
+              {filteredMessages.map(renderMessageCard)}
             </div>
           </TabsContent>
         </Tabs>
       </div>
 
       {/* Preview Modal */}
-      {selectedTemplate && (
+      {selectedMessage && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <Card className="w-full max-w-2xl max-h-[80vh] overflow-hidden">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-lg bg-gradient-to-br ${selectedTemplate.bgColor}`}>
-                  <selectedTemplate.icon className={`h-5 w-5 ${selectedTemplate.color}`} />
+                <div className={`p-2 rounded-lg bg-gradient-to-br ${selectedMessage.bgColor} border ${selectedMessage.borderColor}`}>
+                  <selectedMessage.icon className={`h-5 w-5 ${selectedMessage.color}`} />
                 </div>
                 <div>
-                  <CardTitle>{selectedTemplate.title}</CardTitle>
-                  <p className="text-sm text-muted-foreground">{selectedTemplate.description}</p>
+                  <CardTitle>{selectedMessage.title}</CardTitle>
+                  <p className="text-sm text-muted-foreground">{selectedMessage.description}</p>
                 </div>
               </div>
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setSelectedTemplate(null)}
+                onClick={() => setSelectedMessage(null)}
               >
                 ✕
               </Button>
             </CardHeader>
             
             <CardContent className="space-y-4">
-              <div className="bg-muted/50 rounded-lg p-4">
+              {/* Preview with iHoogi styling */}
+              <div className={`bg-gradient-to-br ${selectedMessage.bgColor} border ${selectedMessage.borderColor} rounded-lg p-4`}>
+                <div className="flex items-start gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
+                    <img 
+                      src="/hoogi-new-avatar.png" 
+                      alt="iHoogi" 
+                      className="w-6 h-6 object-contain"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-sm font-semibold text-primary">iHoogi</div>
+                    <div className="text-xs text-muted-foreground">עוזר חכם</div>
+                  </div>
+                </div>
                 <pre className="text-sm whitespace-pre-wrap text-muted-foreground">
-                  {selectedTemplate.content}
+                  {selectedMessage.content}
                 </pre>
               </div>
               
               <div className="flex flex-wrap gap-2">
-                {selectedTemplate.variables.map((variable, index) => (
+                {selectedMessage.variables.map((variable, index) => (
                   <Badge key={index} variant="secondary" className="text-xs">
                     {`{{${variable}}}`}
                   </Badge>
@@ -472,7 +554,7 @@ const Messages = () => {
               <div className="flex justify-end gap-2">
                 <Button
                   variant="outline"
-                  onClick={() => handleCopyTemplate(selectedTemplate)}
+                  onClick={() => handleCopyMessage(selectedMessage)}
                 >
                   <Copy className="h-4 w-4 mr-2" />
                   העתק הודעה
