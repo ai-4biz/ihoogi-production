@@ -394,95 +394,94 @@ const Messages = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 p-4 md:p-8" dir="rtl">
       <div className="max-w-7xl mx-auto space-y-8">
-          
-          {/* Header */}
-          <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent mb-4">
-              💬 ספריית הודעות
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              אוסף של תבניות הודעות מוכנות לשימוש - הודעות אינפורמציה, השלמת מידע, תודה, סטטוס ועוד
-            </p>
-          </div>
-
-          {/* Categories */}
-          <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-6 gap-2">
-              {categories.map((category) => {
-                const IconComponent = category.icon;
-                return (
-                  <TabsTrigger 
-                    key={category.id} 
-                    value={category.id}
-                    className="flex items-center gap-2 text-sm"
-                  >
-                    <IconComponent className="h-4 w-4" />
-                    <span className="hidden sm:inline">{category.label}</span>
-                  </TabsTrigger>
-                );
-              })}
-            </TabsList>
-
-            <TabsContent value={selectedCategory} className="mt-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredTemplates.map(renderTemplateCard)}
-              </div>
-            </TabsContent>
-          </Tabs>
+        
+        {/* Header */}
+        <div className="text-center">
+          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent mb-4">
+            💬 ספריית הודעות
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+            אוסף של תבניות הודעות מוכנות לשימוש - הודעות אינפורמציה, השלמת מידע, תודה, סטטוס ועוד
+          </p>
         </div>
 
-        {/* Preview Modal */}
-        {selectedTemplate && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-            <Card className="w-full max-w-2xl max-h-[80vh] overflow-hidden">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg bg-gradient-to-br ${selectedTemplate.bgColor}`}>
-                    <selectedTemplate.icon className={`h-5 w-5 ${selectedTemplate.color}`} />
-                  </div>
-                  <div>
-                    <CardTitle>{selectedTemplate.title}</CardTitle>
-                    <p className="text-sm text-muted-foreground">{selectedTemplate.description}</p>
-                  </div>
+        {/* Categories */}
+        <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-6 gap-2">
+            {categories.map((category) => {
+              const IconComponent = category.icon;
+              return (
+                <TabsTrigger 
+                  key={category.id} 
+                  value={category.id}
+                  className="flex items-center gap-2 text-sm"
+                >
+                  <IconComponent className="h-4 w-4" />
+                  <span className="hidden sm:inline">{category.label}</span>
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
+
+          <TabsContent value={selectedCategory} className="mt-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredTemplates.map(renderTemplateCard)}
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
+
+      {/* Preview Modal */}
+      {selectedTemplate && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <Card className="w-full max-w-2xl max-h-[80vh] overflow-hidden">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+              <div className="flex items-center gap-3">
+                <div className={`p-2 rounded-lg bg-gradient-to-br ${selectedTemplate.bgColor}`}>
+                  <selectedTemplate.icon className={`h-5 w-5 ${selectedTemplate.color}`} />
                 </div>
+                <div>
+                  <CardTitle>{selectedTemplate.title}</CardTitle>
+                  <p className="text-sm text-muted-foreground">{selectedTemplate.description}</p>
+                </div>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setSelectedTemplate(null)}
+              >
+                ✕
+              </Button>
+            </CardHeader>
+            
+            <CardContent className="space-y-4">
+              <div className="bg-muted/50 rounded-lg p-4">
+                <pre className="text-sm whitespace-pre-wrap text-muted-foreground">
+                  {selectedTemplate.content}
+                </pre>
+              </div>
+              
+              <div className="flex flex-wrap gap-2">
+                {selectedTemplate.variables.map((variable, index) => (
+                  <Badge key={index} variant="secondary" className="text-xs">
+                    {`{{${variable}}}`}
+                  </Badge>
+                ))}
+              </div>
+              
+              <div className="flex justify-end gap-2">
                 <Button
                   variant="outline"
-                  size="sm"
-                  onClick={() => setSelectedTemplate(null)}
+                  onClick={() => handleCopyTemplate(selectedTemplate)}
                 >
-                  ✕
+                  <Copy className="h-4 w-4 mr-2" />
+                  העתק הודעה
                 </Button>
-              </CardHeader>
-              
-              <CardContent className="space-y-4">
-                <div className="bg-muted/50 rounded-lg p-4">
-                  <pre className="text-sm whitespace-pre-wrap text-muted-foreground">
-                    {selectedTemplate.content}
-                  </pre>
-                </div>
-                
-                <div className="flex flex-wrap gap-2">
-                  {selectedTemplate.variables.map((variable, index) => (
-                    <Badge key={index} variant="secondary" className="text-xs">
-                      {`{{${variable}}}`}
-                    </Badge>
-                  ))}
-                </div>
-                
-                <div className="flex justify-end gap-2">
-                  <Button
-                    variant="outline"
-                    onClick={() => handleCopyTemplate(selectedTemplate)}
-                  >
-                    <Copy className="h-4 w-4 mr-2" />
-                    העתק הודעה
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
-      </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };
