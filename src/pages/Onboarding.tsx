@@ -14,8 +14,6 @@ const Onboarding = () => {
       icon: User,
       title: "צרו את הפרופיל שלכם",
       description: "ספרו לנו מי אתם, מה העסק שלכם, ומה הסגנון שמתאים לכם – ככה Hoogi תדע לבנות עבורכם חוויה שיווקית מותאמת אישית. 💡",
-      color: "from-blue-500 to-cyan-500",
-      bgColor: "from-blue-50 to-cyan-50",
       action: () => navigate("/profile")
     },
     {
@@ -23,8 +21,6 @@ const Onboarding = () => {
       icon: FileText,
       title: "צרו שאלון חכם שמכין אתכם למכירה ממוקדת",
       description: "השאלון הופך את המתעניינים ללידים חמים – הוא שואל, ממקד ומאפשר לכם להגיע לשיחת המכירה כשאתם כבר צעד אחד קדימה. 🎯",
-      color: "from-purple-500 to-pink-500",
-      bgColor: "from-purple-50 to-pink-50",
       action: () => navigate("/my-hoogi")
     },
     {
@@ -32,8 +28,6 @@ const Onboarding = () => {
       icon: MessageSquare,
       title: "צרו תבנית מענה ללקוח",
       description: "הגדירו איך Hoogi תדבר בשם העסק שלכם – באופן מקצועי, אישי ואוטומטי, שמייצר אמון וחיבור אמיתי עם הלקוח. 💬",
-      color: "from-orange-500 to-red-500",
-      bgColor: "from-orange-50 to-red-50",
       action: () => navigate("/create-template")
     },
     {
@@ -41,8 +35,6 @@ const Onboarding = () => {
       icon: Share2,
       title: "קבלו את הלינק שלכם לשיתוף",
       description: "בחרו איך תרצו שהלקוחות ימלאו את השאלון: כ־צ'אט אינטראקטיבי, טופס חכם, או קוד QR לסריקה – רק תבחרו, ושתפו בכל מקום שתרצו: וואטסאפ, אתר או רשתות חברתיות. 🚀",
-      color: "from-green-500 to-teal-500",
-      bgColor: "from-green-50 to-teal-50",
       action: () => navigate("/distribution")
     }
   ];
@@ -61,24 +53,28 @@ const Onboarding = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20" dir="rtl">
       <div className="container mx-auto px-4 py-8 md:py-12">
-        {/* Header with i-Hoogi logo */}
+        {/* Header with Hoogi logo */}
         <div className="text-center mb-8 md:mb-12">
           <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full flex items-center justify-center shadow-lg animate-bounce">
-              <span className="text-4xl md:text-5xl">🦉</span>
+            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-primary/10 flex items-center justify-center shadow-lg animate-bounce">
+              <img 
+                src="/hoogi-new-avatar.png" 
+                alt="Hoogi Avatar" 
+                className="w-16 h-16 md:w-20 md:h-20 object-contain"
+              />
             </div>
           </div>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 mb-4">
-            🦉 ברוכים הבאים ל־i-Hoogi
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/60 mb-4">
+            ברוכים הבאים ל־Hoogi
           </h1>
-          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-6">
+          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-6">
             המערכת שמדברת עם הלקוחות שלכם, מתזכרת אותם,
             ומוודאת שאף ליד לא מתפספס בדרך.
             בואו נתחיל – זה קל, מהיר, וחכם. ⚡
           </p>
-          <h2 className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 mb-6">
+          <h2 className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/60 mb-6">
             ✨ הצעדים הראשונים שלכם עם Hoogi
           </h2>
         </div>
@@ -92,29 +88,29 @@ const Onboarding = () => {
             return (
               <Card 
                 key={step.number}
-                className={`border-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer bg-gradient-to-l ${step.bgColor} ${isCompleted ? 'border-green-500' : 'border-transparent hover:border-purple-200'}`}
+                className={`border shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer bg-card/50 backdrop-blur-sm ${isCompleted ? 'border-primary' : 'border-border hover:border-primary/50'}`}
                 onClick={() => handleStepClick(step.number, step.action)}
               >
                 <CardContent className="p-6 md:p-8">
                   <div className="flex items-start gap-4 md:gap-6">
                     {/* Number Badge */}
-                    <div className={`flex-shrink-0 w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-br ${step.color} flex items-center justify-center shadow-lg relative`}>
+                    <div className={`flex-shrink-0 w-12 h-12 md:w-14 md:h-14 rounded-full bg-primary/10 flex items-center justify-center shadow-lg relative border border-primary/20`}>
                       {isCompleted ? (
-                        <CheckCircle2 className="h-6 w-6 md:h-7 md:w-7 text-white" />
+                        <CheckCircle2 className="h-6 w-6 md:h-7 md:w-7 text-primary" />
                       ) : (
-                        <span className="text-white font-bold text-xl md:text-2xl">{step.number}</span>
+                        <span className="text-primary font-bold text-xl md:text-2xl">{step.number}</span>
                       )}
                     </div>
 
                     {/* Content */}
                     <div className="flex-1 text-right">
                       <div className="flex items-center gap-2 mb-2">
-                        <StepIcon className={`h-5 w-5 md:h-6 md:w-6 bg-gradient-to-br ${step.color} bg-clip-text text-transparent`} />
-                        <h3 className="text-xl md:text-2xl font-bold text-gray-800">
+                        <StepIcon className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+                        <h3 className="text-xl md:text-2xl font-bold text-foreground">
                           {step.title}
                         </h3>
                       </div>
-                      <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+                      <p className="text-muted-foreground leading-relaxed text-sm md:text-base">
                         {step.description}
                       </p>
                     </div>
@@ -122,11 +118,11 @@ const Onboarding = () => {
                     {/* Arrow or Check */}
                     <div className="flex-shrink-0">
                       {isCompleted ? (
-                        <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                          <CheckCircle2 className="h-5 w-5 text-green-600" />
+                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
+                          <CheckCircle2 className="h-5 w-5 text-primary" />
                         </div>
                       ) : (
-                        <div className="text-2xl text-gray-400">←</div>
+                        <div className="text-2xl text-muted-foreground">←</div>
                       )}
                     </div>
                   </div>
@@ -137,33 +133,33 @@ const Onboarding = () => {
         </div>
 
         {/* How it works section */}
-        <Card className="max-w-4xl mx-auto border-2 border-blue-200 shadow-xl bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 mb-8">
+        <Card className="max-w-4xl mx-auto border shadow-lg bg-card/50 backdrop-blur-sm mb-8">
           <CardContent className="p-6 md:p-10 text-center">
             <div className="flex items-center justify-center gap-2 mb-4">
-              <Zap className="h-8 w-8 text-blue-600" />
-              <h2 className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+              <Zap className="h-8 w-8 text-primary" />
+              <h2 className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/60">
                 🔁 ככה זה עובד בפשטות
               </h2>
             </div>
-            <div className="text-gray-700 leading-relaxed text-base md:text-lg max-w-3xl mx-auto mb-4">
+            <div className="text-muted-foreground leading-relaxed text-base md:text-lg max-w-3xl mx-auto mb-4">
               מילוי פרופיל → יצירת שאלון → בניית תבנית מענה ללקוח → קבלת הלינק
             </div>
-            <div className="text-gray-600 text-sm md:text-base">
+            <div className="text-muted-foreground text-sm md:text-base">
               אתם מצרפים את הלקוחות –
             </div>
           </CardContent>
         </Card>
 
         {/* Bottom Section - "From here it's on us" */}
-        <Card className="max-w-4xl mx-auto border-2 border-blue-200 shadow-xl bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+        <Card className="max-w-4xl mx-auto border shadow-lg bg-card/50 backdrop-blur-sm">
           <CardContent className="p-6 md:p-10 text-center">
             <div className="flex items-center justify-center gap-2 mb-4">
-              <MessageSquare className="h-8 w-8 text-blue-600" />
-              <h2 className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+              <MessageSquare className="h-8 w-8 text-primary" />
+              <h2 className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/60">
                 🤖 מכאן זה כבר עלינו
               </h2>
             </div>
-            <p className="text-gray-700 leading-relaxed text-base md:text-lg max-w-3xl mx-auto">
+            <p className="text-muted-foreground leading-relaxed text-base md:text-lg max-w-3xl mx-auto">
               אנחנו נאסוף את הלידים, נרכז את כל המידע במקום אחד,
               נענה בשמכם, נתזכר את הלקוחות שלכם בדיוק ברגע הנכון –
               כדי שכל ליד יהפוך להזדמנות אמיתית. 🎯
@@ -176,7 +172,7 @@ const Onboarding = () => {
           <Button
             onClick={handleStart}
             size="lg"
-            className="px-12 py-6 text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all"
+            className="px-12 py-6 text-xl font-bold shadow-lg hover:shadow-xl transition-all"
           >
             בואו נתחיל! 🚀
           </Button>
