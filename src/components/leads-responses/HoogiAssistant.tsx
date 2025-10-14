@@ -12,7 +12,7 @@ const HoogiAssistant = ({ activeTab, newLeadsCount, newCommentsCount }: HoogiAss
     <div className="bg-white rounded-lg p-6 shadow-md mb-8">
       <div className="flex items-center">
         <Avatar className="h-16 w-16 mr-4 animate-float">
-          <AvatarImage src="/placeholder.svg" alt="Hoogi Avatar" />
+          <AvatarImage src="/placeholder.svg" alt="iHoogi Avatar" />
           <AvatarFallback className="bg-primary text-2xl text-white">🦉</AvatarFallback>
         </Avatar>
         <div>

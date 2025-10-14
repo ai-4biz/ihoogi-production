@@ -8,7 +8,7 @@ const TermsOfService = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = "Hoogi – תנאי שימוש ותקנון";
+    document.title = "iHoogi – תנאי שימוש ותקנון";
   }, []);
 
   return (
@@ -28,13 +28,13 @@ const TermsOfService = () => {
           
           <div className="text-center mb-6">
             <div className="flex justify-center mb-4">
-              <img src="/hoogi-new-avatar.png" alt="לוגו Hoogi" className="h-20 w-20 object-contain" />
+              <img src="/hoogi-new-avatar.png" alt="לוגו iHoogi" className="h-20 w-20 object-contain" />
             </div>
             <h1 className="text-3xl md:text-4xl font-extrabold mb-2">
               תנאי שימוש ותקנון
             </h1>
             <p className="text-muted-foreground">
-              תקנון השימוש בפלטפורמת Hoogi
+              תקנון השימוש בפלטפורמת iHoogi
             </p>
             <p className="text-sm text-muted-foreground mt-2">
               עדכון אחרון: {new Date().toLocaleDateString('he-IL')}
@@ -52,7 +52,7 @@ const TermsOfService = () => {
           </CardHeader>
           <CardContent className="space-y-2 text-right">
             <p className="text-sm leading-relaxed">
-              ✓ פלטפורמת Hoogi מספקת כלים ליצירת שאלונים חכמים וניהול לידים
+              ✓ פלטפורמת iHoogi מספקת כלים ליצירת שאלונים חכמים וניהול לידים
             </p>
             <p className="text-sm leading-relaxed">
               ✓ השירות ניתן תחת מנוי חודשי/שנתי עם מגבלות שימוש לפי התוכנית
@@ -78,8 +78,8 @@ const TermsOfService = () => {
             </CardHeader>
             <CardContent className="space-y-3 text-right">
               <p className="leading-relaxed">
-                ברוכים הבאים ל-Hoogi! תנאי שימוש אלו ("התקנון") מסדירים את השימוש שלך בפלטפורמת Hoogi ("השירות"), 
-                המסופקת על ידי Hoogi Ltd. ("החברה", "אנו", "שלנו").
+                ברוכים הבאים ל-iHoogi! תנאי שימוש אלו ("התקנון") מסדירים את השימוש שלך בפלטפורמת iHoogi ("השירות"), 
+                המסופקת על ידי iHoogi Ltd. ("החברה", "אנו", "שלנו").
               </p>
               <p className="leading-relaxed">
                 השימוש בשירות מהווה הסכמה מלאה לתנאים אלו. אם אינך מסכים לתנאים, אנא הימנע משימוש בשירות.
@@ -98,7 +98,7 @@ const TermsOfService = () => {
             <CardContent className="space-y-3 text-right">
               <h4 className="font-semibold">2.1 תיאור השירות</h4>
               <p className="leading-relaxed">
-                Hoogi מספקת פלטפורמה ליצירה, ניהול והפצה של שאלונים דיגיטליים, איסוף תגובות מלקוחות, 
+                iHoogi מספקת פלטפורמה ליצירה, ניהול והפצה של שאלונים דיגיטליים, איסוף תגובות מלקוחות, 
                 וניהול לידים עסקיים. השירות כולל כלים לאוטומציה, ניתוח נתונים, ואינטגרציה עם ערוצי הפצה שונים.
               </p>
               
@@ -241,7 +241,7 @@ const TermsOfService = () => {
             <CardContent className="space-y-3 text-right">
               <h4 className="font-semibold">7.1 בעלות על הפלטפורמה</h4>
               <p className="leading-relaxed">
-                כל הזכויות בפלטפורמת Hoogi, כולל קוד, עיצוב, לוגו וטכנולוגיה, שייכות לחברה. 
+                כל הזכויות בפלטפורמת iHoogi, כולל קוד, עיצוב, לוגו וטכנולוגיה, שייכות לחברה. 
                 אין להעתיק, לשכפל או להשתמש בחלקים מהפלטפורמה ללא אישור בכתב.
               </p>
               
@@ -342,7 +342,7 @@ const TermsOfService = () => {
             </CardHeader>
             <CardContent className="text-right">
               <p className="leading-relaxed font-semibold">
-                על ידי שימוש בשירות Hoogi, אתה מאשר כי קראת, הבנת והסכמת לתנאי שימוש אלו במלואם.
+                על ידי שימוש בשירות iHoogi, אתה מאשר כי קראת, הבנת והסכמת לתנאי שימוש אלו במלואם.
               </p>
               <p className="leading-relaxed mt-3 text-sm text-muted-foreground">
                 תקנון זה כפוף לדיני מדינת ישראל, והסמכות השיפוטית הבלעדית נתונה לבתי המשפט בתל אביב.
@@ -371,7 +371,7 @@ const TermsOfService = () => {
 
         {/* Footer */}
         <div className="text-center mt-8 text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} Hoogi Ltd. כל הזכויות שמורות.</p>
+          <p>© {new Date().getFullYear()} iHoogi Ltd. כל הזכויות שמורות.</p>
         </div>
       </div>
     </div>

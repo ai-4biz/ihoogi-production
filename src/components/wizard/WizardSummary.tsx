@@ -139,7 +139,7 @@ const WizardSummary = ({ formData, resetWizard }: WizardSummaryProps) => {
         <p className="italic text-gray-600">
           "יש לי תמונה ברורה של מי אתה – עכשיו אפשר להתחיל לבנות לך תוכן שעובד."
         </p>
-        <p className="text-sm text-gray-500">- Hoogi</p>
+        <p className="text-sm text-gray-500">- iHoogi</p>
       </div>
     </div>
   );

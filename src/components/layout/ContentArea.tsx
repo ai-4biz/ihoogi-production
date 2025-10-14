@@ -56,7 +56,7 @@ const ContentArea = ({ currentState, handleStateChange, isMobile, children }: Co
           <div className="text-center p-6 max-w-5xl">
             <img 
               src="/hoogi-new-avatar.png" 
-              alt="לוגו Hoogi" 
+              alt="לוגו iHoogi" 
               className="w-32 h-32 mx-auto mb-6 animate-fade-in"
             />
             <h1 className="text-4xl md:text-6xl font-extrabold mb-4">

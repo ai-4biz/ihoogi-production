@@ -63,13 +63,13 @@ const Onboarding = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20" dir="rtl">
       <div className="container mx-auto px-4 py-8 md:py-12">
-        {/* Header with Hoogi logo */}
+        {/* Header with iHoogi logo */}
         <div className="text-center mb-8 md:mb-12">
           <div className="flex items-center justify-center gap-3 mb-6">
             <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-primary/10 flex items-center justify-center shadow-lg animate-bounce">
               <img 
                 src="/hoogi-new-avatar.png" 
-                alt="Hoogi Avatar" 
+                alt="iHoogi Avatar" 
                 className="w-16 h-16 md:w-20 md:h-20 object-contain"
               />
             </div>

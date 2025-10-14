@@ -78,7 +78,7 @@ const MainLayout = ({
         {currentState === "contact" ? <ContactForm onBack={() => handleStateChange("root")} /> : currentState === "organizations" ? <OrganizationsView /> : children}
       </ContentArea>
 
-      {/* Floating Hoogi Helper */}
+      {/* Floating iHoogi Helper */}
       <HoogiAvatar message="היי! אני כאן לעזור לך" subMessage="בחרי באחת האפשרויות כדי להמשיך" />
     </div>;
 };
