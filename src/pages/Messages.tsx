@@ -30,23 +30,9 @@ const Messages = () => {
     {
       id: "required-fields",
       type: "required",
-      title: "תמלא שאלות חובה",
+      title: "שדות חובה",
       description: "הודעה כאשר משתמש לא מילא שדות חובה",
-      content: `שלום!
-
-אני iHoogi, העוזר החכם שלך 🤖
-
-אני רואה שלא מילאת את כל השדות החובה בטופס. כדי שאוכל לעזור לך בצורה הטובה ביותר, נא למלא את השדות הבאים:
-
-• {{missingField1}}
-• {{missingField2}}
-• {{missingField3}}
-
-זה יעזור לי להבין בדיוק מה אתה מחפש ולהציע לך את הפתרון המתאים ביותר.
-
-תודה על הסבלנות! 😊
-
-iHoogi`,
+      content: `נא למלא את השדות החובה: {{missingField1}}, {{missingField2}}, {{missingField3}}`,
       category: "required",
       icon: AlertTriangle,
       color: "text-red-600",
@@ -58,19 +44,9 @@ iHoogi`,
     {
       id: "field-required",
       type: "required",
-      title: "שדה זה חובה",
+      title: "שדה חובה",
       description: "הודעה עבור שדה ספציפי שחסר",
-      content: `שלום!
-
-אני iHoogi, העוזר החכם שלך 🤖
-
-השדה "{{fieldName}}" הוא שדה חובה ולא ניתן להמשיך בלעדיו.
-
-נא למלא את השדה כדי שאוכל לעזור לך להמשיך.
-
-תודה! 😊
-
-iHoogi`,
+      content: `השדה "{{fieldName}}" הוא חובה ולא ניתן להמשיך בלעדיו`,
       category: "required",
       icon: AlertTriangle,
       color: "text-red-600",
@@ -84,21 +60,9 @@ iHoogi`,
     {
       id: "save-success",
       type: "save",
-      title: "שמירה בוצעה בהצלחה",
+      title: "נשמר בהצלחה",
       description: "הודעה כאשר נתונים נשמרו בהצלחה",
-      content: `שלום!
-
-אני iHoogi, העוזר החכם שלך 🤖
-
-הנתונים שלך נשמרו בהצלחה! ✅
-
-כל השינויים שעשית נשמרו במערכת ואני יכול לעזור לך להמשיך עם הצעד הבא.
-
-אם יש לך שאלות או צרכים נוספים, אני כאן בשבילך!
-
-תודה! 😊
-
-iHoogi`,
+      content: `הנתונים שלך נשמרו בהצלחה! ✅`,
       category: "save",
       icon: Save,
       color: "text-green-600",
@@ -112,19 +76,7 @@ iHoogi`,
       type: "save",
       title: "שמירה אוטומטית",
       description: "הודעה על שמירה אוטומטית של נתונים",
-      content: `שלום!
-
-אני iHoogi, העוזר החכם שלך 🤖
-
-שמרתי את הנתונים שלך אוטומטית! 💾
-
-כל מה שכתבת נשמר במערכת, אז אתה יכול להיות רגוע - אף מידע לא יאבד.
-
-אני ממשיך לעקוב אחר השינויים שלך ולשמור הכל.
-
-תודה! 😊
-
-iHoogi`,
+      content: `שמרתי את הנתונים שלך אוטומטית! 💾`,
       category: "save",
       icon: Save,
       color: "text-green-600",
@@ -140,21 +92,7 @@ iHoogi`,
       type: "warning",
       title: "שים לב",
       description: "הודעה חשובה שמחייבת תשומת לב",
-      content: `שלום!
-
-אני iHoogi, העוזר החכם שלך 🤖
-
-יש לי הודעה חשובה עבורך:
-
-{{importantMessage}}
-
-זה חשוב שתשים לב לזה כי זה יכול להשפיע על התוצאות שלך.
-
-אם יש לך שאלות, אני כאן לעזור!
-
-תודה! 😊
-
-iHoogi`,
+      content: `שים לב: {{importantMessage}}`,
       category: "warning",
       icon: AlertCircle,
       color: "text-orange-600",
@@ -166,23 +104,9 @@ iHoogi`,
     {
       id: "system-maintenance",
       type: "warning",
-      title: "תחזוקת מערכת",
+      title: "תחזוקה",
       description: "הודעה על תחזוקה מתוכננת",
-      content: `שלום!
-
-אני iHoogi, העוזר החכם שלך 🤖
-
-יש לי הודעה חשובה:
-
-המערכת תהיה בתחזוקה ב-{{maintenanceDate}} בין השעות {{startTime}} ל-{{endTime}}.
-
-בזמן הזה אני אהיה פחות זמין, אבל כל הנתונים שלך בטוחים ושמורים.
-
-אחרי התחזוקה אני אחזור לעבוד איתך בצורה עוד יותר טובה!
-
-תודה על ההבנה! 😊
-
-iHoogi`,
+      content: `המערכת תהיה בתחזוקה ב-{{maintenanceDate}} בין השעות {{startTime}} ל-{{endTime}}`,
       category: "warning",
       icon: AlertCircle,
       color: "text-orange-600",
@@ -198,21 +122,7 @@ iHoogi`,
       type: "recommendation",
       title: "מומלץ",
       description: "המלצה חכמה לשיפור התוצאות",
-      content: `שלום!
-
-אני iHoogi, העוזר החכם שלך 🤖
-
-יש לי המלצה חכמה בשבילך:
-
-{{recommendation}}
-
-זה יעזור לך לקבל תוצאות טובות יותר ויעילות גבוהה יותר.
-
-אני כאן אם תרצה הסבר נוסף או עזרה ביישום!
-
-תודה! 😊
-
-iHoogi`,
+      content: `מומלץ: {{recommendation}}`,
       category: "recommendation",
       icon: Lightbulb,
       color: "text-yellow-600",
@@ -226,21 +136,7 @@ iHoogi`,
       type: "recommendation",
       title: "טיפ",
       description: "טיפ שימושי למשתמש",
-      content: `שלום!
-
-אני iHoogi, העוזר החכם שלך 🤖
-
-יש לי טיפ שימושי בשבילך:
-
-💡 {{tip}}
-
-זה יכול לעזור לך לחסוך זמן ולהשיג תוצאות טובות יותר.
-
-אם תרצה עוד טיפים או הסברים, אני כאן!
-
-תודה! 😊
-
-iHoogi`,
+      content: `טיפ: {{tip}}`,
       category: "recommendation",
       icon: Lightbulb,
       color: "text-yellow-600",
@@ -249,28 +145,28 @@ iHoogi`,
       usage: "טיפ שימושי",
       variables: ["tip"]
     },
+    {
+      id: "business-details",
+      type: "recommendation",
+      title: "פרטי עסק",
+      description: "המלצה למלא פרטי עסק",
+      content: `טיפ: מלאי כאן את פרטי העסק כדי שה-AI יתאים עבורך תכנים מדויקים יותר`,
+      category: "recommendation",
+      icon: Lightbulb,
+      color: "text-yellow-600",
+      bgColor: "from-yellow-50 to-yellow-100",
+      borderColor: "border-yellow-200",
+      usage: "המלצה למלא פרטי עסק",
+      variables: []
+    },
 
     // הודעות הדרכה
     {
       id: "guide",
       type: "guide",
-      title: "איך זה עובד",
+      title: "הדרכה",
       description: "הסבר על אופן פעולת המערכת",
-      content: `שלום!
-
-אני iHoogi, העוזר החכם שלך 🤖
-
-בואו אני אסביר לך איך זה עובד:
-
-{{explanation}}
-
-זה יעזור לך להבין איך להשתמש במערכת בצורה הטובה ביותר.
-
-אם יש לך עוד שאלות, אני כאן לעזור!
-
-תודה! 😊
-
-iHoogi`,
+      content: `איך זה עובד: {{explanation}}`,
       category: "guide",
       icon: BookOpen,
       color: "text-blue-600",
@@ -284,21 +180,7 @@ iHoogi`,
       type: "guide",
       title: "מדריך",
       description: "מדריך צעד אחר צעד",
-      content: `שלום!
-
-אני iHoogi, העוזר החכם שלך 🤖
-
-בואו נעבור על זה יחד:
-
-{{tutorialSteps}}
-
-אני אעזור לך בכל שלב ואסביר אם משהו לא ברור.
-
-אם תרצה לחזור על חלק מסוים, רק תגיד לי!
-
-תודה! 😊
-
-iHoogi`,
+      content: `מדריך: {{tutorialSteps}}`,
       category: "guide",
       icon: BookOpen,
       color: "text-blue-600",
@@ -314,21 +196,7 @@ iHoogi`,
       type: "info",
       title: "מידע",
       description: "מידע חשוב למשתמש",
-      content: `שלום!
-
-אני iHoogi, העוזר החכם שלך 🤖
-
-יש לי מידע חשוב עבורך:
-
-{{information}}
-
-זה יעזור לך להבין טוב יותר איך המערכת עובדת.
-
-אם יש לך שאלות נוספות, אני כאן!
-
-תודה! 😊
-
-iHoogi`,
+      content: `מידע: {{information}}`,
       category: "info",
       icon: Info,
       color: "text-cyan-600",
@@ -342,21 +210,7 @@ iHoogi`,
       type: "info",
       title: "עדכון",
       description: "הודעה על עדכון חדש",
-      content: `שלום!
-
-אני iHoogi, העוזר החכם שלך 🤖
-
-יש לי חדשות טובות!
-
-{{updateContent}}
-
-זה יעזור לך לקבל תוצאות עוד יותר טובות!
-
-אם יש לך שאלות על העדכון, אני כאן לעזור!
-
-תודה! 😊
-
-iHoogi`,
+      content: `עדכון: {{updateContent}}`,
       category: "info",
       icon: Info,
       color: "text-cyan-600",
@@ -417,10 +271,21 @@ iHoogi`,
         </CardHeader>
         
         <CardContent className="pt-0">
-          <div className="bg-muted/50 rounded-lg p-3 mb-4">
-            <p className="text-sm text-muted-foreground whitespace-pre-wrap line-clamp-3">
-              {message.content.substring(0, 150)}...
-            </p>
+          <div className={`bg-gradient-to-r ${message.bgColor} border ${message.borderColor} rounded-lg p-3 mb-4`}>
+            <div className="flex items-start gap-3">
+              <div className="flex-1">
+                <p className="text-sm text-muted-foreground">
+                  {message.content}
+                </p>
+              </div>
+              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 flex-shrink-0">
+                <img 
+                  src="/hoogi-new-avatar.png" 
+                  alt="iHoogi" 
+                  className="w-5 h-5 object-contain"
+                />
+              </div>
+            </div>
           </div>
           
           <div className="flex items-center justify-between">
@@ -524,23 +389,21 @@ iHoogi`,
             
             <CardContent className="space-y-4">
               {/* Preview with iHoogi styling */}
-              <div className={`bg-gradient-to-br ${selectedMessage.bgColor} border ${selectedMessage.borderColor} rounded-lg p-4`}>
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
+              <div className={`bg-gradient-to-r ${selectedMessage.bgColor} border ${selectedMessage.borderColor} rounded-lg p-4`}>
+                <div className="flex items-start gap-3">
+                  <div className="flex-1">
+                    <p className="text-sm text-muted-foreground">
+                      {selectedMessage.content}
+                    </p>
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 flex-shrink-0">
                     <img 
                       src="/hoogi-new-avatar.png" 
                       alt="iHoogi" 
                       className="w-6 h-6 object-contain"
                     />
                   </div>
-                  <div className="flex-1">
-                    <div className="text-sm font-semibold text-primary">iHoogi</div>
-                    <div className="text-xs text-muted-foreground">עוזר חכם</div>
-                  </div>
                 </div>
-                <pre className="text-sm whitespace-pre-wrap text-muted-foreground">
-                  {selectedMessage.content}
-                </pre>
               </div>
               
               <div className="flex flex-wrap gap-2">
