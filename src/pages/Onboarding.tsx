@@ -12,8 +12,8 @@ const Onboarding = () => {
     {
       number: 1,
       icon: User,
-      title: "מלאי את הפרופיל שלך",
-      description: "ספרי לנו בקצרה מי את ומה העסק שלך – ככה Hoogi תדע לבנות שאלונים שמתאימים בדיוק לשפה ולסגנון שלך.",
+      title: "מלאו את הפרופיל שלכם",
+      description: "ספרו לנו בקצרה מי אתם ומה העסק שלכם – ככה iHoogi תדע לבנות שאלונים שמתאימים בדיוק לשפה ולסגנון שלכם.",
       color: "from-blue-500 to-cyan-500",
       bgColor: "from-blue-50 to-cyan-50",
       action: () => navigate("/profile")
@@ -21,8 +21,8 @@ const Onboarding = () => {
     {
       number: 2,
       icon: FileText,
-      title: "צרי את השאלון הראשון שלך",
-      description: "תוך דקות, תבני שאלון חכם שמדבר במקומך וממיר מתעניינים ללידים חמים.",
+      title: "צרו את השאלון הראשון שלכם",
+      description: "תוך דקות, תבנו שאלון חכם שמדבר במקומכם וממיר מתעניינים ללידים חמים.",
       color: "from-purple-500 to-pink-500",
       bgColor: "from-purple-50 to-pink-50",
       action: () => navigate("/my-hoogi")
@@ -30,8 +30,8 @@ const Onboarding = () => {
     {
       number: 3,
       icon: MessageSquare,
-      title: "הגדירי תבנית מענה ללקוח",
-      description: "הגדירי איך Hoogi תענה בשם העסק שלך – אוטומטית, מדויקת, ותמיד בזמן.",
+      title: "הגדירו תבנית מענה ללקוח",
+      description: "הגדירו איך iHoogi תענה בשם העסק שלכם – אוטומטית, מדויקת, ותמיד בזמן.",
       color: "from-orange-500 to-red-500",
       bgColor: "from-orange-50 to-red-50",
       action: () => navigate("/create-template")
@@ -39,8 +39,8 @@ const Onboarding = () => {
     {
       number: 4,
       icon: Share2,
-      title: "גשי למסך ההפצה",
-      description: "בלחיצה אחת תקבלי לינק אישי לשאלון שלך.",
+      title: "גשו למסך ההפצה",
+      description: "בלחיצה אחת תקבלו לינק אישי לשאלון שלכם.",
       color: "from-green-500 to-teal-500",
       bgColor: "from-green-50 to-teal-50",
       action: () => navigate("/distribution")
@@ -48,8 +48,8 @@ const Onboarding = () => {
     {
       number: 5,
       icon: Zap,
-      title: "שתפי בכל מקום",
-      description: "וואטסאפ, פייסבוק, אינסטגרם, אתר או דף נחיתה – שימי את הלינק שם וראי את הקסם קורה 🚀",
+      title: "שתפו בכל מקום",
+      description: "וואטסאפ, פייסבוק, אינסטגרם, אתר או דף נחיתה – שימו את הלינק שם וראו את הקסם קורה 🚀",
       color: "from-indigo-500 to-purple-500",
       bgColor: "from-indigo-50 to-purple-50",
       action: () => navigate("/distribution")
@@ -63,12 +63,6 @@ const Onboarding = () => {
     action();
   };
 
-  const handleSkip = () => {
-    // Mark onboarding as completed in localStorage
-    localStorage.setItem("onboarding_completed", "true");
-    navigate("/");
-  };
-
   const handleStart = () => {
     // Mark onboarding as completed and go to profile
     localStorage.setItem("onboarding_completed", "true");
@@ -76,20 +70,20 @@ const Onboarding = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50" dir="rtl">
       <div className="container mx-auto px-4 py-8 md:py-12">
         {/* Header with Hoogi mascot */}
         <div className="text-center mb-8 md:mb-12">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center shadow-lg animate-bounce">
+            <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-green-600 to-emerald-600 rounded-full flex items-center justify-center shadow-lg animate-bounce">
               <Sparkles className="h-8 w-8 md:h-10 md:w-10 text-white" />
             </div>
           </div>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 mb-3">
-            ✨ הצעד הראשון שלך עם Hoogi
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600 mb-3">
+            ✨ הצעד הראשון שלך עם iHoogi
           </h1>
           <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
-            בואי נתחיל את המסע שלך! בחמישה צעדים פשוטים את תהיי מוכנה לייצר לידים חמים
+            בואו נתחיל את המסע שלכם! בחמישה צעדים פשוטים תהיו מוכנים לייצר לידים חמים
           </p>
         </div>
 
@@ -156,29 +150,21 @@ const Onboarding = () => {
               </h2>
             </div>
             <p className="text-gray-700 leading-relaxed text-base md:text-lg max-w-3xl mx-auto">
-              אנחנו נאסוף את כל הלידים שלך, נרכז אותם במקום אחד,
-              נענה להם בשמך, נתזכר את הלקוחות שלך ברגע הנכון,
-              ונדאג שלא תפספסי אף הזדמנות. 🎯
+              אנחנו נאסוף את כל הלידים שלכם, נרכז אותם במקום אחד,
+              נענה להם בשמכם, נתזכר את הלקוחות שלכם ברגע הנכון,
+              ונדאג שלא תפספסו אף הזדמנות. 🎯
             </p>
           </CardContent>
         </Card>
 
         {/* Action Buttons */}
-        <div className="max-w-4xl mx-auto mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div className="max-w-4xl mx-auto mt-8 flex justify-center">
           <Button
             onClick={handleStart}
             size="lg"
-            className="w-full sm:w-auto px-8 py-6 text-lg font-bold bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transition-all"
+            className="px-12 py-6 text-xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all"
           >
-            בואי נתחיל! 🚀
-          </Button>
-          <Button
-            onClick={handleSkip}
-            variant="outline"
-            size="lg"
-            className="w-full sm:w-auto px-8 py-6 text-lg"
-          >
-            דלג לעכשיו
+            בואו נתחיל! 🚀
           </Button>
         </div>
       </div>
