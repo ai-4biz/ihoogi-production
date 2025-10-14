@@ -46,8 +46,8 @@ const Signup = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // For now, just navigate back to main dashboard after a mock submit
-    navigate("/main-dashboard");
+    // Navigate to onboarding after successful signup
+    navigate("/onboarding");
   };
 
   return (

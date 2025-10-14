@@ -69,6 +69,12 @@ const Onboarding = () => {
     navigate("/");
   };
 
+  const handleStart = () => {
+    // Mark onboarding as completed and go to profile
+    localStorage.setItem("onboarding_completed", "true");
+    navigate("/profile");
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50" dir="rtl">
       <div className="container mx-auto px-4 py-8 md:py-12">
@@ -160,7 +166,7 @@ const Onboarding = () => {
         {/* Action Buttons */}
         <div className="max-w-4xl mx-auto mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
           <Button
-            onClick={handleSkip}
+            onClick={handleStart}
             size="lg"
             className="w-full sm:w-auto px-8 py-6 text-lg font-bold bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transition-all"
           >
