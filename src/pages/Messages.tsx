@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Copy, Eye, MessageSquare, Mail, Smartphone, Info, AlertTriangle, CheckCircle, Clock, Users, Star, Heart } from "lucide-react";
 import { toast } from "sonner";
-import MainLayout from "@/components/layout/MainLayout";
 
 interface MessageTemplate {
   id: string;
@@ -393,9 +392,8 @@ const Messages = () => {
   };
 
   return (
-    <MainLayout>
-      <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 p-4 md:p-8" dir="rtl">
-        <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 p-4 md:p-8" dir="rtl">
+      <div className="max-w-7xl mx-auto space-y-8">
           
           {/* Header */}
           <div className="text-center">
@@ -485,7 +483,7 @@ const Messages = () => {
           </div>
         )}
       </div>
-    </MainLayout>
+    </div>
   );
 };
 
