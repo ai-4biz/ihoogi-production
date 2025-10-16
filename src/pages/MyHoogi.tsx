@@ -449,6 +449,8 @@ const MyHoogi = () => {
                                 <div
                                   key={idx}
                                   className="bg-orange-100 text-orange-800 border border-orange-200 px-2 py-1.5 rounded text-xs flex items-center gap-1.5 cursor-pointer hover:bg-orange-200 transition-colors min-w-0 flex-shrink-0"
+                                  onClick={() => window.open(`/create-template?id=${template.id}&mode=edit`, '_blank')}
+                                  title={`ערוך תבנית: ${template.name}`}
                                 >
                                   <span className="truncate font-medium">{template.name}</span>
                                   <span className="text-xs opacity-75 flex-shrink-0">
