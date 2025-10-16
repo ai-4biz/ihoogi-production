@@ -513,45 +513,19 @@ const MyHoogi = () => {
                               <Bot className="h-4 w-4 text-orange-600 dark:text-orange-400" />
                               <h4 className="font-semibold text-sm text-orange-900 dark:text-orange-100">תבניות מענה לקוח</h4>
                             </div>
-                            <div className="flex gap-2">
+                            <div className="flex gap-1">
                               {q.templates.map((template, idx) => (
                                 <div
                                   key={idx}
-                                  className="bg-orange-50 text-orange-800 border border-orange-200 px-3 py-2 rounded-lg cursor-pointer hover:bg-orange-100 transition-colors flex-1"
+                                  className="bg-orange-50 text-orange-800 border border-orange-200 px-2 py-1 rounded cursor-pointer hover:bg-orange-100 transition-colors flex-1 text-center"
                                   onClick={() => window.open(`/create-template?tab=my-templates`, '_blank')}
                                   title={`ערוך תבנית: ${template.name}`}
                                 >
-                                  <div className="flex items-center justify-between gap-2 mb-1">
-                                    <span className="font-medium text-sm">{template.name}</span>
-                                    <span className="text-xs bg-orange-200 px-2 py-0.5 rounded-full">
-                                      {template.type === 'standard' ? 'סטנדרט' :
-                                       template.type === 'ai' ? 'AI' :
-                                       template.type === 'reminder' ? 'תזכורת' :
-                                       template.type === 'combined' ? 'משולב' : template.type}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center gap-3 text-xs text-orange-700">
-                                    {template.channelStats.email > 0 && (
-                                      <div className="flex items-center gap-1">
-                                        <Mail className="h-3 w-3" />
-                                        <span>{template.channelStats.email} מייל</span>
-                                      </div>
-                                    )}
-                                    {template.channelStats.whatsapp > 0 && (
-                                      <div className="flex items-center gap-1">
-                                        <MessageCircle className="h-3 w-3" />
-                                        <span>{template.channelStats.whatsapp} וואטסאפ</span>
-                                      </div>
-                                    )}
-                                    {template.channelStats.sms > 0 && (
-                                      <div className="flex items-center gap-1">
-                                        <Smartphone className="h-3 w-3" />
-                                        <span>{template.channelStats.sms} SMS</span>
-                                      </div>
-                                    )}
-                                    <div className="text-orange-600 font-medium">
-                                      סה"כ: {template.sentCount} נשלחו
-                                    </div>
+                                  <div className="text-xs font-medium truncate">{template.name}</div>
+                                  <div className="text-xs text-orange-600 mt-0.5">
+                                    {template.channelStats.email > 0 && `${template.channelStats.email}📧`}
+                                    {template.channelStats.whatsapp > 0 && `${template.channelStats.whatsapp}📱`}
+                                    {template.channelStats.sms > 0 && `${template.channelStats.sms}📱`}
                                   </div>
                                 </div>
                               ))}
