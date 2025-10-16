@@ -40,6 +40,15 @@ interface Questionnaire {
     total: number;
     new: number;
   }[];
+  templates: {
+    id: number;
+    name: string;
+    type: string;
+    channels: string[];
+    status: string;
+    usageCount: number;
+    sentCount: number;
+  }[];
 }
 
 const ContentInspiration = () => {
@@ -71,6 +80,26 @@ const ContentInspiration = () => {
         { name: "דני כהן", total: 15, new: 6 },
         { name: "יעל לוי", total: 10, new: 4 },
         { name: "רון אבני", total: 7, new: 2 }
+      ],
+      templates: [
+        { 
+          id: 1,
+          name: "תבנית מענה סטנדרטית", 
+          type: "standard",
+          channels: ["email"],
+          status: "active",
+          usageCount: 45,
+          sentCount: 12 
+        },
+        { 
+          id: 2,
+          name: "מענה AI מותאם", 
+          type: "ai",
+          channels: ["email", "whatsapp"],
+          status: "active",
+          usageCount: 23,
+          sentCount: 8 
+        }
       ]
     },
     {
@@ -92,6 +121,26 @@ const ContentInspiration = () => {
       partners: [
         { name: "מיכל גרין", total: 12, new: 4 },
         { name: "אורי שמש", total: 6, new: 2 }
+      ],
+      templates: [
+        { 
+          id: 3,
+          name: "תבנית תזכורת שבועית", 
+          type: "reminder",
+          channels: ["whatsapp", "message"],
+          status: "inactive",
+          usageCount: 12,
+          sentCount: 5 
+        },
+        { 
+          id: 4,
+          name: "מענה משולב אישי", 
+          type: "combined",
+          channels: ["email", "whatsapp", "message"],
+          status: "active",
+          usageCount: 67,
+          sentCount: 15 
+        }
       ]
     },
     {
@@ -104,7 +153,8 @@ const ContentInspiration = () => {
       leads: { total: 0, new: 0, cancellations: 0 },
       sources: [],
       automations: [],
-      partners: []
+      partners: [],
+      templates: []
     }
   ]);
 
@@ -417,6 +467,68 @@ const ContentInspiration = () => {
                         </div>
                       </div>
                     </div>
+
+                    {/* תבניות מענה לקוח */}
+                    {q.templates && q.templates.length > 0 && (
+                      <div className="mt-4 p-3 bg-gradient-to-l from-orange-50 to-orange-100 dark:from-orange-950/20 dark:to-orange-900/10 border border-orange-200 dark:border-orange-800 rounded-lg">
+                        <div className="flex items-start gap-2">
+                          <Bot className="h-4 w-4 text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5" />
+                          <div className="flex-1">
+                            <span className="font-semibold text-orange-900 dark:text-orange-100">תבניות מענה לקוח:</span>
+                            <div className="mt-2 space-y-2">
+                              {q.templates.map((template, idx) => (
+                                <div key={idx} className="bg-white dark:bg-gray-800 border border-orange-200 dark:border-orange-700 rounded-lg p-3">
+                                  <div className="flex items-start justify-between gap-2">
+                                    <div className="flex-1">
+                                      <div className="flex items-center gap-2 mb-1">
+                                        <span className="font-semibold text-orange-900 dark:text-orange-100">{template.name}</span>
+                                        <span className="text-xs px-2 py-0.5 rounded-full bg-orange-200 dark:bg-orange-900 text-orange-800 dark:text-orange-200">
+                                          {template.type === 'standard' ? 'סטנדרט' : 
+                                           template.type === 'ai' ? 'AI' : 
+                                           template.type === 'reminder' ? 'תזכורת' : 
+                                           template.type === 'combined' ? 'משולב' : template.type}
+                                        </span>
+                                        <span className={`text-xs px-2 py-0.5 rounded-full ${
+                                          template.status === 'active' 
+                                            ? 'bg-green-200 dark:bg-green-900 text-green-800 dark:text-green-200' 
+                                            : 'bg-gray-200 dark:bg-gray-900 text-gray-800 dark:text-gray-200'
+                                        }`}>
+                                          {template.status === 'active' ? 'פעיל' : 'לא פעיל'}
+                                        </span>
+                                      </div>
+                                      <div className="flex items-center gap-3 text-xs text-orange-700 dark:text-orange-300">
+                                        {template.channels.includes('email') && (
+                                          <div className="flex items-center gap-1">
+                                            <Mail className="h-3 w-3" />
+                                            <span className="font-medium">📧</span>
+                                          </div>
+                                        )}
+                                        {template.channels.includes('whatsapp') && (
+                                          <div className="flex items-center gap-1">
+                                            <MessageCircle className="h-3 w-3" />
+                                            <span className="font-medium">📱</span>
+                                          </div>
+                                        )}
+                                        {template.channels.includes('message') && (
+                                          <div className="flex items-center gap-1">
+                                            <MessageSquare className="h-3 w-3" />
+                                            <span className="font-medium">💬</span>
+                                          </div>
+                                        )}
+                                        <div className="flex items-center gap-1 mr-2">
+                                          <span className="font-bold text-orange-800 dark:text-orange-200">{template.usageCount} שימושים</span>
+                                          <span className="text-orange-600">({template.sentCount} נשלחו)</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
                     {/* חלק שלישי: כלי הפעולה - מותאם לנייד */}
                     <div className="pt-3 sm:pt-4 border-t">
