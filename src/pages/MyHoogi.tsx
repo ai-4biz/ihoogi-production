@@ -464,11 +464,11 @@ const MyHoogi = () => {
                               <Bot className="h-4 w-4 text-orange-600 dark:text-orange-400" />
                               <h4 className="font-semibold text-sm text-orange-900 dark:text-orange-100">תבניות מענה לקוח</h4>
                             </div>
-                            <div className="space-y-2">
+                            <div className="flex flex-wrap gap-2">
                               {q.templates.map((template, idx) => (
                                 <div
                                   key={idx}
-                                  className="bg-orange-50 text-orange-800 border border-orange-200 px-3 py-2 rounded-lg cursor-pointer hover:bg-orange-100 transition-colors"
+                                  className="bg-orange-50 text-orange-800 border border-orange-200 px-3 py-2 rounded-lg cursor-pointer hover:bg-orange-100 transition-colors flex-1 min-w-[200px] max-w-[300px]"
                                   onClick={() => window.open(`/create-template?id=${template.id}&mode=edit`, '_blank')}
                                   title={`ערוך תבנית: ${template.name}`}
                                 >
