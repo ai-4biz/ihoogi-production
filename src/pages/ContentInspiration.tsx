@@ -470,62 +470,23 @@ const ContentInspiration = () => {
 
                     {/* תבניות מענה לקוח */}
                     {q.templates && q.templates.length > 0 && (
-                      <div className="mt-4 p-3 bg-gradient-to-l from-orange-50 to-orange-100 dark:from-orange-950/20 dark:to-orange-900/10 border border-orange-200 dark:border-orange-800 rounded-lg">
-                        <div className="flex items-start gap-2">
-                          <Bot className="h-4 w-4 text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5" />
-                          <div className="flex-1">
-                            <span className="font-semibold text-orange-900 dark:text-orange-100">תבניות מענה לקוח:</span>
-                            <div className="mt-2 space-y-2">
-                              {q.templates.map((template, idx) => (
-                                <div key={idx} className="bg-white dark:bg-gray-800 border border-orange-200 dark:border-orange-700 rounded-lg p-3">
-                                  <div className="flex items-start justify-between gap-2">
-                                    <div className="flex-1">
-                                      <div className="flex items-center gap-2 mb-1">
-                                        <span className="font-semibold text-orange-900 dark:text-orange-100">{template.name}</span>
-                                        <span className="text-xs px-2 py-0.5 rounded-full bg-orange-200 dark:bg-orange-900 text-orange-800 dark:text-orange-200">
-                                          {template.type === 'standard' ? 'סטנדרט' : 
-                                           template.type === 'ai' ? 'AI' : 
-                                           template.type === 'reminder' ? 'תזכורת' : 
-                                           template.type === 'combined' ? 'משולב' : template.type}
-                                        </span>
-                                        <span className={`text-xs px-2 py-0.5 rounded-full ${
-                                          template.status === 'active' 
-                                            ? 'bg-green-200 dark:bg-green-900 text-green-800 dark:text-green-200' 
-                                            : 'bg-gray-200 dark:bg-gray-900 text-gray-800 dark:text-gray-200'
-                                        }`}>
-                                          {template.status === 'active' ? 'פעיל' : 'לא פעיל'}
-                                        </span>
-                                      </div>
-                                      <div className="flex items-center gap-3 text-xs text-orange-700 dark:text-orange-300">
-                                        {template.channels.includes('email') && (
-                                          <div className="flex items-center gap-1">
-                                            <Mail className="h-3 w-3" />
-                                            <span className="font-medium">📧</span>
-                                          </div>
-                                        )}
-                                        {template.channels.includes('whatsapp') && (
-                                          <div className="flex items-center gap-1">
-                                            <MessageCircle className="h-3 w-3" />
-                                            <span className="font-medium">📱</span>
-                                          </div>
-                                        )}
-                                        {template.channels.includes('message') && (
-                                          <div className="flex items-center gap-1">
-                                            <MessageSquare className="h-3 w-3" />
-                                            <span className="font-medium">💬</span>
-                                          </div>
-                                        )}
-                                        <div className="flex items-center gap-1 mr-2">
-                                          <span className="font-bold text-orange-800 dark:text-orange-200">{template.usageCount} שימושים</span>
-                                          <span className="text-orange-600">({template.sentCount} נשלחו)</span>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
+                      <div className="mt-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Bot className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+                          <h4 className="font-semibold text-sm text-orange-900 dark:text-orange-100">תבניות מענה לקוח</h4>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {q.templates.map((template, idx) => (
+                            <div
+                              key={idx}
+                              className="bg-orange-100 text-orange-800 border border-orange-200 px-2 py-1.5 rounded text-xs flex items-center gap-1.5 cursor-pointer hover:bg-orange-200 transition-colors min-w-0 flex-shrink-0"
+                            >
+                              <span className="truncate font-medium">{template.name}</span>
+                              <span className="text-xs opacity-75 flex-shrink-0">
+                                ({template.usageCount} / {template.sentCount})
+                              </span>
                             </div>
-                          </div>
+                          ))}
                         </div>
                       </div>
                     )}
