@@ -89,7 +89,12 @@ const ContentInspiration = () => {
           channels: ["email"],
           status: "active",
           usageCount: 45,
-          sentCount: 12 
+          sentCount: 12,
+          channelStats: {
+            email: 12,
+            whatsapp: 0,
+            sms: 0
+          }
         },
         { 
           id: 2,
@@ -98,7 +103,12 @@ const ContentInspiration = () => {
           channels: ["email", "whatsapp"],
           status: "active",
           usageCount: 23,
-          sentCount: 8 
+          sentCount: 8,
+          channelStats: {
+            email: 5,
+            whatsapp: 3,
+            sms: 0
+          }
         }
       ]
     },
@@ -130,7 +140,12 @@ const ContentInspiration = () => {
           channels: ["whatsapp", "message"],
           status: "inactive",
           usageCount: 12,
-          sentCount: 5 
+          sentCount: 5,
+          channelStats: {
+            email: 0,
+            whatsapp: 3,
+            sms: 2
+          }
         },
         { 
           id: 4,
@@ -139,7 +154,12 @@ const ContentInspiration = () => {
           channels: ["email", "whatsapp", "message"],
           status: "active",
           usageCount: 67,
-          sentCount: 15 
+          sentCount: 15,
+          channelStats: {
+            email: 8,
+            whatsapp: 4,
+            sms: 3
+          }
         }
       ]
     },
@@ -468,7 +488,7 @@ const ContentInspiration = () => {
                       </div>
                     </div>
 
-                    {/* תבניות מענה לקוח */}
+                    {/* תבניות מענה לקוח - רק ערוצים שנשלחו מהם */}
                     {q.templates && q.templates.length > 0 && (
                       <div className="mt-4">
                         <div className="flex items-center gap-2 mb-2">
@@ -476,19 +496,33 @@ const ContentInspiration = () => {
                           <h4 className="font-semibold text-sm text-orange-900 dark:text-orange-100">תבניות מענה לקוח</h4>
                         </div>
                         <div className="flex flex-wrap gap-1.5">
-                          {q.templates.map((template, idx) => (
-                            <div
-                              key={idx}
-                              className="bg-orange-100 text-orange-800 border border-orange-200 px-2 py-1.5 rounded text-xs flex items-center gap-1.5 cursor-pointer hover:bg-orange-200 transition-colors min-w-0 flex-shrink-0"
-                              onClick={() => window.open(`/create-template?id=${template.id}&mode=edit`, '_blank')}
-                              title={`ערוך תבנית: ${template.name}`}
-                            >
-                              <span className="truncate font-medium">{template.name}</span>
-                              <span className="text-xs opacity-75 flex-shrink-0">
-                                ({template.usageCount} / {template.sentCount})
-                              </span>
-                            </div>
-                          ))}
+                          {q.templates.map((template, idx) => {
+                            // בנה רשימת ערוצים שנשלחו מהם
+                            const sentChannels = [];
+                            if (template.channelStats?.email > 0) {
+                              sentChannels.push(`${template.channelStats.email} מייל`);
+                            }
+                            if (template.channelStats?.whatsapp > 0) {
+                              sentChannels.push(`${template.channelStats.whatsapp} וואטסאפ`);
+                            }
+                            if (template.channelStats?.sms > 0) {
+                              sentChannels.push(`${template.channelStats.sms} SMS`);
+                            }
+                            
+                            return (
+                              <div
+                                key={idx}
+                                className="bg-orange-100 text-orange-800 border border-orange-200 px-2 py-1.5 rounded text-xs flex items-center gap-1.5 cursor-pointer hover:bg-orange-200 transition-colors min-w-0 flex-shrink-0"
+                                onClick={() => window.open(`/automations?tab=templates`, '_blank')}
+                                title={`ערוך תבנית: ${template.name}`}
+                              >
+                                <span className="truncate font-medium">{template.name}</span>
+                                <span className="text-xs opacity-75 flex-shrink-0">
+                                  ({sentChannels.join(', ')})
+                                </span>
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
                     )}
