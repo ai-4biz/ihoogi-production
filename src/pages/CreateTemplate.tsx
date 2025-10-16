@@ -1365,6 +1365,7 @@ const MyTemplatesTab: React.FC<MyTemplatesTabProps> = ({ onEditTemplate }) => {
       createdAt: "2024-01-15",
       lastUsed: "2024-01-20",
       usageCount: 45,
+      sentCount: 12,
       notes: "תבנית בסיסית למענה ללקוחות"
     },
     {
@@ -1376,6 +1377,7 @@ const MyTemplatesTab: React.FC<MyTemplatesTabProps> = ({ onEditTemplate }) => {
       createdAt: "2024-01-10",
       lastUsed: "2024-01-22",
       usageCount: 23,
+      sentCount: 8,
       notes: "מענה אוטומטי עם בינה מלאכותית"
     },
     {
@@ -1387,6 +1389,7 @@ const MyTemplatesTab: React.FC<MyTemplatesTabProps> = ({ onEditTemplate }) => {
       createdAt: "2024-01-05",
       lastUsed: "2024-01-18",
       usageCount: 12,
+      sentCount: 5,
       notes: "תזכורת אוטומטית ללקוחות"
     },
     {
@@ -1398,6 +1401,7 @@ const MyTemplatesTab: React.FC<MyTemplatesTabProps> = ({ onEditTemplate }) => {
       createdAt: "2024-01-12",
       lastUsed: "2024-01-21",
       usageCount: 67,
+      sentCount: 25,
       notes: "שילוב של AI ומענה אישי"
     }
   ]);
@@ -1487,7 +1491,7 @@ const MyTemplatesTab: React.FC<MyTemplatesTabProps> = ({ onEditTemplate }) => {
         <p className="text-gray-500 text-lg text-right">ניהול תבניות המענה שלך</p>
       </div>
 
-      {/* Stats */}
+      {/* Stats - רק כמות נשלחו */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div className="bg-blue-50 p-4 rounded-lg text-center">
           <div className="text-2xl font-bold text-blue-600">{templates.length}</div>
@@ -1501,15 +1505,15 @@ const MyTemplatesTab: React.FC<MyTemplatesTabProps> = ({ onEditTemplate }) => {
         </div>
         <div className="bg-purple-50 p-4 rounded-lg text-center">
           <div className="text-2xl font-bold text-purple-600">
-            {templates.reduce((sum, t) => sum + t.usageCount, 0)}
+            {templates.reduce((sum, t) => sum + (t.sentCount || 0), 0)}
           </div>
-          <div className="text-sm text-gray-600">סך שימושים</div>
+          <div className="text-sm text-gray-600">סך נשלחו</div>
         </div>
         <div className="bg-orange-50 p-4 rounded-lg text-center">
           <div className="text-2xl font-bold text-orange-600">
-            {Math.round(templates.reduce((sum, t) => sum + t.usageCount, 0) / templates.length) || 0}
+            {Math.round(templates.reduce((sum, t) => sum + (t.sentCount || 0), 0) / templates.length) || 0}
           </div>
-          <div className="text-sm text-gray-600">ממוצע שימושים</div>
+          <div className="text-sm text-gray-600">ממוצע נשלחו</div>
         </div>
       </div>
 
