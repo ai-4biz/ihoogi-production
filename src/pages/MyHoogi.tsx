@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { FileText, Plus, Users, Edit, Copy, BarChart3, Share2, Calendar, TrendingUp, AlertCircle, Zap, Eye } from "lucide-react";
+import { FileText, Plus, Users, Edit, Copy, BarChart3, Share2, Calendar, TrendingUp, AlertCircle, Zap, Eye, Mail, Smartphone, MessageCircle, Bot } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import MainLayout from "@/components/layout/MainLayout";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
@@ -22,6 +22,26 @@ const MyHoogi = () => {
       responses: { total: 0, new: 0 },
       sources: [],
       partners: [],
+      templates: [
+        { 
+          id: 1,
+          name: "תבנית מענה סטנדרטית", 
+          type: "standard",
+          channels: ["email"],
+          status: "active",
+          usageCount: 45,
+          sentCount: 12 
+        },
+        { 
+          id: 2,
+          name: "מענה AI מותאם", 
+          type: "ai",
+          channels: ["email", "whatsapp"],
+          status: "active",
+          usageCount: 23,
+          sentCount: 8 
+        }
+      ],
     },
     {
       id: "q-2", 
@@ -33,6 +53,26 @@ const MyHoogi = () => {
       responses: { total: 0, new: 0 },
       sources: [],
       partners: [],
+      templates: [
+        { 
+          id: 3,
+          name: "תבנית תזכורת שבועית", 
+          type: "reminder",
+          channels: ["whatsapp", "message"],
+          status: "inactive",
+          usageCount: 12,
+          sentCount: 5 
+        },
+        { 
+          id: 4,
+          name: "מענה משולב אישי", 
+          type: "combined",
+          channels: ["email", "whatsapp", "message"],
+          status: "active",
+          usageCount: 67,
+          sentCount: 15 
+        }
+      ],
     },
   ]);
 
@@ -396,6 +436,64 @@ const MyHoogi = () => {
                             <span className="text-foreground">{q.partners.length > 0 ? q.partners.length : 0}</span>
                           </div>
                         </div>
+
+                        {/* Customer Response Templates Section */}
+                        {q.templates && q.templates.length > 0 && (
+                          <div className="col-span-full mt-3 space-y-2">
+                            <h4 className="text-sm font-semibold text-muted-foreground">תבניות מענה לקוח:</h4>
+                            <div className="space-y-2">
+                              {q.templates.map((template, idx) => (
+                                <div key={idx} className="bg-gradient-to-l from-orange-50 to-orange-100 dark:from-orange-950/20 dark:to-orange-900/10 border border-orange-200 dark:border-orange-800 rounded-lg p-3">
+                                  <div className="flex items-start justify-between gap-2">
+                                    <div className="flex-1">
+                                      <div className="flex items-center gap-2 mb-1">
+                                        <Bot className="h-4 w-4 text-orange-600 dark:text-orange-400 flex-shrink-0" />
+                                        <span className="font-semibold text-orange-900 dark:text-orange-100">{template.name}</span>
+                                        <span className="text-xs px-2 py-0.5 rounded-full bg-orange-200 dark:bg-orange-900 text-orange-800 dark:text-orange-200">
+                                          {template.type === 'standard' ? 'סטנדרט' : 
+                                           template.type === 'ai' ? 'AI' : 
+                                           template.type === 'reminder' ? 'תזכורת' : 
+                                           template.type === 'combined' ? 'משולב' : template.type}
+                                        </span>
+                                        <span className={`text-xs px-2 py-0.5 rounded-full ${
+                                          template.status === 'active' 
+                                            ? 'bg-green-200 dark:bg-green-900 text-green-800 dark:text-green-200' 
+                                            : 'bg-gray-200 dark:bg-gray-900 text-gray-800 dark:text-gray-200'
+                                        }`}>
+                                          {template.status === 'active' ? 'פעיל' : 'לא פעיל'}
+                                        </span>
+                                      </div>
+                                      <div className="flex items-center gap-3 text-xs text-orange-700 dark:text-orange-300">
+                                        {template.channels.includes('email') && (
+                                          <div className="flex items-center gap-1">
+                                            <Mail className="h-3 w-3" />
+                                            <span className="font-medium">📧</span>
+                                          </div>
+                                        )}
+                                        {template.channels.includes('whatsapp') && (
+                                          <div className="flex items-center gap-1">
+                                            <Smartphone className="h-3 w-3" />
+                                            <span className="font-medium">📱</span>
+                                          </div>
+                                        )}
+                                        {template.channels.includes('message') && (
+                                          <div className="flex items-center gap-1">
+                                            <MessageCircle className="h-3 w-3" />
+                                            <span className="font-medium">💬</span>
+                                          </div>
+                                        )}
+                                        <div className="flex items-center gap-1 mr-2">
+                                          <span className="font-bold text-orange-800 dark:text-orange-200">{template.usageCount} שימושים</span>
+                                          <span className="text-orange-600">({template.sentCount} נשלחו)</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
 
                         {/* Action Buttons */}
                         <div className="flex gap-2">
