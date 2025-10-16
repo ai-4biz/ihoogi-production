@@ -420,121 +420,160 @@ const MyHoogi = () => {
                     onClick={() => navigate('/content-inspiration')}
                   >
                     <CardContent className="p-4">
-                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        {/* Right side - Title and Date */}
-                        <div className="flex items-center gap-3 flex-1">
-                          <div className="flex-1">
-                            <h3 className="text-lg font-bold text-foreground">{q.title}</h3>
-                            <p className="text-sm text-muted-foreground">{q.subtitle}</p>
+                      <div className="space-y-4">
+                        {/* שורה ראשונה - כל הנתונים */}
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                          {/* Right side - Title and Date */}
+                          <div className="flex items-center gap-3 flex-1">
+                            <div className="flex-1">
+                              <h3 className="text-lg font-bold text-foreground">{q.title}</h3>
+                              <p className="text-sm text-muted-foreground">{q.subtitle}</p>
+                            </div>
+                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                              <Calendar className="h-3 w-3" />
+                              <span>{q.date}</span>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                            <Calendar className="h-3 w-3" />
-                            <span>{q.date}</span>
+
+                          {/* Stats */}
+                          <div className="flex items-center gap-6">
+                            <div className="text-center">
+                              <div className="text-xl font-bold text-primary">{q.leads.total}</div>
+                              <div className="text-xs text-muted-foreground">לידים</div>
+                            </div>
+                            <div className="text-center">
+                              <div className="text-xl font-bold text-blue-600 dark:text-blue-400">{q.leads.new}</div>
+                              <div className="text-xs text-muted-foreground">חדשים</div>
+                            </div>
+                          </div>
+
+                          {/* Sources and Partners */}
+                          <div className="flex items-center gap-4 text-xs">
+                            <div className="flex gap-1">
+                              <span className="font-semibold text-muted-foreground">ערוצים: </span>
+                              <div className="flex gap-1">
+                                <div className="bg-blue-50 text-blue-800 border border-blue-200 px-1 py-0.5 rounded text-xs">
+                                  📧 מייל
+                                </div>
+                                <div className="bg-green-50 text-green-800 border border-green-200 px-1 py-0.5 rounded text-xs">
+                                  📱 וואטסאפ
+                                </div>
+                                <div className="bg-purple-50 text-purple-800 border border-purple-200 px-1 py-0.5 rounded text-xs">
+                                  📱 SMS
+                                </div>
+                              </div>
+                            </div>
+                            <div>
+                              <span className="font-semibold text-muted-foreground">שותפים: </span>
+                              <span className="text-foreground">{q.partners.length > 0 ? q.partners.length : 0}</span>
+                            </div>
+                          </div>
+
+                          {/* Action Buttons */}
+                          <div className="flex gap-2">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                window.open(`/questionnaire-view/${q.id}?mode=form`, '_blank');
+                              }}
+                            >
+                              <Eye className="h-4 w-4 ml-2" />
+                              הצגה
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(`/leads-responses?id=${q.id}&tab=analysis`);
+                              }}
+                            >
+                              <BarChart3 className="h-4 w-4 ml-2" />
+                              סטטיסטיקות
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(`/create-questionnaire?id=${q.id}&mode=edit`);
+                              }}
+                            >
+                              <Edit className="h-4 w-4 ml-2" />
+                              עריכה
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(`/distribution?id=${q.id}`);
+                              }}
+                            >
+                              <Share2 className="h-4 w-4 ml-2" />
+                              שיתוף
+                            </Button>
                           </div>
                         </div>
 
-                        {/* Stats */}
-                        <div className="flex items-center gap-6">
-                          <div className="text-center">
-                            <div className="text-xl font-bold text-primary">{q.leads.total}</div>
-                            <div className="text-xs text-muted-foreground">לידים</div>
-                          </div>
-                          <div className="text-center">
-                            <div className="text-xl font-bold text-blue-600 dark:text-blue-400">{q.leads.new}</div>
-                            <div className="text-xs text-muted-foreground">חדשים</div>
-                          </div>
-                        </div>
-
-
-                        {/* Sources and Partners */}
-                        <div className="flex items-center gap-4 text-xs">
-                          <div>
-                            <span className="font-semibold text-muted-foreground">ערוצים: </span>
-                            <span className="text-foreground">{q.sources.length > 0 ? q.sources.length : 0}</span>
-                          </div>
-                          <div>
-                            <span className="font-semibold text-muted-foreground">שותפים: </span>
-                            <span className="text-foreground">{q.partners.length > 0 ? q.partners.length : 0}</span>
-                          </div>
-                        </div>
-
-                        {/* Action Buttons */}
-                        <div className="flex gap-2">
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              window.open(`/questionnaire-view/${q.id}?mode=form`, '_blank');
-                            }}
-                          >
-                            <Eye className="h-4 w-4 ml-2" />
-                            הצגה
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              navigate(`/leads-responses?id=${q.id}&tab=analysis`);
-                            }}
-                          >
-                            <BarChart3 className="h-4 w-4 ml-2" />
-                            סטטיסטיקות
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              navigate(`/create-questionnaire?id=${q.id}&mode=edit`);
-                            }}
-                          >
-                            <Edit className="h-4 w-4 ml-2" />
-                            עריכה
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              navigate(`/distribution?id=${q.id}`);
-                            }}
-                          >
-                            <Share2 className="h-4 w-4 ml-2" />
-                            שיתוף
-                          </Button>
-                        </div>
-
-                        {/* Customer Response Templates Section - כותרת ומלבנים בשורה אחת */}
+                        {/* שורה שנייה - מענה ללקוח + המלבנים מפוצלים לערוצים */}
                         {q.templates && q.templates.length > 0 && (
-                          <div className="mt-4 pt-3 border-t border-gray-200">
+                          <div className="pt-3 border-t border-gray-200">
                             <div className="flex items-center justify-between gap-2">
                               <div className="flex gap-1 flex-1">
-                                {q.templates.map((template, idx) => (
-                                  <div
-                                    key={idx}
-                                    className="bg-orange-50 text-orange-800 border border-orange-200 px-2 py-1 rounded cursor-pointer hover:bg-orange-100 transition-colors flex-1 text-center"
-                                    onClick={() => window.open(`/create-template`, '_blank')}
-                                    title={`ערוך תבנית: ${template.name}`}
-                                  >
-                                    <div className="text-xs font-medium truncate">{template.name}</div>
-                                    <div className="text-xs text-orange-600 mt-0.5">
-                                      {template.channelStats.email > 0 && `${template.channelStats.email}📧`}
-                                      {template.channelStats.whatsapp > 0 && `${template.channelStats.whatsapp}📱`}
-                                      {template.channelStats.sms > 0 && `${template.channelStats.sms}📱`}
-                                    </div>
+                                {q.templates.map((template, templateIdx) => (
+                                  <div key={templateIdx} className="flex gap-1 flex-1">
+                                    {/* מייל */}
+                                    {template.channelStats.email > 0 && (
+                                      <div
+                                        className="bg-orange-50 text-orange-800 border border-orange-200 px-2 py-1 rounded cursor-pointer hover:bg-orange-100 transition-colors flex-1 text-center"
+                                        onClick={() => window.open(`/create-template`, '_blank')}
+                                        title={`ערוך תבנית: ${template.name} - מייל`}
+                                      >
+                                        <div className="text-xs font-medium truncate">{template.name}</div>
+                                        <div className="text-xs text-orange-600 mt-0.5">
+                                          {template.channelStats.email}📧
+                                        </div>
+                                      </div>
+                                    )}
+                                    {/* וואטסאפ */}
+                                    {template.channelStats.whatsapp > 0 && (
+                                      <div
+                                        className="bg-orange-50 text-orange-800 border border-orange-200 px-2 py-1 rounded cursor-pointer hover:bg-orange-100 transition-colors flex-1 text-center"
+                                        onClick={() => window.open(`/create-template`, '_blank')}
+                                        title={`ערוך תבנית: ${template.name} - וואטסאפ`}
+                                      >
+                                        <div className="text-xs font-medium truncate">{template.name}</div>
+                                        <div className="text-xs text-orange-600 mt-0.5">
+                                          {template.channelStats.whatsapp}📱
+                                        </div>
+                                      </div>
+                                    )}
+                                    {/* SMS */}
+                                    {template.channelStats.sms > 0 && (
+                                      <div
+                                        className="bg-orange-50 text-orange-800 border border-orange-200 px-2 py-1 rounded cursor-pointer hover:bg-orange-100 transition-colors flex-1 text-center"
+                                        onClick={() => window.open(`/create-template`, '_blank')}
+                                        title={`ערוך תבנית: ${template.name} - SMS`}
+                                      >
+                                        <div className="text-xs font-medium truncate">{template.name}</div>
+                                        <div className="text-xs text-orange-600 mt-0.5">
+                                          {template.channelStats.sms}📱
+                                        </div>
+                                      </div>
+                                    )}
                                   </div>
                                 ))}
                               </div>
                               <div className="flex items-center gap-2">
                                 <Bot className="h-4 w-4 text-orange-600 dark:text-orange-400" />
-                                <h4 className="font-semibold text-sm text-orange-900 dark:text-orange-100">תבניות מענה לקוח</h4>
+                                <h4 className="font-semibold text-sm text-orange-900 dark:text-orange-100">מענה ללקוח</h4>
                               </div>
                             </div>
                           </div>
                         )}
-
                       </div>
                     </CardContent>
                   </Card>
