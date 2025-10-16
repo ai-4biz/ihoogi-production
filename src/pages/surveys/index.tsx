@@ -27,9 +27,33 @@ const SurveysPage = () => {
       templateName: "תבנית מענה סטנדרטית",
       templateSentCount: 12,
       templates: [
-        { name: "תבנית מענה סטנדרטית", sentCount: 12 },
-        { name: "תבנית AI מותאמת", sentCount: 8 },
-        { name: "תבנית תזכורת", sentCount: 5 }
+        { 
+          id: 1,
+          name: "תבנית מענה סטנדרטית", 
+          type: "standard",
+          channels: ["email"],
+          status: "active",
+          usageCount: 45,
+          sentCount: 12 
+        },
+        { 
+          id: 2,
+          name: "מענה AI מותאם", 
+          type: "ai",
+          channels: ["email", "whatsapp"],
+          status: "active",
+          usageCount: 23,
+          sentCount: 8 
+        },
+        { 
+          id: 3,
+          name: "תבנית תזכורת שבועית", 
+          type: "reminder",
+          channels: ["whatsapp", "message"],
+          status: "inactive",
+          usageCount: 12,
+          sentCount: 5 
+        }
       ],
       sources: [
         { name: "פייסבוק", total: 15, new: 5, icon: Facebook, color: "bg-blue-500" },
@@ -60,9 +84,33 @@ const SurveysPage = () => {
       templateName: "מענה AI מותאם",
       templateSentCount: 28,
       templates: [
-        { name: "מענה AI מותאם", sentCount: 28 },
-        { name: "תבנית משולבת אישית", sentCount: 15 },
-        { name: "תבנית תזכורת שבועית", sentCount: 7 }
+        { 
+          id: 2,
+          name: "מענה AI מותאם", 
+          type: "ai",
+          channels: ["email", "whatsapp"],
+          status: "active",
+          usageCount: 23,
+          sentCount: 28 
+        },
+        { 
+          id: 4,
+          name: "מענה משולב אישי", 
+          type: "combined",
+          channels: ["email", "whatsapp", "message"],
+          status: "active",
+          usageCount: 67,
+          sentCount: 15 
+        },
+        { 
+          id: 3,
+          name: "תבנית תזכורת שבועית", 
+          type: "reminder",
+          channels: ["whatsapp", "message"],
+          status: "inactive",
+          usageCount: 12,
+          sentCount: 7 
+        }
       ],
       sources: [
         { name: "פייסבוק", total: 20, new: 8, icon: Facebook, color: "bg-blue-500" },
@@ -210,10 +258,54 @@ const SurveysPage = () => {
                               <FileText className="h-4 w-4 text-orange-600 flex-shrink-0 mt-0.5" />
                               <div className="flex-1">
                                 <span className="font-semibold text-orange-900">תבניות מענה מחוברות:</span>
-                                <div className="mt-1 space-y-1">
+                                <div className="mt-1 space-y-2">
                                   {q.templates.map((template, idx) => (
-                                    <div key={idx} className="text-orange-800">
-                                      • {template.name} <span className="text-orange-600">({template.sentCount} נשלחו)</span>
+                                    <div key={idx} className="bg-gradient-to-l from-orange-50 to-orange-100 dark:from-orange-950/20 dark:to-orange-900/10 border border-orange-200 dark:border-orange-800 rounded-lg p-3">
+                                      <div className="flex items-start justify-between gap-2">
+                                        <div className="flex-1">
+                                          <div className="flex items-center gap-2 mb-1">
+                                            <Bot className="h-4 w-4 text-orange-600 dark:text-orange-400 flex-shrink-0" />
+                                            <span className="font-semibold text-orange-900 dark:text-orange-100">{template.name}</span>
+                                            <span className="text-xs px-2 py-0.5 rounded-full bg-orange-200 dark:bg-orange-900 text-orange-800 dark:text-orange-200">
+                                              {template.type === 'standard' ? 'סטנדרט' : 
+                                               template.type === 'ai' ? 'AI' : 
+                                               template.type === 'reminder' ? 'תזכורת' : 
+                                               template.type === 'combined' ? 'משולב' : template.type}
+                                            </span>
+                                            <span className={`text-xs px-2 py-0.5 rounded-full ${
+                                              template.status === 'active' 
+                                                ? 'bg-green-200 dark:bg-green-900 text-green-800 dark:text-green-200' 
+                                                : 'bg-gray-200 dark:bg-gray-900 text-gray-800 dark:text-gray-200'
+                                            }`}>
+                                              {template.status === 'active' ? 'פעיל' : 'לא פעיל'}
+                                            </span>
+                                          </div>
+                                          <div className="flex items-center gap-3 text-xs text-orange-700 dark:text-orange-300">
+                                            {template.channels.includes('email') && (
+                                              <div className="flex items-center gap-1">
+                                                <Mail className="h-3 w-3" />
+                                                <span className="font-medium">📧</span>
+                                              </div>
+                                            )}
+                                            {template.channels.includes('whatsapp') && (
+                                              <div className="flex items-center gap-1">
+                                                <Smartphone className="h-3 w-3" />
+                                                <span className="font-medium">📱</span>
+                                              </div>
+                                            )}
+                                            {template.channels.includes('message') && (
+                                              <div className="flex items-center gap-1">
+                                                <MessageCircle className="h-3 w-3" />
+                                                <span className="font-medium">💬</span>
+                                              </div>
+                                            )}
+                                            <div className="flex items-center gap-1 mr-2">
+                                              <span className="font-bold text-orange-800 dark:text-orange-200">{template.usageCount} שימושים</span>
+                                              <span className="text-orange-600">({template.sentCount} נשלחו)</span>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
                                     </div>
                                   ))}
                                 </div>
