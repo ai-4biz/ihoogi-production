@@ -63,7 +63,7 @@ const ContentArea = ({ currentState, handleStateChange, isMobile, children }: Co
               ברוכים הבאים ל-<span className="text-primary">iHoogi</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-12 max-w-3xl mx-auto">
-              מערכת שאלונים חכמה שמייצרת לידים חמים, מרכזת הכל במקום אחד ומקדמת סגירות – אוטומטית.
+              i-Hoogi – אוספת, מנהלת ומתזכרת לידים, ועונה במקומך כדי שכל שיחה תסתיים במכירה
             </p>
 
             {/* Benefits Grid */}
