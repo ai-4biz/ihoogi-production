@@ -468,7 +468,7 @@ const MyHoogi = () => {
                               {q.templates.map((template, idx) => (
                                 <div
                                   key={idx}
-                                  className="bg-orange-50 text-orange-800 border border-orange-200 px-3 py-2 rounded-lg cursor-pointer hover:bg-orange-100 transition-colors flex-1 min-w-[200px] max-w-[300px]"
+                                  className="bg-orange-50 text-orange-800 border border-orange-200 px-3 py-2 rounded-lg cursor-pointer hover:bg-orange-100 transition-colors min-w-[200px] max-w-[300px]"
                                   onClick={() => window.open(`/create-template?id=${template.id}&mode=edit`, '_blank')}
                                   title={`ערוך תבנית: ${template.name}`}
                                 >
