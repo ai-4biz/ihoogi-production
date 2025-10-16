@@ -513,7 +513,7 @@ const ContentInspiration = () => {
                               <div
                                 key={idx}
                                 className="bg-orange-100 text-orange-800 border border-orange-200 px-2 py-1.5 rounded text-xs flex items-center gap-1.5 cursor-pointer hover:bg-orange-200 transition-colors min-w-0 flex-shrink-0"
-                                onClick={() => window.open(`/automations?tab=templates`, '_blank')}
+                                onClick={() => window.open(`/create-template`, '_blank')}
                                 title={`ערוך תבנית: ${template.name}`}
                               >
                                 <span className="truncate font-medium">{template.name}</span>
