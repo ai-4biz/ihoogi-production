@@ -25,6 +25,9 @@ type ContactSubject =
   | "customer-service" 
   | "billing" 
   | "bug" 
+  | "feature"
+  | "feedback"
+  | "usage"
   | "general";
 
 interface ContactForm {
@@ -41,6 +44,9 @@ const subjectToEmailMap: Record<ContactSubject, string> = {
   "customer-service": "service@example.com",
   "billing": "billing@example.com",
   "bug": "bugs@example.com",
+  "feature": "features@example.com",
+  "feedback": "feedback@example.com",
+  "usage": "support@example.com",
   "general": "info@example.com",
 };
 
@@ -50,6 +56,9 @@ const subjectOptions = [
   { value: "customer-service", label: "שירות לקוחות" },
   { value: "billing", label: "בעיה בתשלום" },
   { value: "bug", label: "דיווח על באג" },
+  { value: "feature", label: "בקשת פיצ'ר" },
+  { value: "feedback", label: "משוב על המוצר" },
+  { value: "usage", label: "שאלה על השימוש" },
   { value: "general", label: "שאלה כללית" },
 ];
 
@@ -253,19 +262,27 @@ const ContactDialog = ({ open, onOpenChange }: ContactDialogProps) => {
           
           <div className="space-y-2">
             <div className="flex items-center">
-              <Label htmlFor="file">קובץ מצורף (אופציונלי)</Label>
-              <HoogiTip tip="ניתן לצרף קבצים מסוג PDF, PNG, JPG" />
+              <Label htmlFor="file">תמונה או סרטון (אופציונלי)</Label>
+              <HoogiTip tip="ניתן לצרף תמונות (PNG, JPG), סרטונים (MP4, MOV, WEBM) או מסמכים (PDF)" />
             </div>
             <Input
               id="file"
               type="file"
               onChange={handleFileChange}
-              accept=".pdf,.png,.jpg,.jpeg"
+              accept=".pdf,.png,.jpg,.jpeg,.mp4,.mov,.avi,.webm"
             />
             {form.file && (
-              <p className="text-sm text-gray-500">
-                {form.file.name} ({Math.round(form.file.size / 1024)} KB)
-              </p>
+              <div className="mt-2 p-2 bg-gray-50 rounded-md border flex items-center gap-2">
+                {form.file.type.startsWith('image/') && <span>🖼️</span>}
+                {form.file.type.startsWith('video/') && <span>🎥</span>}
+                {form.file.type === 'application/pdf' && <span>📄</span>}
+                <div className="flex-1">
+                  <p className="text-sm font-medium">{form.file.name}</p>
+                  <p className="text-xs text-gray-500">
+                    {(form.file.size / 1024 / 1024).toFixed(2)} MB
+                  </p>
+                </div>
+              </div>
             )}
           </div>
           

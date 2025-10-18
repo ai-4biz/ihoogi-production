@@ -78,6 +78,14 @@ const NavigationButtons = ({
       color: "red"
     },
     {
+      id: "contact",
+      emoji: "✉️",
+      label: "צור קשר",
+      state: "contact" as ViewState,
+      active: currentState === "contact",
+      color: "pink"
+    },
+    {
       id: "messages",
       emoji: "💬",
       label: "הודעות",
@@ -114,12 +122,40 @@ const NavigationButtons = ({
       onClick: () => navigate("/partners")
     },
     {
-      id: "contact",
-      emoji: "✉️",
-      label: "צור קשר",
-      state: "contact" as ViewState,
-      active: currentState === "contact",
-      color: "pink"
+      id: "email-templates",
+      emoji: "📧",
+      label: "תבניות מייל",
+      state: "root" as ViewState,
+      active: window.location.pathname === "/admin/email-templates",
+      color: "blue",
+      onClick: () => navigate("/admin/email-templates")
+    },
+    {
+      id: "email-designs",
+      emoji: "🎨",
+      label: "עיצובי מייל",
+      state: "root" as ViewState,
+      active: window.location.pathname === "/admin/email-designs",
+      color: "purple",
+      onClick: () => navigate("/admin/email-designs")
+    },
+    {
+      id: "system-overview",
+      emoji: "📊",
+      label: "סקירה כללית",
+      state: "root" as ViewState,
+      active: window.location.pathname === "/admin/system-overview",
+      color: "indigo",
+      onClick: () => navigate("/admin/system-overview")
+    },
+    {
+      id: "contact-routing-settings",
+      emoji: "⚙️",
+      label: "הגדרות ניתוב",
+      state: "root" as ViewState,
+      active: window.location.pathname === "/admin/contact-routing",
+      color: "gray",
+      onClick: () => navigate("/admin/contact-routing")
     },
     {
       id: "subscriptions",
@@ -167,7 +203,7 @@ const NavigationButtons = ({
 
   return (
     <div className="grid grid-cols-3 gap-2 mx-auto" style={{ width: '200px' }}>
-      {buttons.slice(0, 12).map((button) => (
+      {buttons.slice(0, 20).map((button) => (
         <CircularButton
           key={button.id}
           id={button.id}

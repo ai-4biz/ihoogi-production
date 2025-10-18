@@ -30,6 +30,10 @@ import QuestionnaireView from "./pages/QuestionnaireView";
 import CreateTemplate from "./pages/CreateTemplate";
 import Notifications from "./pages/Notifications";
 import PartnersManagement from "./pages/PartnersManagement";
+import ContactRoutingSettings from "./pages/ContactRoutingSettings";
+import EmailTemplates from "./pages/EmailTemplates";
+import EmailDesigns from "./pages/EmailDesigns";
+import SystemOverview from "./pages/SystemOverview";
 import Onboarding from "./pages/Onboarding";
 import Messages from "./pages/Messages";
 import { UserProvider } from "@/hooks/use-user";
@@ -69,6 +73,10 @@ const App = () => {
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/partners" element={<PartnersManagement />} />
               <Route path="/messages" element={<Messages />} />
+              <Route path="/admin/contact-routing" element={<ContactRoutingSettings />} />
+              <Route path="/admin/email-templates" element={<EmailTemplates />} />
+              <Route path="/admin/email-designs" element={<EmailDesigns />} />
+              <Route path="/admin/system-overview" element={<SystemOverview />} />
               <Route path="/questionnaire-view/:id" element={<QuestionnaireView />} />
               <Route path="/questionnaire-view/preview" element={<QuestionnaireView />} />
               <Route path="/signup" element={<Signup />} />
