@@ -45,7 +45,7 @@ const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
     {
       icon: <MapPin className="w-8 h-8 text-primary" />,
       title: "מרכז במקום אחד",
-      description: "כל התשובות והלידים מרכזיים במקום אחד – לא משנה איפה ענו: פייסבוק, ווטסאפ, אתר או דף נחיתה."
+      description: "כל התשובות והלידים מרכזיים במקום אחד – לא משנה איפה ענו: רשתות חברתיות, ווטסאפ, אתר או דף נחיתה."
     },
     {
       icon: <Target className="w-8 h-8 text-primary" />,
@@ -55,7 +55,7 @@ const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
     {
       icon: <Zap className="w-8 h-8 text-primary" />,
       title: "אוטומציה שעובדת בשבילך",
-      description: "חוסכים זמן ומקדמים סיגרות עם אוטומציה חכמה שענווה ללקוח ומסננת את הזמינו החשוב."
+      description: "חוסכים זמן ומקדמים סגירה עם אוטומציה חכמה שעונה ללקוח, מסננת את המידע החשוב, שולחת מענה אוטומטי ומזכירה ליצור קשר."
     }
   ];
 
@@ -206,17 +206,23 @@ const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
               </Label>
             </div>
 
-            <Button 
-              type="submit" 
-              className="w-full py-6 text-lg"
-              disabled={!formData.termsAccepted}
-            >
-              הירשם עכשיו
-            </Button>
-
-            <p className="text-sm text-center text-muted-foreground">
-              כבר רשום/ה? <span className="text-primary cursor-pointer hover:underline" onClick={() => navigate("/login")}>התחבר/י כאן</span>
-            </p>
+            <div className="flex gap-4">
+              <Button 
+                type="button"
+                variant="outline"
+                className="flex-1 py-6 text-lg"
+                onClick={() => navigate("/login")}
+              >
+                התחבר
+              </Button>
+              <Button 
+                type="submit" 
+                className="flex-1 py-6 text-lg"
+                disabled={!formData.termsAccepted}
+              >
+                הירשם עכשיו
+              </Button>
+            </div>
           </form>
         </div>
       </div>
