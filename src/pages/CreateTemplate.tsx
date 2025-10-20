@@ -93,7 +93,7 @@ const CreateTemplate = () => {
   const [profileFile, setProfileFile] = useState<string>("");
   
   // Tab state
-  const [activeTab, setActiveTab] = useState<"templates" | "notifications" | "my-templates" | "customer-response">("templates");
+  const [activeTab, setActiveTab] = useState<"notifications" | "my-templates" | "customer-response">("customer-response");
   
   // Edit mode state
   const [editingTemplateId, setEditingTemplateId] = useState<number | null>(null);
@@ -268,10 +268,10 @@ const CreateTemplate = () => {
           {/* Tabs */}
           <Tabs 
             value={activeTab}
-            onValueChange={(value) => setActiveTab(value as "templates" | "notifications" | "my-templates" | "customer-response")}
+            onValueChange={(value) => setActiveTab(value as "notifications" | "my-templates" | "customer-response")}
             className="w-full mb-6"
           >
-            <TabsList className="grid grid-cols-4 gap-1 md:gap-2 mb-4 md:mb-6 w-full">
+            <TabsList className="grid grid-cols-3 gap-1 md:gap-2 mb-4 md:mb-6 w-full">
               <TabsTrigger 
                 value="notifications" 
                 className="flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm text-right px-2 md:px-4 py-2 md:py-3"
@@ -291,15 +291,6 @@ const CreateTemplate = () => {
               </TabsTrigger>
               
               <TabsTrigger 
-                value="templates" 
-                className="flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm text-right px-2 md:px-4 py-2 md:py-3"
-              >
-                <span className="hidden sm:inline">יצירת תבנית למענה לקוח</span>
-                <span className="sm:hidden">יצירת תבנית</span>
-                <Edit className="h-3 w-3 md:h-4 md:w-4" />
-              </TabsTrigger>
-              
-              <TabsTrigger 
                 value="customer-response" 
                 className="flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm text-right px-2 md:px-4 py-2 md:py-3"
               >
@@ -309,134 +300,22 @@ const CreateTemplate = () => {
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="templates" className="mt-2">
-              {/* Edit Mode Indicator */}
-              {isEditMode && (
-                <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-xl p-4 md:p-6 shadow-sm border border-green-200 mb-6">
-                  <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                    <div className="flex-1">
-                      <h3 className="text-base md:text-lg font-semibold text-foreground mb-2 text-right">
-                        עריכת תבנית
-                      </h3>
-                      <p className="text-sm text-gray-600 text-right">
-                        אתה עורך תבנית קיימת. ניתן לשנות את כל השדות ולשמור את השינויים.
-                      </p>
-                    </div>
-                    <Button 
-                      variant="outline"
-                      onClick={() => {
-                        setIsEditMode(false);
-                        setEditingTemplateId(null);
-                        setTemplateName("");
-                        setTemplateType("standard");
-                        setResponseType("new_customer");
-                        setSelectedChannels([]);
-                        setEmailSubject("");
-                        setEmailBody("");
-                        setMessageBody("");
-                        setCustomAiMessage("");
-                        toast.info("מצב עריכה בוטל - ניתן ליצור תבנית חדשה");
-                      }}
-                      className="flex items-center gap-2"
-                    >
-                      <Plus className="h-4 w-4" />
-                      צור תבנית חדשה
-                    </Button>
+            <TabsContent value="my-templates" className="mt-2">
+              {/* My Templates Content */}
+              <MyTemplatesTab onEditTemplate={loadTemplateForEdit} />
+            </TabsContent>
+
+            <TabsContent value="notifications" className="mt-2">
+              {/* Notifications content */}
+              <div className="space-y-6">
+                {/* Header */}
+                <div className="text-right mb-8">
+                  <div className="flex items-center justify-end gap-3 mb-4">
+                    <h1 className="text-2xl md:text-3xl font-bold text-foreground">ההתראות שלי</h1>
+                    <Bell className="h-8 w-8 text-blue-500" />
                   </div>
+                  <p className="text-gray-500 text-lg text-right">ניהול התראות והגדרות תזמון</p>
                 </div>
-              )}
-
-              {/* Main form section */}
-              <div className="space-y-4 md:space-y-6 mb-6">
-
-              {/* פרטים בסיסיים */}
-              <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl p-4 md:p-6 shadow-sm border border-primary/20 hover:shadow-md transition-shadow">
-                <h3 className="text-base md:text-lg font-semibold text-foreground mb-3 md:mb-4 text-right">פרטים בסיסיים</h3>
-              
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="template-name" className="text-sm font-medium mb-2 block text-right">שם התבנית</Label>
-                    <Input
-                      id="template-name"
-                      placeholder="הקלד שם לתבנית..."
-                      value={templateName}
-                      onChange={(e) => setTemplateName(e.target.value)}
-                      className="text-base text-right"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="template-type" className="text-sm font-medium mb-2 block text-right">סוג התבנית</Label>
-                    <Select value={templateType} onValueChange={(value: any) => setTemplateType(value)}>
-                      <SelectTrigger className="text-right">
-                        <SelectValue placeholder="בחר סוג תבנית" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="standard">
-                          <div className="flex items-center justify-end gap-2">
-                            <span>סטנדרט</span>
-                            <Star className="h-4 w-4 text-gray-500" />
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="ai">
-                          <div className="flex items-center justify-end gap-2">
-                            <span>AI</span>
-                            <Wand2 className="h-4 w-4 text-blue-500" />
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="personal">
-                          <div className="flex items-center justify-end gap-2">
-                            <span>משוב אישי</span>
-                            <Users className="h-4 w-4 text-green-500" />
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="combined">
-                          <div className="flex items-center justify-end gap-2">
-                            <span>AI משולב אישי</span>
-                            <Sparkles className="h-4 w-4 text-purple-500" />
-                          </div>
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <p className="text-xs text-muted-foreground mt-1 text-right">
-                      אפשרות תזכורת תלויה בסוג המנוי - לפיתוח עתידי
-                    </p>
-                  </div>
-
-                  {/* בחירת סוג המענה - תמיד מוצג */}
-                  <div>
-                    <Label className="text-sm font-medium mb-2 block text-right">סוג המענה <span className="text-red-500">*</span></Label>
-                    <div className="flex gap-3">
-                      <Button 
-                        variant={responseType === "reminder" ? "default" : "outline"}
-                        className="flex-1"
-                        onClick={() => setResponseType("reminder")}
-                      >
-                        תזכורת
-                      </Button>
-                      <Button 
-                        variant={responseType === "new_customer" ? "default" : "outline"}
-                        className="flex-1"
-                        onClick={() => setResponseType("new_customer")}
-                      >
-                        מענה ללקוח חדש
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* תבנית סטנדרטית - רק לסטנדרט */}
-              {templateType === "standard" && (
-                <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl p-4 md:p-6 shadow-sm border border-primary/20 hover:shadow-md transition-shadow">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-xl font-semibold text-right">תבנית סטנדרטית</h3>
-                      <Star className="h-5 w-5 text-primary" />
-                    </div>
-                    <div className="bg-primary text-primary-foreground px-3 py-1 rounded-lg text-sm font-medium">
-                      תבנית סטנדרט
-                    </div>
                   </div>
                   
                   <div className="space-y-4">
