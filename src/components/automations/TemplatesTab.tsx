@@ -27,7 +27,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
-import { Edit, Trash2, Star, Plus, ChevronDown, Upload } from "lucide-react";
+import { Edit, Trash2, Star, Plus, ChevronDown, Upload, Copy, MessageCircle } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface Template {
@@ -207,7 +207,7 @@ const TemplatesTab = () => {
     <TooltipProvider>
       <div className="space-y-6" dir="rtl">
       {/* Create Template Button - Top */}
-      <div className="flex justify-start mb-4">
+      <div className="flex justify-end mb-4" dir="rtl">
         <Button 
           onClick={handleCreateTemplate}
           className="bg-primary text-primary-foreground hover:bg-primary/90"
@@ -219,76 +219,121 @@ const TemplatesTab = () => {
 
       {/* Standard Template - Inline Editing */}
       <Card className="p-6 bg-primary/5 border-primary/20" dir="rtl">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <Star className="h-5 w-5 text-primary" />
-            <h2 className="text-xl font-semibold">תבנית סטנדרטית</h2>
+        <div className="flex items-start justify-between mb-4" dir="rtl">
+          <div className="flex gap-2" dir="rtl">
+            <div className="bg-green-500 text-white px-3 py-1 rounded-lg text-sm font-medium">
+              פעיל
+            </div>
+            <div className="bg-gray-500 text-white px-3 py-1 rounded-lg text-sm font-medium">
+              סטנדרט
+            </div>
           </div>
-          <div className="bg-primary text-primary-foreground px-3 py-1 rounded-lg text-sm font-medium">
-            תבנית סטנדרט
+          <div className="flex items-center gap-2" dir="rtl">
+            <h2 className="text-xl font-semibold text-right">תבנית מענה סטנדרטית</h2>
+            <Star className="h-5 w-5 text-primary" />
+          </div>
+        </div>
+        
+        {/* Template Details */}
+        <div className="mb-4" dir="rtl">
+          <div className="space-y-3">
+            <div className="flex items-center gap-2" dir="rtl">
+              <span className="text-sm">email</span>
+              <span className="text-sm">📧</span>
+            </div>
+            <div className="flex items-center gap-4" dir="rtl">
+              <span className="text-sm font-medium">2024-01-15</span>
+              <span className="text-sm text-gray-600">שימוש אחרון:</span>
+            </div>
+            <div className="flex items-center gap-4" dir="rtl">
+              <span className="text-sm font-medium">2024-01-20</span>
+              <span className="text-sm text-gray-600">נוצר:</span>
+            </div>
+            <div className="flex items-center gap-4" dir="rtl">
+              <span className="text-sm font-medium">45</span>
+              <span className="text-sm text-gray-600">סך שימושים:</span>
+            </div>
+            <div className="flex items-center gap-2" dir="rtl">
+              <span className="text-sm">✓</span>
+              <span className="text-sm text-gray-600">הערות:</span>
+            </div>
           </div>
         </div>
         
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>נושא ההודעה</Label>
+            <div className="space-y-2" dir="rtl">
+              <Label className="text-right">נושא ההודעה</Label>
               <Input 
                 value="קיבלנו את השאלון שלך - {{businessName}}"
                 className="text-right"
                 readOnly
+                dir="rtl"
               />
             </div>
-            <div className="space-y-2">
-              <Label>ערוץ שליחה</Label>
-              <div className="flex gap-2">
+            <div className="space-y-2" dir="rtl">
+              <Label className="text-right">ערוץ שליחה</Label>
+              <div className="flex gap-2 justify-end">
                 <Button variant="outline" size="sm" className="flex-1">מייל</Button>
                 <Button variant="outline" size="sm" className="flex-1">וואטסאפ</Button>
               </div>
             </div>
           </div>
           
-          <div className="space-y-2">
-            <Label>תוכן ההודעה (עד 2 שורות)</Label>
+          <div className="space-y-2" dir="rtl">
+            <Label className="text-right">תוכן ההודעה (עד 2 שורות)</Label>
             <Textarea 
               value="שלום {{firstName}},\nתודה שמילאת את השאלון שלנו. פנייתך התקבלה ואנו נחזור אליך בהקדם."
               className="min-h-[60px] max-h-[60px] resize-none text-right"
               rows={2}
+              dir="rtl"
             />
-            <p className="text-xs text-muted-foreground">מוגבל ל-2 שורות בלבד</p>
+            <p className="text-xs text-muted-foreground text-right">מוגבל ל-2 שורות בלבד</p>
           </div>
           
-          <div className="flex justify-end">
+          <div className="flex justify-end gap-2" dir="rtl">
             <Button variant="outline" size="sm">
               <Edit className="h-4 w-4 ml-2" />
-              ערוך תשובה
+              ערוך
+            </Button>
+            <Button variant="outline" size="sm">
+              <Copy className="h-4 w-4 ml-2" />
+              הכפל
+            </Button>
+            <Button variant="outline" size="sm">
+              <MessageCircle className="h-4 w-4 ml-2" />
+              הערות
+            </Button>
+            <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
+              <Trash2 className="h-4 w-4 ml-2" />
+              מחק
             </Button>
           </div>
         </div>
       </Card>
 
       {/* Template Builder */}
-      <Card className="p-6">
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-2">בניית תבניות</h2>
-          <p className="text-muted-foreground">צור תבניות מותאמות אישית למענה אוטומטי</p>
+      <Card className="p-6" dir="rtl">
+        <div className="mb-6" dir="rtl">
+          <h2 className="text-xl font-semibold mb-2 text-right">בניית תבניות</h2>
+          <p className="text-muted-foreground text-right">צור תבניות מותאמות אישית למענה אוטומטי</p>
         </div>
 
         {/* AI Template Options */}
         <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg mb-6 border border-blue-200" dir="rtl">
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 mb-4" dir="rtl">
             <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
               <span className="text-white text-sm font-bold">AI</span>
             </div>
-            <h3 className="text-lg font-semibold">תבנית AI</h3>
+            <h3 className="text-lg font-semibold text-right">תבנית AI</h3>
           </div>
           
-          <div className="space-y-4">
+          <div className="space-y-4" dir="rtl">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <Label>מיקום תגובת AI</Label>
+              <div className="space-y-2" dir="rtl">
+                <Label className="text-right">מיקום תגובת AI</Label>
                 <Select>
-                  <SelectTrigger className="text-right">
+                  <SelectTrigger className="text-right" dir="rtl">
                     <SelectValue placeholder="בחר מיקום" />
                   </SelectTrigger>
                   <SelectContent>
@@ -299,26 +344,27 @@ const TemplatesTab = () => {
                 </Select>
               </div>
               
-              <div className="space-y-2">
-                <Label>ערוצי שליחה</Label>
-                <div className="flex gap-2">
+              <div className="space-y-2" dir="rtl">
+                <Label className="text-right">ערוצי שליחה</Label>
+                <div className="flex gap-2 justify-end">
                   <Button variant="outline" size="sm" className="flex-1">מייל</Button>
                   <Button variant="outline" size="sm" className="flex-1">וואטסאפ</Button>
                 </div>
               </div>
               
-              <div className="space-y-2">
-                <Label>קישור (אופציונלי)</Label>
+              <div className="space-y-2" dir="rtl">
+                <Label className="text-right">קישור (אופציונלי)</Label>
                 <Input 
                   placeholder="https://example.com"
                   className="text-right"
+                  dir="ltr"
                 />
               </div>
             </div>
             
-            <div className="space-y-2">
-              <Label>העלאת קובץ (אופציונלי)</Label>
-              <div className="flex gap-2">
+            <div className="space-y-2" dir="rtl">
+              <Label className="text-right">העלאת קובץ (אופציונלי)</Label>
+              <div className="flex gap-2 justify-end">
                 <Input 
                   type="file"
                   accept="image/*,.pdf"
@@ -329,19 +375,20 @@ const TemplatesTab = () => {
                   בחר קובץ
                 </Button>
               </div>
-              <p className="text-xs text-muted-foreground">ניתן להעלות תמונות או מסמכי PDF</p>
+              <p className="text-xs text-muted-foreground text-right">ניתן להעלות תמונות או מסמכי PDF</p>
             </div>
             
-            <div className="space-y-2">
-              <Label>הודעת AI מותאמת אישית</Label>
+            <div className="space-y-2" dir="rtl">
+              <Label className="text-right">הודעת AI מותאמת אישית</Label>
               <Textarea 
                 placeholder="כתוב כאן את ההודעה שתופיע לפני או אחרי תגובת ה-AI..."
                 className="min-h-[80px] text-right"
                 rows={3}
+                dir="rtl"
               />
             </div>
             
-            <div className="flex justify-end">
+            <div className="flex justify-end" dir="rtl">
               <Button className="bg-blue-500 text-white hover:bg-blue-600">
                 <Plus className="h-4 w-4 ml-2" />
                 צור תבנית AI
@@ -351,11 +398,11 @@ const TemplatesTab = () => {
         </div>
 
         <div className="border rounded-md mb-6" dir="rtl">
-          <div className="p-4 border-b flex items-center justify-between bg-gray-50">
+          <div className="p-4 border-b flex items-center justify-between bg-gray-50" dir="rtl">
             <h3 className="font-medium text-right">תבניות קיימות</h3>
           </div>
           
-          <div className="divide-y">
+          <div className="divide-y" dir="rtl">
             {filteredTemplates.length > 0 ? (
               filteredTemplates.map(template => (
                 <div key={template.id} className="p-4 flex items-center justify-between hover:bg-gray-50" dir="rtl">
@@ -439,7 +486,7 @@ const TemplatesTab = () => {
               ))
             ) : (
               <div className="p-8 text-center text-gray-500" dir="rtl">
-                <p>אין תבניות עדיין עבור הקטגוריה הזו</p>
+                <p className="text-right">אין תבניות עדיין עבור הקטגוריה הזו</p>
                 <Button 
                   variant="outline" 
                   size="sm" 
@@ -455,16 +502,16 @@ const TemplatesTab = () => {
       </Card>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[420px]">
-          <DialogHeader>
-            <DialogTitle>
+        <DialogContent className="sm:max-w-[420px]" dir="rtl">
+          <DialogHeader dir="rtl">
+            <DialogTitle className="text-right">
               {isEditMode ? "עריכת תבנית" : "יצירת תבנית חדשה"}
             </DialogTitle>
           </DialogHeader>
           
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="template-name">שם תבנית</Label>
+          <div className="space-y-4" dir="rtl">
+            <div dir="rtl">
+              <Label htmlFor="template-name" className="text-right">שם תבנית</Label>
               <Input 
                 id="template-name"
                 value={currentTemplate?.name || ""} 
@@ -473,18 +520,19 @@ const TemplatesTab = () => {
                 )} 
                 placeholder="הזן שם לתבנית"
                 dir="rtl"
+                className="text-right"
               />
             </div>
 
-            <div>
-              <Label htmlFor="template-type">סוג תבנית</Label>
+            <div dir="rtl">
+              <Label htmlFor="template-type" className="text-right">סוג תבנית</Label>
               <Select 
                 value={currentTemplate?.templateType || "standard"} 
                 onValueChange={(value) => setCurrentTemplate(prev => 
                   prev ? {...prev, templateType: value as Template['templateType']} : null
                 )}
               >
-                <SelectTrigger id="template-type" className="w-full">
+                <SelectTrigger id="template-type" className="w-full text-right" dir="rtl">
                   <SelectValue placeholder="בחר סוג תבנית" />
                 </SelectTrigger>
                 <SelectContent>
@@ -497,9 +545,9 @@ const TemplatesTab = () => {
               </Select>
             </div>
 
-            <div>
-              <Label htmlFor="template-channels">ערוצי שליחה</Label>
-              <div className="flex gap-2">
+            <div dir="rtl">
+              <Label htmlFor="template-channels" className="text-right">ערוצי שליחה</Label>
+              <div className="flex gap-2 justify-end">
                 <Button 
                   variant={currentTemplate?.channel === "email" ? "default" : "outline"} 
                   size="sm" 
@@ -523,15 +571,15 @@ const TemplatesTab = () => {
               </div>
             </div>
 
-            <div>
-              <Label htmlFor="template-questionnaire">שאלון</Label>
+            <div dir="rtl">
+              <Label htmlFor="template-questionnaire" className="text-right">שאלון</Label>
               <Select 
                 value={currentTemplate?.questionnaireId || ""} 
                 onValueChange={(value) => setCurrentTemplate(prev => 
                   prev ? {...prev, questionnaireId: value} : null
                 )}
               >
-                <SelectTrigger id="template-questionnaire" className="w-full">
+                <SelectTrigger id="template-questionnaire" className="w-full text-right" dir="rtl">
                   <SelectValue placeholder="בחר שאלון" />
                 </SelectTrigger>
                 <SelectContent>
@@ -542,15 +590,15 @@ const TemplatesTab = () => {
               </Select>
             </div>
 
-            <div>
-              <Label htmlFor="template-reminder">תזכורת</Label>
+            <div dir="rtl">
+              <Label htmlFor="template-reminder" className="text-right">תזכורת</Label>
               <Select 
                 value={currentTemplate?.reminderStatus || ""} 
                 onValueChange={(value) => setCurrentTemplate(prev => 
                   prev ? {...prev, reminderStatus: value} : null
                 )}
               >
-                <SelectTrigger id="template-reminder" className="w-full">
+                <SelectTrigger id="template-reminder" className="w-full text-right" dir="rtl">
                   <SelectValue placeholder="בחר תזכורת" />
                 </SelectTrigger>
                 <SelectContent>
@@ -563,15 +611,15 @@ const TemplatesTab = () => {
             </div>
 
             {currentTemplate?.templateType === "reminder" && (
-              <div>
-                <Label htmlFor="lead-status">סטטוס ליד</Label>
+              <div dir="rtl">
+                <Label htmlFor="lead-status" className="text-right">סטטוס ליד</Label>
                 <Select 
                   value={currentTemplate?.leadStatus || ""} 
                   onValueChange={(value) => setCurrentTemplate(prev => 
                     prev ? {...prev, leadStatus: value} : null
                   )}
                 >
-                  <SelectTrigger id="lead-status" className="w-full">
+                  <SelectTrigger id="lead-status" className="w-full text-right" dir="rtl">
                     <SelectValue placeholder="בחר סטטוס ליד" />
                   </SelectTrigger>
                   <SelectContent>
@@ -586,8 +634,8 @@ const TemplatesTab = () => {
               </div>
             )}
 
-            <div>
-              <Label htmlFor="email-subject">נושא מייל</Label>
+            <div dir="rtl">
+              <Label htmlFor="email-subject" className="text-right">נושא מייל</Label>
               <Input 
                 id="email-subject"
                 value={currentTemplate?.subject || ""} 
@@ -596,29 +644,30 @@ const TemplatesTab = () => {
                 )} 
                 placeholder="הזן נושא למייל"
                 dir="rtl"
+                className="text-right"
               />
             </div>
 
-            <div>
-              <Label htmlFor="message-body">גוף ההודעה (עד 2 שורות)</Label>
+            <div dir="rtl">
+              <Label htmlFor="message-body" className="text-right">גוף ההודעה (עד 2 שורות)</Label>
               <Textarea 
                 id="message-body"
                 value={currentTemplate?.body || ""} 
                 onChange={(e) => setCurrentTemplate(prev => 
                   prev ? {...prev, body: e.target.value} : null
                 )} 
-                className="min-h-[60px] max-h-[60px] resize-none"
+                className="min-h-[60px] max-h-[60px] resize-none text-right"
                 placeholder="הזן את תוכן ההודעה (עד 2 שורות)"
                 dir="rtl"
                 rows={2}
               />
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-xs text-muted-foreground mt-1 text-right">
                 מוגבל ל-2 שורות בלבד
               </p>
             </div>
 
-            <div>
-              <Label htmlFor="template-link">קישור (אופציונלי)</Label>
+            <div dir="rtl">
+              <Label htmlFor="template-link" className="text-right">קישור (אופציונלי)</Label>
               <Input 
                 id="template-link"
                 value={currentTemplate?.imageUrl || ""} 
@@ -626,12 +675,13 @@ const TemplatesTab = () => {
                   prev ? {...prev, imageUrl: e.target.value} : null
                 )} 
                 placeholder="https://example.com"
-                dir="rtl"
+                dir="ltr"
+                className="text-left"
               />
             </div>
 
-            <div>
-              <Label htmlFor="template-file">העלאת קובץ (אופציונלי)</Label>
+            <div dir="rtl">
+              <Label htmlFor="template-file" className="text-right">העלאת קובץ (אופציונלי)</Label>
               <Input 
                 id="template-file"
                 type="file"
@@ -650,14 +700,14 @@ const TemplatesTab = () => {
                 }}
                 className="cursor-pointer"
               />
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-xs text-muted-foreground mt-1 text-right">
                 ניתן להעלות תמונות או מסמכי PDF
               </p>
             </div>
 
             {currentTemplate?.templateType !== 'standard' && (
-              <div>
-                <Label htmlFor="file-upload">העלאת קובץ או תמונה</Label>
+              <div dir="rtl">
+                <Label htmlFor="file-upload" className="text-right">העלאת קובץ או תמונה</Label>
                 <Input 
                   id="file-upload"
                   type="file"
@@ -678,11 +728,11 @@ const TemplatesTab = () => {
                   }}
                   className="cursor-pointer"
                 />
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-muted-foreground mt-1 text-right">
                   ניתן להעלות תמונות או קבצי PDF, Word
                 </p>
                 {currentTemplate?.imageUrl && (
-                  <p className="text-xs text-primary mt-2">
+                  <p className="text-xs text-primary mt-2 text-right">
                     קובץ נבחר: {currentTemplate.imageUrl}
                   </p>
                 )}
@@ -693,14 +743,15 @@ const TemplatesTab = () => {
               open={isCollapsibleOpen}
               onOpenChange={setIsCollapsibleOpen}
               className="w-full"
+              dir="rtl"
             >
               <CollapsibleTrigger asChild>
-                <div className="flex items-center text-sm text-blue-600 cursor-pointer">
+                <div className="flex items-center text-sm text-blue-600 cursor-pointer justify-end">
                   <ChevronDown className={`h-4 w-4 transition-transform ${isCollapsibleOpen ? 'transform rotate-180' : ''}`} />
                   <span className="mr-1">משתנים נתמכים</span>
                 </div>
               </CollapsibleTrigger>
-              <CollapsibleContent className="mt-2 p-2 bg-gray-50 rounded-md text-sm">
+              <CollapsibleContent className="mt-2 p-2 bg-gray-50 rounded-md text-sm" dir="rtl">
                 <div className="grid grid-cols-2 gap-2">
                   <div className="bg-gray-100 px-2 py-1 rounded">{"{{firstName}}"}</div>
                   <div className="bg-gray-100 px-2 py-1 rounded">{"{{lastName}}"}</div>
@@ -711,7 +762,7 @@ const TemplatesTab = () => {
               </CollapsibleContent>
             </Collapsible>
 
-            <div className="flex items-center space-x-2 rtl:space-x-reverse">
+            <div className="flex items-center space-x-2 rtl:space-x-reverse justify-end" dir="rtl">
               <Switch 
                 id="is-default"
                 checked={currentTemplate?.isDefault || false}
@@ -719,11 +770,11 @@ const TemplatesTab = () => {
                   prev ? {...prev, isDefault: checked} : null
                 )}
               />
-              <Label htmlFor="is-default">הפוך לברירת-מחדל לערוץ זה</Label>
+              <Label htmlFor="is-default" className="text-right">הפוך לברירת-מחדל לערוץ זה</Label>
             </div>
           </div>
 
-          <DialogFooter>
+          <DialogFooter dir="rtl">
             <Button variant="outline" asChild>
               <DialogClose>ביטול</DialogClose>
             </Button>

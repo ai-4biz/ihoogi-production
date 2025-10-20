@@ -35,10 +35,10 @@ const emailDesigns: EmailDesign[] = [
       description: "תבנית מעוצבת לקבלת פנים חמה למשתמשים חדשים",
       features: [
         "רקע גרדיאנט כחול-סגול",
-        "לוגו הוגי עם תגית 👋",
+        "לוגו iHoogi עם תגית 👋",
         "קופסת פרטי משתמש מעוצבת",
         "כפתור CTA בולט",
-        "טיפ מהוגי בקופסה צהובה"
+        "טיפ מ-iHoogi בקופסה צהובה"
       ],
       preview: "/email-preview-registration.png",
       htmlCode: `<!DOCTYPE html>
@@ -51,15 +51,15 @@ const emailDesigns: EmailDesign[] = [
   <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
     <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
       
-      <!-- Header with Hoogi Avatar -->
+      <!-- Header with iHoogi Avatar -->
       <div style="background: linear-gradient(135deg, hsl(221.2, 83.2%, 53.3%) 0%, hsl(217.2, 91.2%, 59.8%) 100%); padding: 40px 30px; text-align: center;">
         <div style="display: inline-block; position: relative;">
-          <img src="/hoogi-new-avatar.png" alt="Hoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
+          <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
           <div style="position: absolute; bottom: -5px; right: -5px; background: hsl(221.2, 83.2%, 53.3%); width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
             <span style="font-size: 16px;">👋</span>
           </div>
         </div>
-        <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0; font-weight: 700;">ברוכים הבאים ל-Hoogi!</h1>
+        <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0; font-weight: 700;">ברוכים הבאים ל-iHoogi!</h1>
       </div>
       
       <!-- Content -->
@@ -86,8 +86,8 @@ const emailDesigns: EmailDesign[] = [
       
       <!-- Footer -->
       <div style="background: linear-gradient(135deg, hsl(210, 40%, 98%) 0%, hsl(210, 40%, 96.1%) 100%); border-top: 2px solid hsl(214.3, 31.8%, 91.4%); padding: 30px; text-align: center;">
-        <p style="color: hsl(215.4, 16.3%, 46.9%); font-size: 13px;">© 2024 Hoogi. כל הזכויות שמורות.</p>
-        <p style="color: hsl(215, 20.2%, 65.1%); font-size: 12px; margin: 5px 0 0 0;">נוצר עם ❤️ על ידי צוות Hoogi</p>
+        <p style="color: hsl(215.4, 16.3%, 46.9%); font-size: 13px;">© 2024 iHoogi. כל הזכויות שמורות.</p>
+        <p style="color: hsl(215, 20.2%, 65.1%); font-size: 12px; margin: 5px 0 0 0;">נוצר עם ❤️ על ידי צוות iHoogi</p>
       </div>
       
     </div>
@@ -125,7 +125,7 @@ const emailDesigns: EmailDesign[] = [
       <!-- Header -->
       <div style="background: linear-gradient(135deg, hsl(221.2, 83.2%, 53.3%) 0%, hsl(217.2, 91.2%, 59.8%) 100%); padding: 40px 30px; text-align: center;">
         <div style="display: inline-block; position: relative;">
-          <img src="/hoogi-new-avatar.png" alt="Hoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
+          <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
           <div style="position: absolute; bottom: -5px; right: -5px; background: hsl(221.2, 83.2%, 53.3%); width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
             <span style="font-size: 16px;">🔐</span>
           </div>
@@ -196,7 +196,7 @@ const emailDesigns: EmailDesign[] = [
       <!-- Header -->
       <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px 30px; text-align: center;">
         <div style="display: inline-block; position: relative;">
-          <img src="/hoogi-new-avatar.png" alt="Hoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
+          <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
           <div style="position: absolute; bottom: -5px; right: -5px; background: #2D66F2; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
             <span style="font-size: 16px;">💬</span>
           </div>
@@ -259,7 +259,7 @@ const emailDesigns: EmailDesign[] = [
       <!-- Header -->
       <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); padding: 40px 30px; text-align: center;">
         <div style="display: inline-block; position: relative;">
-          <img src="/hoogi-new-avatar.png" alt="Hoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
+          <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
           <div style="position: absolute; bottom: -5px; right: -5px; background: #10b981; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
             <span style="font-size: 16px;">🤝</span>
           </div>
@@ -293,6 +293,407 @@ const emailDesigns: EmailDesign[] = [
   </div>
 </body>
 </html>`
+    },
+    {
+      id: "questionnaire-invitation",
+      name: "הזמנה לשאלון",
+      category: "marketing",
+      color: "purple",
+      gradient: "from-purple-500 to-purple-700",
+      emoji: "📋",
+      description: "תבנית סגולה להזמנות לשאלונים",
+      features: [
+        "רקע גרדיאנט סגול",
+        "לוגו iHoogi עם תגית 📋",
+        "פרטי שאלון בקופסה סגולה",
+        "כפתור CTA סגול",
+        "תיאור שאלון בכחול",
+        "תגמול מודגש"
+      ],
+      preview: "/email-preview-questionnaire.png",
+      htmlCode: `<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+  <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+    <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
+      
+      <!-- Header with iHoogi Avatar -->
+      <div style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); padding: 40px 30px; text-align: center;">
+        <div style="display: inline-block; position: relative;">
+          <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
+          <div style="position: absolute; bottom: -5px; right: -5px; background: #f59e0b; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
+            <span style="font-size: 16px;">📋</span>
+          </div>
+        </div>
+        <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0;">הזמנה לשאלון</h1>
+        <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin: 10px 0 0 0;">{{questionnaireTitle}} 🎯</p>
+      </div>
+      
+      <!-- Content -->
+      <div style="padding: 40px 30px; direction: rtl; text-align: right;">
+        <p style="font-size: 20px; color: #1f2937; font-weight: 600;">היי {{recipientName}},</p>
+        <p style="font-size: 16px; color: #4b5563; line-height: 1.6;">{{senderName}} הזמין אותך להשתתף בשאלון חשוב! 🎉</p>
+        
+        <!-- Questionnaire Info -->
+        <div style="background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); border-right: 5px solid #8b5cf6; padding: 25px; border-radius: 15px; margin: 30px 0;">
+          <h3 style="color: #6b21a8;">📊 פרטי השאלון</h3>
+          <div style="background: white; padding: 15px; border-radius: 10px;">
+            <p><strong style="color: #8b5cf6;">📝 כותרת:</strong> {{questionnaireTitle}}</p>
+            <p><strong style="color: #8b5cf6;">📅 תאריך:</strong> {{questionnaireDate}}</p>
+            <p><strong style="color: #8b5cf6;">⏱️ זמן משוער:</strong> {{estimatedTime}}</p>
+            <p><strong style="color: #8b5cf6;">🎁 תגמול:</strong> {{reward}}</p>
+          </div>
+        </div>
+        
+        <!-- CTA Button -->
+        <div style="text-align: center; margin: 40px 0;">
+          <a href="{{questionnaireLink}}" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 18px 40px; text-decoration: none; border-radius: 30px; font-weight: 700; font-size: 18px; display: inline-block;">
+            📋 התחל לענות על השאלון
+          </a>
+        </div>
+        
+        <!-- Description -->
+        <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-right: 5px solid #2D66F2; padding: 20px; border-radius: 15px; margin: 30px 0;">
+          <p style="margin: 0; color: #1e40af;">
+            <strong>📝 תיאור השאלון:</strong><br>
+            {{questionnaireDescription}}
+          </p>
+        </div>
+      </div>
+      
+      <!-- Footer -->
+      <div style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-top: 2px solid #e5e7eb; padding: 30px; text-align: center;">
+        <p style="color: #9ca3af; font-size: 13px;">© 2024 iHoogi. כל הזכויות שמורות.</p>
+        <p style="color: #d1d5db; font-size: 12px; margin: 5px 0 0 0;">נוצר עם ❤️ על ידי צוות iHoogi</p>
+      </div>
+      
+    </div>
+  </div>
+</body>
+</html>`
+    },
+    {
+      id: "questionnaire-reminder",
+      name: "תזכורת לשאלון",
+      category: "marketing",
+      color: "amber",
+      gradient: "from-amber-500 to-orange-600",
+      emoji: "⏰",
+      description: "תבנית כתומה לתזכורות שאלונים",
+      features: [
+        "רקע גרדיאנט כתום-ענבר",
+        "לוגו iHoogi עם תגית ⏰",
+        "קופסת דחיפות צהובה",
+        "כפתור CTA כתום",
+        "יתרונות השתתפות בירוק",
+        "הודעת זמן מוגבל"
+      ],
+      preview: "/email-preview-reminder.png",
+      htmlCode: `<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+  <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+    <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
+      
+      <!-- Header with iHoogi Avatar -->
+      <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); padding: 40px 30px; text-align: center;">
+        <div style="display: inline-block; position: relative;">
+          <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
+          <div style="position: absolute; bottom: -5px; right: -5px; background: #ef4444; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
+            <span style="font-size: 16px;">⏰</span>
+          </div>
+        </div>
+        <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0;">תזכורת לשאלון</h1>
+        <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin: 10px 0 0 0;">השאלון שלך מחכה לך! 🎯</p>
+      </div>
+      
+      <!-- Content -->
+      <div style="padding: 40px 30px; direction: rtl; text-align: right;">
+        <p style="font-size: 20px; color: #1f2937; font-weight: 600;">היי {{recipientName}},</p>
+        <p style="font-size: 16px; color: #4b5563; line-height: 1.6;">לא שכחתי אותך! 😊 השאלון עדיין מחכה לתגובה שלך.</p>
+        
+        <!-- Urgency Box -->
+        <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-right: 5px solid #f59e0b; padding: 25px; border-radius: 15px; margin: 30px 0;">
+          <h3 style="color: #92400e;">⚠️ זמן מוגבל!</h3>
+          <div style="background: white; padding: 15px; border-radius: 10px;">
+            <p style="color: #92400e;">
+              <strong>⏰ השאלון ייסגר בעוד {{timeLeft}}</strong><br>
+              אל תפספס את ההזדמנות לתת את הדעה שלך!
+            </p>
+          </div>
+        </div>
+        
+        <!-- CTA Button -->
+        <div style="text-align: center; margin: 40px 0;">
+          <a href="{{questionnaireLink}}" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 18px 40px; text-decoration: none; border-radius: 30px; font-weight: 700; font-size: 18px; display: inline-block;">
+            ⏰ השלם את השאלון עכשיו
+          </a>
+        </div>
+        
+        <!-- Benefits -->
+        <div style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-right: 5px solid #10b981; padding: 20px; border-radius: 15px; margin: 30px 0;">
+          <p style="margin: 0; color: #065f46;">
+            <strong>🎁 למה כדאי להשתתף?</strong><br>
+            • התגובה שלך תשפיע על השירות שלנו<br>
+            • תקבל {{reward}} כהערכה על ההשתתפות<br>
+            • זמן השאלון: רק {{estimatedTime}} דקות
+          </p>
+        </div>
+      </div>
+      
+      <!-- Footer -->
+      <div style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-top: 2px solid #e5e7eb; padding: 30px; text-align: center;">
+        <p style="color: #9ca3af; font-size: 13px;">© 2024 iHoogi. כל הזכויות שמורות.</p>
+        <p style="color: #d1d5db; font-size: 12px; margin: 5px 0 0 0;">נוצר עם ❤️ על ידי צוות iHoogi</p>
+      </div>
+      
+    </div>
+  </div>
+</body>
+</html>`
+    },
+    {
+      id: "thank-you-response",
+      name: "תודה על השתתפות",
+      category: "support",
+      color: "green",
+      gradient: "from-green-500 to-emerald-600",
+      emoji: "🎉",
+      description: "תבנית ירוקה להודעות תודה",
+      features: [
+        "רקע גרדיאנט ירוק-אזמרגד",
+        "לוגו iHoogi עם תגית 🎉",
+        "קופסת הצלחה ירוקה",
+        "קופסת תגמול צהובה",
+        "כפתור CTA ירוק",
+        "הודעת תודה חמה"
+      ],
+      preview: "/email-preview-thankyou.png",
+      htmlCode: `<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+  <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+    <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
+      
+      <!-- Header with iHoogi Avatar -->
+      <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px 30px; text-align: center;">
+        <div style="display: inline-block; position: relative;">
+          <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
+          <div style="position: absolute; bottom: -5px; right: -5px; background: #f59e0b; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
+            <span style="font-size: 16px;">🎉</span>
+          </div>
+        </div>
+        <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0;">תודה רבה!</h1>
+        <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin: 10px 0 0 0;">השלמת את השאלון בהצלחה! 🎯</p>
+      </div>
+      
+      <!-- Content -->
+      <div style="padding: 40px 30px; direction: rtl; text-align: right;">
+        <p style="font-size: 20px; color: #1f2937; font-weight: 600;">היי {{recipientName}},</p>
+        <p style="font-size: 16px; color: #4b5563; line-height: 1.6;">וואו! 🎉 השלמת את השאלון בהצלחה! תודה רבה על הזמן והמאמץ שהשקעת.</p>
+        
+        <!-- Success Box -->
+        <div style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-right: 5px solid #10b981; padding: 25px; border-radius: 15px; margin: 30px 0;">
+          <h3 style="color: #065f46;">✅ השאלון הושלם!</h3>
+          <div style="background: white; padding: 15px; border-radius: 10px;">
+            <p><strong style="color: #10b981;">📝 שאלון:</strong> {{questionnaireTitle}}</p>
+            <p><strong style="color: #10b981;">📅 תאריך השלמה:</strong> {{completionDate}}</p>
+            <p><strong style="color: #10b981;">⏱️ זמן השקעת:</strong> {{timeSpent}}</p>
+          </div>
+        </div>
+        
+        <!-- Reward Box -->
+        <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-right: 5px solid #f59e0b; padding: 25px; border-radius: 15px; margin: 30px 0;">
+          <h3 style="color: #92400e;">🎁 התגמול שלך!</h3>
+          <div style="background: white; padding: 15px; border-radius: 10px;">
+            <p style="color: #92400e;">
+              <strong>🎉 {{reward}}</strong><br>
+              תודה על ההשתתפות! התגובה שלך עוזרת לנו לשפר את השירות.
+            </p>
+          </div>
+        </div>
+        
+        <!-- Next Steps -->
+        <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-right: 5px solid #2D66F2; padding: 20px; border-radius: 15px; margin: 30px 0;">
+          <p style="margin: 0; color: #1e40af;">
+            <strong>📊 מה הלאה?</strong><br>
+            {{nextSteps}}
+          </p>
+        </div>
+      </div>
+      
+      <!-- Footer -->
+      <div style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-top: 2px solid #e5e7eb; padding: 30px; text-align: center;">
+        <p style="color: #9ca3af; font-size: 13px;">© 2024 iHoogi. כל הזכויות שמורות.</p>
+        <p style="color: #d1d5db; font-size: 12px; margin: 5px 0 0 0;">נוצר עם ❤️ על ידי צוות iHoogi</p>
+      </div>
+      
+    </div>
+  </div>
+</body>
+</html>`
+    },
+    {
+      id: "error-notification",
+      name: "הודעת שגיאה",
+      category: "support",
+      color: "red",
+      gradient: "from-red-500 to-red-700",
+      emoji: "⚠️",
+      description: "תבנית אדומה להודעות שגיאה",
+      features: [
+        "רקע גרדיאנט אדום",
+        "לוגו iHoogi עם תגית ⚠️",
+        "קופסת פרטי שגיאה אדומה",
+        "קופסת סטטוס תיקון צהובה",
+        "כפתור תמיכה אדום",
+        "הודעת התנצלות חמה"
+      ],
+      preview: "/email-preview-error.png",
+      htmlCode: `<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+  <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+    <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
+      
+      <!-- Header with iHoogi Avatar -->
+      <div style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); padding: 40px 30px; text-align: center;">
+        <div style="display: inline-block; position: relative;">
+          <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
+          <div style="position: absolute; bottom: -5px; right: -5px; background: #f59e0b; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
+            <span style="font-size: 16px;">⚠️</span>
+          </div>
+        </div>
+        <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0;">הודעת שגיאה</h1>
+        <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin: 10px 0 0 0;">{{errorType}} 🚨</p>
+      </div>
+      
+      <!-- Content -->
+      <div style="padding: 40px 30px; direction: rtl; text-align: right;">
+        <p style="font-size: 20px; color: #1f2937; font-weight: 600;">היי {{userName}},</p>
+        <p style="font-size: 16px; color: #4b5563; line-height: 1.6;">אופס! 😅 קרתה שגיאה במערכת. אני כבר עובד על התיקון!</p>
+        
+        <!-- Error Details -->
+        <div style="background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); border-right: 5px solid #ef4444; padding: 25px; border-radius: 15px; margin: 30px 0;">
+          <h3 style="color: #991b1b;">🔍 פרטי השגיאה</h3>
+          <div style="background: white; padding: 15px; border-radius: 10px;">
+            <p><strong style="color: #ef4444;">⚠️ סוג שגיאה:</strong> {{errorType}}</p>
+            <p><strong style="color: #ef4444;">📅 תאריך:</strong> {{errorDate}}</p>
+            <p><strong style="color: #ef4444;">🕐 שעה:</strong> {{errorTime}}</p>
+            <p><strong style="color: #ef4444;">📝 תיאור:</strong> {{errorDescription}}</p>
+          </div>
+        </div>
+        
+        <!-- Status Box -->
+        <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-right: 5px solid #f59e0b; padding: 25px; border-radius: 15px; margin: 30px 0;">
+          <h3 style="color: #92400e;">🔧 סטטוס התיקון</h3>
+          <div style="background: white; padding: 15px; border-radius: 10px;">
+            <p style="color: #92400e;">
+              <strong>🔄 {{fixStatus}}</strong><br>
+              {{fixDescription}}
+            </p>
+          </div>
+        </div>
+        
+        <!-- CTA Button -->
+        <div style="text-align: center; margin: 40px 0;">
+          <a href="{{supportLink}}" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; padding: 18px 40px; text-decoration: none; border-radius: 30px; font-weight: 700; font-size: 18px; display: inline-block;">
+            📞 פנה לתמיכה
+          </a>
+        </div>
+        
+        <!-- Apology -->
+        <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-right: 5px solid #2D66F2; padding: 20px; border-radius: 15px; margin: 30px 0;">
+          <p style="margin: 0; color: #1e40af;">
+            <strong>🙏 סליחה על אי הנוחות!</strong><br>
+            אנחנו עובדים קשה כדי לתקן את הבעיה במהירות האפשרית. אם יש לך שאלות נוספות, אני כאן לעזור!
+          </p>
+        </div>
+      </div>
+      
+      <!-- Footer -->
+      <div style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-top: 2px solid #e5e7eb; padding: 30px; text-align: center;">
+        <p style="color: #9ca3af; font-size: 13px;">© 2024 iHoogi. כל הזכויות שמורות.</p>
+        <p style="color: #d1d5db; font-size: 12px; margin: 5px 0 0 0;">נוצר עם ❤️ על ידי צוות iHoogi</p>
+      </div>
+      
+    </div>
+  </div>
+</body>
+</html>`
+    },
+    {
+      id: "subscription-change",
+      name: "שינוי מנוי",
+      category: "support",
+      color: "purple",
+      gradient: "from-purple-600 to-purple-700",
+      emoji: "📋",
+      description: "תבנית סגולה לשינויי מנוי",
+      features: [
+        "רקע גרדיאנט סגול",
+        "לוגו iHoogi עם תגית 📋",
+        "פרטי שינוי בקופסה סגולה",
+        "יתרונות מנוי בירוק",
+        "מידע חשוב בצהוב",
+        "הודעה ניטרלית מיגדרית"
+      ],
+      preview: "/email-preview-subscription.png",
+      htmlCode: `<!-- שינוי מנוי template HTML code here -->`
+    },
+    {
+      id: "receipt",
+      name: "קבלה",
+      category: "support", 
+      color: "green",
+      gradient: "from-green-600 to-green-700",
+      emoji: "💰",
+      description: "תבנית ירוקה לקבלות תשלום",
+      features: [
+        "רקע גרדיאנט ירוק",
+        "לוגו iHoogi עם תגית 💰",
+        "פרטי קבלה בירוק בהיר",
+        "סיכום תשלום בכחול",
+        "השלבים הבאים בצהוב",
+        "הודעה ניטרלית מיגדרית"
+      ],
+      preview: "/email-preview-receipt.png",
+      htmlCode: `<!-- קבלה template HTML code here -->`
+    },
+    {
+      id: "invoice",
+      name: "חשבונית",
+      category: "support",
+      color: "red",
+      gradient: "from-red-600 to-red-700", 
+      emoji: "📋",
+      description: "תבנית אדומה לחשבוניות",
+      features: [
+        "רקע גרדיאנט אדום",
+        "לוגו iHoogi עם תגית 📋",
+        "פרטי חשבונית מעוצבים",
+        "טבלת פריטים מסודרת",
+        "סיכום תשלום בולט",
+        "הודעה ניטרלית מיגדרית"
+      ],
+      preview: "/email-preview-invoice.png",
+      htmlCode: `<!-- חשבונית template HTML code here -->`
     }
   ];
 

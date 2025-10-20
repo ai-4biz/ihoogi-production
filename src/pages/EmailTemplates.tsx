@@ -46,7 +46,7 @@ const EmailTemplates = () => {
         id: "1",
         name: "אישור הרשמה",
         type: "registration",
-        subject: "ברוכים הבאים ל-Hoogi! 🎉",
+        subject: "ברוכים הבאים ל-iHoogi! 🎉",
         htmlContent: `
           <!DOCTYPE html>
           <html dir="rtl" lang="he">
@@ -58,22 +58,22 @@ const EmailTemplates = () => {
             <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
               <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
                 
-                <!-- Header with Hoogi Avatar -->
+                <!-- Header with iHoogi Avatar -->
                 <div style="background: linear-gradient(135deg, #2D66F2 0%, #1e40af 100%); padding: 40px 30px; text-align: center; position: relative;">
                   <div style="display: inline-block; position: relative;">
-                    <img src="/hoogi-new-avatar.png" alt="Hoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2); background: white;">
+                    <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2); background: white;">
                     <div style="position: absolute; bottom: -5px; right: -5px; background: #10b981; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
                       <span style="font-size: 16px;">👋</span>
                     </div>
                   </div>
-                  <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0; font-weight: 700; text-shadow: 0 2px 10px rgba(0,0,0,0.1);">ברוכים הבאים ל-Hoogi!</h1>
+                  <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0; font-weight: 700; text-shadow: 0 2px 10px rgba(0,0,0,0.1);">ברוכים הבאים ל-iHoogi!</h1>
                   <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin: 10px 0 0 0;">הפלטפורמה החכמה ליצירת שאלונים 🚀</p>
                 </div>
                 
                 <!-- Content -->
                 <div style="padding: 40px 30px; direction: rtl; text-align: right;">
                   <p style="font-size: 20px; margin-bottom: 15px; color: #1f2937; font-weight: 600;">היי {{userName}},</p>
-                  <p style="font-size: 16px; margin-bottom: 25px; color: #4b5563; line-height: 1.6;">תודה רבה שהצטרפת אלינו! 🎉 החשבון שלך נוצר בהצלחה ואני מוכן לעזור לך ליצור שאלונים מדהימים.</p>
+                  <p style="font-size: 16px; margin-bottom: 25px; color: #4b5563; line-height: 1.6;">תודה רבה שהצטרפתם אלינו! 🎉 החשבון שלכם נוצר בהצלחה ו-iHoogi מוכן לעזור לכם ליצור שאלונים מדהימים.</p>
                   
                   <!-- Info Box -->
                   <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-right: 5px solid #2D66F2; padding: 25px; border-radius: 15px; margin: 30px 0; box-shadow: 0 4px 15px rgba(45, 102, 242, 0.1);">
@@ -97,14 +97,14 @@ const EmailTemplates = () => {
                   <!-- Tips Box -->
                   <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-right: 5px solid #f59e0b; padding: 20px; border-radius: 15px; margin: 30px 0;">
                     <p style="margin: 0; color: #92400e; font-size: 15px; line-height: 1.6;">
-                      <strong style="font-size: 16px;">💡 טיפ מהוגי:</strong><br>
-                      התחל עם שאלון פשוט ותראה איך אני עוזר לך לקבל תובנות מדהימות מהתגובות! 
+                      <strong style="font-size: 16px;">💡 טיפ מ-iHoogi:</strong><br>
+                      התחילו עם שאלון פשוט ותראו איך iHoogi עוזר לכם לקבל תובנות מדהימות מהתגובות! 
                     </p>
                   </div>
                   
                   <p style="font-size: 15px; color: #6b7280; margin-top: 30px; text-align: center; line-height: 1.6;">
-                    יש לך שאלות? אני כאן בשבילך! 💬<br>
-                    פשוט שלח לי הודעה ואשמח לעזור.
+                    יש לכם שאלות? iHoogi כאן בשבילכם! 💬<br>
+                    פשוט שלחו הודעה ואנחנו נשמח לעזור.
                   </p>
                 </div>
                 
@@ -114,8 +114,8 @@ const EmailTemplates = () => {
                     <a href="{{supportLink}}" style="color: #2D66F2; text-decoration: none; margin: 0 15px; font-size: 14px; font-weight: 600;">📞 תמיכה</a>
                     <a href="{{privacyLink}}" style="color: #2D66F2; text-decoration: none; margin: 0 15px; font-size: 14px; font-weight: 600;">🔒 פרטיות</a>
                   </div>
-                  <p style="color: #9ca3af; font-size: 13px; margin: 10px 0 0 0;">© 2024 Hoogi - הפלטפורמה החכמה ליצירת שאלונים. כל הזכויות שמורות.</p>
-                  <p style="color: #d1d5db; font-size: 12px; margin: 5px 0 0 0;">נוצר עם ❤️ על ידי צוות Hoogi</p>
+                  <p style="color: #9ca3af; font-size: 13px; margin: 10px 0 0 0;">© 2024 iHoogi - הפלטפורמה החכמה ליצירת שאלונים. כל הזכויות שמורות.</p>
+                  <p style="color: #d1d5db; font-size: 12px; margin: 5px 0 0 0;">נוצר עם ❤️ על ידי צוות iHoogi</p>
                 </div>
                 
               </div>
@@ -124,11 +124,11 @@ const EmailTemplates = () => {
           </html>
         `,
         textContent: `
-          ברוכים הבאים ל-Hoogi!
+          ברוכים הבאים ל-iHoogi!
           
           שלום {{userName}},
           
-          תודה שהצטרפת אלינו! החשבון שלך נוצר בהצלחה.
+          תודה שהצטרפתם אלינו! החשבון שלכם נוצר בהצלחה.
           
           פרטי החשבון שלך:
           - אימייל: {{userEmail}}
@@ -136,9 +136,9 @@ const EmailTemplates = () => {
           
           התחל ליצור שאלונים: {{loginLink}}
           
-          אם יש לך שאלות, אנחנו כאן לעזור!
+          אם יש לכם שאלות, iHoogi כאן לעזור!
           
-          © 2024 Hoogi. כל הזכויות שמורות.
+          © 2024 iHoogi. כל הזכויות שמורות.
         `,
         variables: ["userName", "userEmail", "registrationDate", "loginLink", "supportLink", "privacyLink"],
         isActive: true
@@ -147,7 +147,7 @@ const EmailTemplates = () => {
         id: "2",
         name: "איפוס סיסמה",
         type: "password-reset",
-        subject: "איפוס סיסמה - Hoogi",
+        subject: "איפוס סיסמה - iHoogi",
         htmlContent: `
           <!DOCTYPE html>
           <html dir="rtl" lang="he">
@@ -159,22 +159,22 @@ const EmailTemplates = () => {
             <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
               <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
                 
-                <!-- Header with Hoogi Avatar -->
+                <!-- Header with iHoogi Avatar -->
                 <div style="background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); padding: 40px 30px; text-align: center; position: relative;">
                   <div style="display: inline-block; position: relative;">
-                    <img src="/hoogi-new-avatar.png" alt="Hoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2); background: white;">
+                    <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2); background: white;">
                     <div style="position: absolute; bottom: -5px; right: -5px; background: #ef4444; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
                       <span style="font-size: 16px;">🔐</span>
                     </div>
                   </div>
                   <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0; font-weight: 700; text-shadow: 0 2px 10px rgba(0,0,0,0.1);">איפוס סיסמה</h1>
-                  <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin: 10px 0 0 0;">בקשת איפוס סיסמה לחשבון שלך 🔒</p>
+                    <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin: 10px 0 0 0;">בקשת איפוס סיסמה לחשבון שלכם 🔒</p>
                 </div>
                 
                 <!-- Content -->
                 <div style="padding: 40px 30px; direction: rtl; text-align: right;">
                   <p style="font-size: 20px; margin-bottom: 15px; color: #1f2937; font-weight: 600;">היי {{userName}},</p>
-                  <p style="font-size: 16px; margin-bottom: 25px; color: #4b5563; line-height: 1.6;">קיבלתי את הבקשה שלך לאיפוס סיסמה. אל דאגה, אני כאן לעזור! 🤝</p>
+                  <p style="font-size: 16px; margin-bottom: 25px; color: #4b5563; line-height: 1.6;">קיבלנו את הבקשה שלכם לאיפוס סיסמה. אל דאגה, iHoogi כאן לעזור! 🤝</p>
                   
                   <!-- Warning Box -->
                   <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-right: 5px solid #f59e0b; padding: 25px; border-radius: 15px; margin: 30px 0; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);">
@@ -185,7 +185,7 @@ const EmailTemplates = () => {
                     <div style="background: white; padding: 15px; border-radius: 10px;">
                       <p style="margin: 8px 0; color: #92400e; font-size: 15px; line-height: 1.6;">
                         <strong>🕐 הקישור תקף ל-{{expiryHours}} שעות בלבד</strong><br>
-                        אם לא ביקשת איפוס סיסמה, אתה יכול להתעלם מהמייל הזה והסיסמה שלך תישאר ללא שינוי.
+                        אם לא ביקשתם איפוס סיסמה, אתם יכולים להתעלם מהמייל הזה והסיסמה שלכם תישאר ללא שינוי.
                       </p>
                     </div>
                   </div>
@@ -193,7 +193,7 @@ const EmailTemplates = () => {
                   <!-- CTA Button -->
                   <div style="text-align: center; margin: 40px 0;">
                     <a href="{{resetLink}}" style="background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); color: white; padding: 18px 40px; text-decoration: none; border-radius: 30px; font-weight: 700; font-size: 18px; display: inline-block; box-shadow: 0 10px 30px rgba(220, 38, 38, 0.4);">
-                      🔐 אפס את הסיסמה שלך
+                      🔐 אפסו את הסיסמה שלכם
                     </a>
                   </div>
                   
@@ -206,7 +206,7 @@ const EmailTemplates = () => {
                   <!-- Security Tip -->
                   <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-right: 5px solid #2D66F2; padding: 20px; border-radius: 15px; margin: 30px 0;">
                     <p style="margin: 0; color: #1e40af; font-size: 15px; line-height: 1.6;">
-                      <strong style="font-size: 16px;">🛡️ טיפ אבטחה מהוגי:</strong><br>
+                      <strong style="font-size: 16px;">🛡️ טיפ אבטחה מ-iHoogi:</strong><br>
                       בחר סיסמה חזקה עם אותיות, מספרים וסימנים. אל תשתמש באותה סיסמה באתרים שונים!
                     </p>
                   </div>
@@ -219,8 +219,8 @@ const EmailTemplates = () => {
                 
                 <!-- Footer -->
                 <div style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-top: 2px solid #e5e7eb; padding: 30px; text-align: center;">
-                  <p style="color: #9ca3af; font-size: 13px; margin: 10px 0 0 0;">© 2024 Hoogi - הפלטפורמה החכמה ליצירת שאלונים. כל הזכויות שמורות.</p>
-                  <p style="color: #d1d5db; font-size: 12px; margin: 5px 0 0 0;">נוצר עם ❤️ על ידי צוות Hoogi</p>
+                  <p style="color: #9ca3af; font-size: 13px; margin: 10px 0 0 0;">© 2024 iHoogi - הפלטפורמה החכמה ליצירת שאלונים. כל הזכויות שמורות.</p>
+                  <p style="color: #d1d5db; font-size: 12px; margin: 5px 0 0 0;">נוצר עם ❤️ על ידי צוות iHoogi</p>
                 </div>
                 
               </div>
@@ -229,7 +229,7 @@ const EmailTemplates = () => {
           </html>
         `,
         textContent: `
-          איפוס סיסמה - Hoogi
+          איפוס סיסמה - iHoogi
           
           שלום {{userName}},
           
@@ -243,7 +243,7 @@ const EmailTemplates = () => {
           אם יש לך בעיות עם הקישור, העתק והדבק את הכתובת הבאה בדפדפן:
           {{resetLink}}
           
-          © 2024 Hoogi. כל הזכויות שמורות.
+          © 2024 iHoogi. כל הזכויות שמורות.
         `,
         variables: ["userName", "resetLink", "expiryHours"],
         isActive: true
@@ -252,7 +252,7 @@ const EmailTemplates = () => {
         id: "3",
         name: "תשובה לתמיכה",
         type: "support-response",
-        subject: "תשובה לפנייה שלך - Hoogi Support 💙",
+        subject: "תשובה לפנייה שלך - iHoogi Support 💙",
         htmlContent: `
           <!DOCTYPE html>
           <html dir="rtl" lang="he">
@@ -264,10 +264,10 @@ const EmailTemplates = () => {
             <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
               <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
                 
-                <!-- Header with Hoogi Avatar -->
+                <!-- Header with iHoogi Avatar -->
                 <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px 30px; text-align: center; position: relative;">
                   <div style="display: inline-block; position: relative;">
-                    <img src="/hoogi-new-avatar.png" alt="Hoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2); background: white;">
+                    <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2); background: white;">
                     <div style="position: absolute; bottom: -5px; right: -5px; background: #2D66F2; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
                       <span style="font-size: 16px;">💬</span>
                     </div>
@@ -320,14 +320,14 @@ const EmailTemplates = () => {
                   
                   <p style="font-size: 15px; color: #6b7280; margin-top: 30px; text-align: center; line-height: 1.6;">
                     אני תמיד כאן בשבילך! 💙<br>
-                    הוגי, העוזר הווירטואלי שלך
+                    iHoogi כאן בשבילך
                   </p>
                 </div>
                 
                 <!-- Footer -->
                 <div style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-top: 2px solid #e5e7eb; padding: 30px; text-align: center;">
-                  <p style="color: #9ca3af; font-size: 13px; margin: 10px 0 0 0;">© 2024 Hoogi - הפלטפורמה החכמה ליצירת שאלונים. כל הזכויות שמורות.</p>
-                  <p style="color: #d1d5db; font-size: 12px; margin: 5px 0 0 0;">נוצר עם ❤️ על ידי צוות Hoogi</p>
+                  <p style="color: #9ca3af; font-size: 13px; margin: 10px 0 0 0;">© 2024 iHoogi - הפלטפורמה החכמה ליצירת שאלונים. כל הזכויות שמורות.</p>
+                  <p style="color: #d1d5db; font-size: 12px; margin: 5px 0 0 0;">נוצר עם ❤️ על ידי צוות iHoogi</p>
                 </div>
                 
               </div>
@@ -336,7 +336,7 @@ const EmailTemplates = () => {
           </html>
         `,
         textContent: `
-          תשובה לפנייה שלך - Hoogi Support
+          תשובה לפנייה שלך - iHoogi Support
           
           שלום {{userName}},
           
@@ -354,7 +354,7 @@ const EmailTemplates = () => {
           
           אם התשובה לא פתרה את הבעיה שלך, תוכל לפתוח פנייה חדשה.
           
-          © 2024 Hoogi. כל הזכויות שמורות.
+          © 2024 iHoogi. כל הזכויות שמורות.
           צוות התמיכה שלנו כאן לעזור לך! 💙
         `,
         variables: ["userName", "ticketNumber", "ticketSubject", "ticketDate", "supportResponse", "ticketLink"],
@@ -364,7 +364,7 @@ const EmailTemplates = () => {
         id: "4",
         name: "הזמנת שותף",
         type: "partner-invitation",
-        subject: "הזמנה מיוחדת: הצטרף לשותפים של Hoogi! 🤝",
+        subject: "הזמנה מיוחדת: הצטרף לשותפים של iHoogi! 🤝",
         htmlContent: `
           <!DOCTYPE html>
           <html dir="rtl" lang="he">
@@ -376,16 +376,16 @@ const EmailTemplates = () => {
             <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
               <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
                 
-                <!-- Header with Hoogi Avatar -->
+                <!-- Header with iHoogi Avatar -->
                 <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); padding: 40px 30px; text-align: center; position: relative;">
                   <div style="display: inline-block; position: relative;">
-                    <img src="/hoogi-new-avatar.png" alt="Hoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2); background: white;">
+                    <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2); background: white;">
                     <div style="position: absolute; bottom: -5px; right: -5px; background: #10b981; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
                       <span style="font-size: 16px;">🤝</span>
                     </div>
                   </div>
                   <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0; font-weight: 700; text-shadow: 0 2px 10px rgba(0,0,0,0.1);">הזמנה מיוחדת!</h1>
-                  <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin: 10px 0 0 0;">הצטרף לתוכנית השותפים של Hoogi 💰</p>
+                  <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin: 10px 0 0 0;">הצטרף לתוכנית השותפים של iHoogi 💰</p>
                 </div>
                 
                 <!-- Content -->
@@ -451,14 +451,14 @@ const EmailTemplates = () => {
                   
                   <p style="font-size: 15px; color: #6b7280; margin-top: 30px; text-align: center; line-height: 1.6;">
                     אשמח לראות אותך בקבוצת השותפים! 🎊<br>
-                    הוגי, העוזר החכם שלך
+                    iHoogi כאן בשבילך
                   </p>
                 </div>
                 
                 <!-- Footer -->
                 <div style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-top: 2px solid #e5e7eb; padding: 30px; text-align: center;">
-                  <p style="color: #9ca3af; font-size: 13px; margin: 10px 0 0 0;">© 2024 Hoogi - הפלטפורמה החכמה ליצירת שאלונים. כל הזכויות שמורות.</p>
-                  <p style="color: #d1d5db; font-size: 12px; margin: 5px 0 0 0;">נוצר עם ❤️ על ידי צוות Hoogi</p>
+                  <p style="color: #9ca3af; font-size: 13px; margin: 10px 0 0 0;">© 2024 iHoogi - הפלטפורמה החכמה ליצירת שאלונים. כל הזכויות שמורות.</p>
+                  <p style="color: #d1d5db; font-size: 12px; margin: 5px 0 0 0;">נוצר עם ❤️ על ידי צוות iHoogi</p>
                 </div>
                 
               </div>
@@ -467,11 +467,11 @@ const EmailTemplates = () => {
           </html>
         `,
         textContent: `
-          הזמנה להצטרף כשותף - Hoogi
+          הזמנה להצטרף כשותף - iHoogi
           
           שלום {{partnerName}},
           
-          {{inviterName}} הזמין אותך להצטרף כשותף בתוכנית השותפים של Hoogi!
+          {{inviterName}} הזמין אותך להצטרף כשותף בתוכנית השותפים של iHoogi!
           
           יתרונות השותפות:
           - עמלה של {{commissionRate}}% על כל מכירה
@@ -483,9 +483,823 @@ const EmailTemplates = () => {
           
           ההזמנה תפוג בעוד {{expiryDays}} ימים.
           
-          © 2024 Hoogi. כל הזכויות שמורות.
+          © 2024 iHoogi. כל הזכויות שמורות.
         `,
         variables: ["partnerName", "inviterName", "commissionRate", "invitationLink", "expiryDays"],
+        isActive: true
+      },
+      {
+        id: "5",
+        name: "הזמנה לשאלון",
+        type: "questionnaire-invitation",
+        subject: "הזמנה לשאלון - {{questionnaireTitle}} 📋",
+        htmlContent: `
+          <!DOCTYPE html>
+          <html dir="rtl" lang="he">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          </head>
+          <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+            <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+              <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
+                
+                <!-- Header with iHoogi Avatar -->
+                <div style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); padding: 40px 30px; text-align: center; position: relative;">
+                  <div style="display: inline-block; position: relative;">
+                    <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2); background: white;">
+                    <div style="position: absolute; bottom: -5px; right: -5px; background: #f59e0b; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
+                      <span style="font-size: 16px;">📋</span>
+                    </div>
+                  </div>
+                  <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0; font-weight: 700; text-shadow: 0 2px 10px rgba(0,0,0,0.1);">הזמנה לשאלון</h1>
+                  <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin: 10px 0 0 0;">{{questionnaireTitle}} 🎯</p>
+                </div>
+                
+                <!-- Content -->
+                <div style="padding: 40px 30px; direction: rtl; text-align: right;">
+                  <p style="font-size: 20px; margin-bottom: 15px; color: #1f2937; font-weight: 600;">היי {{recipientName}},</p>
+                  <p style="font-size: 16px; margin-bottom: 25px; color: #4b5563; line-height: 1.6;">{{senderName}} הזמין אותך להשתתף בשאלון חשוב! 🎉</p>
+                  
+                  <!-- Questionnaire Info -->
+                  <div style="background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); border-right: 5px solid #8b5cf6; padding: 25px; border-radius: 15px; margin: 30px 0; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.1);">
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                      <span style="font-size: 32px; margin-left: 15px;">📊</span>
+                      <h3 style="color: #6b21a8; margin: 0; font-size: 20px; font-weight: 700;">פרטי השאלון</h3>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px;">
+                      <p style="margin: 8px 0; color: #374151; font-size: 15px;"><strong style="color: #8b5cf6;">📝 כותרת:</strong> {{questionnaireTitle}}</p>
+                      <p style="margin: 8px 0; color: #374151; font-size: 15px;"><strong style="color: #8b5cf6;">📅 תאריך:</strong> {{questionnaireDate}}</p>
+                      <p style="margin: 8px 0; color: #374151; font-size: 15px;"><strong style="color: #8b5cf6;">⏱️ זמן משוער:</strong> {{estimatedTime}}</p>
+                      <p style="margin: 8px 0; color: #374151; font-size: 15px;"><strong style="color: #8b5cf6;">🎁 תגמול:</strong> {{reward}}</p>
+                    </div>
+                  </div>
+                  
+                  <!-- CTA Button -->
+                  <div style="text-align: center; margin: 40px 0;">
+                    <a href="{{questionnaireLink}}" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 18px 40px; text-decoration: none; border-radius: 30px; font-weight: 700; font-size: 18px; display: inline-block; box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);">
+                      📋 התחל לענות על השאלון
+                    </a>
+                  </div>
+                  
+                  <!-- Description -->
+                  <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-right: 5px solid #2D66F2; padding: 20px; border-radius: 15px; margin: 30px 0;">
+                    <p style="margin: 0; color: #1e40af; font-size: 15px; line-height: 1.6;">
+                      <strong style="font-size: 16px;">📝 תיאור השאלון:</strong><br>
+                      {{questionnaireDescription}}
+                    </p>
+                  </div>
+                  
+                  <p style="font-size: 15px; color: #6b7280; margin-top: 30px; text-align: center; line-height: 1.6;">
+                    תודה על ההשתתפות! 🙏<br>
+                    התגובות שלך חשובות לנו מאוד.
+                  </p>
+                </div>
+                
+                <!-- Footer -->
+                <div style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-top: 2px solid #e5e7eb; padding: 30px; text-align: center;">
+                  <p style="color: #9ca3af; font-size: 13px; margin: 10px 0 0 0;">© 2024 iHoogi - הפלטפורמה החכמה ליצירת שאלונים. כל הזכויות שמורות.</p>
+                  <p style="color: #d1d5db; font-size: 12px; margin: 5px 0 0 0;">נוצר עם ❤️ על ידי צוות iHoogi</p>
+                </div>
+                
+              </div>
+            </div>
+          </body>
+          </html>
+        `,
+        textContent: `
+          הזמנה לשאלון - {{questionnaireTitle}}
+          
+          שלום {{recipientName}},
+          
+          {{senderName}} הזמין אותך להשתתף בשאלון חשוב!
+          
+          פרטי השאלון:
+          - כותרת: {{questionnaireTitle}}
+          - תאריך: {{questionnaireDate}}
+          - זמן משוער: {{estimatedTime}}
+          - תגמול: {{reward}}
+          
+          תיאור השאלון:
+          {{questionnaireDescription}}
+          
+          התחל לענות: {{questionnaireLink}}
+          
+          תודה על ההשתתפות!
+          
+          © 2024 iHoogi. כל הזכויות שמורות.
+        `,
+        variables: ["recipientName", "senderName", "questionnaireTitle", "questionnaireDate", "estimatedTime", "reward", "questionnaireDescription", "questionnaireLink"],
+        isActive: true
+      },
+      {
+        id: "6",
+        name: "תזכורת לשאלון",
+        type: "questionnaire-reminder",
+        subject: "תזכורת: השאלון שלך מחכה לך! ⏰",
+        htmlContent: `
+          <!DOCTYPE html>
+          <html dir="rtl" lang="he">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          </head>
+          <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+            <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+              <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
+                
+                <!-- Header with iHoogi Avatar -->
+                <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); padding: 40px 30px; text-align: center; position: relative;">
+                  <div style="display: inline-block; position: relative;">
+                    <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2); background: white;">
+                    <div style="position: absolute; bottom: -5px; right: -5px; background: #ef4444; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
+                      <span style="font-size: 16px;">⏰</span>
+                    </div>
+                  </div>
+                  <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0; font-weight: 700; text-shadow: 0 2px 10px rgba(0,0,0,0.1);">תזכורת לשאלון</h1>
+                  <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin: 10px 0 0 0;">השאלון שלך מחכה לך! 🎯</p>
+                </div>
+                
+                <!-- Content -->
+                <div style="padding: 40px 30px; direction: rtl; text-align: right;">
+                  <p style="font-size: 20px; margin-bottom: 15px; color: #1f2937; font-weight: 600;">היי {{recipientName}},</p>
+                  <p style="font-size: 16px; margin-bottom: 25px; color: #4b5563; line-height: 1.6;">לא שכחתי אותך! 😊 השאלון עדיין מחכה לתגובה שלך.</p>
+                  
+                  <!-- Urgency Box -->
+                  <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-right: 5px solid #f59e0b; padding: 25px; border-radius: 15px; margin: 30px 0; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);">
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                      <span style="font-size: 32px; margin-left: 15px;">⚠️</span>
+                      <h3 style="color: #92400e; margin: 0; font-size: 20px; font-weight: 700;">זמן מוגבל!</h3>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px;">
+                      <p style="margin: 8px 0; color: #92400e; font-size: 15px; line-height: 1.6;">
+                        <strong>⏰ השאלון ייסגר בעוד {{timeLeft}}</strong><br>
+                        אל תפספס את ההזדמנות לתת את הדעה שלך!
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <!-- CTA Button -->
+                  <div style="text-align: center; margin: 40px 0;">
+                    <a href="{{questionnaireLink}}" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 18px 40px; text-decoration: none; border-radius: 30px; font-weight: 700; font-size: 18px; display: inline-block; box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4);">
+                      ⏰ השלם את השאלון עכשיו
+                    </a>
+                  </div>
+                  
+                  <!-- Benefits -->
+                  <div style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-right: 5px solid #10b981; padding: 20px; border-radius: 15px; margin: 30px 0;">
+                    <p style="margin: 0; color: #065f46; font-size: 15px; line-height: 1.6;">
+                      <strong style="font-size: 16px;">🎁 למה כדאי להשתתף?</strong><br>
+                      • התגובה שלך תשפיע על השירות שלנו<br>
+                      • תקבל {{reward}} כהערכה על ההשתתפות<br>
+                      • זמן השאלון: רק {{estimatedTime}} דקות
+                    </p>
+                  </div>
+                  
+                  <p style="font-size: 15px; color: #6b7280; margin-top: 30px; text-align: center; line-height: 1.6;">
+                    אם כבר השלמת את השאלון, תודה רבה! 🙏<br>
+                    אם לא, זה הזמן המושלם להשלים אותו.
+                  </p>
+                </div>
+                
+                <!-- Footer -->
+                <div style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-top: 2px solid #e5e7eb; padding: 30px; text-align: center;">
+                  <p style="color: #9ca3af; font-size: 13px; margin: 10px 0 0 0;">© 2024 iHoogi - הפלטפורמה החכמה ליצירת שאלונים. כל הזכויות שמורות.</p>
+                  <p style="color: #d1d5db; font-size: 12px; margin: 5px 0 0 0;">נוצר עם ❤️ על ידי צוות iHoogi</p>
+                </div>
+                
+              </div>
+            </div>
+          </body>
+          </html>
+        `,
+        textContent: `
+          תזכורת לשאלון
+          
+          שלום {{recipientName}},
+          
+          השאלון שלך עדיין מחכה לתגובה!
+          
+          זמן מוגבל:
+          השאלון ייסגר בעוד {{timeLeft}}
+          
+          למה כדאי להשתתף:
+          • התגובה שלך תשפיע על השירות שלנו
+          • תקבל {{reward}} כהערכה על ההשתתפות
+          • זמן השאלון: רק {{estimatedTime}} דקות
+          
+          השלם את השאלון: {{questionnaireLink}}
+          
+          אם כבר השלמת את השאלון, תודה רבה!
+          
+          © 2024 iHoogi. כל הזכויות שמורות.
+        `,
+        variables: ["recipientName", "questionnaireLink", "timeLeft", "reward", "estimatedTime"],
+        isActive: true
+      },
+      {
+        id: "7",
+        name: "תודה על השתתפות",
+        type: "thank-you-response",
+        subject: "תודה רבה על ההשתתפות! 🎉",
+        htmlContent: `
+          <!DOCTYPE html>
+          <html dir="rtl" lang="he">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          </head>
+          <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+            <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+              <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
+                
+                <!-- Header with iHoogi Avatar -->
+                <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px 30px; text-align: center; position: relative;">
+                  <div style="display: inline-block; position: relative;">
+                    <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2); background: white;">
+                    <div style="position: absolute; bottom: -5px; right: -5px; background: #f59e0b; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
+                      <span style="font-size: 16px;">🎉</span>
+                    </div>
+                  </div>
+                  <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0; font-weight: 700; text-shadow: 0 2px 10px rgba(0,0,0,0.1);">תודה רבה!</h1>
+                  <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin: 10px 0 0 0;">השלמת את השאלון בהצלחה! 🎯</p>
+                </div>
+                
+                <!-- Content -->
+                <div style="padding: 40px 30px; direction: rtl; text-align: right;">
+                  <p style="font-size: 20px; margin-bottom: 15px; color: #1f2937; font-weight: 600;">היי {{recipientName}},</p>
+                  <p style="font-size: 16px; margin-bottom: 25px; color: #4b5563; line-height: 1.6;">וואו! 🎉 השלמת את השאלון בהצלחה! תודה רבה על הזמן והמאמץ שהשקעת.</p>
+                  
+                  <!-- Success Box -->
+                  <div style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-right: 5px solid #10b981; padding: 25px; border-radius: 15px; margin: 30px 0; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.1);">
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                      <span style="font-size: 32px; margin-left: 15px;">✅</span>
+                      <h3 style="color: #065f46; margin: 0; font-size: 20px; font-weight: 700;">השאלון הושלם!</h3>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px;">
+                      <p style="margin: 8px 0; color: #374151; font-size: 15px;"><strong style="color: #10b981;">📝 שאלון:</strong> {{questionnaireTitle}}</p>
+                      <p style="margin: 8px 0; color: #374151; font-size: 15px;"><strong style="color: #10b981;">📅 תאריך השלמה:</strong> {{completionDate}}</p>
+                      <p style="margin: 8px 0; color: #374151; font-size: 15px;"><strong style="color: #10b981;">⏱️ זמן השקעת:</strong> {{timeSpent}}</p>
+                    </div>
+                  </div>
+                  
+                  <!-- Reward Box -->
+                  <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-right: 5px solid #f59e0b; padding: 25px; border-radius: 15px; margin: 30px 0; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);">
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                      <span style="font-size: 32px; margin-left: 15px;">🎁</span>
+                      <h3 style="color: #92400e; margin: 0; font-size: 20px; font-weight: 700;">התגמול שלך!</h3>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px;">
+                      <p style="margin: 8px 0; color: #92400e; font-size: 15px; line-height: 1.6;">
+                        <strong>🎉 {{reward}}</strong><br>
+                        תודה על ההשתתפות! התגובה שלך עוזרת לנו לשפר את השירות.
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <!-- Next Steps -->
+                  <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-right: 5px solid #2D66F2; padding: 20px; border-radius: 15px; margin: 30px 0;">
+                    <p style="margin: 0; color: #1e40af; font-size: 15px; line-height: 1.6;">
+                      <strong style="font-size: 16px;">📊 מה הלאה?</strong><br>
+                      {{nextSteps}}
+                    </p>
+                  </div>
+                  
+                  <p style="font-size: 15px; color: #6b7280; margin-top: 30px; text-align: center; line-height: 1.6;">
+                    שוב תודה רבה! 🙏<br>
+                    התגובה שלך חשובה לנו מאוד.
+                  </p>
+                </div>
+                
+                <!-- Footer -->
+                <div style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-top: 2px solid #e5e7eb; padding: 30px; text-align: center;">
+                  <p style="color: #9ca3af; font-size: 13px; margin: 10px 0 0 0;">© 2024 iHoogi - הפלטפורמה החכמה ליצירת שאלונים. כל הזכויות שמורות.</p>
+                  <p style="color: #d1d5db; font-size: 12px; margin: 5px 0 0 0;">נוצר עם ❤️ על ידי צוות iHoogi</p>
+                </div>
+                
+              </div>
+            </div>
+          </body>
+          </html>
+        `,
+        textContent: `
+          תודה רבה על ההשתתפות!
+          
+          שלום {{recipientName}},
+          
+          השלמת את השאלון בהצלחה! תודה רבה על הזמן והמאמץ שהשקעת.
+          
+          פרטי השאלון:
+          - שאלון: {{questionnaireTitle}}
+          - תאריך השלמה: {{completionDate}}
+          - זמן השקעת: {{timeSpent}}
+          
+          התגמול שלך:
+          {{reward}}
+          
+          מה הלאה?
+          {{nextSteps}}
+          
+          שוב תודה רבה! התגובה שלך חשובה לנו מאוד.
+          
+          © 2024 iHoogi. כל הזכויות שמורות.
+        `,
+        variables: ["recipientName", "questionnaireTitle", "completionDate", "timeSpent", "reward", "nextSteps"],
+        isActive: true
+      },
+      {
+        id: "8",
+        name: "הודעת שגיאה",
+        type: "error-notification",
+        subject: "הודעת שגיאה - {{errorType}} ⚠️",
+        htmlContent: `
+          <!DOCTYPE html>
+          <html dir="rtl" lang="he">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          </head>
+          <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+            <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+              <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
+                
+                <!-- Header with iHoogi Avatar -->
+                <div style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); padding: 40px 30px; text-align: center; position: relative;">
+                  <div style="display: inline-block; position: relative;">
+                    <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2); background: white;">
+                    <div style="position: absolute; bottom: -5px; right: -5px; background: #f59e0b; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
+                      <span style="font-size: 16px;">⚠️</span>
+                    </div>
+                  </div>
+                  <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0; font-weight: 700; text-shadow: 0 2px 10px rgba(0,0,0,0.1);">הודעת שגיאה</h1>
+                  <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin: 10px 0 0 0;">{{errorType}} 🚨</p>
+                </div>
+                
+                <!-- Content -->
+                <div style="padding: 40px 30px; direction: rtl; text-align: right;">
+                  <p style="font-size: 20px; margin-bottom: 15px; color: #1f2937; font-weight: 600;">היי {{userName}},</p>
+                  <p style="font-size: 16px; margin-bottom: 25px; color: #4b5563; line-height: 1.6;">אופס! 😅 קרתה שגיאה במערכת. אני כבר עובד על התיקון!</p>
+                  
+                  <!-- Error Details -->
+                  <div style="background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); border-right: 5px solid #ef4444; padding: 25px; border-radius: 15px; margin: 30px 0; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.1);">
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                      <span style="font-size: 32px; margin-left: 15px;">🔍</span>
+                      <h3 style="color: #991b1b; margin: 0; font-size: 20px; font-weight: 700;">פרטי השגיאה</h3>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px;">
+                      <p style="margin: 8px 0; color: #374151; font-size: 15px;"><strong style="color: #ef4444;">⚠️ סוג שגיאה:</strong> {{errorType}}</p>
+                      <p style="margin: 8px 0; color: #374151; font-size: 15px;"><strong style="color: #ef4444;">📅 תאריך:</strong> {{errorDate}}</p>
+                      <p style="margin: 8px 0; color: #374151; font-size: 15px;"><strong style="color: #ef4444;">🕐 שעה:</strong> {{errorTime}}</p>
+                      <p style="margin: 8px 0; color: #374151; font-size: 15px;"><strong style="color: #ef4444;">📝 תיאור:</strong> {{errorDescription}}</p>
+                    </div>
+                  </div>
+                  
+                  <!-- Status Box -->
+                  <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-right: 5px solid #f59e0b; padding: 25px; border-radius: 15px; margin: 30px 0; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);">
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                      <span style="font-size: 32px; margin-left: 15px;">🔧</span>
+                      <h3 style="color: #92400e; margin: 0; font-size: 20px; font-weight: 700;">סטטוס התיקון</h3>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px;">
+                      <p style="margin: 8px 0; color: #92400e; font-size: 15px; line-height: 1.6;">
+                        <strong>🔄 {{fixStatus}}</strong><br>
+                        {{fixDescription}}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <!-- CTA Button -->
+                  <div style="text-align: center; margin: 40px 0;">
+                    <a href="{{supportLink}}" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; padding: 18px 40px; text-decoration: none; border-radius: 30px; font-weight: 700; font-size: 18px; display: inline-block; box-shadow: 0 10px 30px rgba(239, 68, 68, 0.4);">
+                      📞 פנה לתמיכה
+                    </a>
+                  </div>
+                  
+                  <!-- Apology -->
+                  <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-right: 5px solid #2D66F2; padding: 20px; border-radius: 15px; margin: 30px 0;">
+                    <p style="margin: 0; color: #1e40af; font-size: 15px; line-height: 1.6;">
+                      <strong style="font-size: 16px;">🙏 סליחה על אי הנוחות!</strong><br>
+                      אנחנו עובדים קשה כדי לתקן את הבעיה במהירות האפשרית. אם יש לך שאלות נוספות, אני כאן לעזור!
+                    </p>
+                  </div>
+                  
+                  <p style="font-size: 15px; color: #6b7280; margin-top: 30px; text-align: center; line-height: 1.6;">
+                    תודה על הסבלנות! 💪<br>
+                    נחזור אליך ברגע שהבעיה תיפתר.
+                  </p>
+                </div>
+                
+                <!-- Footer -->
+                <div style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-top: 2px solid #e5e7eb; padding: 30px; text-align: center;">
+                  <p style="color: #9ca3af; font-size: 13px; margin: 10px 0 0 0;">© 2024 iHoogi - הפלטפורמה החכמה ליצירת שאלונים. כל הזכויות שמורות.</p>
+                  <p style="color: #d1d5db; font-size: 12px; margin: 5px 0 0 0;">נוצר עם ❤️ על ידי צוות iHoogi</p>
+                </div>
+                
+              </div>
+            </div>
+          </body>
+          </html>
+        `,
+        textContent: `
+          הודעת שגיאה - {{errorType}}
+          
+          שלום {{userName}},
+          
+          קרתה שגיאה במערכת. אנחנו עובדים על התיקון!
+          
+          פרטי השגיאה:
+          - סוג שגיאה: {{errorType}}
+          - תאריך: {{errorDate}}
+          - שעה: {{errorTime}}
+          - תיאור: {{errorDescription}}
+          
+          סטטוס התיקון:
+          {{fixStatus}}
+          {{fixDescription}}
+          
+          אם יש לך שאלות נוספות, פנה לתמיכה: {{supportLink}}
+          
+          סליחה על אי הנוחות! אנחנו עובדים קשה כדי לתקן את הבעיה.
+          
+          © 2024 iHoogi. כל הזכויות שמורות.
+        `,
+        variables: ["userName", "errorType", "errorDate", "errorTime", "errorDescription", "fixStatus", "fixDescription", "supportLink"],
+        isActive: true
+      },
+      {
+        id: "9",
+        name: "שינוי מנוי",
+        type: "subscription-change",
+        subject: "שינוי במנוי שלכם - iHoogi 📋",
+        htmlContent: `
+          <!DOCTYPE html>
+          <html dir="rtl" lang="he">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          </head>
+          <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);">
+            <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+              <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
+                
+                <!-- Header with iHoogi Avatar -->
+                <div style="background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); padding: 40px 30px; text-align: center; position: relative;">
+                  <div style="display: inline-block; position: relative;">
+                    <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2); background: white;">
+                    <div style="position: absolute; bottom: -5px; right: -5px; background: #10b981; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
+                      <span style="font-size: 16px;">📋</span>
+                    </div>
+                  </div>
+                  <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0; font-weight: 700; text-shadow: 0 2px 10px rgba(0,0,0,0.1);">שינוי במנוי</h1>
+                  <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin: 10px 0 0 0;">עדכנו את המנוי שלכם 📊</p>
+                </div>
+                
+                <!-- Content -->
+                <div style="padding: 40px 30px; direction: rtl; text-align: right;">
+                  <p style="font-size: 20px; margin-bottom: 15px; color: #1f2937; font-weight: 600;">שלום {{userName}},</p>
+                  <p style="font-size: 16px; margin-bottom: 25px; color: #4b5563; line-height: 1.6;">קיבלנו את הבקשה שלכם לשינוי המנוי! המעבר יעשה בקרוב ואתם תקבלו עדכון נוסף. 🎉</p>
+                  
+                  <!-- Subscription Details -->
+                  <div style="background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); border-right: 5px solid #7c3aed; padding: 25px; border-radius: 15px; margin: 30px 0; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.1);">
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                      <span style="font-size: 32px; margin-left: 15px;">📊</span>
+                      <h3 style="color: #6b21a8; margin: 0; font-size: 20px; font-weight: 700;">פרטי השינוי</h3>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px;">
+                      <p style="margin: 8px 0; color: #374151; font-size: 15px;"><strong style="color: #7c3aed;">🔄 מ:</strong> {{oldPlan}}</p>
+                      <p style="margin: 8px 0; color: #374151; font-size: 15px;"><strong style="color: #7c3aed;">➡️ אל:</strong> {{newPlan}}</p>
+                      <p style="margin: 8px 0; color: #374151; font-size: 15px;"><strong style="color: #7c3aed;">💰 מחיר חדש:</strong> {{newPrice}}</p>
+                      <p style="margin: 8px 0; color: #374151; font-size: 15px;"><strong style="color: #7c3aed;">📅 תאריך שינוי:</strong> {{changeDate}}</p>
+                    </div>
+                  </div>
+                  
+                  <!-- Benefits -->
+                  <div style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-right: 5px solid #10b981; padding: 25px; border-radius: 15px; margin: 30px 0;">
+                    <h3 style="color: #065f46; margin: 0 0 15px 0; font-size: 20px; font-weight: 700;">🎁 מה תקבלו במנוי החדש:</h3>
+                    <div style="background: white; padding: 15px; border-radius: 10px;">
+                      {{planBenefits}}
+                    </div>
+                  </div>
+                  
+                  <!-- Important Info -->
+                  <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-right: 5px solid #f59e0b; padding: 25px; border-radius: 15px; margin: 30px 0;">
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                      <span style="font-size: 32px; margin-left: 15px;">ℹ️</span>
+                      <h3 style="color: #92400e; margin: 0; font-size: 20px; font-weight: 700;">מידע חשוב</h3>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px;">
+                      <p style="margin: 0; color: #92400e; font-size: 15px; line-height: 1.6;">
+                        {{importantInfo}}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <p style="font-size: 15px; color: #6b7280; margin-top: 30px; text-align: center; line-height: 1.6;">
+                    תודה על האמון! 🙏<br>
+                    iHoogi כאן בשבילכם
+                  </p>
+                </div>
+                
+                <!-- Footer -->
+                <div style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-top: 2px solid #e5e7eb; padding: 30px; text-align: center;">
+                  <p style="color: #9ca3af; font-size: 13px; margin: 10px 0 0 0;">© 2024 iHoogi - הפלטפורמה החכמה ליצירת שאלונים. כל הזכויות שמורות.</p>
+                  <p style="color: #d1d5db; font-size: 12px; margin: 5px 0 0 0;">נוצר עם ❤️ על ידי צוות iHoogi</p>
+                </div>
+                
+              </div>
+            </div>
+          </body>
+          </html>
+        `,
+        textContent: `
+          שינוי במנוי - iHoogi
+          
+          שלום {{userName}},
+          
+          קיבלנו את הבקשה שלכם לשינוי המנוי!
+          
+          פרטי השינוי:
+          - מ: {{oldPlan}}
+          - אל: {{newPlan}}
+          - מחיר חדש: {{newPrice}}
+          - תאריך שינוי: {{changeDate}}
+          
+          מה תקבלו במנוי החדש:
+          {{planBenefits}}
+          
+          מידע חשוב:
+          {{importantInfo}}
+          
+          תודה על האמון!
+          
+          © 2024 iHoogi. כל הזכויות שמורות.
+        `,
+        variables: ["userName", "oldPlan", "newPlan", "newPrice", "changeDate", "planBenefits", "importantInfo"],
+        isActive: true
+      },
+      {
+        id: "10",
+        name: "קבלה",
+        type: "receipt",
+        subject: "קבלת התשלום שלכם - iHoogi 💰",
+        htmlContent: `
+          <!DOCTYPE html>
+          <html dir="rtl" lang="he">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          </head>
+          <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #059669 0%, #047857 100%);">
+            <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+              <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
+                
+                <!-- Header with iHoogi Avatar -->
+                <div style="background: linear-gradient(135deg, #059669 0%, #047857 100%); padding: 40px 30px; text-align: center; position: relative;">
+                  <div style="display: inline-block; position: relative;">
+                    <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2); background: white;">
+                    <div style="position: absolute; bottom: -5px; right: -5px; background: #10b981; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
+                      <span style="font-size: 16px;">💰</span>
+                    </div>
+                  </div>
+                  <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0; font-weight: 700; text-shadow: 0 2px 10px rgba(0,0,0,0.1);">קבלה</h1>
+                  <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin: 10px 0 0 0;">התשלום התקבל בהצלחה! ✅</p>
+                </div>
+                
+                <!-- Content -->
+                <div style="padding: 40px 30px; direction: rtl; text-align: right;">
+                  <p style="font-size: 20px; margin-bottom: 15px; color: #1f2937; font-weight: 600;">שלום {{userName}},</p>
+                  <p style="font-size: 16px; margin-bottom: 25px; color: #4b5563; line-height: 1.6;">תודה רבה על התשלום! קיבלנו אותו בהצלחה והמנוי שלכם פעיל. 🎉</p>
+                  
+                  <!-- Receipt Details -->
+                  <div style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-right: 5px solid #059669; padding: 25px; border-radius: 15px; margin: 30px 0; box-shadow: 0 4px 15px rgba(5, 150, 105, 0.1);">
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                      <span style="font-size: 32px; margin-left: 15px;">📄</span>
+                      <h3 style="color: #065f46; margin: 0; font-size: 20px; font-weight: 700;">פרטי הקבלה</h3>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px;">
+                      <p style="margin: 8px 0; color: #374151; font-size: 15px;"><strong style="color: #059669;">🧾 מספר קבלה:</strong> {{receiptNumber}}</p>
+                      <p style="margin: 8px 0; color: #374151; font-size: 15px;"><strong style="color: #059669;">📅 תאריך:</strong> {{paymentDate}}</p>
+                      <p style="margin: 8px 0; color: #374151; font-size: 15px;"><strong style="color: #059669;">💳 אמצעי תשלום:</strong> {{paymentMethod}}</p>
+                      <p style="margin: 8px 0; color: #374151; font-size: 15px;"><strong style="color: #059669;">💰 סכום:</strong> {{amount}}</p>
+                      <p style="margin: 8px 0; color: #374151; font-size: 15px;"><strong style="color: #059669;">📦 פריט:</strong> {{itemDescription}}</p>
+                    </div>
+                  </div>
+                  
+                  <!-- Payment Summary -->
+                  <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-right: 5px solid #2563eb; padding: 25px; border-radius: 15px; margin: 30px 0;">
+                    <h3 style="color: #1e40af; margin: 0 0 15px 0; font-size: 20px; font-weight: 700;">📊 סיכום התשלום</h3>
+                    <div style="background: white; padding: 15px; border-radius: 10px;">
+                      <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span>מחיר לפני מע"מ:</span>
+                        <span><strong>{{subtotal}}</strong></span>
+                      </div>
+                      <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span>מע"מ:</span>
+                        <span><strong>{{tax}}</strong></span>
+                      </div>
+                      <hr style="border: 1px solid #e5e7eb; margin: 10px 0;">
+                      <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 18px; color: #059669;">
+                        <span>סך הכל:</span>
+                        <span>{{total}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Next Steps -->
+                  <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-right: 5px solid #f59e0b; padding: 20px; border-radius: 15px; margin: 30px 0;">
+                    <p style="margin: 0; color: #92400e; font-size: 15px; line-height: 1.6;">
+                      <strong style="font-size: 16px;">🎯 השלבים הבאים:</strong><br>
+                      המנוי שלכם פעיל מיד! תוכלו להתחיל להשתמש בכל התכונות החדשות. אם יש לכם שאלות, iHoogi כאן בשבילכם!
+                    </p>
+                  </div>
+                  
+                  <p style="font-size: 15px; color: #6b7280; margin-top: 30px; text-align: center; line-height: 1.6;">
+                    תודה על הבחירה בנו! 🙏<br>
+                    iHoogi כאן בשבילכם
+                  </p>
+                </div>
+                
+                <!-- Footer -->
+                <div style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-top: 2px solid #e5e7eb; padding: 30px; text-align: center;">
+                  <p style="color: #9ca3af; font-size: 13px; margin: 10px 0 0 0;">© 2024 iHoogi - הפלטפורמה החכמה ליצירת שאלונים. כל הזכויות שמורות.</p>
+                  <p style="color: #d1d5db; font-size: 12px; margin: 5px 0 0 0;">נוצר עם ❤️ על ידי צוות iHoogi</p>
+                </div>
+                
+              </div>
+            </div>
+          </body>
+          </html>
+        `,
+        textContent: `
+          קבלה - iHoogi
+          
+          שלום {{userName}},
+          
+          תודה רבה על התשלום! קיבלנו אותו בהצלחה.
+          
+          פרטי הקבלה:
+          - מספר קבלה: {{receiptNumber}}
+          - תאריך: {{paymentDate}}
+          - אמצעי תשלום: {{paymentMethod}}
+          - סכום: {{amount}}
+          - פריט: {{itemDescription}}
+          
+          סיכום התשלום:
+          - מחיר לפני מע"מ: {{subtotal}}
+          - מע"מ: {{tax}}
+          - סך הכל: {{total}}
+          
+          השלבים הבאים:
+          המנוי שלכם פעיל מיד! תוכלו להתחיל להשתמש בכל התכונות החדשות.
+          
+          תודה על הבחירה בנו!
+          
+          © 2024 iHoogi. כל הזכויות שמורות.
+        `,
+        variables: ["userName", "receiptNumber", "paymentDate", "paymentMethod", "amount", "itemDescription", "subtotal", "tax", "total"],
+        isActive: true
+      },
+      {
+        id: "11",
+        name: "חשבונית",
+        type: "invoice",
+        subject: "חשבונית - iHoogi 📋",
+        htmlContent: `
+          <!DOCTYPE html>
+          <html dir="rtl" lang="he">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          </head>
+          <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);">
+            <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+              <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
+                
+                <!-- Header with iHoogi Avatar -->
+                <div style="background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); padding: 40px 30px; text-align: center; position: relative;">
+                  <div style="display: inline-block; position: relative;">
+                    <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2); background: white;">
+                    <div style="position: absolute; bottom: -5px; right: -5px; background: #f59e0b; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
+                      <span style="font-size: 16px;">📋</span>
+                    </div>
+                  </div>
+                  <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0; font-weight: 700; text-shadow: 0 2px 10px rgba(0,0,0,0.1);">חשבונית</h1>
+                  <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin: 10px 0 0 0;">חשבונית מס' {{invoiceNumber}} 📄</p>
+                </div>
+                
+                <!-- Content -->
+                <div style="padding: 40px 30px; direction: rtl; text-align: right;">
+                  <!-- Invoice Header -->
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #e5e7eb;">
+                    <div>
+                      <h3 style="color: #1f2937; margin: 0 0 10px 0; font-size: 18px;">Bill To:</h3>
+                      <p style="margin: 0; color: #6b7280; line-height: 1.5;">{{customerName}}<br>{{customerAddress}}</p>
+                    </div>
+                    <div style="text-align: left;">
+                      <h3 style="color: #1f2937; margin: 0 0 10px 0; font-size: 18px;">From:</h3>
+                      <p style="margin: 0; color: #6b7280; line-height: 1.5;">iHoogi<br>חברת טכנולוגיה</p>
+                    </div>
+                  </div>
+                  
+                  <!-- Invoice Details -->
+                  <div style="background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); border-right: 5px solid #dc2626; padding: 25px; border-radius: 15px; margin: 30px 0;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                      <div>
+                        <p style="margin: 5px 0; color: #374151;"><strong>מספר חשבונית:</strong> {{invoiceNumber}}</p>
+                        <p style="margin: 5px 0; color: #374151;"><strong>תאריך:</strong> {{invoiceDate}}</p>
+                        <p style="margin: 5px 0; color: #374151;"><strong>תאריך תשלום:</strong> {{dueDate}}</p>
+                      </div>
+                      <div style="text-align: left;">
+                        <p style="margin: 5px 0; color: #374151;"><strong>סטטוס:</strong> {{status}}</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Items Table -->
+                  <div style="margin: 30px 0;">
+                    <h3 style="color: #1f2937; margin: 0 0 15px 0; font-size: 20px;">פרטי החשבונית</h3>
+                    <div style="border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden;">
+                      <div style="background: #f9fafb; padding: 15px; border-bottom: 1px solid #e5e7eb;">
+                        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 15px; text-align: center; font-weight: 700;">
+                          <div>תיאור</div>
+                          <div>כמות</div>
+                          <div>מחיר יחידה</div>
+                          <div>סה"כ</div>
+                        </div>
+                      </div>
+                      <div style="padding: 15px;">
+                        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 15px; text-align: center; align-items: center;">
+                          <div style="text-align: right;">{{itemDescription}}</div>
+                          <div>{{quantity}}</div>
+                          <div>{{unitPrice}}</div>
+                          <div style="font-weight: 700;">{{lineTotal}}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Total -->
+                  <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-right: 5px solid #2563eb; padding: 25px; border-radius: 15px; margin: 30px 0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 20px; font-weight: 700; color: #1e40af;">
+                      <span>סך הכל לתשלום:</span>
+                      <span style="font-size: 24px;">{{totalAmount}}</span>
+                    </div>
+                  </div>
+                  
+                  <!-- Payment Info -->
+                  <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-right: 5px solid #f59e0b; padding: 20px; border-radius: 15px; margin: 30px 0;">
+                    <h3 style="color: #92400e; margin: 0 0 15px 0; font-size: 18px;">💳 פרטי תשלום</h3>
+                    <p style="margin: 0; color: #92400e; font-size: 15px; line-height: 1.6;">
+                      {{paymentInstructions}}
+                    </p>
+                  </div>
+                  
+                  <p style="font-size: 15px; color: #6b7280; margin-top: 30px; text-align: center; line-height: 1.6;">
+                    תודה על העסקה! 🙏<br>
+                    iHoogi כאן בשבילכם
+                  </p>
+                </div>
+                
+                <!-- Footer -->
+                <div style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-top: 2px solid #e5e7eb; padding: 30px; text-align: center;">
+                  <p style="color: #9ca3af; font-size: 13px; margin: 10px 0 0 0;">© 2024 iHoogi - הפלטפורמה החכמה ליצירת שאלונים. כל הזכויות שמורות.</p>
+                  <p style="color: #d1d5db; font-size: 12px; margin: 5px 0 0 0;">נוצר עם ❤️ על ידי צוות iHoogi</p>
+                </div>
+                
+              </div>
+            </div>
+          </body>
+          </html>
+        `,
+        textContent: `
+          חשבונית - iHoogi
+          
+          שלום {{customerName}},
+          
+          מצורפת חשבונית מספר {{invoiceNumber}}
+          
+          פרטי החשבונית:
+          - מספר חשבונית: {{invoiceNumber}}
+          - תאריך: {{invoiceDate}}
+          - תאריך תשלום: {{dueDate}}
+          - סטטוס: {{status}}
+          
+          פרטי החשבונית:
+          - תיאור: {{itemDescription}}
+          - כמות: {{quantity}}
+          - מחיר יחידה: {{unitPrice}}
+          - סה"כ: {{lineTotal}}
+          
+          סך הכל לתשלום: {{totalAmount}}
+          
+          פרטי תשלום:
+          {{paymentInstructions}}
+          
+          תודה על העסקה!
+          
+          © 2024 iHoogi. כל הזכויות שמורות.
+        `,
+        variables: ["customerName", "customerAddress", "invoiceNumber", "invoiceDate", "dueDate", "status", "itemDescription", "quantity", "unitPrice", "lineTotal", "totalAmount", "paymentInstructions"],
         isActive: true
       }
     ];
