@@ -34,6 +34,7 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import CustomerResponseTab from "@/components/automations/CustomerResponseTab";
 
 interface TemplateDesign {
   logoUrl: string;
@@ -92,7 +93,7 @@ const CreateTemplate = () => {
   const [profileFile, setProfileFile] = useState<string>("");
   
   // Tab state
-  const [activeTab, setActiveTab] = useState<"templates" | "notifications" | "my-templates">("templates");
+  const [activeTab, setActiveTab] = useState<"templates" | "notifications" | "my-templates" | "customer-response">("templates");
   
   // Edit mode state
   const [editingTemplateId, setEditingTemplateId] = useState<number | null>(null);
@@ -267,10 +268,10 @@ const CreateTemplate = () => {
           {/* Tabs */}
           <Tabs 
             value={activeTab}
-            onValueChange={(value) => setActiveTab(value as "templates" | "notifications" | "my-templates")}
+            onValueChange={(value) => setActiveTab(value as "templates" | "notifications" | "my-templates" | "customer-response")}
             className="w-full mb-6"
           >
-            <TabsList className="grid grid-cols-3 gap-1 md:gap-2 mb-4 md:mb-6 w-full">
+            <TabsList className="grid grid-cols-4 gap-1 md:gap-2 mb-4 md:mb-6 w-full">
               <TabsTrigger 
                 value="notifications" 
                 className="flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm text-right px-2 md:px-4 py-2 md:py-3"
@@ -296,6 +297,15 @@ const CreateTemplate = () => {
                 <span className="hidden sm:inline">יצירת תבנית למענה לקוח</span>
                 <span className="sm:hidden">יצירת תבנית</span>
                 <Edit className="h-3 w-3 md:h-4 md:w-4" />
+              </TabsTrigger>
+              
+              <TabsTrigger 
+                value="customer-response" 
+                className="flex items-center justify-center gap-1 md:gap-2 text-xs md:text-sm text-right px-2 md:px-4 py-2 md:py-3"
+              >
+                <MessageCircle className="h-3 w-3 md:h-4 md:w-4" />
+                <span className="hidden sm:inline">מענה לקוח</span>
+                <span className="sm:hidden">מענה</span>
               </TabsTrigger>
             </TabsList>
 
@@ -1177,6 +1187,10 @@ const CreateTemplate = () => {
                   </Button>
                 </div>
               </div>
+            </TabsContent>
+            
+            <TabsContent value="customer-response" className="mt-2">
+              <CustomerResponseTab />
             </TabsContent>
           </Tabs>
         </div>

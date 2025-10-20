@@ -70,14 +70,6 @@ const NavigationButtons = ({
       color: "orange"
     },
     {
-      id: "automations",
-      emoji: "🎧",
-      label: "אוטומציות",
-      state: "automations" as ViewState,
-      active: currentState === "automations",
-      color: "red"
-    },
-    {
       id: "contact",
       emoji: "✉️",
       label: "צור קשר",

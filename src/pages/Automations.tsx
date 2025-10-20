@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"; 
 import MainLayout from "@/components/layout/MainLayout";
-import { Bell, Edit, Settings, ArrowRight, AlertTriangle } from "lucide-react";
+import { Bell, Edit, Settings, ArrowRight, AlertTriangle, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import TriggersTab from "@/components/automations/TriggersTab";
 import TemplatesTab from "@/components/automations/TemplatesTab";
@@ -80,8 +80,9 @@ const Automations = () => {
               className={cn("flex items-center gap-1 md:gap-2 text-xs md:text-sm", activeTab === "notifications" && "text-red-500")}
             >
               <AlertTriangle className="h-3 w-3 md:h-4 md:w-4" />
-              <span>מענה ללקוחות</span>
+              <span>התראות</span>
             </TabsTrigger>
+            
           </TabsList>
 
           <TabsContent value="templates" className="mt-2">
