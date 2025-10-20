@@ -20,6 +20,7 @@ import LeadDetail from "./pages/LeadDetail";
 import AffiliateProgram from "./pages/AffiliateProgram";
 import Organizations from "./pages/Organizations";
 import Subscriptions from "./pages/Subscriptions";
+import SubscriptionPlans from "./pages/SubscriptionPlans";
 import MyHoogi from "./pages/MyHoogi";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
@@ -67,6 +68,7 @@ const App = () => {
               <Route path="/affiliate-program" element={<AffiliateProgram />} />
               <Route path="/organizations" element={<Organizations />} />
               <Route path="/subscriptions" element={<Subscriptions />} />
+              <Route path="/subscription-plans" element={<SubscriptionPlans />} />
               <Route path="/my-hoogi" element={<MyHoogi />} />
               <Route path="/distribution" element={<Distribution />} />
               <Route path="/create-template" element={<CreateTemplate />} />

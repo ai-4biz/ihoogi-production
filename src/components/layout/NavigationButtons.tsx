@@ -159,6 +159,15 @@ const NavigationButtons = ({
       onClick: () => navigate("/subscriptions")
     },
     {
+      id: "subscription-plans",
+      emoji: "📋",
+      label: "תוכנית מנויים",
+      state: "root" as ViewState,
+      active: window.location.pathname === "/subscription-plans",
+      color: "emerald",
+      onClick: () => navigate("/subscription-plans")
+    },
+    {
       id: "root",
       emoji: "🏠",
       label: "ראשי",

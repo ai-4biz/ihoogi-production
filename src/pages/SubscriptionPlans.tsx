@@ -4,7 +4,7 @@ import { Check, Zap, MessageSquare, Mail, Users, Star } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 
-const Subscriptions = () => {
+const SubscriptionPlans = () => {
   const plans = [
     {
       id: "basic",
@@ -73,10 +73,10 @@ const Subscriptions = () => {
         {/* Header */}
         <div className="text-center max-w-4xl mx-auto">
           <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6">
-            בחר את התוכנית המתאימה לך
+            תוכניות מנויים - iHoogi
           </h1>
           <p className="text-xl text-muted-foreground mb-8">
-            כל התוכניות כוללות גישה מלאה לכל התכונות הבסיסיות של iHoogi
+            בחר את התוכנית המתאימה לך והתחל לנהל את העסק שלך בצורה חכמה יותר
           </p>
         </div>
 
@@ -203,4 +203,4 @@ const Subscriptions = () => {
   );
 };
 
-export default Subscriptions;
+export default SubscriptionPlans;

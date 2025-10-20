@@ -1,5 +1,6 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MainLayout from "@/components/layout/MainLayout";
 import BusinessForm from "@/components/profile/forms/BusinessForm";
@@ -9,7 +10,17 @@ import { ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 
 const Profile = () => {
-  const [activeTab, setActiveTab] = useState("business");
+  const [searchParams] = useSearchParams();
+  const initialTab = searchParams.get("section") || "billing";
+  const [activeTab, setActiveTab] = useState(initialTab);
+
+  // Update tab when URL params change
+  useEffect(() => {
+    const section = searchParams.get("section");
+    if (section && (section === "billing" || section === "business")) {
+      setActiveTab(section);
+    }
+  }, [searchParams]);
   
   const handleSaveLinks = () => {
     toast.success("הפרטים נשמרו בהצלחה");
