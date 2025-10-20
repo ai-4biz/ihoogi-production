@@ -80,6 +80,6 @@ const MainLayout = ({
 
       {/* Floating iHoogi Helper */}
       <HoogiAvatar message="היי! אני כאן לעזור לך" subMessage="בחרי באחת האפשרויות כדי להמשיך" />
-    </div>;
+    </div>
 };
 export default MainLayout;
