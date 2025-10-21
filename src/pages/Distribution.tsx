@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import MainLayout from "@/components/layout/MainLayout";
 import SurveyPicker from "@/components/surveys/SurveyPicker";
@@ -36,6 +36,29 @@ const Distribution = () => {
   const [linkData, setLinkData] = useState({
     linkText: ""
   });
+
+  // Saved links state - initialize from localStorage
+  const [savedLinks, setSavedLinks] = useState<Array<{
+    id: string;
+    url: string;
+    linkText: string;
+    type: "form" | "chat" | "qr";
+    createdAt: string;
+    surveyId: string;
+  }>>(() => {
+    try {
+      const savedLinksData = localStorage.getItem('hoogi-saved-links');
+      return savedLinksData ? JSON.parse(savedLinksData) : [];
+    } catch (error) {
+      console.error('Error loading saved links:', error);
+      return [];
+    }
+  });
+
+  // Save links to localStorage whenever savedLinks changes
+  useEffect(() => {
+    localStorage.setItem('hoogi-saved-links', JSON.stringify(savedLinks));
+  }, [savedLinks]);
 
   // Customer response settings - up to 3 templates, each with multiple channels
   const [selectedTemplates, setSelectedTemplates] = useState<Array<{ 
@@ -124,10 +147,73 @@ const Distribution = () => {
       return;
     }
     
-    // Here you would typically save the link or process it
-    toast.success("מלל נוסף בהצלחה");
+    if (!currentUrl || !currentMode || !selectedSurveyId) {
+      toast.error("אנא יצור קישור תחילה");
+      return;
+    }
+    
+    // Save the link with its text
+    const newSavedLink = {
+      id: `link-${Date.now()}`,
+      url: currentUrl,
+      linkText: linkData.linkText.trim(),
+      type: currentMode,
+      createdAt: new Date().toISOString(),
+      surveyId: selectedSurveyId
+    };
+    
+    setSavedLinks(prev => [...prev, newSavedLink]);
+    toast.success("קישור עם מלל נשמר בהצלחה");
     setLinkData({ linkText: "" });
     setShowLinkForm(false);
+  };
+
+  // Delete saved link
+  const handleDeleteSavedLink = (linkId: string) => {
+    setSavedLinks(prev => prev.filter(link => link.id !== linkId));
+    toast.success("קישור נמחק בהצלחה");
+  };
+
+  // Load saved link into current form
+  const handleLoadSavedLink = (savedLink: typeof savedLinks[0]) => {
+    setCurrentUrl(savedLink.url);
+    setCurrentMode(savedLink.type);
+    setLinkData({ linkText: savedLink.linkText });
+    toast.success("קישור נטען בהצלחה");
+  };
+
+  // Copy functions for saved links
+  const copySavedLinkAsButton = async (link: typeof savedLinks[0]) => {
+    const buttonHtml = `<a href="${link.url}" style="display: inline-block; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); transition: all 0.3s ease;">${link.linkText}</a>`;
+    
+    try {
+      const blob = new Blob([buttonHtml], { type: 'text/html' });
+      const data = [new ClipboardItem({ 'text/html': blob, 'text/plain': new Blob([link.linkText], { type: 'text/plain' }) })];
+      await navigator.clipboard.write(data);
+      toast.success("כפתור הועתק ללוח");
+    } catch (err) {
+      await navigator.clipboard.writeText(buttonHtml);
+      toast.success("כפתור הועתק ללוח (HTML)");
+    }
+  };
+
+  const copySavedLinkAsText = async (link: typeof savedLinks[0]) => {
+    const htmlContent = `<a href="${link.url}">${link.linkText}</a>`;
+    
+    try {
+      const blob = new Blob([htmlContent], { type: 'text/html' });
+      const data = [new ClipboardItem({ 'text/html': blob, 'text/plain': new Blob([link.linkText], { type: 'text/plain' }) })];
+      await navigator.clipboard.write(data);
+      toast.success("מלל עם קישור הועתק ללוח");
+    } catch (err) {
+      await navigator.clipboard.writeText(`${link.linkText} - ${link.url}`);
+      toast.success("מלל עם קישור הועתק ללוח");
+    }
+  };
+
+  const copySavedLinkAsLink = (link: typeof savedLinks[0]) => {
+    navigator.clipboard.writeText(link.url);
+    toast.success("קישור הועתק ללוח");
   };
 
   // Copy as button (with full styling) - copies from hidden text area
@@ -458,23 +544,79 @@ const Distribution = () => {
               </div>
 
               {/* Custom Link Form */}
-              <div className="mb-6">
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                  <div className="space-y-6">
+              <div className="mb-8">
+                <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 relative overflow-hidden">
+                  {/* Background Pattern */}
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full -translate-y-16 translate-x-16 opacity-50"></div>
+                  <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-green-100 to-blue-100 rounded-full translate-y-12 -translate-x-12 opacity-50"></div>
+                  
+                  <div className="relative space-y-8">
                     {/* Input Section */}
-                    <div className="space-y-4">
-                      <div>
-                        <Label htmlFor="linkText" className="text-right block text-sm font-medium text-gray-700 mb-2">
-                          מלל הקישור
-                        </Label>
-                        <Input
-                          id="linkText"
-                          value={linkData.linkText}
-                          onChange={(e) => setLinkData({...linkData, linkText: e.target.value})}
-                          className="text-right w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                          placeholder='הזן את המלל שלך כאן...'
-                        />
-                      </div>
+                    <div className="space-y-6">
+                      {/* Link and Text Input - Combined */}
+                      {currentUrl && (
+                        <div className="space-y-4">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {/* Link Display */}
+                            <div className="space-y-2">
+                              <Label className="text-sm font-medium text-gray-700 text-right block">
+                                הקישור
+                              </Label>
+                              <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+                                <div className="flex items-center gap-2">
+                                  <div className="flex-shrink-0">
+                                    <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded flex items-center justify-center">
+                                      <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                      </svg>
+                                    </div>
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-mono text-gray-700 truncate" dir="ltr">
+                                      {currentUrl}
+                                    </p>
+                                  </div>
+                                  <button
+                                    onClick={() => navigator.clipboard.writeText(currentUrl)}
+                                    className="flex-shrink-0 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors duration-200"
+                                  >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                    </svg>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Text Input */}
+                            <div className="space-y-2">
+                              <Label htmlFor="linkText" className="text-sm font-medium text-gray-700 text-right block">
+                                מלל הקישור
+                              </Label>
+                              <Input
+                                id="linkText"
+                                value={linkData.linkText}
+                                onChange={(e) => setLinkData({...linkData, linkText: e.target.value})}
+                                className="text-right w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                                placeholder='הזן את המלל שלך כאן...'
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Message when no link is created */}
+                      {!currentUrl && (
+                        <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 text-center">
+                          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                            </svg>
+                          </div>
+                          <h3 className="text-lg font-semibold text-gray-700 mb-2">צור קישור תחילה</h3>
+                          <p className="text-sm text-gray-500 mb-4">על מנת להוסיף מלל לקישור, יש ליצור קישור תחילה באמצעות הכפתורים למעלה</p>
+                        </div>
+                      )}
                       
                       {/* Hidden text area for link content */}
                       <div className="hidden">
@@ -488,49 +630,162 @@ const Distribution = () => {
                       </div>
                     </div>
                     
-                    {/* Action Buttons */}
-                    <div className="flex flex-wrap gap-3 justify-center">
-                      <Button 
-                        variant="outline" 
-                        onClick={() => setShowLinkForm(false)}
-                        className="px-6 py-2 border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors duration-200"
-                      >
-                        ביטול
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        onClick={copyAsButton} 
-                        disabled={!currentUrl || !linkData.linkText.trim()}
-                        className="px-6 py-2 border-blue-300 text-blue-700 hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
-                      >
-                        כפתור HTML
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        onClick={copyAsText} 
-                        disabled={!linkData.linkText.trim()}
-                        className="px-6 py-2 border-green-300 text-green-700 hover:bg-green-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
-                      >
-                        מלל עם קישור
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        onClick={copyAsLink} 
-                        disabled={!currentUrl}
-                        className="px-6 py-2 border-purple-300 text-purple-700 hover:bg-purple-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
-                      >
-                        רק קישור
-                      </Button>
-                      <Button 
-                        onClick={handleAddLink}
-                        className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
-                      >
-                        הוסף כפתור
-                      </Button>
-                    </div>
+                    {/* Action Buttons - Only show when link exists */}
+                    {currentUrl && (
+                      <div className="flex flex-wrap gap-4 justify-center">
+                        <Button 
+                          variant="outline" 
+                          onClick={() => setShowLinkForm(false)}
+                          className="px-8 py-3 border-2 border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 font-medium rounded-xl"
+                        >
+                          ביטול
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          onClick={copyAsButton} 
+                          disabled={!linkData.linkText.trim()}
+                          className="px-8 py-3 border-2 border-blue-200 text-blue-600 hover:bg-blue-50 hover:border-blue-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 font-medium rounded-xl"
+                        >
+                          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                          כפתור HTML
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          onClick={copyAsText} 
+                          disabled={!linkData.linkText.trim()}
+                          className="px-8 py-3 border-2 border-green-200 text-green-600 hover:bg-green-50 hover:border-green-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 font-medium rounded-xl"
+                        >
+                          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                          </svg>
+                          מלל עם קישור
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          onClick={copyAsLink} 
+                          className="px-8 py-3 border-2 border-purple-200 text-purple-600 hover:bg-purple-50 hover:border-purple-300 transition-all duration-300 font-medium rounded-xl"
+                        >
+                          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                          </svg>
+                          רק קישור
+                        </Button>
+                        <Button 
+                          onClick={handleAddLink}
+                          className="px-8 py-3 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 transition-all duration-300 shadow-xl hover:shadow-2xl font-semibold rounded-xl transform hover:scale-105"
+                        >
+                          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                          </svg>
+                          הוסף כפתור
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
+
+              {/* Saved Links Section */}
+              {savedLinks.length > 0 && (
+                <div className="mb-6">
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <div className="text-center mb-4">
+                      <h3 className="text-lg font-semibold text-gray-900 text-right">קישורים שמורים</h3>
+                      <p className="text-sm text-gray-500 text-right mt-1">הקישורים שלך עם המלל המותאם אישית</p>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      {savedLinks.map((link) => (
+                        <div key={link.id} className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-2">
+                              <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded flex items-center justify-center">
+                                <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                </svg>
+                              </div>
+                              <span className="text-sm font-medium text-gray-700">
+                                {link.type === 'form' ? 'טופס' : link.type === 'chat' ? 'צ\'אט' : 'QR'}
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                {new Date(link.createdAt).toLocaleDateString('he-IL')}
+                              </span>
+                            </div>
+                            <div className="flex gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleLoadSavedLink(link)}
+                                className="px-3 py-1 text-xs"
+                              >
+                                טען
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleDeleteSavedLink(link.id)}
+                                className="px-3 py-1 text-xs text-red-600 hover:text-red-700"
+                              >
+                                מחק
+                              </Button>
+                            </div>
+                          </div>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                            <div>
+                              <p className="text-xs text-gray-500 mb-1">קישור:</p>
+                              <p className="text-sm font-mono text-gray-700 truncate" dir="ltr">{link.url}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-500 mb-1">מלל:</p>
+                              <p className="text-sm text-gray-700">{link.linkText}</p>
+                            </div>
+                          </div>
+                          
+                          {/* Copy action buttons */}
+                          <div className="flex flex-wrap gap-2 pt-3 border-t border-gray-200">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => copySavedLinkAsButton(link)}
+                              className="px-3 py-1 text-xs border-blue-200 text-blue-600 hover:bg-blue-50"
+                            >
+                              <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                              </svg>
+                              כפתור HTML
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => copySavedLinkAsText(link)}
+                              className="px-3 py-1 text-xs border-green-200 text-green-600 hover:bg-green-50"
+                            >
+                              <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                              </svg>
+                              מלל עם קישור
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => copySavedLinkAsLink(link)}
+                              className="px-3 py-1 text-xs border-purple-200 text-purple-600 hover:bg-purple-50"
+                            >
+                              <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                              </svg>
+                              רק קישור
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Guide Section */}
               <div className="mb-6">
@@ -558,10 +813,6 @@ const Distribution = () => {
                 </div>
               </div>
 
-              {/* Preview Section */}
-              {currentMode && currentUrl && <div className="mt-6 md:mt-8 animate-fade-in">
-                  <PreviewPane mode={currentMode} url={currentUrl} />
-                </div>}
             </div>
 
       </div>
