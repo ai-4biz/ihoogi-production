@@ -45,6 +45,35 @@ body {
   direction: rtl;
 }
 
+/* Link Styles */
+a {
+  text-decoration: underline !important;
+  color: #2563eb !important;
+}
+
+a:hover {
+  color: #1d4ed8 !important;
+}
+
+/* Hide URL in links */
+a[href] {
+  text-decoration: underline !important;
+  color: #2563eb !important;
+}
+
+a[href]:hover {
+  color: #1d4ed8 !important;
+}
+
+/* Prevent URL from showing */
+a[href]:after {
+  content: none !important;
+}
+
+a[href]:before {
+  content: none !important;
+}
+
 /* Icon Button Style */
 .icon-btn {
   width: 20px;

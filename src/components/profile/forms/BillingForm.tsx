@@ -35,8 +35,8 @@ const BillingForm = () => {
   
   // Mock data - פרטי המנוי הנוכחי
   const currentPlan = {
-    name: "תוכנית מקצועית",
-    price: "₪99",
+    name: "Pro",
+    price: "₪290",
     period: "חודשי",
     startDate: "15 במאי 2025",
     nextBilling: "15 ביוני 2025",
@@ -45,30 +45,30 @@ const BillingForm = () => {
     whatsappRemaining: 245,
     emailRemaining: 198,
     remindersSent: 12,
-    aiResponseType: "AI חכם",
-    questionnaires: 5
+    aiResponseType: "מענה אישי מעוצב + AI",
+    questionnaires: 3
   };
 
   // Mock data - תשלומים אחרונים
   const recentPayments = [
     {
       date: "15 במאי 2025",
-      type: "מנוי חודשי",
-      amount: "₪99",
+      type: "מנוי חודשי Pro",
+      amount: "₪290",
       status: "שולם",
       invoice: "INV-2025-001"
     },
     {
       date: "20 במאי 2025",
       type: "+100 לידים",
-      amount: "₪29",
+      amount: "₪49",
       status: "שולם",
       invoice: "INV-2025-002"
     },
     {
       date: "15 באפריל 2025",
-      type: "מנוי חודשי",
-      amount: "₪99",
+      type: "מנוי חודשי Pro",
+      amount: "₪290",
       status: "שולם",
       invoice: "INV-2025-003"
     }
@@ -95,49 +95,67 @@ const BillingForm = () => {
   const plans = [
     {
       id: "basic",
-      name: "בסיסי",
-      price: "₪39",
+      name: "חינמי",
+      price: "₪0",
       period: "חודשי",
-      description: "מתאים ליחידים או חברות קטנות שרק מתחילים",
+      description: "לטעום את כל יכולות המערכת – חד פעמי",
       features: [
-        "עד 100 לידים בחודש",
-        "עד 5 שאלונים פעילים",
-        "200 הודעות מייל",
-        "מענה סטנדרטי",
-        "תמיכה בדוא\"ל בלבד"
+        "10 לידים בחודש",
+        "1 שאלון פעיל",
+        "מענה חכם (AI) מלא להתנסות",
+        "עד 30 מייל",
+        "עד 30 וואטסאפ",
+        "תזכורות + עיצוב ממותג"
+      ],
+      isCurrent: false
+    },
+    {
+      id: "basic-paid",
+      name: "Basic",
+      price: "₪179",
+      period: "חודשי",
+      description: "עצמאים קטנים שרוצים לנהל לידים פשוט",
+      features: [
+        "100 לידים בחודש",
+        "1 שאלון פעיל",
+        "מענה סטנדרטי / אישי (ללא AI)",
+        "300 מייל (כולל 2 תזכורות)",
+        "תזכורות מייל בלבד",
+        "עיצוב ממותג"
       ],
       isCurrent: false
     },
     {
       id: "pro",
-      name: "מקצועי",
-      price: "₪99",
+      name: "Pro",
+      price: "₪290",
       period: "חודשי",
-      description: "לעסקים צומחים שצריכים פתרון מקיף יותר",
+      description: "בעלי עסקים פעילים שרוצים אוטומציה מלאה",
       features: [
-        "עד 300 לידים בחודש",
-        "עד 15 שאלונים פעילים",
-        "500 הודעות מייל",
-        "100 הודעות WhatsApp",
-        "AI מענה חכם",
-        "תמיכה בצ'אט ודוא\"ל"
+        "300 לידים בחודש",
+        "3 שאלונים פעילים",
+        "מענה אישי מעוצב + AI",
+        "900 מייל",
+        "300 וואטסאפ",
+        "תזכורות מייל + וואטסאפ",
+        "עיצוב ממותג"
       ],
       isCurrent: true
     },
     {
       id: "premium",
-      name: "פרימיום",
-      price: "₪199",
+      name: "Premium",
+      price: "₪480",
       period: "חודשי", 
-      description: "לארגונים גדולים עם צרכים מורכבים",
+      description: "משרדים וקהילות עם נפח לקוחות גבוה",
       features: [
-        "עד 1000 לידים בחודש",
-        "עד 50 שאלונים פעילים",
-        "1500 הודעות מייל",
-        "500 הודעות WhatsApp",
-        "AI מענה חכם מתקדם",
-        "תמיכה VIP",
-        "אינטגרציות מתקדמות"
+        "600 לידים בחודש",
+        "6 שאלונים פעילים",
+        "מענה חכם + AI משולב (כולל למידת סגנון)",
+        "1800 מייל",
+        "600 וואטסאפ",
+        "תזכורות חכם (עד 3 תזכורות)",
+        "עיצוב ממותג"
       ],
       isCurrent: false
     }
@@ -147,37 +165,102 @@ const BillingForm = () => {
     {
       id: "leads-100",
       name: "+100 לידים",
-      price: "₪29",
-      description: "הרחבת מכסה בלחיצה אחת",
-      icon: "🧲"
+      price: "₪49",
+      description: "הרחבת מכסת לידים (כולל 300 הודעות מייל)",
+      icon: "🧲",
+      note: "חד־פעמית; לא משנה את המנוי — הרווח גדל"
     },
     {
       id: "leads-300",
       name: "+300 לידים",
-      price: "₪69",
-      description: "לעסקים פעילים יותר",
-      icon: "🧲"
+      price: "₪99",
+      description: "הרחבה לעסקים פעילים (כולל 900 הודעות מייל)",
+      icon: "🧲",
+      note: "משתלם למנויי Basic/Pro"
+    },
+    {
+      id: "leads-600",
+      name: "+600 לידים",
+      price: "₪149",
+      description: "הרחבה גדולה (כולל 1800 הודעות מייל)",
+      icon: "🧲",
+      note: "למשרדים"
     },
     {
       id: "email-500",
       name: "+500 הודעות מייל",
-      price: "₪19",
-      description: "תוספת מענה/תזכורות במייל",
-      icon: "📧"
+      price: "₪29",
+      description: "הודעות נוספות למענה או תזכורות",
+      icon: "📧",
+      note: "למי שעובר את המכסה"
     },
     {
       id: "whatsapp-500",
-      name: "+500 הודעות WhatsApp",
-      price: "₪39",
-      description: "הרחבה לשיחות נוספות",
-      icon: "💬"
+      name: "+500 הודעות וואטסאפ",
+      price: "₪59",
+      description: "תוספת הודעות וואטסאפ",
+      icon: "💬",
+      note: "מענה/תזכורות נוספות"
     },
     {
-      id: "ai-tokens",
-      name: "+טוקנים למענה AI",
-      price: "₪29",
-      description: "מאפשר מענה חכם נוסף (כ-300 תשובות)",
-      icon: "🤖"
+      id: "whatsapp-1000",
+      name: "+1000 הודעות וואטסאפ",
+      price: "₪99",
+      description: "מיועד לקמפיינים ומשרדים גדולים",
+      icon: "💬",
+      note: "נרכש לפי הצורך בלבד"
+    }
+  ];
+
+  // נתוני המנויים החדשים
+  const subscriptionPlans = [
+    {
+      level: "חינמי",
+      monthlyPrice: "₪0",
+      monthlyLeads: "10",
+      activeQuestionnaires: "1",
+      customerResponse: "מענה חכם (AI) מלא להתנסות",
+      emailMessages: "עד 30 מייל",
+      whatsappMessages: "עד 30 וואטסאפ",
+      reminders: "✅",
+      brandedDesign: "✅",
+      targetAudience: "לטעום את כל יכולות המערכת – חד פעמי"
+    },
+    {
+      level: "Basic",
+      monthlyPrice: "₪179",
+      monthlyLeads: "100",
+      activeQuestionnaires: "1",
+      customerResponse: "מענה סטנדרטי / אישי (ללא AI)",
+      emailMessages: "300 מייל (כולל 2 תזכורות)",
+      whatsappMessages: "❌",
+      reminders: "מייל בלבד",
+      brandedDesign: "✅",
+      targetAudience: "עצמאים קטנים שרוצים לנהל לידים פשוט"
+    },
+    {
+      level: "Pro",
+      monthlyPrice: "₪290",
+      monthlyLeads: "300",
+      activeQuestionnaires: "3",
+      customerResponse: "מענה אישי מעוצב + AI",
+      emailMessages: "900 מייל",
+      whatsappMessages: "300 וואטסאפ",
+      reminders: "מייל + וואטסאפ",
+      brandedDesign: "✅",
+      targetAudience: "בעלי עסקים פעילים שרוצים אוטומציה מלאה"
+    },
+    {
+      level: "Premium",
+      monthlyPrice: "₪480",
+      monthlyLeads: "600",
+      activeQuestionnaires: "6",
+      customerResponse: "מענה חכם + AI משולב (כולל למידת סגנון)",
+      emailMessages: "1800 מייל",
+      whatsappMessages: "600 וואטסאפ",
+      reminders: "חכם (עד 3 תזכורות)",
+      brandedDesign: "✅",
+      targetAudience: "משרדים וקהילות עם נפח לקוחות גבוה"
     }
   ];
 
@@ -378,12 +461,17 @@ const BillingForm = () => {
             <Card key={addon.id} className="hover:shadow-md transition-shadow">
               <CardContent className="p-6">
                 <div className="flex items-start justify-between mb-4">
-                  <div>
+                  <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-2xl">{addon.icon}</span>
                       <h3 className="font-semibold">{addon.name}</h3>
                     </div>
-                    <p className="text-sm text-muted-foreground">{addon.description}</p>
+                    <p className="text-sm text-muted-foreground mb-2">{addon.description}</p>
+                    {addon.note && (
+                      <p className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                        {addon.note}
+                      </p>
+                    )}
                   </div>
                   <div className="text-right">
                     <div className="text-xl font-bold text-primary">{addon.price}</div>
@@ -486,35 +574,111 @@ const BillingForm = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-3">
-                <h4 className="font-semibold">יתרונות התוכנית:</h4>
-                <ul className="space-y-2">
-                  <li className="flex items-center gap-2">
-                    <CheckIcon className="h-4 w-4 text-green-500" />
-                    <span className="text-sm">20% עמלה חוזרת מכל לקוח שתפנה</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckIcon className="h-4 w-4 text-green-500" />
-                    <span className="text-sm">פאנל ניהול מתקדם לעקוב אחר ההכנסות</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckIcon className="h-4 w-4 text-green-500" />
-                    <span className="text-sm">חומרי שיווק ותמיכה ייעודית</span>
-                  </li>
-                </ul>
-              </div>
-              <div className="space-y-3">
-                <div className="text-center p-4 bg-purple-100 rounded-lg">
-                  <div className="text-2xl font-bold text-purple-600">20%</div>
-                  <p className="text-sm text-muted-foreground">עמלה ממוצעת</p>
+            <div className="space-y-6">
+              {/* מבנה עמלות */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-white rounded-lg p-4 border">
+                  <h4 className="font-semibold text-lg mb-2">עמלה לפי תוכנית</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span>Basic (₪179)</span>
+                      <span className="font-medium">₪36</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Pro (₪290)</span>
+                      <span className="font-medium">₪58</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Premium (₪480)</span>
+                      <span className="font-medium">₪96</span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">20% עמלה חודשית חוזרת</p>
                 </div>
-                <Button 
-                  className="w-full" 
-                  onClick={() => toast.success("בקשתך התקבלה! ניצור איתך קשר בקרוב")}
-                >
-                  הצטרף עכשיו
-                </Button>
+
+                <div className="bg-white rounded-lg p-4 border">
+                  <h4 className="font-semibold text-lg mb-2">עמלה על תוספות</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span>+100 לידים (₪49)</span>
+                      <span className="font-medium">₪10</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>+300 לידים (₪99)</span>
+                      <span className="font-medium">₪20</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>+500 מייל (₪29)</span>
+                      <span className="font-medium">₪6</span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">עמלה חד פעמית</p>
+                </div>
+
+                <div className="bg-white rounded-lg p-4 border">
+                  <h4 className="font-semibold text-lg mb-2">תגמולים נוספים</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span>50+ לקוחות</span>
+                      <span className="font-medium">+5% בונוס</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>100+ לקוחות</span>
+                      <span className="font-medium">+10% בונוס</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>הפניה שנתית</span>
+                      <span className="font-medium">+2% בונוס</span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">תגמולים הדרגתיים</p>
+                </div>
+              </div>
+
+              {/* יתרונות התוכנית */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <h4 className="font-semibold">יתרונות התוכנית:</h4>
+                  <ul className="space-y-2">
+                    <li className="flex items-center gap-2">
+                      <CheckIcon className="h-4 w-4 text-green-500" />
+                      <span className="text-sm">עמלה חודשית חוזרת ללא הגבלת זמן</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckIcon className="h-4 w-4 text-green-500" />
+                      <span className="text-sm">פאנל ניהול מתקדם עם דוחות מפורטים</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckIcon className="h-4 w-4 text-green-500" />
+                      <span className="text-sm">חומרי שיווק מקצועיים וקודי הטמעה</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckIcon className="h-4 w-4 text-green-500" />
+                      <span className="text-sm">תמיכה ייעודית לשותפים</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckIcon className="h-4 w-4 text-green-500" />
+                      <span className="text-sm">תשלום מהיר - כל 30 יום</span>
+                    </li>
+                  </ul>
+                </div>
+                <div className="space-y-4">
+                  <div className="text-center p-4 bg-gradient-to-r from-purple-100 to-blue-100 rounded-lg">
+                    <div className="text-2xl font-bold text-purple-600 mb-1">20%–35%</div>
+                    <p className="text-sm text-muted-foreground">עמלה כולל בונוסים</p>
+                  </div>
+                  <div className="bg-blue-50 rounded-lg p-3 text-sm">
+                    <h5 className="font-medium mb-2">דוגמה לחישוב:</h5>
+                    <p>לקוח Pro (₪290) × 20% = ₪58 עמלה חודשית</p>
+                    <p className="text-muted-foreground">עם 100+ לקוחות: +10% בונוס</p>
+                  </div>
+                  <Button 
+                    className="w-full" 
+                    onClick={() => toast.success("בקשתך התקבלה! ניצור איתך קשר בקרוב")}
+                  >
+                    הצטרף עכשיו
+                  </Button>
+                </div>
               </div>
             </div>
           </CardContent>

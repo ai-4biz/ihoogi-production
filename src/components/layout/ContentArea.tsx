@@ -32,7 +32,12 @@ const ContentArea = ({ currentState, handleStateChange, isMobile, children }: Co
         "rtl:mr-[220px] ltr:ml-[220px]"
       )}
     >
-      {currentState === "root" ? (
+      {/* Show children content if it exists */}
+      {children ? (
+        <div className="h-full w-full">
+          {children}
+        </div>
+      ) : currentState === "root" ? (
         <div className="h-full flex items-center justify-center p-4">
           {/* Language Selection */}
           <div className="absolute top-4 right-4 flex gap-2">
@@ -147,7 +152,7 @@ const ContentArea = ({ currentState, handleStateChange, isMobile, children }: Co
             </Button>
           </div>
           <div className="flex-1 overflow-auto p-4">
-            {children}
+            {/* This should not happen if children exists */}
           </div>
         </div>
       )}

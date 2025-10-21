@@ -184,9 +184,10 @@ const NavigationButtons = ({
       id: "affiliate",
       emoji: "🤝",
       label: "השותפים שלי",
-      state: "affiliate" as ViewState,
-      active: currentState === "affiliate",
-      color: "indigo"
+      state: "root" as ViewState,
+      active: window.location.pathname === "/my-partners",
+      color: "indigo",
+      onClick: () => navigate("/my-partners")
     });
   }
   

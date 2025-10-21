@@ -27,6 +27,7 @@ import Login from "./pages/Login";
 import TermsOfService from "./pages/TermsOfService";
 import SurveysPage from "./pages/surveys/index";
 import Distribution from "./pages/Distribution";
+import Guide from "./pages/Guide";
 import QuestionnaireView from "./pages/QuestionnaireView";
 import CreateTemplate from "./pages/CreateTemplate";
 import Notifications from "./pages/Notifications";
@@ -71,9 +72,11 @@ const App = () => {
               <Route path="/subscription-plans" element={<SubscriptionPlans />} />
               <Route path="/my-hoogi" element={<MyHoogi />} />
               <Route path="/distribution" element={<Distribution />} />
+              <Route path="/guide" element={<Guide />} />
               <Route path="/create-template" element={<CreateTemplate />} />
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/partners" element={<PartnersManagement />} />
+              <Route path="/my-partners" element={<PartnersManagement />} />
               <Route path="/messages" element={<Messages />} />
               <Route path="/admin/contact-routing" element={<ContactRoutingSettings />} />
               <Route path="/admin/email-templates" element={<EmailTemplates />} />

@@ -5,6 +5,8 @@ import SurveyPicker from "@/components/surveys/SurveyPicker";
 import QuickLinks from "@/components/surveys/QuickLinks";
 import PreviewPane from "@/components/surveys/PreviewPane";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Mail, MessageCircle, Smartphone, ExternalLink, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -28,6 +30,12 @@ const Distribution = () => {
   const [selectedSurveyId, setSelectedSurveyId] = useState<string>("");
   const [currentMode, setCurrentMode] = useState<"form" | "chat" | "qr" | null>(null);
   const [currentUrl, setCurrentUrl] = useState<string>("");
+
+  // Custom link form state
+  const [showLinkForm, setShowLinkForm] = useState(false);
+  const [linkData, setLinkData] = useState({
+    linkText: ""
+  });
 
   // Customer response settings - up to 3 templates, each with multiple channels
   const [selectedTemplates, setSelectedTemplates] = useState<Array<{ 
@@ -107,6 +115,104 @@ const Distribution = () => {
   const handlePreviewLink = (link: any) => {
     setCurrentMode(link.type);
     setCurrentUrl(link.url);
+  };
+
+  // Custom link form functions
+  const handleAddLink = () => {
+    if (!linkData.linkText.trim()) {
+      toast.error("אנא מלא את שדה המלל");
+      return;
+    }
+    
+    // Here you would typically save the link or process it
+    toast.success("מלל נוסף בהצלחה");
+    setLinkData({ linkText: "" });
+    setShowLinkForm(false);
+  };
+
+  // Copy as button (with full styling) - copies from hidden text area
+  const copyAsButton = () => {
+    if (!linkData.linkText.trim() || !currentUrl) {
+      toast.error("אנא מלא את שדה המלל ויצור קישור תחילה");
+      return;
+    }
+    
+    // Get content from hidden text area
+    const hiddenContent = linkData.linkText;
+    
+    // Create HTML button with gradient background and icon - smaller version
+    const htmlContent = `
+      <div style="background: linear-gradient(to right, #3b82f6, #f97316); padding: 12px; border-radius: 8px; text-align: center;">
+        <a href="${currentUrl}" target="_blank" style="display: inline-flex; align-items: center; gap: 4px; padding: 8px 16px; background: rgba(255,255,255,0.2); backdrop-filter: blur(4px); border-radius: 6px; color: white; font-weight: 500; text-decoration: none; transition: all 0.2s; font-size: 14px;">
+          ${hiddenContent}
+          <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+          </svg>
+        </a>
+      </div>
+    `;
+    
+    // Try to copy as HTML first (for rich text editors)
+    if (navigator.clipboard.write) {
+      const clipboardItem = new ClipboardItem({
+        'text/html': new Blob([htmlContent], { type: 'text/html' }),
+        'text/plain': new Blob([hiddenContent], { type: 'text/plain' })
+      });
+      
+      navigator.clipboard.write([clipboardItem]).then(() => {
+        toast.success("כפתור הקישור הועתק ללוח");
+      }).catch(() => {
+        // Fallback to plain text
+        navigator.clipboard.writeText(hiddenContent);
+        toast.success("מלל הכפתור הועתק ללוח");
+      });
+    } else {
+      // Fallback for older browsers
+      navigator.clipboard.writeText(hiddenContent);
+      toast.success("מלל הכפתור הועתק ללוח");
+    }
+  };
+
+  // Copy as text with link
+  const copyAsText = () => {
+    if (!linkData.linkText.trim() || !currentUrl) {
+      toast.error("אנא מלא את שדה המלל ויצור קישור תחילה");
+      return;
+    }
+    
+    // Create clickable text with link
+    const htmlContent = `<a href="${currentUrl}" target="_blank">${linkData.linkText}</a>`;
+    
+    // Try to copy as HTML first (for rich text editors)
+    if (navigator.clipboard.write) {
+      const clipboardItem = new ClipboardItem({
+        'text/html': new Blob([htmlContent], { type: 'text/html' }),
+        'text/plain': new Blob([linkData.linkText], { type: 'text/plain' })
+      });
+      
+      navigator.clipboard.write([clipboardItem]).then(() => {
+        toast.success("מלל הקישור הועתק ללוח");
+      }).catch(() => {
+        // Fallback to plain text
+        navigator.clipboard.writeText(linkData.linkText);
+        toast.success("מלל הכפתור הועתק ללוח");
+      });
+    } else {
+      // Fallback for older browsers
+      navigator.clipboard.writeText(linkData.linkText);
+      toast.success("מלל הכפתור הועתק ללוח");
+    }
+  };
+
+  // Copy as link only
+  const copyAsLink = () => {
+    if (!currentUrl) {
+      toast.error("אנא יצור קישור תחילה");
+      return;
+    }
+    
+    navigator.clipboard.writeText(currentUrl);
+    toast.success("קישור הועתק ללוח");
   };
   return <MainLayout initialState="content">
       <div className="flex flex-col w-full space-y-6 p-4 md:p-8 bg-background" dir="rtl">
@@ -349,6 +455,107 @@ const Distribution = () => {
               {/* Quick Links Section */}
               <div className="mb-6">
                 <QuickLinks currentUrl={currentUrl} onBuild={handleBuildLink} onCopy={handleCopyUrl} onPreview={handlePreviewLink} disabled={!selectedSurveyId} />
+              </div>
+
+              {/* Custom Link Form */}
+              <div className="mb-6">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                  <div className="space-y-6">
+                    {/* Input Section */}
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="linkText" className="text-right block text-sm font-medium text-gray-700 mb-2">
+                          מלל הקישור
+                        </Label>
+                        <Input
+                          id="linkText"
+                          value={linkData.linkText}
+                          onChange={(e) => setLinkData({...linkData, linkText: e.target.value})}
+                          className="text-right w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                          placeholder='הזן את המלל שלך כאן...'
+                        />
+                      </div>
+                      
+                      {/* Hidden text area for link content */}
+                      <div className="hidden">
+                        <Label htmlFor="linkContent" className="text-right">תוכן הקישור</Label>
+                        <Input
+                          id="linkContent"
+                          value={linkData.linkText}
+                          readOnly
+                          className="text-right mt-2"
+                        />
+                      </div>
+                    </div>
+                    
+                    {/* Action Buttons */}
+                    <div className="flex flex-wrap gap-3 justify-center">
+                      <Button 
+                        variant="outline" 
+                        onClick={() => setShowLinkForm(false)}
+                        className="px-6 py-2 border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+                      >
+                        ביטול
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        onClick={copyAsButton} 
+                        disabled={!currentUrl || !linkData.linkText.trim()}
+                        className="px-6 py-2 border-blue-300 text-blue-700 hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                      >
+                        כפתור HTML
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        onClick={copyAsText} 
+                        disabled={!linkData.linkText.trim()}
+                        className="px-6 py-2 border-green-300 text-green-700 hover:bg-green-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                      >
+                        מלל עם קישור
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        onClick={copyAsLink} 
+                        disabled={!currentUrl}
+                        className="px-6 py-2 border-purple-300 text-purple-700 hover:bg-purple-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                      >
+                        רק קישור
+                      </Button>
+                      <Button 
+                        onClick={handleAddLink}
+                        className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+                      >
+                        הוסף כפתור
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Guide Section */}
+              <div className="mb-6">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                  <div className="text-center mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900 text-right">העתקת קישור לרשתות השונות</h3>
+                    <p className="text-sm text-gray-500 text-right mt-1">לאתר, לווראטאפ ולדפי נחיתה - כל רשת עם החוקים שלה</p>
+                    <Button 
+                      onClick={() => window.open('/guide', '_blank')}
+                      className="mt-3 px-6 py-2 bg-gradient-to-r from-green-500 to-blue-600 text-white hover:from-green-600 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+                    >
+                      📊 הצג מדריך מפורט
+                    </Button>
+                  </div>
+                  
+                  {/* Quick Summary */}
+                  <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <p className="text-sm text-blue-800 text-right leading-relaxed">
+                      <strong>💡 סיכום מהיר:</strong><br/>
+                      • <strong>מלל עם קישור:</strong> WhatsApp, Telegram, Email, Facebook רגיל<br/>
+                      • <strong>רק קישור:</strong> Twitter, LinkedIn, SMS, YouTube, TikTok Bio<br/>
+                      • <strong>כפתור HTML:</strong> אתרים, דפי נחיתה, מודעות ממומנות
+                    </p>
+                  </div>
+                </div>
               </div>
 
               {/* Preview Section */}
