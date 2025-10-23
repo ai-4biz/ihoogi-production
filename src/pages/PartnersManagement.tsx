@@ -1461,6 +1461,10 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     commissionIncludesAddons: true, // עמלה כוללת תוספות קניית לידים
     separatePaymentPerUser: true, // הפרדת תשלום לכל משתמש
     
+    // הגדרות תשלום חדשות
+    paymentForBasicSubscription: true, // תשלום עבור מנוי בסיסי
+    paymentForAddons: true, // תשלום עבור תוספות
+    
     // הגדרות נוספות
     status: 'active' as 'active' | 'inactive',
     joinDate: new Date().toISOString().split('T')[0],
@@ -1974,6 +1978,81 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                         </div>
                       )}
                     </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* לינק שותף ייחודי - נוסף לפרטים אישיים */}
+        {currentStep === 1 && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-right flex items-center gap-2">
+                <Link className="h-5 w-5 text-blue-600" />
+                לינק שותף ייחודי
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="max-w-2xl mx-auto">
+                <div className="p-4 bg-blue-50 rounded-lg">
+                  <Label htmlFor="uniqueLink" className="text-right">לינק שותף *</Label>
+                  <div className="flex gap-2 mt-2">
+                    <Input
+                      id="uniqueLink"
+                      value={formData.uniqueLink}
+                      onChange={(e) => handleFieldChange('uniqueLink', e.target.value)}
+                      className="text-right font-mono text-sm flex-1"
+                      placeholder="https://hoogi.co/partner/..."
+                    />
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        handleFieldChange('uniqueLink', generateUniqueLink());
+                      }}
+                    >
+                      <RefreshCw className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        navigator.clipboard.writeText(formData.uniqueLink);
+                      }}
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <p className="text-sm text-gray-600 text-right mt-2">
+                    לינק זה יזהה את השותף ויאפשר מעקב אחר פעילות ההפצה שלו/ה
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="linkExpiryDays" className="text-right">תוקף לינק (ימים)</Label>
+                    <Input
+                      id="linkExpiryDays"
+                      type="number"
+                      value={formData.linkExpiryDays}
+                      onChange={(e) => handleFieldChange('linkExpiryDays', e.target.value)}
+                      className="text-right"
+                      placeholder="30"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="internalNotes" className="text-right">הערות פנימיות</Label>
+                    <Textarea
+                      id="internalNotes"
+                      value={formData.internalNotes}
+                      onChange={(e) => handleFieldChange('internalNotes', e.target.value)}
+                      className="text-right"
+                      placeholder="הערות נוספות על השותף..."
+                      rows={2}
+                    />
                   </div>
                 </div>
               </div>
@@ -2717,78 +2796,24 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 </div>
               )}
 
-              {/* תנאי תשלום משופרים */}
-              <div className="mt-8 space-y-6 p-4 bg-blue-50 rounded-lg">
-                <h4 className="font-semibold text-right flex items-center gap-2">
-                  <Clock className="h-5 w-5 text-blue-600" />
-                  תנאי תשלום - הפרדה לכל משתמש
-                </h4>
-                
-                <div className="bg-white p-4 rounded border">
-                  <div className="space-y-4">
-                    <div>
-                      <Label className="text-right text-base font-medium">מתי ישולם התשלום לשותף?</Label>
-                      <Select value={formData.paymentCondition} onValueChange={(value) => handleFieldChange('paymentCondition', value)}>
-                        <SelectTrigger className="text-right mt-2">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="after_one_paid_month">
-                            🔐 רק אחרי חודש מנוי אחד ששולם במלואו
-                          </SelectItem>
-                          <SelectItem value="after_lead_month_plus_days">
-                            ⏰ חודש מהליד + X ימים ביטחון
-                          </SelectItem>
-                          <SelectItem value="immediate">
-                            ⚡ תשלום מיידי (לא מומלץ)
-                          </SelectItem>
-                          <SelectItem value="after_lead_conversion_only">
-                            🎯 רק על פי המרת לידים אמיתית
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    {formData.paymentCondition === 'after_lead_month_plus_days' && (
-                      <div>
-                        <Label className="text-right">ימים נוספים מעבר לחודש (ביטחון)</Label>
-                        <div className="flex items-center gap-2 mt-2">
-                          <Input
-                            type="number"
-                            value={formData.paymentDelayDays}
-                            onChange={(e) => handleFieldChange('paymentDelayDays', Number(e.target.value))}
-                            className="text-right w-20"
-                            min="0"
-                            max="30"
-                          />
-                          <span className="text-sm text-gray-600">ימים</span>
-                        </div>
-                        <p className="text-xs text-gray-600 text-right mt-1">
-                          ימים נוספים מעבר לחודש הראשון לקבלת הליד (ביטחון נגד ביטולים)
-                        </p>
-                      </div>
-                    )}
-
-                    {/* הגדרות עמלה */}
-                    <div className="space-y-4 p-3 bg-gray-50 rounded">
-                      <h5 className="font-medium text-right">הגדרות עמלה מפורטות</h5>
-                      
-                      <div className="flex items-center justify-between">
-                        <Label className="text-right">העמלה כוללת את תשלום הבסיס (מנוי)</Label>
-                        <Switch
-                          checked={formData.commissionIncludesBase}
-                          onCheckedChange={(checked) => handleFieldChange('commissionIncludesBase', checked)}
-                        />
-                      </div>
-                      
-                      <div className="flex items-center justify-between">
-                        <Label className="text-right">העמלה כוללת תוספות קניית לידים (+100, +300 וכו')</Label>
-                        <Switch
-                          checked={formData.commissionIncludesAddons}
-                          onCheckedChange={(checked) => handleFieldChange('commissionIncludesAddons', checked)}
-                        />
-                      </div>
-                    </div>
+              {/* הגדרות תשלום */}
+              <div className="mt-6 p-4 bg-green-50 rounded-lg border border-green-200">
+                <h5 className="font-medium text-green-800 mb-3">הגדרות תשלום</h5>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-3 bg-white rounded-lg border">
+                    <Label className="text-right font-medium">תשלום עבור מנוי בסיסי</Label>
+                    <Switch
+                      checked={formData.paymentForBasicSubscription || false}
+                      onCheckedChange={(checked) => handleFieldChange('paymentForBasicSubscription', checked)}
+                    />
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-3 bg-white rounded-lg border">
+                    <Label className="text-right font-medium">תשלום עבור תוספות</Label>
+                    <Switch
+                      checked={formData.paymentForAddons || false}
+                      onCheckedChange={(checked) => handleFieldChange('paymentForAddons', checked)}
+                    />
                   </div>
                 </div>
               </div>
@@ -2920,75 +2945,6 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           </Card>
         )}
 
-        {currentStep === 4 && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-right flex items-center gap-2">
-                <Link className="h-5 w-5 text-blue-600" />
-                לינק שותף ייחודי
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="p-4 bg-blue-50 rounded-lg">
-                <Label htmlFor="uniqueLink" className="text-right">לינק שותף *</Label>
-                <div className="flex gap-3 mt-2">
-                  <Input
-                    id="uniqueLink"
-                    value={formData.uniqueLink}
-                    onChange={(e) => handleFieldChange('uniqueLink', e.target.value)}
-                    className="text-right font-mono text-sm flex-1"
-                    placeholder="https://hoogi.co/partner/..."
-                  />
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => {
-                      handleFieldChange('uniqueLink', generateUniqueLink());
-                    }}
-                  >
-                    <RefreshCw className="h-4 w-4" />
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => {
-                      navigator.clipboard.writeText(formData.uniqueLink);
-                    }}
-                  >
-                    <Copy className="h-4 w-4" />
-                  </Button>
-                </div>
-                <p className="text-sm text-gray-600 text-right mt-2">
-                  לינק זה יזהה את השותף ויאפשר מעקב אחר פעילות ההפצה שלו/ה
-                </p>
-              </div>
-
-              <div>
-                <Label htmlFor="linkExpiryDays" className="text-right">תוקף לינק (ימים)</Label>
-                <Input
-                  id="linkExpiryDays"
-                  type="number"
-                  value={formData.linkExpiryDays}
-                  onChange={(e) => handleFieldChange('linkExpiryDays', e.target.value)}
-                  className="text-right"
-                  placeholder="30"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="internalNotes" className="text-right">הערות פנימיות</Label>
-                <Textarea
-                  id="internalNotes"
-                  value={formData.internalNotes}
-                  onChange={(e) => handleFieldChange('internalNotes', e.target.value)}
-                  className="text-right"
-                  placeholder="הערות נוספות על השותף..."
-                  rows={3}
-                />
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         {currentStep === 5 && (
           <Card>
