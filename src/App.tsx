@@ -22,6 +22,7 @@ import Organizations from "./pages/Organizations";
 import Subscriptions from "./pages/Subscriptions";
 import SubscriptionPlans from "./pages/SubscriptionPlans";
 import MyHoogi from "./pages/MyHoogi";
+import HeroSection from "./components/dashboard/HeroSection";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import TermsOfService from "./pages/TermsOfService";
@@ -49,7 +50,7 @@ const App = () => {
         <TooltipProvider>
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<MainDashboard />} />
+              <Route path="/" element={<HeroSection onGetStarted={() => {}} />} />
               <Route path="/onboarding" element={<Onboarding />} />
               <Route path="/main-dashboard" element={<MainDashboard />} />
               <Route path="/content-inspiration" element={<ContentInspiration />} />

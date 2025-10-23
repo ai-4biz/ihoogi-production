@@ -38,24 +38,24 @@ const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
 
   const benefits = [
     {
-      icon: <MessageSquare className="w-8 h-8 text-primary" />,
-      title: "כלי מכירה חכם",
-      description: "הופכים שאלונים לכלי מכירה – מעוצבים, מקצועיים ומותאמים אישית לכל פלטפורמה."
-    },
-    {
       icon: <MapPin className="w-8 h-8 text-primary" />,
       title: "מרכז במקום אחד",
-      description: "כל התשובות והלידים מרכזיים במקום אחד – לא משנה איפה ענו: רשתות חברתיות, ווטסאפ, אתר או דף נחיתה."
+      description: "כל הלידים, התשובות והשיחות מרוכזים במקום אחד – בלי לפספס אף פנייה. האתר, המיילים, הוואטסאפ והרשתות החברתיות – כולם מתכנסים לדף ניהול נוח אחד."
     },
     {
-      icon: <Target className="w-8 h-8 text-primary" />,
-      title: "לידים חיים ומעוניינים",
-      description: "לידים שמגיעים מוכנים לשיחה – מקדמים את התהליך ומאפשרים את טיקיי הסגירה."
+      icon: <MessageSquare className="w-8 h-8 text-primary" />,
+      title: "כלי מכירה חכם",
+      description: "כל שאלון הופך לכלי מכירה מעוצב וחכם – שמותאם אישית לכל עסק, מקצועי ומוכן לשיתוף בכל פלטפורמה."
     },
     {
       icon: <Zap className="w-8 h-8 text-primary" />,
       title: "אוטומציה שעובדת בשבילך",
-      description: "חוסכים זמן ומקדמים סגירה עם אוטומציה חכמה שעונה ללקוח, מסננת את המידע החשוב, שולחת מענה אוטומטי ומזכירה ליצור קשר."
+      description: "חוסכים זמן ומקדמים סגירות עם אוטומציה חכמה. המערכת שולחת מענה אוטומטי, מתזכרת לקוחות ומייצרת קשר חם – באופן אישי ומדויק."
+    },
+    {
+      icon: <Target className="w-8 h-8 text-primary" />,
+      title: "לידים חיים ומניעים",
+      description: "הלידים שלך לא נעלמים – הם מקבלים מענה חכם שממשיך את השיח ומוביל אותם לשלב הבא בתהליך המכירה."
     }
   ];
 
@@ -81,7 +81,7 @@ const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
             ברוכים הבאים ל-<span className="text-primary">Hoogi</span>
           </h1>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            מערכת שאלונים חכמה שמייצרת לידים חמים, מורכת הכל במקום אחד ומקדמת סיגרות – אוטומטית.
+            מערכת חכמה שממירה שאלונים ללידים חמים, מרכזת את כל הפניות במקום אחד ומקדמת אותך לסגירת עסקה בקליק.
           </p>
         </div>
 
@@ -107,123 +107,32 @@ const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
           ))}
         </div>
 
-        {/* Registration Form */}
-        <div className="max-w-2xl mx-auto bg-card p-8 rounded-lg shadow-lg border border-border animate-fade-in" style={{ animationDelay: "0.4s" }}>
-          <h2 className="text-2xl font-bold text-center mb-6">הירשם עכשיו</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="username" className="text-right block">שם משתמש</Label>
-              <Input
-                id="username"
-                type="text"
-                value={formData.username}
-                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                className="text-right"
-                required
-              />
-            </div>
+        {/* Action Buttons */}
+        <div className="text-center space-y-4">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              size="lg" 
+              className="px-8 py-3 text-lg"
+              onClick={() => navigate('/signup')}
+            >
+              הירשם
+            </Button>
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="px-8 py-3 text-lg"
+              onClick={() => navigate('/login')}
+            >
+              התחבר
+            </Button>
+          </div>
+        </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-right block">מייל</Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="text-right"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="emailConfirm" className="text-right block">עימות מייל</Label>
-              <Input
-                id="emailConfirm"
-                type="email"
-                value={formData.emailConfirm}
-                onChange={(e) => setFormData({ ...formData, emailConfirm: e.target.value })}
-                className="text-right"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-right block">סיסמא</Label>
-              <Input
-                id="password"
-                type="password"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="text-right"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="passwordConfirm" className="text-right block">עימות סיסמא</Label>
-              <Input
-                id="passwordConfirm"
-                type="password"
-                value={formData.passwordConfirm}
-                onChange={(e) => setFormData({ ...formData, passwordConfirm: e.target.value })}
-                className="text-right"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="language" className="text-right block">בחירת שפה</Label>
-              <Select value={formData.language} onValueChange={(value) => setFormData({ ...formData, language: value })}>
-                <SelectTrigger id="language" className="text-right">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="he">עברית</SelectItem>
-                  <SelectItem value="en">English</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="flex items-start gap-2 pt-2">
-              <Checkbox
-                id="terms"
-                checked={formData.termsAccepted}
-                onCheckedChange={(checked) => setFormData({ ...formData, termsAccepted: checked as boolean })}
-              />
-              <Label htmlFor="terms" className="text-sm text-right cursor-pointer leading-relaxed">
-                אני מסכים/ה לתנאי השימוש והתקנון
-              </Label>
-            </div>
-
-            <div className="flex items-start gap-2">
-              <Checkbox
-                id="marketing"
-                checked={formData.marketingAccepted}
-                onCheckedChange={(checked) => setFormData({ ...formData, marketingAccepted: checked as boolean })}
-              />
-              <Label htmlFor="marketing" className="text-sm text-right cursor-pointer leading-relaxed">
-                אני מסכים/ה לקבל תוכן שיווקי
-              </Label>
-            </div>
-
-            <div className="flex gap-4">
-              <Button 
-                type="button"
-                variant="outline"
-                className="flex-1 py-6 text-lg"
-                onClick={() => navigate("/login")}
-              >
-                התחבר
-              </Button>
-              <Button 
-                type="submit" 
-                className="flex-1 py-6 text-lg"
-                disabled={!formData.termsAccepted}
-              >
-                הירשם עכשיו
-              </Button>
-            </div>
-          </form>
+        {/* Legal Notice */}
+        <div className="text-center mt-12 pt-6 border-t border-border/50">
+          <p className="text-xs text-muted-foreground leading-relaxed max-w-4xl mx-auto">
+            iHoogi™ היא מערכת בבעלות ובניהול AI-4Biz. כל הזכויות שמורות. השימוש במערכת כפוף ל<a href="/terms-of-service" className="text-primary hover:underline">תנאי השימוש</a> ולמדיניות הפרטיות של החברה.
+          </p>
         </div>
       </div>
     </div>

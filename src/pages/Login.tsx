@@ -30,7 +30,7 @@ const Login = () => {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     toast.success("התחברת בהצלחה!");
-    navigate("/main-dashboard");
+    navigate("/my-hoogi");
   };
 
   const handleForgotPassword = (e: React.FormEvent) => {

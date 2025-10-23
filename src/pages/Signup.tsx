@@ -158,6 +158,13 @@ const Signup = () => {
             </div>
           </form>
         </div>
+
+        {/* Legal Notice */}
+        <div className="text-center mt-8 pt-6 border-t border-border/50">
+          <p className="text-xs text-muted-foreground leading-relaxed max-w-4xl mx-auto">
+            iHoogi™ היא מערכת בבעלות ובניהול AI-4Biz. כל הזכויות שמורות. השימוש במערכת כפוף ל<a href="/terms-of-service" className="text-primary hover:underline">תנאי השימוש</a> ולמדיניות הפרטיות של החברה.
+          </p>
+        </div>
       </div>
     </div>
   );

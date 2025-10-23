@@ -34,7 +34,7 @@ const Header = ({ className }: HeaderProps) => {
               <ul className="flex items-center space-x-4 space-x-reverse">
                 <li>
                   <a
-                    href="/main-dashboard"
+                    href="/"
                     className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
                   >
                     דף הבית

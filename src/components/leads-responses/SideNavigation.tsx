@@ -16,7 +16,7 @@ const SideNavigation = ({ activeRoute }: SideNavigationProps) => {
     {
       icon: "🏠",
       label: "דף הבית",
-      path: "/main-dashboard"
+      path: "/"
     },
     {
       icon: "✍️",

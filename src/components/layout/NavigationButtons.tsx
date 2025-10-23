@@ -174,7 +174,7 @@ const NavigationButtons = ({
       state: "root" as ViewState,
       active: currentState === "root",
       color: "blue",
-      onClick: () => navigate("/main-dashboard")
+      onClick: () => navigate("/")
     }
   ];
 

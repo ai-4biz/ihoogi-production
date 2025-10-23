@@ -28,8 +28,8 @@ const Sidebar = ({ activeItem }: SidebarProps) => {
     {
       icon: <Home className="w-5 h-5" />,
       label: "דף הבית",
-      path: "/main-dashboard",
-      active: activeItem === "main-dashboard"
+      path: "/terms-of-service",
+      active: activeItem === "terms-of-service"
     },
     {
       icon: <FileText className="w-5 h-5" />,

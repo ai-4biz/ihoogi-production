@@ -9,7 +9,7 @@ const TermsOfService = () => {
   const [language, setLanguage] = useState<'he' | 'en'>('he');
 
   useEffect(() => {
-    document.title = language === 'he' ? "iHoogi – תנאי שימוש ותקנון" : "iHoogi – Terms of Service & Privacy Policy";
+    document.title = language === 'he' ? "Ai-4.BIZ – תנאי שימוש ותקנון" : "Ai-4.BIZ – Terms of Service & Privacy Policy";
   }, [language]);
 
   const toggleLanguage = () => {
@@ -23,7 +23,7 @@ const TermsOfService = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-right">
             <CheckCircle className="h-5 w-5 text-primary" />
-            תקנון אחיד ומלא (Master Terms & Privacy Policy)
+            תקנון ותנאי שימוש – iHoogi / AI-4Biz
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 text-right">
@@ -45,6 +45,9 @@ const TermsOfService = () => {
           <p className="text-sm leading-relaxed">
             ✓ הגנה על קניין רוחני
           </p>
+          <p className="text-sm leading-relaxed">
+            ✓ שירותים מבוססי בינה מלאכותית (AI)
+          </p>
         </CardContent>
       </Card>
 
@@ -59,13 +62,19 @@ const TermsOfService = () => {
           </CardHeader>
           <CardContent className="space-y-3 text-right">
             <p className="leading-relaxed">
-              מסמך זה מהווה את התקנון, תנאי השימוש ומדיניות הפרטיות של פלטפורמת <strong>iHoogi Ltd.</strong> (להלן: "החברה", "אנו", "השירות").
+              <strong>1.1</strong> תקנון זה מהווה הסכם מחייב בין המשתמש לבין <strong>AI-4Biz</strong> (להלן: "החברה", "אנחנו", "שלנו") – הבעלים והמפעילה הבלעדית של הפלטפורמה <strong>iHoogi</strong>, לרבות הסוכן הדיגיטלי "I-Hoogi", וכל השירותים, המערכות והתכנים הנלווים.
             </p>
             <p className="leading-relaxed">
-              השימוש בשירות מהווה הסכמה מלאה ובלתי חוזרת לכל התנאים המפורטים להלן.
+              <strong>1.2</strong> כל פעילות עסקית, לרבות מנויים, חשבוניות ותשלומים לשותפים, מתבצעת על ידי <strong>AI-4Biz</strong>, הפועלת כחוק בישראל.
             </p>
             <p className="leading-relaxed">
-              התקנון מחייב את המשתמשים, הלקוחות, והשותפים (Affiliates) של הפלטפורמה.
+              <strong>1.3</strong> מקום הפעילות: קדימה, ישראל.
+            </p>
+            <p className="leading-relaxed">
+              <strong>1.4</strong> כל אזכור של "iHoogi" או "I-Hoogi" בתקנון זה מתייחס לפלטפורמה, למערכת ולמותג שבבעלות ובניהול <strong>AI-4Biz</strong>.
+            </p>
+            <p className="leading-relaxed">
+              <strong>1.5</strong> השימוש בשירות מהווה הסכמה מלאה ובלתי חוזרת לכל תנאי התקנון ומדיניות הפרטיות של החברה.
             </p>
           </CardContent>
         </Card>
@@ -80,16 +89,19 @@ const TermsOfService = () => {
           </CardHeader>
           <CardContent className="space-y-3 text-right">
             <p className="leading-relaxed">
-              <strong>2.1</strong> החברה מספקת מערכת SaaS לניהול לידים, יצירת שאלונים חכמים, אוטומציה, הפצה, ניתוח נתונים ותהליכי שיווק.
+              <strong>2.1</strong> הפלטפורמה מספקת כלים חכמים לניהול לידים, יצירת שאלונים, אוטומציות, ניתוח נתונים, מענה אוטומטי ותמיכה שיווקית.
             </p>
             <p className="leading-relaxed">
-              <strong>2.2</strong> השירות ניתן במודל מנוי חודשי/שנתי.
+              <strong>2.2</strong> השירות ניתן במודל מנוי חודשי או שנתי לפי תוכנית.
             </p>
             <p className="leading-relaxed">
-              <strong>2.3</strong> ייתכנו עדכונים, הפסקות תחזוקה או שינויים במערכת לפי שיקול דעת החברה.
+              <strong>2.3</strong> השירות אינו מהווה ייעוץ מקצועי (משפטי, פיננסי, טיפולי או רפואי) ואינו מחליף שיקול דעת אנושי.
             </p>
             <p className="leading-relaxed">
-              <strong>2.4</strong> החברה רשאית להוסיף, לשנות או להסיר פיצ׳רים ללא הודעה מוקדמת.
+              <strong>2.4</strong> החברה רשאית לשנות, להוסיף או להסיר רכיבים לפי שיקול דעתה.
+            </p>
+            <p className="leading-relaxed">
+              <strong>2.5</strong> ייתכנו הפסקות זמניות לשם תחזוקה או שדרוג.
             </p>
           </CardContent>
         </Card>
@@ -99,21 +111,18 @@ const TermsOfService = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-right">
               <Users className="h-5 w-5 text-primary" />
-              3. פתיחת חשבון ואחריות המשתמש
+              3. חשבון משתמש
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-right">
             <p className="leading-relaxed">
-              <strong>3.1</strong> המשתמש נדרש להזין פרטים מדויקים בעת ההרשמה, לרבות שם, דוא"ל ופרטי תשלום.
+              <strong>3.1</strong> המשתמש מתחייב למסור פרטים נכונים, לשמור על סודיות ולדווח על כל שימוש לא מורשה.
             </p>
             <p className="leading-relaxed">
-              <strong>3.2</strong> האחריות לשמירה על סודיות פרטי הגישה היא של המשתמש בלבד.
+              <strong>3.2</strong> כל פעולה בחשבון תיחשב כאילו בוצעה על ידי המשתמש.
             </p>
             <p className="leading-relaxed">
-              <strong>3.3</strong> כל פעולה שתתבצע תחת החשבון תיחשב כאילו נעשתה על ידי המשתמש עצמו.
-            </p>
-            <p className="leading-relaxed">
-              <strong>3.4</strong> החברה רשאית להשעות או לסגור חשבון במקרה של שימוש לרעה או הפרת תנאים.
+              <strong>3.3</strong> החברה רשאית להשעות או לסגור חשבון בגין הפרת תנאים או שימוש לרעה.
             </p>
           </CardContent>
         </Card>
@@ -128,19 +137,13 @@ const TermsOfService = () => {
           </CardHeader>
           <CardContent className="space-y-3 text-right">
             <p className="leading-relaxed">
-              <strong>4.1</strong> מותר להשתמש בשירות לצרכים עסקיים לגיטימיים בלבד.
+              <strong>4.1</strong> השירות נועד לשימוש עסקי חוקי בלבד.
             </p>
             <p className="leading-relaxed">
-              <strong>4.2</strong> נאסר להשתמש בשירות לשם:
+              <strong>4.2</strong> נאסר להשתמש בשירות לשם הפצת תכנים פוגעניים, ספאם, חדירה למידע, הפרת זכויות יוצרים, או הפצה לא מורשית.
             </p>
-            <ul className="list-disc list-inside mr-4 space-y-1">
-              <li>הפצת ספאם, לשון הרע, או תכנים בלתי חוקיים</li>
-              <li>איסוף מידע ללא הסכמה</li>
-              <li>ניסיון פריצה, חדירה או פגיעה באבטחת המערכת</li>
-              <li>שימוש בנתונים לצורך הונאה, תרמית או פגיעה באחרים</li>
-            </ul>
             <p className="leading-relaxed">
-              <strong>4.3</strong> הפרה תביא לסגירה מיידית של החשבון ללא החזר כספי.
+              <strong>4.3</strong> החברה רשאית לחסום או למחוק חשבון במקרה של שימוש אסור, ללא החזר כספי.
             </p>
           </CardContent>
         </Card>
@@ -150,27 +153,24 @@ const TermsOfService = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-right">
               <CreditCard className="h-5 w-5 text-primary" />
-              5. תשלום, מנויים והחזרים
+              5. תשלום ומנויים
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-right">
             <p className="leading-relaxed">
-              <strong>5.1</strong> השירות ניתן בתשלום חודשי/שנתי מראש.
+              <strong>5.1</strong> השירות ניתן בתשלום מראש חודשי או שנתי.
             </p>
             <p className="leading-relaxed">
-              <strong>5.2</strong> המחירים מפורסמים באתר iHoogi וכוללים מע"מ אלא אם צוין אחרת.
+              <strong>5.2</strong> המחירים כוללים מע"מ אלא אם צוין אחרת.
             </p>
             <p className="leading-relaxed">
-              <strong>5.3</strong> ביטול מנוי יתבצע דרך ממשק המשתמש. השירות יישאר פעיל עד תום התקופה ששולמה.
+              <strong>5.3</strong> ניתן לבטל מנוי בכל עת דרך האפליקציה.
             </p>
             <p className="leading-relaxed">
               <strong>5.4</strong> החזר כספי יינתן רק בגין תקלה מוכחת באחריות החברה.
             </p>
             <p className="leading-relaxed">
-              <strong>5.5</strong> החברה רשאית לשנות את המחירים מעת לעת.
-            </p>
-            <p className="leading-relaxed">
-              <strong>5.6</strong> המשתמש אחראי לעמידה בדרישות המס המקומיות שלו.
+              <strong>5.5</strong> במקרה מחלוקת על חיוב, יש לפנות תחילה אל החברה לפתרון בטרם פנייה לחברת אשראי.
             </p>
           </CardContent>
         </Card>
@@ -180,27 +180,21 @@ const TermsOfService = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-right">
               <Users className="h-5 w-5 text-primary" />
-              6. תוכנית שותפים (Affiliate Program)
+              6. תוכנית שותפים
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-right">
             <p className="leading-relaxed">
-              <strong>6.1</strong> שותפים רשאים לקבל עמלות בגין לקוחות שהפנו לפלטפורמה.
+              <strong>6.1</strong> החברה מפעילה תוכנית שותפים לקבלת עמלות בגין הפניות.
             </p>
             <p className="leading-relaxed">
-              <strong>6.2</strong> תשלום יתבצע אחת לחודש, לאחר אישור עסקה שלא בוטלה.
+              <strong>6.2</strong> העמלות משולמות אחת לחודש לאחר אישור עסקה.
             </p>
             <p className="leading-relaxed">
-              <strong>6.3</strong> החברה רשאית לשלול עמלות במקרים של פעילות פסולה, זיוף או רמאות.
+              <strong>6.3</strong> החברה רשאית לעכב עמלות במקרה של פעילות פסולה או הפרת תנאים.
             </p>
             <p className="leading-relaxed">
-              <strong>6.4</strong> עמלות ישולמו לאחר ניכוי מס כחוק, באמצעות אמצעי התשלום הרשום במערכת.
-            </p>
-            <p className="leading-relaxed">
-              <strong>6.5</strong> השותף אחראי על דיווח המס העצמאי במדינתו.
-            </p>
-            <p className="leading-relaxed">
-              <strong>6.6</strong> אין התחייבות לתקופת שותפות, וניתן להפסיקה בכל עת על ידי החברה.
+              <strong>6.4</strong> כל תשלום נעשה כחוק, כולל ניכוי מס במקור כנדרש.
             </p>
           </CardContent>
         </Card>
@@ -215,28 +209,28 @@ const TermsOfService = () => {
           </CardHeader>
           <CardContent className="space-y-3 text-right">
             <p className="leading-relaxed">
-              <strong>7.1</strong> החברה מחויבת לחוק הגנת הפרטיות הישראלי, לתקנות GDPR האירופאיות ולחוקי CCPA האמריקאיים.
+              <strong>7.1</strong> החברה פועלת בהתאם לחוק הגנת הפרטיות הישראלי, GDPR ו-CCPA.
             </p>
             <p className="leading-relaxed">
-              <strong>7.2</strong> נאסף מידע אישי כגון: פרטי משתמש, נתוני לקוחות קצה, לידים, נתוני שימוש ופרטי תשלום.
+              <strong>7.2</strong> נאסף מידע הדרוש להפעלת השירות בלבד.
             </p>
             <p className="leading-relaxed">
-              <strong>7.3</strong> החברה נוקטת באמצעי אבטחה מתקדמים: הצפנת SSL, אימות דו-שלבי, גיבויים ובקרת גישה.
+              <strong>7.3</strong> הנתונים נשמרים ב-Supabase, Google Cloud ו-OpenAI בתקן ISO 27001 ו-GDPR.
             </p>
             <p className="leading-relaxed">
-              <strong>7.4</strong> הנתונים נשמרים בשרתים מאובטחים בישראל ובאיחוד האירופי.
+              <strong>7.4</strong> החברה אינה מוכרת מידע לצדדים שלישיים.
             </p>
             <p className="leading-relaxed">
-              <strong>7.5</strong> החברה לא מוכרת מידע לצדדים שלישיים.
+              <strong>7.5</strong> המשתמש אחראי לקבלת הסכמה חוקית מלקוחות הקצה.
             </p>
             <p className="leading-relaxed">
-              <strong>7.6</strong> המשתמש אחראי לקבלת הסכמה חוקית ממשתמשי הקצה שלו.
+              <strong>7.6</strong> מידע אישי נשמר בשרתים מאובטחים בישראל ובאיחוד האירופי.
             </p>
             <p className="leading-relaxed">
-              <strong>7.7</strong> ניתן לבקש גישה, תיקון או מחיקה של מידע אישי דרך לשונית "צור קשר" באפליקציה.
+              <strong>7.7</strong> ניתן לבקש גישה, תיקון או מחיקה של נתונים דרך לשונית "צור קשר".
             </p>
             <p className="leading-relaxed">
-              <strong>7.8</strong> החברה עשויה להשתמש במידע אנונימי לשם שיפור השירות בלבד.
+              <strong>7.8</strong> החברה רשאית להשתמש במידע אנונימי בלבד לשיפור השירות.
             </p>
           </CardContent>
         </Card>
@@ -246,15 +240,12 @@ const TermsOfService = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-right">
               <FileText className="h-5 w-5 text-primary" />
-              8. Cookies ועיבוד נתונים
+              8. Cookies
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-right">
             <p className="leading-relaxed">
-              המערכת עושה שימוש בקובצי Cookies לאנליטיקות, שיפור חוויית המשתמש ושמירת הגדרות.
-            </p>
-            <p className="leading-relaxed">
-              המשתמש רשאי לחסום קבצים אלה דרך הדפדפן, אך חלק מהשירותים עשויים שלא לפעול.
+              המערכת משתמשת בעוגיות (Cookies) להפעלת השירות, לשיפור חוויית המשתמש ולסטטיסטיקות אנונימיות. ניתן לחסום עוגיות, אך חלק מהפונקציות עלולות שלא לפעול.
             </p>
           </CardContent>
         </Card>
@@ -264,12 +255,21 @@ const TermsOfService = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-right">
               <Shield className="h-5 w-5 text-primary" />
-              9. קטינים
+              9. קניין רוחני
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-right">
             <p className="leading-relaxed">
-              השירות מיועד לבגירים (מעל גיל 18). אם נאסף מידע מקטין – ניתן לפנות להסרתו.
+              <strong>9.1</strong> כל הזכויות בקוד, בעיצוב ובמותג <strong>iHoogi</strong> שייכות ל-<strong>AI-4Biz</strong>.
+            </p>
+            <p className="leading-relaxed">
+              <strong>9.2</strong> "AI-4Biz", "iHoogi" והלוגו הם סימני מסחר של החברה.
+            </p>
+            <p className="leading-relaxed">
+              <strong>9.3</strong> אין להעתיק, לשכפל או לשנות חלקים מהמערכת ללא אישור.
+            </p>
+            <p className="leading-relaxed">
+              <strong>9.4</strong> תכנים שהועלו על ידי המשתמשים נשארים בבעלותם, אך ניתנת רשות שימוש להפעלת השירות.
             </p>
           </CardContent>
         </Card>
@@ -278,19 +278,22 @@ const TermsOfService = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-right">
-              <FileText className="h-5 w-5 text-primary" />
-              10. קניין רוחני
+              <Shield className="h-5 w-5 text-primary" />
+              10. הגבלת אחריות
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-right">
             <p className="leading-relaxed">
-              <strong>10.1</strong> כל הזכויות בתכני המערכת, עיצוב, קוד, לוגו וסימני המסחר שייכות ל־iHoogi Ltd.
+              <strong>10.1</strong> השירות ניתן "כמות שהוא".
             </p>
             <p className="leading-relaxed">
-              <strong>10.2</strong> אין להעתיק, לשכפל, לפרסם, לשדר או לערוך שימוש מסחרי בתכנים ללא אישור בכתב מהחברה.
+              <strong>10.2</strong> החברה אינה אחראית לכל נזק ישיר או עקיף, לרבות הפסד רווחים או אובדן נתונים.
             </p>
             <p className="leading-relaxed">
-              <strong>10.3</strong> תוכן שנוצר על ידי המשתמש נשאר בבעלותו, אך ניתנת לחברה רשות להשתמש בו לצורך מתן השירות.
+              <strong>10.3</strong> החברה אינה אחראית לשירותי צד שלישי (Meta, WhatsApp, API, דוא"ל, סליקה).
+            </p>
+            <p className="leading-relaxed">
+              <strong>10.4</strong> אחריות החברה, אם תוטל, מוגבלת לסכום ששולם ב-30 הימים שקדמו לאירוע.
             </p>
           </CardContent>
         </Card>
@@ -299,22 +302,16 @@ const TermsOfService = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-right">
-              <Shield className="h-5 w-5 text-primary" />
-              11. הגבלת אחריות ושיפוי
+              <FileText className="h-5 w-5 text-primary" />
+              11. הודעות למשתמש
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-right">
             <p className="leading-relaxed">
-              <strong>11.1</strong> השירות ניתן "כמות שהוא" (AS IS).
+              <strong>11.1</strong> החברה רשאית לשלוח עדכוני מערכת ותוכן שיווקי רלוונטי.
             </p>
             <p className="leading-relaxed">
-              <strong>11.2</strong> החברה לא אחראית לכל נזק ישיר, עקיף, עסקי או כספי.
-            </p>
-            <p className="leading-relaxed">
-              <strong>11.3</strong> המשתמש מתחייב לשפות את החברה בגין כל נזק, תביעה או דרישה הנובעים משימוש לא חוקי או הפרת תנאים.
-            </p>
-            <p className="leading-relaxed">
-              <strong>11.4</strong> אחריות החברה, אם תיקבע, מוגבלת לסכום ששולם בעבור השירות בשלושים הימים האחרונים.
+              <strong>11.2</strong> ניתן להסיר את ההרשמה להודעות שיווקיות בכל עת.
             </p>
           </CardContent>
         </Card>
@@ -324,18 +321,18 @@ const TermsOfService = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-right">
               <FileText className="h-5 w-5 text-primary" />
-              12. שיפוט ודין
+              12. דין ושיפוט
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-right">
             <p className="leading-relaxed">
-              <strong>12.1</strong> תנאים אלה כפופים לדיני מדינת ישראל בלבד.
+              <strong>12.1</strong> התקנון כפוף לדיני מדינת ישראל.
             </p>
             <p className="leading-relaxed">
-              <strong>12.2</strong> סמכות השיפוט הבלעדית נתונה לבתי המשפט בתל אביב–יפו.
+              <strong>12.2</strong> סמכות השיפוט הבלעדית – בתי המשפט בתל-אביב.
             </p>
             <p className="leading-relaxed">
-              <strong>12.3</strong> החברה רשאית להציע יישוב סכסוכים בבוררות.
+              <strong>12.3</strong> ניתן ליישב סכסוכים באמצעות בוררות לפי שיקול דעת החברה.
             </p>
           </CardContent>
         </Card>
@@ -345,15 +342,84 @@ const TermsOfService = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-right">
               <CheckCircle className="h-5 w-5 text-primary" />
-              13. עדכוני תקנון
+              13. עדכונים
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-right">
             <p className="leading-relaxed">
-              החברה רשאית לעדכן את התקנון ואת מדיניות הפרטיות בכל עת.
+              <strong>13.1</strong> החברה רשאית לעדכן תקנון זה מעת לעת.
             </p>
             <p className="leading-relaxed">
-              שינויים מהותיים יפורסמו בהודעה באפליקציה.
+              <strong>13.2</strong> המשך שימוש מהווה הסכמה לנוסח המעודכן.
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Section 14 */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-right">
+              <Shield className="h-5 w-5 text-primary" />
+              14. שירותים מבוססי בינה מלאכותית (AI)
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-right">
+            <p className="leading-relaxed">
+              <strong>14.1</strong> השירות כולל רכיבי AI שעלולים להיות חלקיים, שגויים או לא מדויקים.
+            </p>
+            <p className="leading-relaxed">
+              <strong>14.2</strong> תוצרי AI אינם ייעוץ מקצועי ואין להסתמך עליהם ללא אימות אנושי.
+            </p>
+            <p className="leading-relaxed">
+              <strong>14.3</strong> המשתמש חייב לאשר ידנית כל תוכן לפני שליחתו ללקוחות או הפצה.
+            </p>
+            <p className="leading-relaxed">
+              <strong>14.4</strong> המשתמש אחראי לכל קלט שמוזן למערכת ולא יפר זכויות או פרטיות.
+            </p>
+            <p className="leading-relaxed">
+              <strong>14.5</strong> כל שליחה אוטומטית חייבת לעמוד בחוק הספאם ובתקנות Meta ו-GDPR.
+            </p>
+            <p className="leading-relaxed">
+              <strong>14.6</strong> החברה אינה אחראית לשיבושים, חסימות או תקלות אצל ספקי צד-שלישי.
+            </p>
+            <p className="leading-relaxed">
+              <strong>14.7</strong> לצורכי אבטחה ושיפור יישמרו לוגים אנונימיים בלבד.
+            </p>
+            <p className="leading-relaxed">
+              <strong>14.8</strong> המידע ישמש לשיפור השירות רק במתכונת אנונימית.
+            </p>
+            <p className="leading-relaxed">
+              <strong>14.9</strong> המשתמש מקבל רישיון שימוש לא בלעדי בתוצרי ה-AI.
+            </p>
+            <p className="leading-relaxed">
+              <strong>14.10</strong> החברה, עובדיה וספקיה לא יישאו באחריות לנזקים עקב תוצרי AI.
+            </p>
+            <p className="leading-relaxed">
+              <strong>14.11</strong> פיצ'רים מסומנים כ-Beta עלולים לכלול מגבלות או שגיאות.
+            </p>
+            <p className="leading-relaxed">
+              <strong>14.12</strong> החברה רשאית לעצור זמנית פעולות במקרה חשד לשימוש לרעה.
+            </p>
+            <p className="leading-relaxed">
+              <strong>14.13</strong> המשתמש ישפה את החברה בגין טענות צד-שלישי הנובעות מהקלט או התוצרים.
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Section 15 */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-right">
+              <FileText className="h-5 w-5 text-primary" />
+              15. קרדיט ותצוגה
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-right">
+            <p className="leading-relaxed">
+              © 2025 AI-4Biz – כל הזכויות שמורות.
+            </p>
+            <p className="leading-relaxed">
+              מופעל באמצעות iHoogi.
             </p>
           </CardContent>
         </Card>
@@ -368,7 +434,7 @@ const TermsOfService = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-left">
             <CheckCircle className="h-5 w-5 text-primary" />
-            Master Terms & Privacy Policy
+            Terms of Service – iHoogi / AI-4Biz
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 text-left">
@@ -390,6 +456,9 @@ const TermsOfService = () => {
           <p className="text-sm leading-relaxed">
             ✓ Intellectual Property Protection
           </p>
+          <p className="text-sm leading-relaxed">
+            ✓ AI-Based Services
+          </p>
         </CardContent>
       </Card>
 
@@ -404,13 +473,16 @@ const TermsOfService = () => {
           </CardHeader>
           <CardContent className="space-y-3 text-left">
             <p className="leading-relaxed">
-              This document constitutes the unified <strong>Terms of Use, Privacy Policy, and Affiliate Terms</strong> of <strong>iHoogi Ltd.</strong> ("the Company", "we", "our", "Service").
+              <strong>1.1</strong> These Terms constitute a binding agreement between the user ("you") and <strong>AI-4Biz</strong> ("the Company", "we", "our").
             </p>
             <p className="leading-relaxed">
-              By using the platform, you fully agree to these terms.
+              <strong>1.2</strong> AI-4Biz owns and operates the <strong>iHoogi</strong> platform, including the digital agent "I-Hoogi".
             </p>
             <p className="leading-relaxed">
-              These terms apply to all users, clients, and affiliates.
+              <strong>1.3</strong> All billing, subscriptions and affiliate payments are processed by <strong>AI-4Biz</strong>, legally registered in Israel.
+            </p>
+            <p className="leading-relaxed">
+              <strong>1.4</strong> Using the Service constitutes full acceptance of these Terms and the Privacy Policy.
             </p>
           </CardContent>
         </Card>
@@ -425,13 +497,19 @@ const TermsOfService = () => {
           </CardHeader>
           <CardContent className="space-y-3 text-left">
             <p className="leading-relaxed">
-              <strong>2.1</strong> iHoogi provides an online SaaS platform for smart questionnaires, lead management, automation, analytics, and marketing tools.
+              <strong>2.1</strong> The platform provides smart tools for lead management, questionnaires, automation, AI content generation and analytics.
             </p>
             <p className="leading-relaxed">
-              <strong>2.2</strong> The Service is provided under monthly or annual subscriptions.
+              <strong>2.2</strong> Services are offered on monthly or annual subscription plans.
             </p>
             <p className="leading-relaxed">
-              <strong>2.3</strong> The Company may modify, suspend, or update the Service at any time without prior notice.
+              <strong>2.3</strong> The Service does not constitute professional advice (legal, financial, medical, therapeutic) and must be verified by humans.
+            </p>
+            <p className="leading-relaxed">
+              <strong>2.4</strong> We may modify or suspend features at any time.
+            </p>
+            <p className="leading-relaxed">
+              <strong>2.5</strong> Temporary downtime may occur for maintenance or updates.
             </p>
           </CardContent>
         </Card>
@@ -441,21 +519,18 @@ const TermsOfService = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-left">
               <Users className="h-5 w-5 text-primary" />
-              3. Account and User Responsibility
+              3. User Account
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-left">
             <p className="leading-relaxed">
-              <strong>3.1</strong> Users must provide accurate registration details.
+              <strong>3.1</strong> You must provide accurate details, keep credentials secure and notify us of unauthorized use.
             </p>
             <p className="leading-relaxed">
-              <strong>3.2</strong> Users are responsible for maintaining the confidentiality of their login information.
+              <strong>3.2</strong> Any activity in your account is deemed yours.
             </p>
             <p className="leading-relaxed">
-              <strong>3.3</strong> Any activity conducted under the user's account is the user's responsibility.
-            </p>
-            <p className="leading-relaxed">
-              <strong>3.4</strong> The Company may suspend or terminate accounts for misuse or violation of these terms.
+              <strong>3.3</strong> We may suspend or terminate accounts for violations.
             </p>
           </CardContent>
         </Card>
@@ -465,24 +540,18 @@ const TermsOfService = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-left">
               <AlertCircle className="h-5 w-5 text-primary" />
-              4. Permitted and Prohibited Use
+              4. Permitted Use
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-left">
             <p className="leading-relaxed">
-              <strong>4.1</strong> The Service may be used only for lawful business purposes.
+              <strong>4.1</strong> The Service is for lawful business use only.
             </p>
             <p className="leading-relaxed">
-              <strong>4.2</strong> Prohibited uses include:
+              <strong>4.2</strong> Do not use the Service to send spam, upload harmful content or violate rights.
             </p>
-            <ul className="list-disc list-inside ml-4 space-y-1">
-              <li>Sending spam or unlawful content</li>
-              <li>Collecting data without consent</li>
-              <li>Attempting to hack, damage, or access restricted areas</li>
-              <li>Misusing the platform for fraud or harm</li>
-            </ul>
             <p className="leading-relaxed">
-              <strong>4.3</strong> Violation will result in immediate termination without refund.
+              <strong>4.3</strong> We may block accounts for abuse without refund.
             </p>
           </CardContent>
         </Card>
@@ -497,19 +566,19 @@ const TermsOfService = () => {
           </CardHeader>
           <CardContent className="space-y-3 text-left">
             <p className="leading-relaxed">
-              <strong>5.1</strong> Subscriptions are billed monthly or annually in advance.
+              <strong>5.1</strong> Prepaid monthly or annual subscriptions.
             </p>
             <p className="leading-relaxed">
-              <strong>5.2</strong> Prices are displayed on the iHoogi website and include VAT unless otherwise stated.
+              <strong>5.2</strong> Prices include VAT unless stated otherwise.
             </p>
             <p className="leading-relaxed">
-              <strong>5.3</strong> Cancellations can be made through the in-app account area; service remains active until period end.
+              <strong>5.3</strong> You may cancel anytime; access continues until period end.
             </p>
             <p className="leading-relaxed">
-              <strong>5.4</strong> Refunds are granted only for proven technical failures attributable to the Company.
+              <strong>5.4</strong> Refunds only for verified Company-caused issues.
             </p>
             <p className="leading-relaxed">
-              <strong>5.5</strong> Prices may change with prior notice.
+              <strong>5.5</strong> Billing disputes must be raised with <strong>AI-4Biz</strong> before contacting card issuers.
             </p>
           </CardContent>
         </Card>
@@ -524,22 +593,16 @@ const TermsOfService = () => {
           </CardHeader>
           <CardContent className="space-y-3 text-left">
             <p className="leading-relaxed">
-              <strong>6.1</strong> Affiliates may earn commissions for referred paying customers.
+              <strong>6.1</strong> AI-4Biz runs an affiliate program granting commissions for valid referrals.
             </p>
             <p className="leading-relaxed">
-              <strong>6.2</strong> Commissions are paid monthly after verification of valid transactions.
+              <strong>6.2</strong> Payments occur monthly after confirmation.
             </p>
             <p className="leading-relaxed">
-              <strong>6.3</strong> The Company may withhold commissions in cases of fraud or violation.
+              <strong>6.3</strong> We may withhold commissions for fraud or violations.
             </p>
             <p className="leading-relaxed">
-              <strong>6.4</strong> All payments are made net of taxes and according to local laws.
-            </p>
-            <p className="leading-relaxed">
-              <strong>6.5</strong> Affiliates are independently responsible for tax reporting.
-            </p>
-            <p className="leading-relaxed">
-              <strong>6.6</strong> The Company may terminate affiliate participation at any time.
+              <strong>6.4</strong> All payments comply with tax laws.
             </p>
           </CardContent>
         </Card>
@@ -554,28 +617,28 @@ const TermsOfService = () => {
           </CardHeader>
           <CardContent className="space-y-3 text-left">
             <p className="leading-relaxed">
-              <strong>7.1</strong> iHoogi complies with Israeli Privacy Law, GDPR (EU), and CCPA (US).
+              <strong>7.1</strong> AI-4Biz complies with Israeli law, GDPR and CCPA.
             </p>
             <p className="leading-relaxed">
-              <strong>7.2</strong> Collected data includes user details, customer leads, usage analytics, and billing info.
+              <strong>7.2</strong> We collect only essential operational data.
             </p>
             <p className="leading-relaxed">
-              <strong>7.3</strong> Data is secured using SSL encryption, 2FA, backups, and restricted access.
+              <strong>7.3</strong> Data is stored securely via Supabase, OpenAI and Google Cloud (ISO 27001 / GDPR).
             </p>
             <p className="leading-relaxed">
-              <strong>7.4</strong> Data is hosted on secure servers in Israel and the EU.
+              <strong>7.4</strong> We do not sell user data.
             </p>
             <p className="leading-relaxed">
-              <strong>7.5</strong> The Company never sells personal data.
+              <strong>7.5</strong> Users must obtain legal consent from their end-clients.
             </p>
             <p className="leading-relaxed">
-              <strong>7.6</strong> Users must ensure consent from their own clients before data collection.
+              <strong>7.6</strong> Data is stored in secured servers within Israel and the EU.
             </p>
             <p className="leading-relaxed">
-              <strong>7.7</strong> Data access, correction, or deletion requests can be made via the in-app Contact section.
+              <strong>7.7</strong> You may request access, correction or deletion via the "Contact Us" form.
             </p>
             <p className="leading-relaxed">
-              <strong>7.8</strong> Anonymized data may be used for service improvements only.
+              <strong>7.8</strong> Anonymous data may be used for service improvement only.
             </p>
           </CardContent>
         </Card>
@@ -590,10 +653,10 @@ const TermsOfService = () => {
           </CardHeader>
           <CardContent className="space-y-3 text-left">
             <p className="leading-relaxed">
-              The platform uses cookies for analytics, personalization, and functionality.
+              We use cookies to enable features, save preferences and collect anonymized analytics.
             </p>
             <p className="leading-relaxed">
-              Users can disable cookies via browser settings, though functionality may be affected.
+              You can disable cookies, but some features may not function.
             </p>
           </CardContent>
         </Card>
@@ -603,12 +666,21 @@ const TermsOfService = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-left">
               <Shield className="h-5 w-5 text-primary" />
-              9. Minors
+              9. Intellectual Property
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-left">
             <p className="leading-relaxed">
-              The Service is intended for adults (18+). If minor data is detected, it can be removed upon request.
+              <strong>9.1</strong> All code, design and brand elements belong to <strong>AI-4Biz</strong>.
+            </p>
+            <p className="leading-relaxed">
+              <strong>9.2</strong> "AI-4Biz" and "iHoogi" are registered trademarks.
+            </p>
+            <p className="leading-relaxed">
+              <strong>9.3</strong> No copying, distribution or modification without written approval.
+            </p>
+            <p className="leading-relaxed">
+              <strong>9.4</strong> User-uploaded content remains the user's property, but a license is granted for service operation.
             </p>
           </CardContent>
         </Card>
@@ -617,19 +689,22 @@ const TermsOfService = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-left">
-              <FileText className="h-5 w-5 text-primary" />
-              10. Intellectual Property
+              <Shield className="h-5 w-5 text-primary" />
+              10. Limitation of Liability
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-left">
             <p className="leading-relaxed">
-              <strong>10.1</strong> All IP rights in the platform, code, design, logo, and trademarks belong to iHoogi Ltd.
+              <strong>10.1</strong> The Service is provided "as is".
             </p>
             <p className="leading-relaxed">
-              <strong>10.2</strong> No part of the platform may be copied, distributed, or modified without written consent.
+              <strong>10.2</strong> We are not liable for any direct or indirect loss or damage.
             </p>
             <p className="leading-relaxed">
-              <strong>10.3</strong> User-generated content remains user-owned, with a non-exclusive license granted to iHoogi for service delivery.
+              <strong>10.3</strong> We are not responsible for third-party APIs or integrations (Meta, WhatsApp, email, payment processors).
+            </p>
+            <p className="leading-relaxed">
+              <strong>10.4</strong> Maximum liability = fees paid within the preceding 30 days.
             </p>
           </CardContent>
         </Card>
@@ -638,22 +713,16 @@ const TermsOfService = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-left">
-              <Shield className="h-5 w-5 text-primary" />
-              11. Limitation of Liability & Indemnification
+              <FileText className="h-5 w-5 text-primary" />
+              11. Notifications
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-left">
             <p className="leading-relaxed">
-              <strong>11.1</strong> The Service is provided "AS IS".
+              <strong>11.1</strong> We may send system or service-related messages.
             </p>
             <p className="leading-relaxed">
-              <strong>11.2</strong> The Company shall not be liable for any direct, indirect, or consequential damages.
-            </p>
-            <p className="leading-relaxed">
-              <strong>11.3</strong> Users agree to indemnify and hold the Company harmless against claims arising from misuse or breach.
-            </p>
-            <p className="leading-relaxed">
-              <strong>11.4</strong> The Company's total liability shall not exceed the amount paid in the 30 days prior to the incident.
+              <strong>11.2</strong> You may opt out of marketing emails at any time.
             </p>
           </CardContent>
         </Card>
@@ -668,13 +737,13 @@ const TermsOfService = () => {
           </CardHeader>
           <CardContent className="space-y-3 text-left">
             <p className="leading-relaxed">
-              <strong>12.1</strong> These terms shall be governed by the laws of the State of Israel.
+              <strong>12.1</strong> These Terms are governed by the laws of Israel.
             </p>
             <p className="leading-relaxed">
-              <strong>12.2</strong> Exclusive jurisdiction shall rest with the courts of Tel Aviv–Yafo.
+              <strong>12.2</strong> Exclusive jurisdiction: Tel Aviv District Courts.
             </p>
             <p className="leading-relaxed">
-              <strong>12.3</strong> The Company may offer alternative dispute resolution methods (e.g., arbitration).
+              <strong>12.3</strong> Disputes may be resolved via arbitration at our discretion.
             </p>
           </CardContent>
         </Card>
@@ -684,15 +753,84 @@ const TermsOfService = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-left">
               <CheckCircle className="h-5 w-5 text-primary" />
-              13. Policy Updates
+              13. Updates
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-left">
             <p className="leading-relaxed">
-              The Company may revise these Terms and Privacy Policy from time to time.
+              <strong>13.1</strong> We may update these Terms periodically.
             </p>
             <p className="leading-relaxed">
-              Major updates will be displayed within the app interface.
+              <strong>13.2</strong> Continued use constitutes acceptance of revised Terms.
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Section 14 */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-left">
+              <Shield className="h-5 w-5 text-primary" />
+              14. AI-Based Services
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-left">
+            <p className="leading-relaxed">
+              <strong>14.1</strong> The Service includes AI components that may produce incomplete or inaccurate outputs.
+            </p>
+            <p className="leading-relaxed">
+              <strong>14.2</strong> AI content is not professional advice and must be verified by a human reviewer.
+            </p>
+            <p className="leading-relaxed">
+              <strong>14.3</strong> Users must manually approve all AI-generated content before sending or publishing.
+            </p>
+            <p className="leading-relaxed">
+              <strong>14.4</strong> Users are responsible for all input (Prompts) and compliance with rights and privacy laws.
+            </p>
+            <p className="leading-relaxed">
+              <strong>14.5</strong> Automated messaging must comply with anti-spam laws and Meta / GDPR policies.
+            </p>
+            <p className="leading-relaxed">
+              <strong>14.6</strong> AI-4Biz is not liable for third-party service failures or API changes.
+            </p>
+            <p className="leading-relaxed">
+              <strong>14.7</strong> System logs may retain anonymized data for security and improvement.
+            </p>
+            <p className="leading-relaxed">
+              <strong>14.8</strong> Anonymized metadata may be used to enhance algorithms.
+            </p>
+            <p className="leading-relaxed">
+              <strong>14.9</strong> Users receive a non-exclusive license for AI outputs.
+            </p>
+            <p className="leading-relaxed">
+              <strong>14.10</strong> AI-4Biz and its suppliers bear no liability for any AI errors or misuse.
+            </p>
+            <p className="leading-relaxed">
+              <strong>14.11</strong> Beta features may contain limitations or bugs.
+            </p>
+            <p className="leading-relaxed">
+              <strong>14.12</strong> We may pause automations if misuse is suspected.
+            </p>
+            <p className="leading-relaxed">
+              <strong>14.13</strong> Users indemnify AI-4Biz against claims arising from their inputs or AI outputs.
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Section 15 */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-left">
+              <FileText className="h-5 w-5 text-primary" />
+              15. Credits and Display
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-left">
+            <p className="leading-relaxed">
+              © 2025 AI-4Biz – All rights reserved.
+            </p>
+            <p className="leading-relaxed">
+              Powered by iHoogi.
             </p>
           </CardContent>
         </Card>
@@ -737,16 +875,16 @@ const TermsOfService = () => {
           
           <div className="text-center mb-6">
             <div className="flex justify-center mb-4">
-              <img src="/hoogi-new-avatar.png" alt="iHoogi Logo" className="h-20 w-20 object-contain" />
+              <img src="/ai-4-biz-logo.svg" alt="Ai-4.BIZ Logo" className="h-20 w-32 object-contain" />
             </div>
             <h1 className="text-3xl md:text-4xl font-extrabold mb-2">
-              {language === 'he' ? '📜 תקנון ותנאי שימוש ומדיניות פרטיות – iHoogi' : '📜 Terms of Service & Privacy Policy – iHoogi'}
+              {language === 'he' ? '📜 תקנון ותנאי שימוש – iHoogi / AI-4Biz' : '📜 Terms of Service – iHoogi / AI-4Biz'}
             </h1>
             <p className="text-muted-foreground">
-              {language === 'he' ? 'תקנון השימוש בפלטפורמת iHoogi' : 'iHoogi Platform Usage Terms'}
+              {language === 'he' ? 'תקנון השימוש בפלטפורמת iHoogi / AI-4Biz' : 'iHoogi / AI-4Biz Platform Usage Terms'}
             </p>
             <p className="text-sm text-muted-foreground mt-2">
-              {language === 'he' ? 'עדכון אחרון: 20 באוקטובר 2025' : 'Last updated: October 20, 2025'}
+              {language === 'he' ? 'עדכון אחרון: 23 באוקטובר 2025' : 'Last updated: October 23, 2025'}
             </p>
           </div>
         </div>
@@ -785,7 +923,7 @@ const TermsOfService = () => {
 
         {/* Footer */}
         <div className="text-center mt-8 text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} iHoogi Ltd. {language === 'he' ? 'כל הזכויות שמורות.' : 'All rights reserved.'}</p>
+          <p>© {new Date().getFullYear()} AI-4Biz {language === 'he' ? 'כל הזכויות שמורות.' : 'All rights reserved.'}</p>
           <p className="mt-2 text-xs">
             {language === 'he' ? 'נוצר באהבה בישראל ❤️' : 'Created with love in Israel ❤️'}
           </p>

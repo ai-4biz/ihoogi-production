@@ -59,7 +59,7 @@ const MainLayout = ({
         navigate("/organizations");
         break;
       case "root":
-        navigate("/main-dashboard");
+        // Don't navigate when already on root - just stay on current page
         break;
     }
   };

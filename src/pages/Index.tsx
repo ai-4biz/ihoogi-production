@@ -10,9 +10,9 @@ import { useEffect } from "react";
 const Index = () => {
   const navigate = useNavigate();
 
-  // Redirect to main dashboard
+  // Redirect to home page
   useEffect(() => {
-    navigate("/main-dashboard");
+    navigate("/");
   }, [navigate]);
 
   const handleNavigateToInspiration = () => {

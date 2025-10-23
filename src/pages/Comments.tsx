@@ -31,7 +31,7 @@ const Comments = () => {
         </div>
         <Button 
           variant="outline" 
-          onClick={() => navigate("/main-dashboard")}
+          onClick={() => navigate("/")}
           className="flex items-center gap-2"
         >
           <ArrowRight className="h-4 w-4" />

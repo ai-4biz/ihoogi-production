@@ -17,8 +17,8 @@ const SideNavigation = ({ activeRoute }: SideNavigationProps) => {
     {
       icon: <Home className="h-5 w-5" />,
       label: "דף הבית",
-      path: "/main-dashboard",
-      active: activeRoute === "/main-dashboard"
+      path: "/",
+      active: activeRoute === "/"
     },
     {
       icon: <FileText className="h-5 w-5" />,

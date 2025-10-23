@@ -173,7 +173,7 @@ const StateDrivenDashboard = () => {
       {
         title: "מאמרים",
         icon: <BookOpen className="h-6 w-6 text-blue-500" />,
-        onClick: () => navigate("/main-dashboard"),
+        onClick: () => navigate("/"),
         color: "blue"
       },
       {

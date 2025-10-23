@@ -12,7 +12,7 @@ const Organizations = () => {
   useEffect(() => {
     // Redirect if user doesn't have organization access
     if (!user.subscription.isOrganization) {
-      navigate("/main-dashboard");
+      navigate("/");
     }
   }, [user, navigate]);
 

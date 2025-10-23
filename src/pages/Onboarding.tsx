@@ -57,7 +57,7 @@ const Onboarding = () => {
   const handleStart = () => {
     // Mark onboarding as completed and go to profile
     localStorage.setItem("onboarding_completed", "true");
-    navigate("/profile");
+    navigate("/my-hoogi");
   };
 
   return (
