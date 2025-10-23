@@ -1573,9 +1573,7 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const steps = [
     { number: 1, title: 'פרטים אישיים', icon: Users },
     { number: 2, title: 'פרטי חשבון', icon: CreditCard },
-    { number: 3, title: 'הגדרות עמלה', icon: DollarSign },
-    { number: 4, title: 'לינק שותף', icon: Link },
-    { number: 5, title: 'תבנית תשלום', icon: FileText }
+    { number: 3, title: 'הגדרות עמלה', icon: DollarSign }
   ];
 
   return (
@@ -1616,173 +1614,205 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       {/* Form Content */}
       <div className="bg-white rounded-lg border p-6">
         {currentStep === 1 && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-right flex items-center gap-2">
+          <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
+            <CardHeader className="bg-blue-100/50 rounded-t-lg">
+              <CardTitle className="text-right flex items-center gap-2 text-blue-800">
                 <Users className="h-5 w-5 text-blue-600" />
                 פרטים אישיים
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-                  <Label htmlFor="name" className="text-right">שם מלא *</Label>
-          <Input
-            id="name"
-            value={formData.name}
-                    onChange={(e) => handleFieldChange('name', e.target.value)}
-            className="text-right"
-                    placeholder="הזן שם מלא"
-                    required
-          />
-        </div>
-        <div>
-                  <Label htmlFor="billingName" className="text-right">שם על החשבונית</Label>
-          <Input
-            id="billingName"
-            value={formData.billingName}
-                    onChange={(e) => handleFieldChange('billingName', e.target.value)}
-            className="text-right"
-                    placeholder="שם שיופיע על החשבונית"
-          />
-        </div>
-        <div>
-                  <Label htmlFor="email" className="text-right">אימייל *</Label>
-          <Input
-            id="email"
-            type="email"
-            value={formData.email}
-                    onChange={(e) => handleFieldChange('email', e.target.value)}
-            className="text-right"
-                    placeholder="example@email.com"
-                    required
-          />
-        </div>
-        <div>
-                  <Label htmlFor="phone" className="text-right">טלפון *</Label>
-          <Input
-            id="phone"
-            value={formData.phone}
-                    onChange={(e) => handleFieldChange('phone', e.target.value)}
-            className="text-right"
-                    placeholder="050-1234567"
-                    required
-          />
-        </div>
-        <div>
-                  <Label htmlFor="businessType" className="text-right">סוג עסק *</Label>
-                  <Select value={formData.businessType} onValueChange={(value) => handleFieldChange('businessType', value)}>
-                    <SelectTrigger className="text-right">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="individual">עצמאי</SelectItem>
-                      <SelectItem value="authorized_dealer">עוסק מורשה</SelectItem>
-                      <SelectItem value="company">חברה</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="personalId" className="text-right">ת.ז./ח.פ *</Label>
-                  <Input
-                    id="personalId"
-                    value={formData.personalId}
-                    onChange={(e) => handleFieldChange('personalId', e.target.value)}
-                    className="text-right"
-                    placeholder="123456789"
-                    required
-                  />
-                </div>
-                
-                {formData.businessType === 'authorized_dealer' && (
+            <CardContent className="space-y-6 bg-white/70 rounded-b-lg">
+              {/* פרטים בסיסיים */}
+              <div className="p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-200">
+                <h4 className="font-semibold text-blue-800 mb-4 flex items-center gap-2">
+                  <Users className="h-5 w-5 text-blue-600" />
+                  פרטים בסיסיים
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="businessNumber" className="text-right">מספר עוסק מורשה *</Label>
+                    <Label htmlFor="name" className="text-right">שם מלא *</Label>
                     <Input
-                      id="businessNumber"
-                      value={formData.businessNumber}
-                      onChange={(e) => handleFieldChange('businessNumber', e.target.value)}
-                      className="text-right"
-                      placeholder="מספר עוסק מורשה"
+                      id="name"
+                      value={formData.name}
+                      onChange={(e) => handleFieldChange('name', e.target.value)}
+                      className="text-right bg-white"
+                      placeholder="הזן שם מלא"
                       required
                     />
                   </div>
-                )}
-                
-                <div>
-                  <Label htmlFor="company" className="text-right">שם החברה/העסק</Label>
-          <Input
-            id="company"
-            value={formData.company}
-                    onChange={(e) => handleFieldChange('company', e.target.value)}
-            className="text-right"
-                    placeholder="שם החברה או העסק"
-          />
-        </div>
-                <div>
-                  <Label className="text-right">סטטוס</Label>
-                  <Select value={formData.status} onValueChange={(value) => handleFieldChange('status', value)}>
-                    <SelectTrigger className="text-right">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="active">פעיל</SelectItem>
-                      <SelectItem value="inactive">לא פעיל</SelectItem>
-                    </SelectContent>
-                  </Select>
-        </div>
-      </div>
-
-      <div>
-                <Label htmlFor="address" className="text-right">כתובת</Label>
-                <Textarea
-                  id="address"
-                  value={formData.address}
-                  onChange={(e) => handleFieldChange('address', e.target.value)}
-                  className="text-right"
-                  placeholder="הזן כתובת מלאה"
-                  rows={2}
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="city" className="text-right">עיר</Label>
-                  <Input
-                    id="city"
-                    value={formData.city}
-                    onChange={(e) => handleFieldChange('city', e.target.value)}
-                    className="text-right"
-                    placeholder="תל אביב"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="zipCode" className="text-right">מיקוד</Label>
-                  <Input
-                    id="zipCode"
-                    value={formData.zipCode}
-                    onChange={(e) => handleFieldChange('zipCode', e.target.value)}
-                    className="text-right"
-                    placeholder="1234567"
-                  />
+                  <div>
+                    <Label htmlFor="billingName" className="text-right">שם על החשבונית</Label>
+                    <Input
+                      id="billingName"
+                      value={formData.billingName}
+                      onChange={(e) => handleFieldChange('billingName', e.target.value)}
+                      className="text-right bg-white"
+                      placeholder="שם שיופיע על החשבונית"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="email" className="text-right">אימייל *</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => handleFieldChange('email', e.target.value)}
+                      className="text-right bg-white"
+                      placeholder="example@email.com"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="phone" className="text-right">טלפון *</Label>
+                    <Input
+                      id="phone"
+                      value={formData.phone}
+                      onChange={(e) => handleFieldChange('phone', e.target.value)}
+                      className="text-right bg-white"
+                      placeholder="050-1234567"
+                      required
+                    />
+                  </div>
                 </div>
               </div>
 
-              <div>
-                <Label htmlFor="personalDescription" className="text-right">תיאור אישי</Label>
-                <Textarea
-                  id="personalDescription"
-                  value={formData.personalDescription}
-                  onChange={(e) => handleFieldChange('personalDescription', e.target.value)}
-                  className="text-right"
-                  placeholder="תיאור קצר על השותף ותחומי הפעילות שלו/ה"
-                  rows={3}
-                />
+              {/* פרטי עסק */}
+              <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
+                <h4 className="font-semibold text-green-800 mb-4 flex items-center gap-2">
+                  <Building className="h-5 w-5 text-green-600" />
+                  פרטי עסק
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="businessType" className="text-right">סוג עסק *</Label>
+                    <Select value={formData.businessType} onValueChange={(value) => handleFieldChange('businessType', value)}>
+                      <SelectTrigger className="text-right bg-white">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="individual">עצמאי</SelectItem>
+                        <SelectItem value="authorized_dealer">עוסק מורשה</SelectItem>
+                        <SelectItem value="company">חברה</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="personalId" className="text-right">ת.ז./ח.פ *</Label>
+                    <Input
+                      id="personalId"
+                      value={formData.personalId}
+                      onChange={(e) => handleFieldChange('personalId', e.target.value)}
+                      className="text-right bg-white"
+                      placeholder="123456789"
+                      required
+                    />
+                  </div>
+                  
+                  {formData.businessType === 'authorized_dealer' && (
+                    <div>
+                      <Label htmlFor="businessNumber" className="text-right">מספר עוסק מורשה *</Label>
+                      <Input
+                        id="businessNumber"
+                        value={formData.businessNumber}
+                        onChange={(e) => handleFieldChange('businessNumber', e.target.value)}
+                        className="text-right bg-white"
+                        placeholder="מספר עוסק מורשה"
+                        required
+                      />
+                    </div>
+                  )}
+                  
+                  <div>
+                    <Label htmlFor="company" className="text-right">שם החברה/העסק</Label>
+                    <Input
+                      id="company"
+                      value={formData.company}
+                      onChange={(e) => handleFieldChange('company', e.target.value)}
+                      className="text-right bg-white"
+                      placeholder="שם החברה או העסק"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-right">סטטוס</Label>
+                    <Select value={formData.status} onValueChange={(value) => handleFieldChange('status', value)}>
+                      <SelectTrigger className="text-right bg-white">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="active">פעיל</SelectItem>
+                        <SelectItem value="inactive">לא פעיל</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </div>
+
+              {/* כתובת */}
+              <div className="p-4 bg-gradient-to-r from-purple-50 to-violet-50 rounded-lg border border-purple-200">
+                <h4 className="font-semibold text-purple-800 mb-4 flex items-center gap-2">
+                  <Building className="h-5 w-5 text-purple-600" />
+                  כתובת
+                </h4>
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="address" className="text-right">כתובת</Label>
+                    <Textarea
+                      id="address"
+                      value={formData.address}
+                      onChange={(e) => handleFieldChange('address', e.target.value)}
+                      className="text-right bg-white"
+                      placeholder="הזן כתובת מלאה"
+                      rows={2}
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="city" className="text-right">עיר</Label>
+                      <Input
+                        id="city"
+                        value={formData.city}
+                        onChange={(e) => handleFieldChange('city', e.target.value)}
+                        className="text-right bg-white"
+                        placeholder="תל אביב"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="zipCode" className="text-right">מיקוד</Label>
+                      <Input
+                        id="zipCode"
+                        value={formData.zipCode}
+                        onChange={(e) => handleFieldChange('zipCode', e.target.value)}
+                        className="text-right bg-white"
+                        placeholder="1234567"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* תיאור אישי */}
+              <div className="p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg border border-orange-200">
+                <h4 className="font-semibold text-orange-800 mb-4 flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-orange-600" />
+                  תיאור אישי
+                </h4>
+                <div>
+                  <Label htmlFor="personalDescription" className="text-right">תיאור אישי</Label>
+                  <Textarea
+                    id="personalDescription"
+                    value={formData.personalDescription}
+                    onChange={(e) => handleFieldChange('personalDescription', e.target.value)}
+                    className="text-right bg-white"
+                    placeholder="תיאור קצר על השותף ותחומי הפעילות שלו/ה"
+                    rows={3}
+                  />
+                </div>
               </div>
 
               {/* מסמכים משפטיים */}
-              <div className="border-t pt-6">
-                <h4 className="font-semibold text-right mb-4 flex items-center gap-2">
-                  <FileText className="h-5 w-5 text-blue-600" />
+              <div className="p-4 bg-gradient-to-r from-red-50 to-pink-50 rounded-lg border border-red-200">
+                <h4 className="font-semibold text-red-800 mb-4 flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-red-600" />
                   מסמכים משפטיים
                 </h4>
                 
@@ -1987,14 +2017,14 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
         {/* לינק שותף ייחודי - נוסף לפרטים אישיים */}
         {currentStep === 1 && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-right flex items-center gap-2">
-                <Link className="h-5 w-5 text-blue-600" />
+          <Card className="bg-gradient-to-br from-purple-50 to-violet-50 border-purple-200">
+            <CardHeader className="bg-purple-100/50 rounded-t-lg">
+              <CardTitle className="text-right flex items-center gap-2 text-purple-800">
+                <Link className="h-5 w-5 text-purple-600" />
                 לינק שותף ייחודי
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 bg-white/70 rounded-b-lg">
               <div className="max-w-2xl mx-auto">
                 <div className="p-4 bg-blue-50 rounded-lg">
                   <Label htmlFor="uniqueLink" className="text-right">לינק שותף *</Label>
@@ -2061,14 +2091,14 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         )}
 
         {currentStep === 2 && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-right flex items-center gap-2">
+          <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
+            <CardHeader className="bg-blue-100/50 rounded-t-lg">
+              <CardTitle className="text-right flex items-center gap-2 text-blue-800">
                 <CreditCard className="h-5 w-5 text-blue-600" />
                 פרטי חשבון לתשלום
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-6 bg-white/70 rounded-b-lg">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label className="text-right">אמצעי תשלום מועדף *</Label>
@@ -2433,121 +2463,141 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         )}
 
         {currentStep === 3 && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-right flex items-center gap-2">
-                <DollarSign className="h-5 w-5 text-blue-600" />
+          <Card className="bg-gradient-to-br from-orange-50 to-amber-50 border-orange-200">
+            <CardHeader className="bg-orange-100/50 rounded-t-lg">
+              <CardTitle className="text-right flex items-center gap-2 text-orange-800">
+                <DollarSign className="h-5 w-5 text-orange-600" />
                 הגדרות עמלה
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <Label className="text-right">סוג עמלה *</Label>
-                <Select value={formData.commissionType} onValueChange={(value) => {
-                  handleFieldChange('commissionType', value);
-                  handleFieldChange('commissionStructure', 
-                    value === 'mixed' ? 'mixed' : 
-                    value === 'tiered' ? 'tiered' : 'simple'
-                  );
-                }}>
-          <SelectTrigger className="text-right">
-            <SelectValue placeholder="בחר סוג עמלה" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="fixed_monthly">עמלה חודשית קבועה</SelectItem>
-            <SelectItem value="percentage_monthly">עמלה חודשית באחוזים</SelectItem>
-            <SelectItem value="one_time">עמלה חד פעמית (ללא תשלומים נוספים)</SelectItem>
-            <SelectItem value="mixed">עמלה מעורבת</SelectItem>
-            <SelectItem value="tiered">עמלות מדורגות</SelectItem>
-            <SelectItem value="user_based">עמלה לפי משתמשים</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+            <CardContent className="space-y-6 bg-white/70 rounded-b-lg">
+              {/* סוגי עמלה */}
+              <div className="p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-200">
+                <h4 className="font-semibold text-blue-800 mb-4 flex items-center gap-2">
+                  <DollarSign className="h-5 w-5 text-blue-600" />
+                  סוגי עמלה
+                </h4>
+                <div>
+                  <Label className="text-right">סוג עמלה *</Label>
+                  <Select value={formData.commissionType} onValueChange={(value) => {
+                    handleFieldChange('commissionType', value);
+                    handleFieldChange('commissionStructure', 
+                      value === 'mixed' ? 'mixed' : 
+                      value === 'tiered' ? 'tiered' : 'simple'
+                    );
+                  }}>
+                    <SelectTrigger className="text-right bg-white">
+                      <SelectValue placeholder="בחר סוג עמלה" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="fixed_monthly">עמלה חודשית קבועה</SelectItem>
+                      <SelectItem value="percentage_monthly">עמלה חודשית באחוזים</SelectItem>
+                      <SelectItem value="one_time">עמלה חד פעמית (ללא תשלומים נוספים)</SelectItem>
+                      <SelectItem value="mixed">עמלה מעורבת</SelectItem>
+                      <SelectItem value="tiered">עמלות מדורגות</SelectItem>
+                      <SelectItem value="user_based">עמלה לפי משתמשים</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
 
               {formData.commissionType === 'percentage_monthly' && (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-green-50 rounded-lg">
-      <div>
-                    <Label htmlFor="commissionPercentage" className="text-right">אחוז עמלה (%) *</Label>
-                    <Input
-                      id="commissionPercentage"
-                      type="number"
-                      value={formData.commissionPercentage}
-                      onChange={(e) => handleFieldChange('commissionPercentage', e.target.value)}
-                      className="text-right"
-                      placeholder="15"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="minAmount" className="text-right">סכום מינימלי (₪)</Label>
-                    <Input
-                      id="minAmount"
-                      type="number"
-                      value={formData.minAmount}
-                      onChange={(e) => handleFieldChange('minAmount', e.target.value)}
-                      className="text-right"
-                      placeholder="500"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="maxAmount" className="text-right">סכום מקסימלי (₪)</Label>
-                    <Input
-                      id="maxAmount"
-                      type="number"
-                      value={formData.maxAmount}
-                      onChange={(e) => handleFieldChange('maxAmount', e.target.value)}
-                      className="text-right"
-                      placeholder="5000"
-                    />
+                <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
+                  <h5 className="font-semibold text-green-800 mb-4 flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5 text-green-600" />
+                    עמלה חודשית באחוזים
+                  </h5>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <Label htmlFor="commissionPercentage" className="text-right">אחוז עמלה (%) *</Label>
+                      <Input
+                        id="commissionPercentage"
+                        type="number"
+                        value={formData.commissionPercentage}
+                        onChange={(e) => handleFieldChange('commissionPercentage', e.target.value)}
+                        className="text-right bg-white"
+                        placeholder="15"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="minAmount" className="text-right">סכום מינימלי (₪)</Label>
+                      <Input
+                        id="minAmount"
+                        type="number"
+                        value={formData.minAmount}
+                        onChange={(e) => handleFieldChange('minAmount', e.target.value)}
+                        className="text-right bg-white"
+                        placeholder="500"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="maxAmount" className="text-right">סכום מקסימלי (₪)</Label>
+                      <Input
+                        id="maxAmount"
+                        type="number"
+                        value={formData.maxAmount}
+                        onChange={(e) => handleFieldChange('maxAmount', e.target.value)}
+                        className="text-right bg-white"
+                        placeholder="5000"
+                      />
+                    </div>
                   </div>
                 </div>
               )}
 
               {formData.commissionType === 'fixed_monthly' && (
-                <div className="p-4 bg-green-50 rounded-lg">
-                  <Label htmlFor="fixedAmount" className="text-right">סכום קבוע לחודש (₪) *</Label>
-                  <Input
-                    id="fixedAmount"
-                    type="number"
-                    value={formData.fixedAmount}
-                    onChange={(e) => handleFieldChange('fixedAmount', e.target.value)}
-                    className="text-right"
-                    placeholder="1000"
-                  />
+                <div className="p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-200">
+                  <h5 className="font-semibold text-blue-800 mb-4 flex items-center gap-2">
+                    <DollarSign className="h-5 w-5 text-blue-600" />
+                    עמלה חודשית קבועה
+                  </h5>
+                  <div>
+                    <Label htmlFor="fixedAmount" className="text-right">סכום קבוע לחודש (₪) *</Label>
+                    <Input
+                      id="fixedAmount"
+                      type="number"
+                      value={formData.fixedAmount}
+                      onChange={(e) => handleFieldChange('fixedAmount', e.target.value)}
+                      className="text-right bg-white"
+                      placeholder="1000"
+                    />
+                  </div>
                 </div>
               )}
 
               {formData.commissionType === 'one_time' && (
-                <div className="p-4 bg-orange-50 rounded-lg border-l-4 border-orange-400">
-                  <div className="flex items-start">
-                    <AlertCircle className="h-5 w-5 text-orange-600 mt-0.5 ml-3 flex-shrink-0" />
-                    <div className="text-right">
-                      <h4 className="font-semibold text-orange-800 mb-2">עמלה חד פעמית</h4>
-                      <div className="mb-4">
-                        <Label htmlFor="fixedAmount" className="text-right">סכום עמלה חד פעמית (₪) *</Label>
-                        <Input
-                          id="fixedAmount"
-                          type="number"
-                          value={formData.fixedAmount}
-                          onChange={(e) => handleFieldChange('fixedAmount', e.target.value)}
-                          className="text-right"
-                          placeholder="500"
-                        />
-                      </div>
-                      <div className="bg-orange-100 p-3 rounded text-sm text-orange-800">
-                        <strong>שימו לב:</strong> עמלה חד פעמית משולמת פעם אחת בלבד ואין תשלומים נוספים.
-                        התשלום יבוצע לפי תנאי התשלום שנבחרו בקטגוריה הבאה.
-                      </div>
+                <div className="p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg border border-orange-200">
+                  <h5 className="font-semibold text-orange-800 mb-4 flex items-center gap-2">
+                    <AlertCircle className="h-5 w-5 text-orange-600" />
+                    עמלה חד פעמית
+                  </h5>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="fixedAmount" className="text-right">סכום עמלה חד פעמית (₪) *</Label>
+                      <Input
+                        id="fixedAmount"
+                        type="number"
+                        value={formData.fixedAmount}
+                        onChange={(e) => handleFieldChange('fixedAmount', e.target.value)}
+                        className="text-right bg-white"
+                        placeholder="500"
+                      />
+                    </div>
+                    <div className="bg-orange-100 p-3 rounded text-sm text-orange-800">
+                      <strong>שימו לב:</strong> עמלה חד פעמית משולמת פעם אחת בלבד ואין תשלומים נוספים.
+                      התשלום יבוצע לפי תנאי התשלום שנבחרו בקטגוריה הבאה.
                     </div>
                   </div>
                 </div>
               )}
 
               {formData.commissionType === 'mixed' && (
-                <div className="space-y-6 p-4 bg-green-50 rounded-lg">
-                  <h4 className="font-semibold text-right">הגדרת עמלה מעורבת</h4>
-                  
-                  {/* שלב 1: תשלום התחלתי */}
-                  <div className="space-y-4">
+                <div className="p-4 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg border border-indigo-200">
+                  <h5 className="font-semibold text-indigo-800 mb-4 flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5 text-indigo-600" />
+                    עמלה מעורבת
+                  </h5>
+                  <div className="space-y-6">
                     <h5 className="font-medium text-right text-blue-700">שלב 1: תשלום התחלתי</h5>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
@@ -2703,28 +2753,34 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               )}
 
               {formData.commissionType === 'user_based' && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-green-50 rounded-lg">
-                  <div>
-                    <Label htmlFor="userThreshold" className="text-right">מס' משתמשים מינימלי *</Label>
-                    <Input
-                      id="userThreshold"
-                      type="number"
-                      value={formData.userThreshold}
-                      onChange={(e) => handleFieldChange('userThreshold', e.target.value)}
-                      className="text-right"
-                      placeholder="10"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="commissionPercentage" className="text-right">אחוז עמלה (%) *</Label>
-                    <Input
-                      id="commissionPercentage"
-                      type="number"
-                      value={formData.commissionPercentage}
-                      onChange={(e) => handleFieldChange('commissionPercentage', e.target.value)}
-                      className="text-right"
-                      placeholder="20"
-                    />
+                <div className="p-4 bg-gradient-to-r from-purple-50 to-violet-50 rounded-lg border border-purple-200">
+                  <h5 className="font-semibold text-purple-800 mb-4 flex items-center gap-2">
+                    <Users className="h-5 w-5 text-purple-600" />
+                    עמלה לפי משתמשים
+                  </h5>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="userThreshold" className="text-right">מס' משתמשים מינימלי *</Label>
+                      <Input
+                        id="userThreshold"
+                        type="number"
+                        value={formData.userThreshold}
+                        onChange={(e) => handleFieldChange('userThreshold', e.target.value)}
+                        className="text-right bg-white"
+                        placeholder="10"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="commissionPercentage" className="text-right">אחוז עמלה (%) *</Label>
+                      <Input
+                        id="commissionPercentage"
+                        type="number"
+                        value={formData.commissionPercentage}
+                        onChange={(e) => handleFieldChange('commissionPercentage', e.target.value)}
+                        className="text-right bg-white"
+                        placeholder="20"
+                      />
+                    </div>
                   </div>
                 </div>
               )}
@@ -2797,8 +2853,11 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               )}
 
               {/* הגדרות תשלום */}
-              <div className="mt-6 p-4 bg-green-50 rounded-lg border border-green-200">
-                <h5 className="font-medium text-green-800 mb-3">הגדרות תשלום</h5>
+              <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
+                <h4 className="font-semibold text-green-800 mb-4 flex items-center gap-2">
+                  <DollarSign className="h-5 w-5 text-green-600" />
+                  הגדרות תשלום
+                </h4>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-3 bg-white rounded-lg border">
                     <Label className="text-right font-medium">תשלום עבור מנוי בסיסי</Label>
@@ -2807,7 +2866,7 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                       onCheckedChange={(checked) => handleFieldChange('paymentForBasicSubscription', checked)}
                     />
                   </div>
-                  
+
                   <div className="flex items-center justify-between p-3 bg-white rounded-lg border">
                     <Label className="text-right font-medium">תשלום עבור תוספות</Label>
                     <Switch
@@ -2819,8 +2878,11 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               </div>
 
               {/* תוספות מותאמות אישית */}
-              <div className="mt-6 p-4 bg-orange-50 rounded-lg border border-orange-200">
-                <h5 className="font-medium text-orange-800 mb-3">תוספות מותאמות אישית</h5>
+              <div className="p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg border border-orange-200">
+                <h5 className="font-semibold text-orange-800 mb-4 flex items-center gap-2">
+                  <Plus className="h-5 w-5 text-orange-600" />
+                  תוספות מותאמות אישית
+                </h5>
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* עמלה בסכום קבוע */}
@@ -2946,70 +3008,6 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         )}
 
 
-        {currentStep === 5 && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-right flex items-center gap-2">
-                <FileText className="h-5 w-5 text-blue-600" />
-                תבנית תשלום
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <Label className="text-right">תדירות תשלום</Label>
-                <Select value={formData.paymentFrequency} onValueChange={(value) => handleFieldChange('paymentFrequency', value)}>
-          <SelectTrigger className="text-right">
-                    <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-                    <SelectItem value="monthly">חודשי</SelectItem>
-                    <SelectItem value="weekly">שבועי</SelectItem>
-                    <SelectItem value="quarterly">רבעוני</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <Label htmlFor="autoPayment" className="text-right">תשלום אוטומטי</Label>
-                <Switch
-                  id="autoPayment"
-                  checked={formData.autoPayment}
-                  onCheckedChange={(checked) => handleFieldChange('autoPayment', checked)}
-                />
-              </div>
-
-              <div className="p-4 bg-blue-50 rounded-lg">
-                <h4 className="font-semibold text-right mb-4">תצורת תבנית התשלום</h4>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-right">שליחת תזכורת לפני תשלום</span>
-                    <Switch defaultChecked />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-right">שליחת קבלה לאחר תשלום</span>
-                    <Switch defaultChecked />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-right">עדכון סטטוס אוטומטי</span>
-                    <Switch />
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <Label htmlFor="joinDate" className="text-right">תאריך הצטרפות</Label>
-                <Input
-                  id="joinDate"
-                  type="date"
-                  value={formData.joinDate}
-                  onChange={(e) => handleFieldChange('joinDate', e.target.value)}
-                  className="text-right"
-                />
-              </div>
-
-            </CardContent>
-          </Card>
-        )}
 
         {/* Navigation Buttons */}
         <div className="flex justify-between items-center pt-6 border-t">
@@ -3026,7 +3024,7 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         <Button variant="outline" onClick={onClose}>
           ביטול
         </Button>
-            {currentStep < 5 ? (
+            {currentStep < 3 ? (
               <Button onClick={handleNext}>
                 הבא
                 <ArrowLeft className="h-4 w-4 mr-2" />
