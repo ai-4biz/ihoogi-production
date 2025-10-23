@@ -1362,6 +1362,8 @@ const getCommissionDescription = (type: string): string => {
 // Add Partner Form Component
 const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [showSignaturePad, setShowSignaturePad] = useState(false);
+  const [signatureData, setSignatureData] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     // פרטים אישיים
     name: '',
@@ -1472,7 +1474,25 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     // תבנית תשלום
     paymentTemplate: '',
     autoPayment: false,
-    paymentFrequency: 'monthly' as 'monthly' | 'weekly' | 'quarterly'
+    paymentFrequency: 'monthly' as 'monthly' | 'weekly' | 'quarterly',
+    
+    // תנאי תשלום לפרטי חשבון
+    paymentDay: '15',
+    minPaymentThreshold: '500',
+    baseCommissionPercentage: '15',
+    paymentType: 'verified' as 'verified' | 'immediate' | 'monthly',
+    allowCancellations: false,
+    
+    // תוספות שירותים
+    fixedAddonCommission: '10',
+    percentageAddonCommission: '20',
+    addonPaymentWithMonthly: true,
+    
+    // מתי בחודש יהיה התשלום
+    paymentDayOfMonth: '15',
+    customPaymentFrequency: '',
+    customPaymentFrequencyUnit: 'days' as 'days' | 'weeks' | 'months',
+    customPaymentCondition: ''
   });
 
   // Generate unique link
@@ -1491,6 +1511,15 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   const handleFieldChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSignatureComplete = (signature: string) => {
+    setSignatureData(signature);
+    setShowSignaturePad(false);
+  };
+
+  const clearSignature = () => {
+    setSignatureData(null);
   };
 
   const addTieredCommission = () => {
@@ -1546,6 +1575,7 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   ];
 
   return (
+    <>
     <div className="w-full max-w-4xl mx-auto">
       {/* Progress Bar */}
       <div className="mb-8">
@@ -1740,7 +1770,7 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   value={formData.personalDescription}
                   onChange={(e) => handleFieldChange('personalDescription', e.target.value)}
                   className="text-right"
-                  placeholder="תיאור קצר על השותף ותחומי הפעילות שלו"
+                  placeholder="תיאור קצר על השותף ותחומי הפעילות שלו/ה"
                   rows={3}
                 />
               </div>
@@ -1775,6 +1805,46 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     <p className="text-xs text-gray-600 text-right mt-1">
                       יש להעלות חוזה שותפים חתום (PDF, DOC, DOCX)
                     </p>
+                  </div>
+
+                  {/* חתימה דיגיטלית על החוזה */}
+                  <div className="space-y-3">
+                    <Label className="text-sm font-medium">חתימה דיגיטלית על החוזה</Label>
+                    <div className="space-y-2">
+                      {signatureData ? (
+                        <div className="border border-gray-200 rounded-lg p-4 bg-white">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-sm text-gray-600">חתימה שמורה:</span>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={clearSignature}
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <Trash2 className="w-4 h-4 ml-1" />
+                              מחק חתימה
+                            </Button>
+                          </div>
+                          <div className="border border-gray-300 rounded p-2 bg-gray-50">
+                            <img src={signatureData} alt="חתימה דיגיטלית" className="max-w-full h-auto" />
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="border border-dashed border-gray-300 rounded-lg p-6 text-center">
+                          <p className="text-sm text-gray-500 mb-3">אין חתימה דיגיטלית על החוזה</p>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setShowSignaturePad(true)}
+                            className="flex items-center gap-2"
+                          >
+                            <Edit className="w-4 h-4" />
+                            הוסף חתימה דיגיטלית על החוזה
+                          </Button>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   {/* מסמכים משפטיים נוספים */}
@@ -1864,6 +1934,46 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     <Label htmlFor="termsAccepted" className="text-right text-sm">
                       אני מקבל את תנאי השותפות והתקנון *
                     </Label>
+                  </div>
+
+                  {/* חתימה דיגיטלית */}
+                  <div className="space-y-3">
+                    <Label className="text-sm font-medium">חתימה דיגיטלית על התקנון</Label>
+                    <div className="space-y-2">
+                      {signatureData ? (
+                        <div className="border border-gray-200 rounded-lg p-4 bg-white">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-sm text-gray-600">חתימה שמורה:</span>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={clearSignature}
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <Trash2 className="w-4 h-4 ml-1" />
+                              מחק חתימה
+                            </Button>
+                          </div>
+                          <div className="border border-gray-300 rounded p-2 bg-gray-50">
+                            <img src={signatureData} alt="חתימה דיגיטלית" className="max-w-full h-auto" />
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="border border-dashed border-gray-300 rounded-lg p-6 text-center">
+                          <p className="text-sm text-gray-500 mb-3">אין חתימה דיגיטלית</p>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setShowSignaturePad(true)}
+                            className="flex items-center gap-2"
+                          >
+                            <Edit className="w-4 h-4" />
+                            הוסף חתימה דיגיטלית
+                          </Button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2110,6 +2220,135 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   </div>
                 </div>
               )}
+
+              {/* מתי ישולם התשלום לשותף */}
+              <div className="mt-4 p-4 bg-purple-50 rounded-lg border border-purple-200">
+                <h5 className="font-medium text-purple-800 mb-3">מתי ישולם התשלום לשותף?</h5>
+                <div className="space-y-4">
+                  <div>
+                    <Select value={formData.paymentCondition} onValueChange={(value) => handleFieldChange('paymentCondition', value)}>
+                      <SelectTrigger className="text-right">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="after_one_paid_month">
+                          🔐 רק אחרי חודש מנוי אחד ששולם במלואו
+                        </SelectItem>
+                        <SelectItem value="after_lead_month_plus_days">
+                          ⏰ חודש מהליד + X ימים ביטחון
+                        </SelectItem>
+                        <SelectItem value="immediate">
+                          ⚡ תשלום מיידי (לא מומלץ)
+                        </SelectItem>
+                        <SelectItem value="after_lead_conversion_only">
+                          🎯 רק על פי המרת לידים אמיתית
+                        </SelectItem>
+                        <SelectItem value="custom">
+                          ✏️ אחר - הגדר בעצמך
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {formData.paymentCondition === 'after_lead_month_plus_days' && (
+                    <div>
+                      <Label className="text-sm font-medium">ימים נוספים מעבר לחודש (ביטחון)</Label>
+                      <div className="flex items-center gap-2 mt-2">
+                        <Input 
+                          type="number"
+                          value={formData.paymentDelayDays || 3}
+                          onChange={(e) => handleFieldChange('paymentDelayDays', parseInt(e.target.value))}
+                          className="text-right w-20"
+                          min="1"
+                          max="30"
+                        />
+                        <span className="text-sm text-gray-600">ימים</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {formData.paymentCondition === 'custom' && (
+                    <div>
+                      <Label className="text-sm font-medium">הגדר תנאי תשלום מותאם אישית</Label>
+                      <Textarea 
+                        value={formData.customPaymentCondition || ""}
+                        onChange={(e) => handleFieldChange('customPaymentCondition', e.target.value)}
+                        className="text-right mt-2"
+                        placeholder="הכנס כאן את התנאים המותאמים אישית שלך..."
+                        rows={3}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* מתי בחודש יהיה התשלום */}
+              <div className="mt-4 p-4 bg-orange-50 rounded-lg border border-orange-200">
+                <h5 className="font-medium text-orange-800 mb-3">מתי בחודש יהיה התשלום?</h5>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-sm font-medium">יום בחודש לתשלום</Label>
+                      <Select value={formData.paymentDayOfMonth || "15"} onValueChange={(value) => handleFieldChange('paymentDayOfMonth', value)}>
+                        <SelectTrigger className="text-right">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1">1 לחודש</SelectItem>
+                          <SelectItem value="5">5 לחודש</SelectItem>
+                          <SelectItem value="10">10 לחודש</SelectItem>
+                          <SelectItem value="15">15 לחודש</SelectItem>
+                          <SelectItem value="20">20 לחודש</SelectItem>
+                          <SelectItem value="25">25 לחודש</SelectItem>
+                          <SelectItem value="30">30 לחודש</SelectItem>
+                          <SelectItem value="last">יום אחרון בחודש</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div>
+                      <Label className="text-sm font-medium">תדירות תשלום</Label>
+                      <Select value={formData.paymentFrequency || "monthly"} onValueChange={(value) => handleFieldChange('paymentFrequency', value)}>
+                        <SelectTrigger className="text-right">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="weekly">שבועי</SelectItem>
+                          <SelectItem value="biweekly">דו-שבועי</SelectItem>
+                          <SelectItem value="monthly">חודשי</SelectItem>
+                          <SelectItem value="quarterly">רבעוני</SelectItem>
+                          <SelectItem value="custom">מותאם אישית</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  {formData.paymentFrequency === 'custom' && (
+                    <div>
+                      <Label className="text-sm font-medium">הגדר תדירות מותאמת אישית</Label>
+                      <div className="flex items-center gap-2 mt-2">
+                        <Input 
+                          type="number"
+                          value={formData.customPaymentFrequency || ""}
+                          onChange={(e) => handleFieldChange('customPaymentFrequency', e.target.value)}
+                          className="text-right w-20"
+                          placeholder="7"
+                        />
+                        <Select value={formData.customPaymentFrequencyUnit || "days"} onValueChange={(value) => handleFieldChange('customPaymentFrequencyUnit', value)}>
+                          <SelectTrigger className="text-right w-32">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="days">ימים</SelectItem>
+                            <SelectItem value="weeks">שבועות</SelectItem>
+                            <SelectItem value="months">חודשים</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
             </CardContent>
           </Card>
         )}
@@ -2549,21 +2788,131 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                           onCheckedChange={(checked) => handleFieldChange('commissionIncludesAddons', checked)}
                         />
                       </div>
-                      
-                      <div className="flex items-center justify-between">
-                        <Label className="text-right">תשלום נפרד לכל משתמש (לא מצטבר לכלל השותף)</Label>
-                        <Switch
-                          checked={formData.separatePaymentPerUser}
-                          onCheckedChange={(checked) => handleFieldChange('separatePaymentPerUser', checked)}
-                        />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* תוספות מותאמות אישית */}
+              <div className="mt-6 p-4 bg-orange-50 rounded-lg border border-orange-200">
+                <h5 className="font-medium text-orange-800 mb-3">תוספות מותאמות אישית</h5>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* עמלה בסכום קבוע */}
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                        <Label className="text-sm font-medium text-green-700">עמלה בסכום קבוע (₪)</Label>
                       </div>
+                      
+                      <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                        <div className="grid grid-cols-1 gap-3">
+                          <div>
+                            <Label className="text-xs text-gray-600">שם התוספת</Label>
+                            <Input 
+                              placeholder="לדוגמה: 100 לידים+"
+                              className="text-sm"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-xs text-gray-600">מחיר התוספת (₪)</Label>
+                            <Input 
+                              placeholder="49"
+                              type="number"
+                              className="text-sm"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-xs text-gray-600">עמלה קבועה (₪)</Label>
+                            <Input 
+                              placeholder="10"
+                              type="number"
+                              className="text-sm"
+                            />
+                          </div>
+                        </div>
+                        <Button 
+                          type="button" 
+                          variant="ghost" 
+                          size="sm" 
+                          className="mt-2 text-red-600 hover:text-red-700"
+                        >
+                          <Trash2 className="w-4 h-4 ml-1" />
+                          מחק
+                        </Button>
+                      </div>
+                      
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        className="w-full border-dashed border-green-300 text-green-600 hover:bg-green-50"
+                      >
+                        <Plus className="w-4 h-4 ml-2" />
+                        הוסף עמלה קבועה
+                      </Button>
                     </div>
 
-                    {/* הסבר ברור */}
-                    <div className="bg-blue-100 p-3 rounded text-sm text-blue-800">
-                      <strong>הסבר:</strong> כל משתמש שהשותף הביא יקבל התייחסות נפרדת לתשלום. 
-                      התשלום יבוצע רק לאחר תקופת ביטחון כדי לוודא שהמנוי יציב ולא יבוטל.
+                    {/* עמלה באחוזים */}
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                        <Label className="text-sm font-medium text-blue-700">עמלה באחוזים (%)</Label>
+                      </div>
+                      
+                      <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                        <div className="grid grid-cols-1 gap-3">
+                          <div>
+                            <Label className="text-xs text-gray-600">שם התוספת</Label>
+                            <Input 
+                              placeholder="לדוגמה: תמיכה טלפונית"
+                              className="text-sm"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-xs text-gray-600">מחיר התוספת (₪)</Label>
+                            <Input 
+                              placeholder="79"
+                              type="number"
+                              className="text-sm"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-xs text-gray-600">אחוז עמלה (%)</Label>
+                            <Input 
+                              placeholder="20"
+                              type="number"
+                              className="text-sm"
+                            />
+                          </div>
+                        </div>
+                        <Button 
+                          type="button" 
+                          variant="ghost" 
+                          size="sm" 
+                          className="mt-2 text-red-600 hover:text-red-700"
+                        >
+                          <Trash2 className="w-4 h-4 ml-1" />
+                          מחק
+                        </Button>
+                      </div>
+                      
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        className="w-full border-dashed border-blue-300 text-blue-600 hover:bg-blue-50"
+                      >
+                        <Plus className="w-4 h-4 ml-2" />
+                        הוסף עמלה באחוזים
+                      </Button>
                     </div>
+                  </div>
+                  
+                  <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                    <h6 className="font-medium text-orange-800 mb-2">הסבר:</h6>
+                    <p className="text-sm text-orange-700">
+                      ניתן להוסיף תוספות שירותים עם עמלה קבועה (₪) או עמלה באחוזים (%). 
+                      כל תוספת תקבל את העמלה המוגדרת שלה בהתאם לסוג העמלה שנבחר.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -2610,7 +2959,7 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   </Button>
                 </div>
                 <p className="text-sm text-gray-600 text-right mt-2">
-                  לינק זה יזהה את השותף ויאפשר מעקב אחר פעילות ההפצה שלו
+                  לינק זה יזהה את השותף ויאפשר מעקב אחר פעילות ההפצה שלו/ה
                 </p>
               </div>
 
@@ -2733,6 +3082,120 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         </Button>
             )}
           </div>
+        </div>
+      </div>
+    </div>
+    
+    {/* SignaturePad Modal */}
+    {showSignaturePad && (
+      <SignaturePad 
+        onComplete={handleSignatureComplete}
+        onCancel={() => setShowSignaturePad(false)}
+      />
+    )}
+    </>
+  );
+};
+
+// SignaturePad Component
+interface SignaturePadProps {
+  onComplete: (signature: string) => void;
+  onCancel: () => void;
+}
+
+const SignaturePad: React.FC<SignaturePadProps> = ({ onComplete, onCancel }) => {
+  const canvasRef = React.useRef<HTMLCanvasElement>(null);
+  const [isDrawing, setIsDrawing] = React.useState(false);
+
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+  }, []);
+
+  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    setIsDrawing(true);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    ctx.beginPath();
+    ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+  };
+
+  const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isDrawing) return;
+    
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+    ctx.stroke();
+  };
+
+  const stopDrawing = () => {
+    setIsDrawing(false);
+  };
+
+  const handleSave = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const signature = canvas.toDataURL();
+    onComplete(signature);
+  };
+
+  const handleClear = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 w-full max-w-md">
+        <h3 className="text-lg font-semibold text-center mb-4">חתימה דיגיטלית</h3>
+        
+        <div className="border border-gray-300 rounded-lg mb-4">
+          <canvas
+            ref={canvasRef}
+            width={400}
+            height={200}
+            className="w-full h-48 cursor-crosshair"
+            onMouseDown={startDrawing}
+            onMouseMove={draw}
+            onMouseUp={stopDrawing}
+            onMouseLeave={stopDrawing}
+          />
+        </div>
+
+        <div className="flex gap-2 justify-center">
+          <Button variant="outline" onClick={handleClear}>
+            נקה
+          </Button>
+          <Button variant="outline" onClick={onCancel}>
+            ביטול
+          </Button>
+          <Button onClick={handleSave}>
+            שמור חתימה
+          </Button>
         </div>
       </div>
     </div>
