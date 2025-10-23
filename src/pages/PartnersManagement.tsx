@@ -48,6 +48,7 @@ import {
 } from 'lucide-react';
 import MainLayout from '@/components/layout/MainLayout';
 import AdvancedReportGenerator from '@/components/reports/AdvancedReportGenerator';
+import SmartReportsSystem from '@/components/reports/SmartReportsSystem';
 
 interface Partner {
   id: string;
@@ -455,6 +456,24 @@ const PartnersManagement: React.FC = () => {
               onExport={async (data, config) => {
                 // Excel export logic
                 console.log('Exporting partners data:', data, config);
+              }}
+            />
+          </CardContent>
+        </Card>
+
+        {/* Smart Reports System */}
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle className="text-right text-xl font-bold flex items-center gap-2">
+              <BarChart3 className="h-6 w-6 text-purple-600" />
+              מערכת דוחות חכמה 👑
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <SmartReportsSystem
+              partners={partners}
+              onExport={(data, reportType) => {
+                console.log('Exporting smart report:', reportType, data);
               }}
             />
           </CardContent>
