@@ -105,7 +105,7 @@ const NavigationButtons = ({
       onClick: () => navigate("/notifications")
     },
     {
-      id: "partners",
+      id: "partners-management",
       emoji: "🤝",
       label: "ניהול שותפים",
       state: "root" as ViewState,

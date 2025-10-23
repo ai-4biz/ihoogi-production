@@ -46,6 +46,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import MainLayout from '@/components/layout/MainLayout';
+import AdvancedReportGenerator from '@/components/reports/AdvancedReportGenerator';
 
 interface Partner {
   id: string;
@@ -318,25 +319,31 @@ const PartnersManagement: React.FC = () => {
   return (
     <MainLayout>
       <div className="container mx-auto px-4 py-6" dir="rtl">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-          <div className="flex items-center gap-4 mb-4 md:mb-0">
-            <div className="p-3 bg-blue-100 rounded-xl">
-              <Users className="h-8 w-8 text-blue-600" />
+        {/* User Banner with Logo */}
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg p-6 mb-8 text-white">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                <img 
+                  src="/hoogi-new-avatar.png" 
+                  alt="Hoogi Logo" 
+                  className="w-12 h-12 rounded-full object-cover"
+                />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold">שלום, משתמש המערכת</h2>
+                <p className="text-blue-100 text-lg">ברוכים הבאים למערכת ניהול השותפים</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">
-                {location.pathname === '/my-partners' ? 'השותפים שלי' : 'ניהול שותפים'}
-              </h1>
-              <p className="text-gray-500 text-lg">
-                {location.pathname === '/my-partners' 
-                  ? 'תוכנית שותפים ועמלות מתקדמת' 
-                  : 'מערכת ניהול שותפים ועמלות מתקדמת'
-                }
-              </p>
+            <div className="text-right">
+              <p className="text-blue-100 text-sm">תאריך: {new Date().toLocaleDateString('he-IL')}</p>
+              <p className="text-blue-100 text-sm">שעה: {new Date().toLocaleTimeString('he-IL')}</p>
             </div>
           </div>
-          {location.pathname === '/partners' && (
+        </div>
+
+        {/* Add Partner Button */}
+        <div className="flex justify-end mb-6">
           <Dialog open={showAddPartner} onOpenChange={setShowAddPartner}>
             <DialogTrigger asChild>
               <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3">
@@ -344,16 +351,15 @@ const PartnersManagement: React.FC = () => {
                 הוסף שותף חדש
               </Button>
             </DialogTrigger>
-              <DialogContent className="max-w-6xl max-h-[95vh] overflow-y-auto">
+            <DialogContent className="max-w-6xl max-h-[95vh] overflow-y-auto">
               <DialogHeader>
-                  <DialogTitle className="text-right text-xl font-bold">הוספת שותף חדש</DialogTitle>
+                <DialogTitle className="text-right text-xl font-bold">הוספת שותף חדש</DialogTitle>
               </DialogHeader>
-                <div className="p-2">
-              <AddPartnerForm onClose={() => setShowAddPartner(false)} />
-                </div>
+              <div className="p-2">
+                <AddPartnerForm onClose={() => setShowAddPartner(false)} />
+              </div>
             </DialogContent>
           </Dialog>
-          )}
         </div>
 
         {/* Stats Cards */}
@@ -409,754 +415,49 @@ const PartnersManagement: React.FC = () => {
           </Card>
         </div>
 
-        {/* Main Content */}
-        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as any)} className="w-full">
-          <TabsList className={`grid w-full ${location.pathname === '/my-partners' ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-3 md:grid-cols-6'} mb-6`}>
-            <TabsTrigger value="overview" className="flex items-center gap-2">
-              <BarChart3 className="h-4 w-4" />
-              תוכנית שותפים
-            </TabsTrigger>
-            <TabsTrigger value="partners" className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              {location.pathname === '/my-partners' ? 'השותפים שלי' : 'שותפים שלי'}
-            </TabsTrigger>
-            <TabsTrigger value="commissions" className="flex items-center gap-2">
-              <DollarSign className="h-4 w-4" />
-              עמלות ותשלומים
-            </TabsTrigger>
-            {location.pathname === '/partners' && (
-              <>
-            <TabsTrigger value="reports" className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-                  דוחות וסטטיסטיקות
-            </TabsTrigger>
-                <TabsTrigger value="settings" className="flex items-center gap-2">
-                  <Settings className="h-4 w-4" />
-                  הגדרות תוכנית
-                </TabsTrigger>
-                <TabsTrigger value="integrations" className="flex items-center gap-2">
-                  <Zap className="h-4 w-4" />
-                  אינטגרציות עתידיות
-                </TabsTrigger>
-              </>
-            )}
-          </TabsList>
 
-          {/* Overview Tab - תוכנית שותפים */}
-          <TabsContent value="overview" className="mt-0 space-y-6">
-            {/* Enhanced Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <Card className="bg-gradient-to-br from-blue-50 to-blue-100">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-blue-600 text-right">שותפים פעילים</p>
-                      <p className="text-3xl font-bold text-blue-700 text-right">{partners.filter(p => p.status === 'active').length}</p>
-                    </div>
-                    <Users className="h-12 w-12 text-blue-500" />
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <Card className="bg-gradient-to-br from-green-50 to-green-100">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-green-600 text-right">לידים דרך שותפים</p>
-                      <p className="text-3xl font-bold text-green-700 text-right">
-                        {partners.reduce((sum, p) => sum + p.totalLeads, 0)}
-                      </p>
-                    </div>
-                    <TrendingUp className="h-12 w-12 text-green-500" />
-                  </div>
-                </CardContent>
-              </Card>
 
-              <Card className="bg-gradient-to-br from-orange-50 to-orange-100">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-orange-600 text-right">עמלות צפויות</p>
-                      <p className="text-3xl font-bold text-orange-700 text-right">
-                        ₪{commissionPayments.filter(p => p.status === 'unpaid' || p.status === 'pending').reduce((sum, p) => sum + p.amount, 0).toLocaleString()}
-                      </p>
-                    </div>
-                    <DollarSign className="h-12 w-12 text-orange-500" />
-                  </div>
-                </CardContent>
-              </Card>
 
-              <Card className="bg-gradient-to-br from-purple-50 to-purple-100">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-purple-600 text-right">אחוז המרה ממוצע</p>
-                      <p className="text-3xl font-bold text-purple-700 text-right">
-                        {Math.round(partners.reduce((sum, p) => sum + p.conversionRate, 0) / partners.length)}%
-                      </p>
-                    </div>
-                    <BarChart3 className="h-12 w-12 text-purple-500" />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
 
-            {/* Top Performers */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-right">5 השותפים הפעילים ביותר</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {partners
-                      .sort((a, b) => b.totalLeads - a.totalLeads)
-                      .slice(0, 5)
-                      .map((partner, index) => (
-                        <div key={partner.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
-                              {index + 1}
-                            </div>
-                            <div>
-                              <p className="font-medium text-right">{partner.name}</p>
-                              <p className="text-sm text-gray-500 text-right">{partner.totalLeads} לידים</p>
-                            </div>
-                          </div>
-                          <Badge className={getStatusColor(partner.status)}>
-                            {getStatusText(partner.status)}
-                          </Badge>
-                        </div>
-                      ))}
-                  </div>
-                </CardContent>
-              </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-right">סטטיסטיקות מהירות</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-right">סך מכירות דרך שותפים</span>
-                      <span className="font-bold">₪{partners.reduce((sum, p) => sum + (p.totalSales * 1200), 0).toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-right">עמלות שולמו החודש</span>
-                      <span className="font-bold">₪{commissionPayments.filter(p => p.status === 'paid' && new Date(p.paidDate!).getMonth() === new Date().getMonth()).reduce((sum, p) => sum + p.amount, 0).toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-right">שותף חדש ביותר</span>
-                      <span className="font-bold">{partners.sort((a, b) => new Date(b.joinDate).getTime() - new Date(a.joinDate).getTime())[0]?.name}</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
 
-          {/* Partners Tab - שותפים שלי */}
-          <TabsContent value="partners" className="mt-0 space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-right">רשימת שותפים</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="text-right">שם שותף</TableHead>
-                        <TableHead className="text-right">דוא"ל</TableHead>
-                        <TableHead className="text-right">אחוז עמלה</TableHead>
-                        <TableHead className="text-right">סה"כ לידים</TableHead>
-                        <TableHead className="text-right">סה"כ מכירות</TableHead>
-                        <TableHead className="text-right">סכום עמלה</TableHead>
-                        <TableHead className="text-right">סטטוס</TableHead>
-                        <TableHead className="text-right">פעולות</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {partners.map((partner) => (
-                        <TableRow key={partner.id} className="hover:bg-gray-50">
-                          <TableCell className="text-right cursor-pointer" onClick={() => {
-                            setSelectedPartner(partner);
-                            setShowPartnerDetails(true);
-                          }}>
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                                <Users className="h-5 w-5 text-blue-600" />
-                              </div>
-                            <div>
-                              <p className="font-medium">{partner.name}</p>
-                                <p className="text-sm text-gray-500">{partner.company}</p>
-                              </div>
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex items-center gap-2">
-                              <Mail className="h-4 w-4 text-gray-400" />
-                              <span className="text-sm">{partner.email}</span>
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Badge variant="outline" className="font-medium">
-                              {partner.commissionPercentage}%
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-right font-medium">
-                            {partner.totalLeads}
-                          </TableCell>
-                          <TableCell className="text-right font-medium">
-                            {partner.totalSales}
-                          </TableCell>
-                          <TableCell className="text-right font-bold text-green-600">
-                            ₪{partner.totalEarnings.toLocaleString()}
-                          </TableCell>
-                          <TableCell>
-                            <Badge className={getStatusColor(partner.status)}>
-                              {getStatusText(partner.status)}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex gap-2">
-                              <Button variant="outline" size="sm" onClick={() => {
-                                setSelectedPartner(partner);
-                                setShowPartnerDetails(true);
-                              }}>
-                                <Eye className="h-4 w-4" />
-                              </Button>
-                              <Button variant="outline" size="sm">
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                              <Button variant="outline" size="sm">
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
 
-          {/* Commissions Tab - עמלות ותשלומים */}
-          <TabsContent value="commissions" className="mt-0 space-y-6">
-            {/* Unpaid Commissions */}
-            <Card>
-                    <CardHeader>
-                <CardTitle className="text-right flex items-center gap-2">
-                  <AlertCircle className="h-5 w-5 text-red-500" />
-                  עמלות שטרם שולמו
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="text-right">שותף</TableHead>
-                        <TableHead className="text-right">תיאור</TableHead>
-                        <TableHead className="text-right">סכום</TableHead>
-                        <TableHead className="text-right">תאריך יעד</TableHead>
-                        <TableHead className="text-right">סטטוס תשלום</TableHead>
-                        <TableHead className="text-right">פעולות</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {commissionPayments.filter(p => p.status === 'unpaid').map((payment) => (
-                        <TableRow key={payment.id}>
-                          <TableCell className="text-right font-medium">
-                            {payment.partnerName}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            {payment.description}
-                          </TableCell>
-                          <TableCell className="text-right font-bold text-green-600">
-                            ₪{payment.amount.toLocaleString()}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            {payment.dueDate}
-                          </TableCell>
-                          <TableCell>
-                            <Badge className="bg-red-100 text-red-800 border-red-200">
-                              🔴 לא שולם
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex gap-2">
-                              <Button variant="outline" size="sm" className="text-green-600">
-                                שלם עכשיו
-                      </Button>
-                              <Button variant="outline" size="sm">
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-                    </CardContent>
-                  </Card>
 
-            {/* Paid Commissions */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-right flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-green-500" />
-                  עמלות ששולמו
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="text-right">שותף</TableHead>
-                        <TableHead className="text-right">תיאור</TableHead>
-                        <TableHead className="text-right">סכום</TableHead>
-                        <TableHead className="text-right">תאריך תשלום</TableHead>
-                        <TableHead className="text-right">סטטוס תשלום</TableHead>
-                        <TableHead className="text-right">פעולות</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {commissionPayments.filter(p => p.status === 'paid').map((payment) => (
-                        <TableRow key={payment.id}>
-                          <TableCell className="text-right font-medium">
-                            {payment.partnerName}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            {payment.description}
-                          </TableCell>
-                          <TableCell className="text-right font-bold text-green-600">
-                            ₪{payment.amount.toLocaleString()}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            {payment.paidDate}
-                          </TableCell>
-                          <TableCell>
-                            <Badge className="bg-green-100 text-green-800 border-green-200">
-                              🟢 שולם
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex gap-2">
-                              <Button variant="outline" size="sm">
-                                <Eye className="h-4 w-4" />
-                              </Button>
-                              <Button variant="outline" size="sm">
-                                <Download className="h-4 w-4" />
-                              </Button>
-            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Reports Tab - דוחות וסטטיסטיקות */}
-          {location.pathname === '/partners' && (
-            <TabsContent value="reports" className="mt-0 space-y-6">
-            {/* Charts Placeholder */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                  <CardTitle className="text-right flex items-center gap-2">
-                    <BarChart3 className="h-5 w-5 text-blue-500" />
-                    מכירות לפי שותף
-                  </CardTitle>
-              </CardHeader>
-              <CardContent>
-                  <div className="h-64 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg flex items-center justify-center">
-                    <div className="text-center">
-                      <BarChart3 className="h-12 w-12 text-blue-500 mx-auto mb-2" />
-                      <p className="text-gray-600">גרף עמודות של מכירות לפי שותף</p>
-                      <p className="text-sm text-gray-500">יופיע בעתיד עם ספריית גרפים</p>
-                          </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-right flex items-center gap-2">
-                    <PieChart className="h-5 w-5 text-green-500" />
-                    התפלגות עמלות לפי תחום
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-64 bg-gradient-to-br from-green-50 to-green-100 rounded-lg flex items-center justify-center">
-                    <div className="text-center">
-                      <PieChart className="h-12 w-12 text-green-500 mx-auto mb-2" />
-                      <p className="text-gray-600">גרף עוגה של התפלגות עמלות</p>
-                      <p className="text-sm text-gray-500">יופיע בעתיד עם ספריית גרפים</p>
-                      </div>
-                      </div>
-                </CardContent>
-              </Card>
-                      </div>
-
-            {/* Monthly Sales Chart */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-right flex items-center gap-2">
-                  <LineChart className="h-5 w-5 text-orange-500" />
-                  מכירות לפי חודש
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-64 bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg flex items-center justify-center">
-                  <div className="text-center">
-                    <LineChart className="h-12 w-12 text-orange-500 mx-auto mb-2" />
-                    <p className="text-gray-600">גרף קו של מכירות לפי חודש</p>
-                    <p className="text-sm text-gray-500">יופיע בעתיד עם ספריית גרפים</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Export Reports */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-right">ייצוא דוחות</CardTitle>
-              </CardHeader>
-              <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Button variant="outline" className="h-20 flex-col">
-                      <FileText className="h-6 w-6 mb-2" />
-                      דוח חודשי
-                    <span className="text-xs text-gray-500 mt-1">PDF</span>
-                    </Button>
-                    <Button variant="outline" className="h-20 flex-col">
-                      <TrendingUp className="h-6 w-6 mb-2" />
-                      דוח ביצועים
-                    <span className="text-xs text-gray-500 mt-1">CSV</span>
-                    </Button>
-                    <Button variant="outline" className="h-20 flex-col">
-                      <DollarSign className="h-6 w-6 mb-2" />
-                      דוח עמלות
-                    <span className="text-xs text-gray-500 mt-1">PDF</span>
-                    </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          )}
-
-          {/* Settings Tab - הגדרות תוכנית */}
-          {location.pathname === '/partners' && (
-            <TabsContent value="settings" className="mt-0 space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-right">הגדרות תוכנית שותפים</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <Label htmlFor="defaultCommission" className="text-right">אחוז עמלה ברירת מחדל (%)</Label>
-                    <Input
-                      id="defaultCommission"
-                      type="number"
-                      value={programSettings.defaultCommissionPercentage}
-                      onChange={(e) => setProgramSettings({
-                        ...programSettings,
-                        defaultCommissionPercentage: Number(e.target.value)
-                      })}
-                      className="text-right"
-                    />
-                  </div>
-                  <div className="space-y-4">
-                    <Label htmlFor="linkExpiry" className="text-right">תוקף לינק שותף (ימים)</Label>
-                    <Input
-                      id="linkExpiry"
-                      type="number"
-                      value={programSettings.linkExpiryDays}
-                      onChange={(e) => setProgramSettings({
-                        ...programSettings,
-                        linkExpiryDays: Number(e.target.value)
-                      })}
-                      className="text-right"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                  <Label htmlFor="allowDataView" className="text-right">לאפשר לשותפים לראות רק את הנתונים שלהם</Label>
-                  <Switch
-                    id="allowDataView"
-                    checked={programSettings.allowPartnerDataView}
-                    onCheckedChange={(checked) => setProgramSettings({
-                      ...programSettings,
-                      allowPartnerDataView: checked
-                    })}
-                  />
-                </div>
-
-                <div className="space-y-4">
-                  <Label htmlFor="terms" className="text-right">תנאי הצטרפות לתוכנית</Label>
-                  <Textarea
-                    id="terms"
-                    value={programSettings.termsText}
-                    onChange={(e) => setProgramSettings({
-                      ...programSettings,
-                      termsText: e.target.value
-                    })}
-                    className="text-right min-h-[100px]"
-                    placeholder="הזן את תנאי ההצטרפות לתוכנית השותפים..."
-                  />
-                </div>
-
-                {/* Product-specific commission rates */}
-                <div className="space-y-4">
-                  <Label className="text-right text-lg font-semibold">אחוזי עמלה לפי מוצר</Label>
-                  <div className="space-y-3">
-                    {programSettings.productCommissionRates.map((product, index) => (
-                      <div key={product.productId} className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
-                        <span className="flex-1 text-right font-medium">{product.productName}</span>
-                        <div className="flex items-center gap-2">
-                          <Input
-                            type="number"
-                            value={product.commissionRate}
-                            onChange={(e) => {
-                              const newRates = [...programSettings.productCommissionRates];
-                              newRates[index].commissionRate = Number(e.target.value);
-                              setProgramSettings({
-                                ...programSettings,
-                                productCommissionRates: newRates
-                              });
-                            }}
-                            className="w-20 text-center"
-                          />
-                          <span>%</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* הגדרות חברת סליקה */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-right flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-blue-600" />
-                  הגדרות חברת סליקה כללית
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <div className="flex items-start gap-3">
-                    <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                    <div className="text-right">
-                      <p className="font-medium text-blue-800 mb-1">חיבור למערכת תשלומים</p>
-                      <p className="text-sm text-blue-700">
-                        הגדרות אלה יחולו על כל השותפים במערכת. התשלומים יבוצעו אוטומטית לפי ההגדרות כאן.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <Label className="text-right">חברת סליקה פעילה</Label>
-                  <Select 
-                    value={programSettings.paymentGateway} 
-                    onValueChange={(value: any) => setProgramSettings({
-                      ...programSettings,
-                      paymentGateway: value
-                    })}
-                  >
-                    <SelectTrigger className="text-right">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="manual">תשלום ידני (ללא אוטומציה)</SelectItem>
-                      <SelectItem value="zcredit">ZCredit</SelectItem>
-                      <SelectItem value="payme">PayMe</SelectItem>
-                      <SelectItem value="tranzila">Tranzila</SelectItem>
-                      <SelectItem value="max">Max (מקס)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {programSettings.paymentGateway !== 'manual' && (
-                  <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
-                    <h5 className="font-medium text-right text-gray-800">פרטי חיבור API</h5>
-                    
-                    <div>
-                      <Label htmlFor="gatewayApiKey" className="text-right">API Key *</Label>
-                      <Input
-                        id="gatewayApiKey"
-                        type="password"
-                        value={programSettings.gatewayApiKey}
-                        onChange={(e) => setProgramSettings({
-                          ...programSettings,
-                          gatewayApiKey: e.target.value
-                        })}
-                        className="text-right font-mono text-sm"
-                        placeholder="הזן את מפתח ה-API"
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="gatewayApiSecret" className="text-right">API Secret *</Label>
-                      <Input
-                        id="gatewayApiSecret"
-                        type="password"
-                        value={programSettings.gatewayApiSecret}
-                        onChange={(e) => setProgramSettings({
-                          ...programSettings,
-                          gatewayApiSecret: e.target.value
-                        })}
-                        className="text-right font-mono text-sm"
-                        placeholder="הזן את סיסמת ה-API"
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="gatewayMerchantId" className="text-right">Merchant ID</Label>
-                      <Input
-                        id="gatewayMerchantId"
-                        value={programSettings.gatewayMerchantId}
-                        onChange={(e) => setProgramSettings({
-                          ...programSettings,
-                          gatewayMerchantId: e.target.value
-                        })}
-                        className="text-right"
-                        placeholder="מזהה הסוחר (אם נדרש)"
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between p-3 bg-white rounded border">
-                      <Label htmlFor="autoInvoiceGeneration" className="text-right">
-                        יצירת חשבוניות אוטומטית לכל השותפים
-                      </Label>
-                      <Switch
-                        id="autoInvoiceGeneration"
-                        checked={programSettings.autoInvoiceGeneration}
-                        onCheckedChange={(checked) => setProgramSettings({
-                          ...programSettings,
-                          autoInvoiceGeneration: checked
-                        })}
-                      />
-                    </div>
-
-                    <div className="bg-green-100 p-3 rounded text-sm text-green-800">
-                      <strong>שמור הגדרות:</strong> לאחר שמירת ההגדרות, התשלומים החודשיים יבוצעו אוטומטית 
-                      באמצעות חברת הסליקה שנבחרה, עם יצירת חשבוניות אוטומטית לפי ההגדרה.
-                    </div>
-                  </div>
-                )}
-
-                {programSettings.paymentGateway === 'manual' && (
-                  <div className="p-4 bg-gray-50 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <AlertCircle className="h-5 w-5 text-gray-600" />
-                      <div className="text-right">
-                        <p className="font-medium text-gray-800">תשלום ידני פעיל</p>
-                        <p className="text-sm text-gray-600 mt-1">
-                          כל התשלומים לשותפים יבוצעו ידנית. יש ליצור חשבוניות באופן ידני ולהעביר תשלומים 
-                          לפי הפרטים שכל שותף סיפק במערכת.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-          )}
-
-          {/* Integrations Tab - אינטגרציות עתידיות */}
-          {location.pathname === '/partners' && (
-            <TabsContent value="integrations" className="mt-0 space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-right flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-purple-500" />
-                  אינטגרציות עתידיות
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Payment Provider Selection */}
-                <div className="space-y-4">
-                  <Label className="text-right text-lg font-semibold">ספק תשלומים</Label>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {[
-                      { name: 'ZCredit', icon: CreditCard, status: 'planned' },
-                      { name: 'PayMe', icon: DollarSign, status: 'planned' },
-                      { name: 'Tranzila', icon: Building, status: 'planned' }
-                    ].map((provider) => (
-                      <Card key={provider.name} className="p-4 border-2 border-dashed border-gray-300">
-                        <div className="text-center">
-                          <provider.icon className="h-8 w-8 mx-auto mb-2 text-gray-400" />
-                          <p className="font-medium">{provider.name}</p>
-                          <Badge variant="outline" className="mt-2">
-                            יבוא בעתיד
-                          </Badge>
-                        </div>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-
-                {/* API Configuration Placeholder */}
-                <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-4 text-right">תצורת API</h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-right text-gray-600">API Key</span>
-                      <Input 
-                        placeholder="הזן API Key" 
-                        className="w-64 text-left"
-                        disabled
-                      />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-right text-gray-600">API Secret</span>
-                      <Input 
-                        placeholder="הזן API Secret" 
-                        type="password"
-                        className="w-64 text-left"
-                        disabled
-                      />
-                    </div>
-                  </div>
-                  <div className="mt-4 p-3 bg-blue-50 rounded border-l-4 border-blue-500">
-                    <p className="text-sm text-blue-800 text-right">
-                      💡 חיבור לתשלומים אוטומטיים ייפתח עם שדרוג לגרסת PRO+
-                    </p>
-                  </div>
-                </div>
-
-                {/* Payment History Placeholder */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-right">היסטוריית תשלומים</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-center py-8 text-gray-500">
-                      <CreditCard className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                      <p>טבלת תשלומים היסטורית תוצג כאן עם חיבור לספק התשלומים</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          )}
-        </Tabs>
+        {/* Advanced Report Generator */}
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle className="text-right text-xl font-bold flex items-center gap-2">
+              <BarChart3 className="h-6 w-6 text-blue-600" />
+              מחולל דוחות מתקדם
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <AdvancedReportGenerator
+              data={partners}
+              columns={[
+                { key: 'name', label: 'שם השותף', type: 'text', visible: true, sortable: true, filterable: true },
+                { key: 'email', label: 'אימייל', type: 'text', visible: true, sortable: true, filterable: true },
+                { key: 'phone', label: 'טלפון', type: 'text', visible: true, sortable: true, filterable: true },
+                { key: 'status', label: 'סטטוס', type: 'status', visible: true, sortable: true, filterable: true },
+                { key: 'joinDate', label: 'תאריך הצטרפות', type: 'date', visible: true, sortable: true, filterable: true },
+                { key: 'totalLeads', label: 'סך לידים', type: 'number', visible: true, sortable: true, filterable: true },
+                { key: 'totalSales', label: 'סך מכירות', type: 'number', visible: true, sortable: true, filterable: true },
+                { key: 'totalEarnings', label: 'סך עמלות', type: 'currency', visible: true, sortable: true, filterable: true },
+                { key: 'monthlyEarnings', label: 'עמלות חודשיות', type: 'currency', visible: true, sortable: true, filterable: true },
+                { key: 'commissionPercentage', label: 'אחוז עמלה', type: 'number', visible: true, sortable: true, filterable: true },
+                { key: 'conversionRate', label: 'אחוז המרה', type: 'number', visible: true, sortable: true, filterable: true },
+                { key: 'lastActivity', label: 'פעילות אחרונה', type: 'date', visible: true, sortable: true, filterable: true },
+                { key: 'region', label: 'אזור', type: 'text', visible: true, sortable: true, filterable: true },
+                { key: 'source', label: 'מקור', type: 'text', visible: true, sortable: true, filterable: true }
+              ]}
+              title="דוח שותפים מפורט"
+              onExport={async (data, config) => {
+                // Excel export logic
+                console.log('Exporting partners data:', data, config);
+              }}
+            />
+          </CardContent>
+        </Card>
 
         {/* Partner Details Dialog */}
         <Dialog open={showPartnerDetails} onOpenChange={setShowPartnerDetails}>
