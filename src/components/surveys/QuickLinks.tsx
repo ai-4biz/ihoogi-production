@@ -1,14 +1,24 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { FileText, MessageCircle, QrCode, Copy, Eye, X } from "lucide-react";
+import { FileText, MessageCircle, QrCode, Copy, Eye, X, BarChart3, Share2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import ActiveBadgeToggle from "./ActiveBadgeToggle";
+import { Badge } from "@/components/ui/badge";
 
 interface GeneratedLink {
   id: string;
   type: "form" | "chat" | "qr";
   url: string;
   active: boolean;
+  networkTracking?: {
+    facebook: number;
+    instagram: number;
+    whatsapp: number;
+    telegram: number;
+    email: number;
+    sms: number;
+    other: number;
+  };
 }
 
 interface QuickLinksProps {
@@ -31,6 +41,15 @@ const QuickLinks = ({ currentUrl, onBuild, onCopy, onPreview, disabled }: QuickL
         type,
         url: "", // Will be filled when currentUrl updates
         active: true,
+        networkTracking: {
+          facebook: 0,
+          instagram: 0,
+          whatsapp: 0,
+          telegram: 0,
+          email: 0,
+          sms: 0,
+          other: 0,
+        },
       };
       setGeneratedLinks((prev) => [...prev, newLink]);
     }
@@ -71,6 +90,28 @@ const QuickLinks = ({ currentUrl, onBuild, onCopy, onPreview, disabled }: QuickL
     if (onPreview) {
       onPreview(link);
     }
+  };
+
+  const updateNetworkTracking = (linkId: string, network: keyof GeneratedLink['networkTracking']) => {
+    setGeneratedLinks((prev) =>
+      prev.map((link) => {
+        if (link.id === linkId && link.networkTracking) {
+          return {
+            ...link,
+            networkTracking: {
+              ...link.networkTracking,
+              [network]: (link.networkTracking[network] || 0) + 1,
+            },
+          };
+        }
+        return link;
+      })
+    );
+  };
+
+  const getTotalViews = (link: GeneratedLink) => {
+    if (!link.networkTracking) return 0;
+    return Object.values(link.networkTracking).reduce((sum, count) => sum + count, 0);
   };
 
   const getTypeLabel = (type: string) => {
@@ -144,60 +185,122 @@ const QuickLinks = ({ currentUrl, onBuild, onCopy, onPreview, disabled }: QuickL
             {generatedLinks.map((link) => (
               <div
                 key={link.id}
-                className="flex flex-col md:flex-row items-stretch md:items-center gap-2 md:gap-3 p-3 md:p-4 bg-muted/50 rounded-lg border border-border"
+                className="flex flex-col gap-3 p-3 md:p-4 bg-muted/50 rounded-lg border border-border"
               >
-                {/* Type Icon & Label */}
-                <div className="flex items-center gap-2 min-w-[80px]">
-                  {getTypeIcon(link.type)}
-                  <span className="text-sm font-medium text-foreground">{getTypeLabel(link.type)}</span>
+                {/* Main Link Row */}
+                <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2 md:gap-3">
+                  {/* Type Icon & Label */}
+                  <div className="flex items-center gap-2 min-w-[80px]">
+                    {getTypeIcon(link.type)}
+                    <span className="text-sm font-medium text-foreground">{getTypeLabel(link.type)}</span>
+                  </div>
+
+                  {/* URL Input */}
+                  <Input
+                    value={link.url || "מייצר קישור..."}
+                    readOnly
+                    className="flex-1 bg-background text-xs md:text-sm"
+                    dir="ltr"
+                  />
+
+                  {/* Action Icons */}
+                  <div className="flex items-center gap-2">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => handlePreview(link)}
+                      className="h-8 w-8 md:h-9 md:w-9 p-0 hover:bg-primary/10 hover:text-primary"
+                      title="הצג תצוגה מקדימה"
+                      disabled={!link.url}
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => handleCopyLink(link.url)}
+                      className="h-8 w-8 md:h-9 md:w-9 p-0 hover:bg-primary/10 hover:text-primary"
+                      title="העתק קישור"
+                      disabled={!link.url}
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => handleRemoveLink(link.id)}
+                      className="h-8 w-8 md:h-9 md:w-9 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                      title="מחק"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+
+                  {/* Active Toggle */}
+                  <ActiveBadgeToggle
+                    active={link.active}
+                    onChange={(next) => handleToggleActive(link.id, next)}
+                  />
                 </div>
 
-                {/* URL Input */}
-                <Input
-                  value={link.url || "מייצר קישור..."}
-                  readOnly
-                  className="flex-1 bg-background text-xs md:text-sm"
-                  dir="ltr"
-                />
-
-                {/* Action Icons */}
-                <div className="flex items-center gap-2">
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => handlePreview(link)}
-                    className="h-8 w-8 md:h-9 md:w-9 p-0 hover:bg-primary/10 hover:text-primary"
-                    title="הצג תצוגה מקדימה"
-                    disabled={!link.url}
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => handleCopyLink(link.url)}
-                    className="h-8 w-8 md:h-9 md:w-9 p-0 hover:bg-primary/10 hover:text-primary"
-                    title="העתק קישור"
-                    disabled={!link.url}
-                  >
-                    <Copy className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => handleRemoveLink(link.id)}
-                    className="h-8 w-8 md:h-9 md:w-9 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
-                    title="מחק"
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-
-                {/* Active Toggle */}
-                <ActiveBadgeToggle
-                  active={link.active}
-                  onChange={(next) => handleToggleActive(link.id, next)}
-                />
+                {/* Network Tracking Section */}
+                {link.networkTracking && (
+                  <div className="border-t border-border pt-3">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <BarChart3 className="h-4 w-4 text-blue-600" />
+                        <span className="text-sm font-medium text-foreground">מעקב לפי רשת</span>
+                        <Badge variant="secondary" className="text-xs">
+                          {getTotalViews(link)} צפיות
+                        </Badge>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                      {Object.entries(link.networkTracking).map(([network, count]) => (
+                        <div key={network} className="flex items-center justify-between p-2 bg-background rounded border">
+                          <span className="text-xs text-muted-foreground">
+                            {network === 'facebook' && 'פייסבוק'}
+                            {network === 'instagram' && 'אינסטגרם'}
+                            {network === 'whatsapp' && 'וואטסאפ'}
+                            {network === 'telegram' && 'טלגרם'}
+                            {network === 'email' && 'אימייל'}
+                            {network === 'sms' && 'SMS'}
+                            {network === 'other' && 'אחר'}
+                          </span>
+                          <Badge variant="outline" className="text-xs">
+                            {count}
+                          </Badge>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    {/* Manual Tracking Buttons */}
+                    <div className="mt-2">
+                      <p className="text-xs text-muted-foreground mb-2">הוסף צפייה ידנית:</p>
+                      <div className="flex flex-wrap gap-1">
+                        {Object.keys(link.networkTracking).map((network) => (
+                          <Button
+                            key={network}
+                            size="sm"
+                            variant="outline"
+                            onClick={() => updateNetworkTracking(link.id, network as keyof GeneratedLink['networkTracking'])}
+                            className="h-6 px-2 text-xs"
+                          >
+                            <Share2 className="h-3 w-3 ml-1" />
+                            {network === 'facebook' && 'פייסבוק'}
+                            {network === 'instagram' && 'אינסטגרם'}
+                            {network === 'whatsapp' && 'וואטסאפ'}
+                            {network === 'telegram' && 'טלגרם'}
+                            {network === 'email' && 'אימייל'}
+                            {network === 'sms' && 'SMS'}
+                            {network === 'other' && 'אחר'}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>

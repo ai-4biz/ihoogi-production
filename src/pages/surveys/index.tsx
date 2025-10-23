@@ -7,6 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, MessageSquare, Users, TrendingUp, Clock, Edit, Copy, BarChart3, Share2, Calendar, Eye, FileText, MessageCircle, Facebook, Instagram, Linkedin, Globe, Smartphone, Mail, Zap, Bot } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import MainLayout from "@/components/layout/MainLayout";
+import QuickLinks from "@/components/surveys/QuickLinks";
+import PreviewPane from "@/components/surveys/PreviewPane";
+import { toast } from "sonner";
 
 const SurveysPage = () => {
   const navigate = useNavigate();
@@ -14,6 +17,43 @@ const SurveysPage = () => {
   // State for questionnaire view mode (form or chat)
   const [questionnaireViewMode, setQuestionnaireViewMode] = useState<{[key: string]: 'form' | 'chat'}>({});
   
+  // State for distribution functionality
+  const [selectedSurveyId, setSelectedSurveyId] = useState<string>("");
+  const [currentMode, setCurrentMode] = useState<"form" | "chat" | "qr" | null>(null);
+  const [currentUrl, setCurrentUrl] = useState<string>("");
+  
+  // Distribution functions
+  const handleBuildLink = (type: "form" | "chat" | "qr") => {
+    if (!selectedSurveyId) {
+      toast.error("בחר שאלון תחילה");
+      return;
+    }
+    const base = typeof window !== "undefined" ? window.location.origin : "";
+    let url = "";
+    if (type === "form") {
+      url = `${base}/form/${selectedSurveyId}`;
+    } else if (type === "chat") {
+      url = `${base}/chat/${selectedSurveyId}`;
+    } else if (type === "qr") {
+      url = `${base}/form/${selectedSurveyId}`;
+    }
+    setCurrentMode(type);
+    setCurrentUrl(url);
+    toast.success("קישור נוצר בהצלחה");
+  };
+
+  const handleCopyUrl = () => {
+    if (currentUrl) {
+      navigator.clipboard.writeText(currentUrl);
+      toast.success("הקישור הועתק ללוח");
+    }
+  };
+
+  const handlePreviewLink = (link: any) => {
+    setCurrentMode(link.type);
+    setCurrentUrl(link.url);
+  };
+
   const [questionnaires, setQuestionnaires] = useState([
     {
       id: "q-1",
@@ -447,13 +487,61 @@ const SurveysPage = () => {
             </TabsContent>
 
             <TabsContent value="distribution">
-              <Card className="border shadow-md">
-                <CardContent className="p-12 text-center">
-                  <Share2 className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-                  <h3 className="text-2xl font-bold text-foreground mb-2">הפצת שאלונים</h3>
-                  <p className="text-muted-foreground">בחר שאלון מהרשימה כדי להתחיל בהפצה</p>
-                </CardContent>
-              </Card>
+              <div className="space-y-6">
+                {/* Survey Selection */}
+                <Card className="border shadow-md">
+                  <CardContent className="p-6">
+                    <h3 className="text-lg font-semibold mb-4">בחרי שאלון להפצה</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {questionnaires.map((q) => (
+                        <Card 
+                          key={q.id}
+                          className={`cursor-pointer transition-all hover:shadow-md ${
+                            selectedSurveyId === q.id ? 'ring-2 ring-primary bg-primary/5' : ''
+                          }`}
+                          onClick={() => setSelectedSurveyId(q.id)}
+                        >
+                          <CardContent className="p-4">
+                            <div className="flex items-center justify-between mb-2">
+                              <h4 className="font-medium text-sm">{q.title}</h4>
+                              <Badge variant={q.active ? "default" : "secondary"} className="text-xs">
+                                {q.active ? "פעיל" : "לא פעיל"}
+                              </Badge>
+                            </div>
+                            <p className="text-xs text-muted-foreground mb-2">{q.date}</p>
+                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                              <Users className="h-3 w-3" />
+                              <span>{q.responses} תגובות</span>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                    {selectedSurveyId && (
+                      <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200">
+                        <p className="text-sm text-green-700">
+                          ✅ נבחר שאלון: {questionnaires.find(q => q.id === selectedSurveyId)?.title}
+                        </p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Quick Links and Preview */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <QuickLinks
+                    currentUrl={currentUrl}
+                    onBuild={handleBuildLink}
+                    onCopy={handleCopyUrl}
+                    onPreview={handlePreviewLink}
+                    disabled={!selectedSurveyId}
+                  />
+                  
+                  {currentMode && currentUrl && (
+                    <PreviewPane mode={currentMode} url={currentUrl} />
+                  )}
+                </div>
+              </div>
             </TabsContent>
           </Tabs>
         </div>
