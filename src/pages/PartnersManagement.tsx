@@ -43,7 +43,8 @@ import {
   Zap,
   RefreshCw,
   ArrowLeft,
-  ArrowRight
+  ArrowRight,
+  Globe
 } from 'lucide-react';
 import MainLayout from '@/components/layout/MainLayout';
 import AdvancedReportGenerator from '@/components/reports/AdvancedReportGenerator';
@@ -701,6 +702,18 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     bankBranch: '',
     bankBranchName: '', // שם הסניף
     accountNumber: '',
+    
+    // פרטי העברה לחול (International Wire Transfer)
+    beneficiaryName: '', // שם בעל החשבון באנגלית
+    beneficiaryAddress: '', // כתובת מלאה
+    bankNameEnglish: '', // שם הבנק באנגלית
+    bankAddress: '', // כתובת הבנק
+    ibanNumber: '', // מספר IBAN
+    swiftBicCode: '', // קוד SWIFT/BIC
+    paymentAmount: '', // סכום התשלום
+    paymentPurpose: '', // מטרת התשלום
+    intermediaryBank: '', // בנק תיווך (אם נדרש)
+    paymentReference: '', // מספר אסמכתא
     
     // פרטי כרטיס אשראי
     cardHolderName: '',
@@ -1409,6 +1422,7 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="bank_transfer">העברה בנקאית</SelectItem>
+                      <SelectItem value="international_wire">העברה לחול</SelectItem>
                       <SelectItem value="credit_card">כרטיס אשראי</SelectItem>
                       <SelectItem value="paypal">PayPal</SelectItem>
                       <SelectItem value="crypto">מטבע דיגיטלי</SelectItem>
@@ -1433,7 +1447,12 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               </div>
 
               {formData.paymentMethod === 'bank_transfer' && (
-                <div className="space-y-4 p-4 bg-blue-50 rounded-lg">
+                <div className="space-y-6 p-4 bg-blue-50 rounded-lg">
+                  <h4 className="font-semibold text-blue-800 mb-4 flex items-center gap-2">
+                    <CreditCard className="h-5 w-5 text-blue-600" />
+                    פרטי העברה בנקאית מקומית
+                  </h4>
+                  
                   <div>
                     <Label htmlFor="bankAccountName" className="text-right">שם על החשבון *</Label>
                     <Input
@@ -1487,6 +1506,132 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                         className="text-right"
                         placeholder="123456789"
                       />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {formData.paymentMethod === 'international_wire' && (
+                <div className="space-y-6 p-4 bg-gradient-to-r from-purple-50 to-violet-50 rounded-lg border border-purple-200">
+                  <h4 className="font-semibold text-purple-800 mb-4 flex items-center gap-2">
+                    <Globe className="h-5 w-5 text-purple-600" />
+                    פרטי העברה לחול (International Wire Transfer)
+                  </h4>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="beneficiaryName" className="text-right text-sm">Beneficiary Name *</Label>
+                      <Input
+                        id="beneficiaryName"
+                        value={formData.beneficiaryName}
+                        onChange={(e) => handleFieldChange('beneficiaryName', e.target.value)}
+                        className="text-right"
+                        placeholder="Full name as appears in bank (in English)"
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="beneficiaryAddress" className="text-right text-sm">Beneficiary Address *</Label>
+                      <Input
+                        id="beneficiaryAddress"
+                        value={formData.beneficiaryAddress}
+                        onChange={(e) => handleFieldChange('beneficiaryAddress', e.target.value)}
+                        className="text-right"
+                        placeholder="Full address as appears in bank documents"
+                      />
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="bankNameEnglish" className="text-right text-sm">Bank Name (English) *</Label>
+                        <Input
+                          id="bankNameEnglish"
+                          value={formData.bankNameEnglish}
+                          onChange={(e) => handleFieldChange('bankNameEnglish', e.target.value)}
+                          className="text-right"
+                          placeholder="e.g., Bank Leumi le-Israel B.M."
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="bankAddress" className="text-right text-sm">Bank Address</Label>
+                        <Input
+                          id="bankAddress"
+                          value={formData.bankAddress}
+                          onChange={(e) => handleFieldChange('bankAddress', e.target.value)}
+                          className="text-right"
+                          placeholder="Main branch or headquarters address"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="ibanNumber" className="text-right text-sm">Account Number / IBAN *</Label>
+                        <Input
+                          id="ibanNumber"
+                          value={formData.ibanNumber}
+                          onChange={(e) => handleFieldChange('ibanNumber', e.target.value)}
+                          className="text-right"
+                          placeholder="IL62 0108 0000 0000 1234 567"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="swiftBicCode" className="text-right text-sm">SWIFT/BIC Code *</Label>
+                        <Input
+                          id="swiftBicCode"
+                          value={formData.swiftBicCode}
+                          onChange={(e) => handleFieldChange('swiftBicCode', e.target.value)}
+                          className="text-right"
+                          placeholder="LUMIILITXXX"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="paymentAmount" className="text-right text-sm">Amount *</Label>
+                        <Input
+                          id="paymentAmount"
+                          type="number"
+                          value={formData.paymentAmount}
+                          onChange={(e) => handleFieldChange('paymentAmount', e.target.value)}
+                          className="text-right"
+                          placeholder="0.00"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="paymentPurpose" className="text-right text-sm">Purpose of Payment *</Label>
+                        <Input
+                          id="paymentPurpose"
+                          value={formData.paymentPurpose}
+                          onChange={(e) => handleFieldChange('paymentPurpose', e.target.value)}
+                          className="text-right"
+                          placeholder="e.g., Payment for software services"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="intermediaryBank" className="text-right text-sm">Intermediary Bank (if required)</Label>
+                        <Input
+                          id="intermediaryBank"
+                          value={formData.intermediaryBank}
+                          onChange={(e) => handleFieldChange('intermediaryBank', e.target.value)}
+                          className="text-right"
+                          placeholder="Required for US intermediary banks"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="paymentReference" className="text-right text-sm">Reference *</Label>
+                        <Input
+                          id="paymentReference"
+                          value={formData.paymentReference}
+                          onChange={(e) => handleFieldChange('paymentReference', e.target.value)}
+                          className="text-right"
+                          placeholder="Transaction reference number"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
