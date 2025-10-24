@@ -534,69 +534,74 @@ const SmartReportsSystem: React.FC<SmartReportsSystemProps> = ({ partners, onExp
 
   return (
     <div className="space-y-6">
-      {/* בחירת קטגוריה */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {Object.entries(reportsByCategory).map(([category, reports]) => (
-          <Card key={category} className="cursor-pointer hover:shadow-md transition-shadow">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-right">
-                {category}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-right">
-                {reports.length}
-              </div>
-              <p className="text-xs text-muted-foreground text-right">
-                דוחות זמינים
-              </p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* בחירת דוח */}
+      {/* בחירת קטגוריה - כפתורים בשורה אחת */}
       <div className="space-y-4">
         <div className="flex items-center gap-4">
           <Filter className="h-5 w-5 text-muted-foreground" />
-          <h3 className="text-lg font-semibold">בחר דוח להצגה</h3>
+          <h3 className="text-lg font-semibold">בחר קטגוריית דוחות</h3>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {reportTemplates.map((report) => {
-            const IconComponent = report.icon;
-            return (
-              <Card 
-                key={report.id} 
-                className={`cursor-pointer transition-all hover:shadow-md ${
-                  selectedReport === report.id ? 'ring-2 ring-blue-500' : ''
-                }`}
-                onClick={() => setSelectedReport(report.id)}
-              >
-                <CardHeader className="pb-2">
-                  <div className="flex items-center justify-between">
-                    <IconComponent className={`h-6 w-6 text-${report.color}-600`} />
-                    <Badge variant="secondary" className="text-xs">
-                      {report.category}
-                    </Badge>
-                  </div>
-                  <CardTitle className="text-sm font-medium text-right">
-                    {report.name}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-xs text-muted-foreground text-right">
-                    {report.description}
-                  </p>
-                  <div className="mt-2 text-xs text-muted-foreground text-right">
-                    {report.columns.length} שדות
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+        <div className="flex flex-wrap gap-2">
+          {Object.entries(reportsByCategory).map(([category, reports]) => (
+            <Button
+              key={category}
+              variant={selectedReport && reportTemplates.find(r => r.id === selectedReport)?.category === category ? "default" : "outline"}
+              className="flex items-center gap-2"
+              onClick={() => {
+                // אם הקטגוריה כבר נבחרה, בחר את הדוח הראשון
+                const firstReport = reports[0];
+                setSelectedReport(firstReport.id);
+              }}
+            >
+              <span className="text-sm font-medium">{category}</span>
+              <Badge variant="secondary" className="text-xs">
+                {reports.length}
+              </Badge>
+            </Button>
+          ))}
+          
+          {selectedReport && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+              onClick={() => setSelectedReport('')}
+            >
+              <span className="text-sm">נקה בחירה</span>
+            </Button>
+          )}
         </div>
       </div>
+
+      {/* בחירת דוח ספציפי - כפתורים קטנים */}
+      {selectedReport && (
+        <div className="space-y-4">
+          <div className="flex items-center gap-4">
+            <Eye className="h-5 w-5 text-muted-foreground" />
+            <h3 className="text-lg font-semibold">בחר דוח ספציפי</h3>
+          </div>
+          
+          <div className="flex flex-wrap gap-2">
+            {reportTemplates
+              .filter(report => report.category === reportTemplates.find(r => r.id === selectedReport)?.category)
+              .map((report) => {
+                const IconComponent = report.icon;
+                return (
+                  <Button
+                    key={report.id}
+                    variant={selectedReport === report.id ? "default" : "outline"}
+                    size="sm"
+                    className="flex items-center gap-2"
+                    onClick={() => setSelectedReport(report.id)}
+                  >
+                    <IconComponent className="h-4 w-4" />
+                    <span className="text-sm">{report.name}</span>
+                  </Button>
+                );
+              })}
+          </div>
+        </div>
+      )}
 
       {/* הצגת הדוח */}
       {currentReport && (

@@ -39,6 +39,7 @@ import EmailDesigns from "./pages/EmailDesigns";
 import SystemOverview from "./pages/SystemOverview";
 import Onboarding from "./pages/Onboarding";
 import Reports from "./pages/Reports";
+import Messages from "./pages/Messages";
 import { UserProvider } from "@/hooks/use-user";
 
 const queryClient = new QueryClient();
@@ -76,6 +77,7 @@ const App = () => {
               <Route path="/guide" element={<Guide />} />
               <Route path="/create-template" element={<CreateTemplate />} />
               <Route path="/notifications" element={<Notifications />} />
+              <Route path="/messages" element={<Messages />} />
               <Route path="/partners" element={<PartnersManagement />} />
               <Route path="/my-partners" element={<PartnersManagement />} />
               <Route path="/reports" element={<Reports />} />
