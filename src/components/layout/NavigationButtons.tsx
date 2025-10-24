@@ -107,7 +107,7 @@ const NavigationButtons = ({
     {
       id: "partners-management",
       emoji: "🤝",
-      label: "ניהול שותפים",
+      label: "רונה",
       state: "root" as ViewState,
       active: window.location.pathname === "/partners",
       color: "purple",

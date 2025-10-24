@@ -44,7 +44,8 @@ import {
   RefreshCw,
   ArrowLeft,
   ArrowRight,
-  Globe
+  Globe,
+  ChevronDown
 } from 'lucide-react';
 import MainLayout from '@/components/layout/MainLayout';
 import AdvancedReportGenerator from '@/components/reports/AdvancedReportGenerator';
@@ -138,11 +139,38 @@ interface ProgramSettings {
 const PartnersManagement: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [activeTab, setActiveTab] = useState<'overview' | 'partners' | 'commissions' | 'reports' | 'settings' | 'integrations'>('overview');
+  const [activeTab, setActiveTab] = useState<'partners' | 'new-partner' | 'reports' | 'send-form'>('partners');
   const [selectedPartner, setSelectedPartner] = useState<Partner | null>(null);
   const [showAddPartner, setShowAddPartner] = useState(false);
   const [showCommissionDialog, setShowCommissionDialog] = useState(false);
   const [showPartnerDetails, setShowPartnerDetails] = useState(false);
+  const [formSections, setFormSections] = useState({
+    basic: true,
+    business: false,
+    commission: false,
+    payment: false,
+    advanced: false
+  });
+  
+  // User profile data (should come from user context)
+  const userProfile = {
+    businessName: "Hoogi",
+    email: "info@hoogi.co",
+    phone: "03-1234567",
+    website: "www.hoogi.co",
+    logo: "/hoogi-new-avatar.png",
+    primaryColor: "blue",
+    secondaryColor: "indigo"
+  };
+  
+  // Commission data from "שותף חדש" form
+  const commissionData = {
+    type: "percentage",
+    percentage: 15,
+    frequency: "monthly",
+    condition: "after_one_paid_month",
+    paymentMethod: "bank_transfer"
+  };
 
   // Set initial tab based on route
   useEffect(() => {
@@ -370,53 +398,493 @@ const PartnersManagement: React.FC = () => {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500 text-right">סך השותפים</p>
-                  <p className="text-2xl font-bold text-right">{partners.length}</p>
+                  <p className="text-sm font-medium text-gray-600">סך משתמשים שהובאו</p>
+                  <p className="text-2xl font-bold">73</p>
                 </div>
-                <Users className="h-8 w-8 text-blue-500" />
+                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <UserCheck className="h-6 w-6 text-purple-600" />
+                </div>
               </div>
             </CardContent>
           </Card>
-          
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500 text-right">שותפים פעילים</p>
-                  <p className="text-2xl font-bold text-right">{partners.filter(p => p.status === 'active').length}</p>
+                  <p className="text-sm font-medium text-gray-600">סך עמלות החודש</p>
+                  <p className="text-2xl font-bold">₪3,700</p>
                 </div>
-                <CheckCircle className="h-8 w-8 text-green-500" />
+                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                  <DollarSign className="h-6 w-6 text-green-600" />
+                </div>
               </div>
             </CardContent>
           </Card>
-
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500 text-right">סך עמלות החודש</p>
-                  <p className="text-2xl font-bold text-right">
-                    ₪{partners.reduce((sum, p) => sum + p.monthlyEarnings, 0).toLocaleString()}
-                  </p>
+                  <p className="text-sm font-medium text-gray-600">שותפים פעילים</p>
+                  <p className="text-2xl font-bold">2</p>
                 </div>
-                <DollarSign className="h-8 w-8 text-green-500" />
+                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                  <CheckCircle className="h-6 w-6 text-green-600" />
+                </div>
               </div>
             </CardContent>
           </Card>
-
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500 text-right">סך משתמשים שהובאו</p>
-                  <p className="text-2xl font-bold text-right">{partners.reduce((sum, p) => sum + p.usersBrought, 0)}</p>
+                  <p className="text-sm font-medium text-gray-600">סך השותפים</p>
+                  <p className="text-2xl font-bold">2</p>
                 </div>
-                <UserCheck className="h-8 w-8 text-purple-500" />
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <Users className="h-6 w-6 text-blue-600" />
+                </div>
               </div>
             </CardContent>
           </Card>
         </div>
 
+        {/* Tabs Navigation */}
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as any)} className="mb-8">
+          <TabsList className="grid w-full grid-cols-4 bg-gray-100 rounded-xl p-1">
+            <TabsTrigger value="partners" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
+              השותפים שלי
+            </TabsTrigger>
+            <TabsTrigger value="new-partner" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
+              שותף חדש
+            </TabsTrigger>
+            <TabsTrigger value="reports" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
+              דוחות
+            </TabsTrigger>
+            <TabsTrigger value="send-form" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
+              שלח טופס לשותף
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        {/* New Partner Tab Content */}
+        {activeTab === 'new-partner' && (
+          <div className="space-y-8">
+            <AddPartnerForm onClose={() => setActiveTab('partners')} />
+          </div>
+        )}
+
+        {/* Partners Tab Content */}
+        {activeTab === 'partners' && (
+          <div className="space-y-8">
+            {/* Partners List */}
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-right text-2xl font-bold">רשימת שותפים</CardTitle>
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2">
+                  <Plus className="h-4 w-4 ml-2" />
+                  הוסף שותף
+                </Button>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow className="text-right">
+                      <TableHead>פעולות</TableHead>
+                      <TableHead>סטטוס</TableHead>
+                      <TableHead>תאריך הצטרפות</TableHead>
+                      <TableHead>עמלות חודשיות</TableHead>
+                      <TableHead>סך עמלות</TableHead>
+                      <TableHead>אימייל</TableHead>
+                      <TableHead>שם</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {partners.map((partner) => (
+                      <TableRow key={partner.id} className="text-right">
+                        <TableCell>
+                          <div className="flex justify-end gap-2">
+                            <Button variant="outline" size="sm" onClick={() => setSelectedPartner(partner)}>
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            <Button variant="outline" size="sm">
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button variant="destructive" size="sm">
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={getStatusColor(partner.status)}>
+                            {getStatusText(partner.status)}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{partner.joinDate}</TableCell>
+                        <TableCell>₪{partner.monthlyEarnings.toLocaleString()}</TableCell>
+                        <TableCell>₪{partner.totalEarnings.toLocaleString()}</TableCell>
+                        <TableCell>{partner.email}</TableCell>
+                        <TableCell className="font-medium">{partner.name}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+            
+            {/* Advanced Reports Generator */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-right text-xl font-bold flex items-center gap-2">
+                  <BarChart3 className="h-6 w-6 text-purple-600" />
+                  מחולל דוחות מתקדמים
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <AdvancedReportGenerator
+                  data={partners}
+                  columns={[
+                    { key: 'name', label: 'שם', type: 'text', visible: true, sortable: true, filterable: true },
+                    { key: 'email', label: 'אימייל', type: 'email', visible: true, sortable: true, filterable: true },
+                    { key: 'status', label: 'סטטוס', type: 'text', visible: true, sortable: true, filterable: true },
+                    { key: 'joinDate', label: 'תאריך הצטרפות', type: 'date', visible: true, sortable: true, filterable: true },
+                    { key: 'totalLeads', label: 'סך לידים', type: 'number', visible: true, sortable: true, filterable: true },
+                    { key: 'totalSales', label: 'סך מכירות', type: 'number', visible: true, sortable: true, filterable: true },
+                    { key: 'totalEarnings', label: 'סך עמלות', type: 'currency', visible: true, sortable: true, filterable: true },
+                    { key: 'monthlyEarnings', label: 'עמלות חודשיות', type: 'currency', visible: true, sortable: true, filterable: true },
+                    { key: 'commissionPercentage', label: 'אחוז עמלה', type: 'number', visible: true, sortable: true, filterable: true },
+                    { key: 'conversionRate', label: 'אחוז המרה', type: 'number', visible: true, sortable: true, filterable: true },
+                    { key: 'lastActivity', label: 'פעילות אחרונה', type: 'date', visible: true, sortable: true, filterable: true },
+                    { key: 'region', label: 'אזור', type: 'text', visible: true, sortable: true, filterable: true },
+                    { key: 'source', label: 'מקור', type: 'text', visible: true, sortable: true, filterable: true }
+                  ]}
+                  title="דוח שותפים מפורט"
+                  onExport={async (data, config) => {
+                    // Excel export logic
+                    console.log('Exporting partners data:', data, config);
+                  }}
+                />
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Reports Tab Content */}
+        {activeTab === 'reports' && (
+          <div className="space-y-8">
+            {/* Smart Reports System */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-right text-xl font-bold flex items-center gap-2">
+                  <BarChart3 className="h-6 w-6 text-purple-600" />
+                  מערכת דוחות חכמה 👑
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <SmartReportsSystem
+                  partners={partners}
+                  onExport={(data, reportType) => {
+                    console.log('Exporting smart report:', reportType, data);
+                  }}
+                />
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Send Form Tab Content */}
+        {activeTab === 'send-form' && (
+          <div className="space-y-8">
+            {/* Header */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center">
+                    <Mail className="h-6 w-6 text-green-600" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900">שלח טופס לשותף</h1>
+                    <p className="text-gray-600 text-sm">צור טופס רשמי עם פרטי עמלה וחוזה לחתימה</p>
+                  </div>
+                </div>
+                <div className="w-8 h-8 bg-green-50 rounded-lg flex items-center justify-center">
+                  <img 
+                    src="/hoogi-new-avatar.png" 
+                    alt="Hoogi Owl" 
+                    className="w-6 h-6 rounded-full object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Official Partner Form */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+              
+              {/* Company Header */}
+              <div className={`bg-gradient-to-r from-${userProfile.primaryColor}-600 to-${userProfile.secondaryColor}-600 text-white p-8`}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <img 
+                      src={userProfile.logo} 
+                      alt={`${userProfile.businessName} Logo`} 
+                      className="w-16 h-16 rounded-full object-cover bg-white/20 p-2"
+                    />
+                    <div>
+                      <h1 className="text-3xl font-bold">{userProfile.businessName}</h1>
+                      <p className="text-blue-100 text-lg">מערכת ניהול שותפים</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-blue-100 text-sm">תאריך: {new Date().toLocaleDateString('he-IL')}</p>
+                    <p className="text-blue-100 text-sm">מסמך רשמי</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Form Content */}
+              <div className="p-8 space-y-8">
+                
+                {/* Section 1: Personal Information */}
+                <div className="border-b border-gray-200 pb-6">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <Users className="h-6 w-6 text-blue-600" />
+                    פרטים אישיים
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <Label htmlFor="partnerName" className="text-sm font-medium text-gray-700 mb-2 block">שם מלא *</Label>
+                      <Input
+                        id="partnerName"
+                        className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                        placeholder="הזן שם מלא"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="partnerEmail" className="text-sm font-medium text-gray-700 mb-2 block">אימייל *</Label>
+                      <Input
+                        id="partnerEmail"
+                        type="email"
+                        className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                        placeholder="example@email.com"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="partnerPhone" className="text-sm font-medium text-gray-700 mb-2 block">טלפון *</Label>
+                      <Input
+                        id="partnerPhone"
+                        className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                        placeholder="050-1234567"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="partnerId" className="text-sm font-medium text-gray-700 mb-2 block">ת.ז./ח.פ *</Label>
+                      <Input
+                        id="partnerId"
+                        className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                        placeholder="123456789"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section 2: Bank Details */}
+                <div className="border-b border-gray-200 pb-6">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <CreditCard className="h-6 w-6 text-green-600" />
+                    פרטי חשבון בנקאיים
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <Label htmlFor="bankName" className="text-sm font-medium text-gray-700 mb-2 block">שם הבנק *</Label>
+                      <Input
+                        id="bankName"
+                        className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                        placeholder="שם הבנק"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="bankBranch" className="text-sm font-medium text-gray-700 mb-2 block">מספר סניף *</Label>
+                      <Input
+                        id="bankBranch"
+                        className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                        placeholder="מספר סניף"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="accountNumber" className="text-sm font-medium text-gray-700 mb-2 block">מספר חשבון *</Label>
+                      <Input
+                        id="accountNumber"
+                        className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                        placeholder="מספר חשבון"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="accountName" className="text-sm font-medium text-gray-700 mb-2 block">שם על החשבון *</Label>
+                      <Input
+                        id="accountName"
+                        className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                        placeholder="שם בעל החשבון"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section 3: Commission Details */}
+                <div className="border-b border-gray-200 pb-6">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <DollarSign className="h-6 w-6 text-purple-600" />
+                    פרטי עמלה
+                  </h2>
+                  <div className="bg-purple-50 rounded-xl p-6 border border-purple-200">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <Label className="text-sm font-medium text-purple-700 mb-2 block">סוג עמלה</Label>
+                        <div className="bg-white rounded-lg p-3 border border-purple-200">
+                          <span className="text-purple-800 font-medium">
+                            {commissionData.type === 'percentage' ? `אחוז מהמכירות - ${commissionData.percentage}%` :
+                             commissionData.type === 'fixed' ? `סכום קבוע - ₪${commissionData.percentage}` :
+                             commissionData.type === 'mixed' ? 'עמלה מעורבת' : 'עמלה מדורגת'}
+                          </span>
+                        </div>
+                      </div>
+                      <div>
+                        <Label className="text-sm font-medium text-purple-700 mb-2 block">תדירות תשלום</Label>
+                        <div className="bg-white rounded-lg p-3 border border-purple-200">
+                          <span className="text-purple-800 font-medium">
+                            {commissionData.frequency === 'monthly' ? 'חודשי' :
+                             commissionData.frequency === 'weekly' ? 'שבועי' :
+                             commissionData.frequency === 'quarterly' ? 'רבעוני' : 'לפי בקשה'}
+                          </span>
+                        </div>
+                      </div>
+                      <div>
+                        <Label className="text-sm font-medium text-purple-700 mb-2 block">תנאי תשלום</Label>
+                        <div className="bg-white rounded-lg p-3 border border-purple-200">
+                          <span className="text-purple-800 font-medium">
+                            {commissionData.condition === 'after_one_paid_month' ? 'לאחר חודש מנוי פעיל' :
+                             commissionData.condition === 'immediate' ? 'מיידי' :
+                             commissionData.condition === 'after_lead_conversion_only' ? 'לאחר המרת ליד בלבד' : 'לפי הסכם'}
+                          </span>
+                        </div>
+                      </div>
+                      <div>
+                        <Label className="text-sm font-medium text-purple-700 mb-2 block">אמצעי תשלום</Label>
+                        <div className="bg-white rounded-lg p-3 border border-purple-200">
+                          <span className="text-purple-800 font-medium">
+                            {commissionData.paymentMethod === 'bank_transfer' ? 'העברה בנקאית' :
+                             commissionData.paymentMethod === 'credit_card' ? 'כרטיס אשראי' :
+                             commissionData.paymentMethod === 'paypal' ? 'PayPal' :
+                             commissionData.paymentMethod === 'crypto' ? 'מטבע דיגיטלי' : 'לפי בחירה'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section 4: Contract */}
+                <div className="border-b border-gray-200 pb-6">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <FileText className="h-6 w-6 text-orange-600" />
+                    הסכם שותפות
+                  </h2>
+                  <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                    <div className="space-y-6 text-sm text-gray-700 leading-relaxed">
+                      
+                      <div>
+                        <p className="font-bold text-lg mb-2">הסכם שותפות בין {userProfile.businessName} לבין השותף</p>
+                        <p className="text-gray-600 text-xs">תאריך: {new Date().toLocaleDateString('he-IL')}</p>
+                      </div>
+                      
+                      <div>
+                        <p className="font-bold mb-2">1. הגדרות כלליות:</p>
+                        <p className="mr-4">השותף מתחייב לפעול בהתאם לתנאי ההסכם ולחוקי המדינה. השותף יקבל עמלה לפי התנאים המפורטים לעיל.</p>
+                      </div>
+                      
+                      <div>
+                        <p className="font-bold mb-2">2. עמלות ותשלומים:</p>
+                        <p className="mr-4">העמלה תשולם לפי התנאים המפורטים לעיל: {commissionData.type === 'percentage' ? `${commissionData.percentage}% מהמכירות` : 'סכום קבוע'}, בתדירות {commissionData.frequency === 'monthly' ? 'חודשית' : commissionData.frequency === 'weekly' ? 'שבועית' : 'רבעונית'}.</p>
+                        <p className="mr-4">התשלום יבוצע באמצעות: {commissionData.paymentMethod === 'bank_transfer' ? 'העברה בנקאית' : commissionData.paymentMethod === 'credit_card' ? 'כרטיס אשראי' : commissionData.paymentMethod === 'paypal' ? 'PayPal' : 'מטבע דיגיטלי'}.</p>
+                      </div>
+                      
+                      <div>
+                        <p className="font-bold mb-2">3. חובות השותף:</p>
+                        <p className="mr-4">השותף מתחייב לפעול ביושר ובהתאם לכללי החברה. השותף לא יפעל נגד האינטרסים של {userProfile.businessName}.</p>
+                      </div>
+                      
+                      <div>
+                        <p className="font-bold mb-2">4. סיום ההסכם:</p>
+                        <p className="mr-4">כל צד רשאי לסיים את ההסכם בהודעה מוקדמת של 30 יום. במקרה של הפרת תנאי ההסכם, ההסכם יסתיים מיידית.</p>
+                      </div>
+                      
+                      <div>
+                        <p className="font-bold mb-2">5. פרטי קשר:</p>
+                        <p className="mr-4">לכל שאלה או בקשה, ניתן לפנות ל-{userProfile.businessName} בטלפון: {userProfile.phone} או באימייל: {userProfile.email}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section 5: Signature */}
+                <div className="pb-6">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <CheckCircle className="h-6 w-6 text-green-600" />
+                    חתימה דיגיטלית
+                  </h2>
+                  <div className="bg-green-50 rounded-xl p-6 border border-green-200">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <Label className="text-sm font-medium text-green-700 mb-2 block">חתימת השותף</Label>
+                        <div className="bg-white rounded-lg p-4 border border-green-200 h-24 flex items-center justify-center">
+                          <span className="text-green-600 text-sm">אזור חתימה דיגיטלית</span>
+                        </div>
+                      </div>
+                      <div>
+                        <Label className="text-sm font-medium text-green-700 mb-2 block">תאריך חתימה</Label>
+                        <div className="bg-white rounded-lg p-4 border border-green-200 h-24 flex items-center justify-center">
+                          <span className="text-green-600 text-sm">{new Date().toLocaleDateString('he-IL')}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Company Footer */}
+              <div className="bg-gray-50 border-t border-gray-200 p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <img 
+                      src={userProfile.logo} 
+                      alt={`${userProfile.businessName} Logo`} 
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <h3 className="text-lg font-bold text-gray-900">{userProfile.businessName}</h3>
+                      <p className="text-gray-600 text-sm">מערכת ניהול שותפים מקצועית</p>
+                    </div>
+                  </div>
+                  <div className="text-right text-sm text-gray-600">
+                    <p>טלפון: {userProfile.phone}</p>
+                    <p>אימייל: {userProfile.email}</p>
+                    <p>אתר: {userProfile.website}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-4">
+              <Button variant="outline" className="px-6 py-2">
+                <Download className="h-4 w-4 ml-2" />
+                הורד PDF
+              </Button>
+              <Button className="bg-green-600 hover:bg-green-700 text-white px-6 py-2">
+                <Mail className="h-4 w-4 ml-2" />
+                שלח לשותף
+              </Button>
+            </div>
+          </div>
+        )}
 
 
 
@@ -425,59 +893,7 @@ const PartnersManagement: React.FC = () => {
 
 
 
-        {/* Advanced Report Generator */}
-        <Card className="mt-8">
-          <CardHeader>
-            <CardTitle className="text-right text-xl font-bold flex items-center gap-2">
-              <BarChart3 className="h-6 w-6 text-blue-600" />
-              מחולל דוחות מתקדם
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <AdvancedReportGenerator
-              data={partners}
-              columns={[
-                { key: 'name', label: 'שם השותף', type: 'text', visible: true, sortable: true, filterable: true },
-                { key: 'email', label: 'אימייל', type: 'text', visible: true, sortable: true, filterable: true },
-                { key: 'phone', label: 'טלפון', type: 'text', visible: true, sortable: true, filterable: true },
-                { key: 'status', label: 'סטטוס', type: 'status', visible: true, sortable: true, filterable: true },
-                { key: 'joinDate', label: 'תאריך הצטרפות', type: 'date', visible: true, sortable: true, filterable: true },
-                { key: 'totalLeads', label: 'סך לידים', type: 'number', visible: true, sortable: true, filterable: true },
-                { key: 'totalSales', label: 'סך מכירות', type: 'number', visible: true, sortable: true, filterable: true },
-                { key: 'totalEarnings', label: 'סך עמלות', type: 'currency', visible: true, sortable: true, filterable: true },
-                { key: 'monthlyEarnings', label: 'עמלות חודשיות', type: 'currency', visible: true, sortable: true, filterable: true },
-                { key: 'commissionPercentage', label: 'אחוז עמלה', type: 'number', visible: true, sortable: true, filterable: true },
-                { key: 'conversionRate', label: 'אחוז המרה', type: 'number', visible: true, sortable: true, filterable: true },
-                { key: 'lastActivity', label: 'פעילות אחרונה', type: 'date', visible: true, sortable: true, filterable: true },
-                { key: 'region', label: 'אזור', type: 'text', visible: true, sortable: true, filterable: true },
-                { key: 'source', label: 'מקור', type: 'text', visible: true, sortable: true, filterable: true }
-              ]}
-              title="דוח שותפים מפורט"
-              onExport={async (data, config) => {
-                // Excel export logic
-                console.log('Exporting partners data:', data, config);
-              }}
-            />
-          </CardContent>
-        </Card>
 
-        {/* Smart Reports System */}
-        <Card className="mt-8">
-          <CardHeader>
-            <CardTitle className="text-right text-xl font-bold flex items-center gap-2">
-              <BarChart3 className="h-6 w-6 text-purple-600" />
-              מערכת דוחות חכמה 👑
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <SmartReportsSystem
-              partners={partners}
-              onExport={(data, reportType) => {
-                console.log('Exporting smart report:', reportType, data);
-              }}
-            />
-          </CardContent>
-        </Card>
 
         {/* Partner Details Dialog */}
         <Dialog open={showPartnerDetails} onOpenChange={setShowPartnerDetails}>
