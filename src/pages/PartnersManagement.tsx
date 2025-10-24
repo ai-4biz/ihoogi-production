@@ -45,8 +45,11 @@ import {
   ArrowLeft,
   ArrowRight,
   Globe,
-  ChevronDown
+  ChevronDown,
+  StickyNote,
+  MessageCircle
 } from 'lucide-react';
+import { toast } from 'sonner';
 import MainLayout from '@/components/layout/MainLayout';
 import AdvancedReportGenerator from '@/components/reports/AdvancedReportGenerator';
 import SmartReportsSystem from '@/components/reports/SmartReportsSystem';
@@ -151,16 +154,37 @@ const PartnersManagement: React.FC = () => {
     payment: false,
     advanced: false
   });
+
+  // Smart Partners Generator states
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [viewedPartners, setViewedPartners] = useState<string[]>([]);
+  const [partnerStatuses, setPartnerStatuses] = useState<Record<string, string>>({});
+  const [partnerSubStatuses, setPartnerSubStatuses] = useState<Record<string, string>>({});
+  const [selectedPartnerForNotes, setSelectedPartnerForNotes] = useState<Partner | null>(null);
+  const [notesDialogOpen, setNotesDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [partnerToDelete, setPartnerToDelete] = useState<string | null>(null);
+
+  // Filter states
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [strengthFilter, setStrengthFilter] = useState('');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
+  const [regionFilter, setRegionFilter] = useState('');
+  const [sourceFilter, setSourceFilter] = useState('');
+  const [commissionFilter, setCommissionFilter] = useState('');
+  const [leadsFilter, setLeadsFilter] = useState('');
   
   // User profile data (should come from user context)
   const userProfile = {
-    businessName: "Hoogi",
-    email: "info@hoogi.co",
-    phone: "03-1234567",
-    website: "www.hoogi.co",
-    logo: "/hoogi-new-avatar.png",
-    primaryColor: "blue",
-    secondaryColor: "indigo"
+    businessName: "שם העסק שלי", // יבוא מהפרופיל
+    email: "info@mybusiness.co.il", // יבוא מהפרופיל
+    phone: "03-1234567", // יבוא מהפרופיל
+    website: "www.mybusiness.co.il", // יבוא מהפרופיל
+    logo: "/hoogi-new-avatar.png", // יבוא מהפרופיל
+    primaryColor: "blue", // יבוא מהפרופיל
+    secondaryColor: "indigo" // יבוא מהפרופיל
   };
   
   // Commission data from "שותף חדש" form
@@ -346,6 +370,114 @@ const PartnersManagement: React.FC = () => {
     }
   };
 
+  // Smart Partners Generator functions
+  const toggleSelectRow = (partnerId: string, event?: React.MouseEvent) => {
+    if (event) event.stopPropagation();
+    setSelectedRows(prev => 
+      prev.includes(partnerId) 
+        ? prev.filter(id => id !== partnerId)
+        : [...prev, partnerId]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedRows.length === filteredPartners.length) {
+      setSelectedRows([]);
+    } else {
+      setSelectedRows(filteredPartners.map(p => p.id));
+    }
+  };
+
+  const handlePartnerClick = (partnerId: string) => {
+    if (!viewedPartners.includes(partnerId)) {
+      setViewedPartners(prev => [...prev, partnerId]);
+    }
+  };
+
+  const handleStatusChange = (partnerId: string, status: string) => {
+    setPartnerStatuses(prev => ({ ...prev, [partnerId]: status }));
+    setPartnerSubStatuses(prev => ({ ...prev, [partnerId]: '' }));
+  };
+
+  const handleSubStatusChange = (partnerId: string, subStatus: string) => {
+    setPartnerSubStatuses(prev => ({ ...prev, [partnerId]: subStatus }));
+  };
+
+  const getSubStatusOptions = (status: string) => {
+    switch (status) {
+      case 'active':
+        return ['מעולה', 'טוב', 'ממוצע', 'חלש'];
+      case 'inactive':
+        return ['זמנית', 'קבועה', 'בהמתנה'];
+      case 'pending':
+        return ['אישור', 'בדיקה', 'ממתין'];
+      case 'suspended':
+        return ['זמנית', 'קבועה', 'הפרה'];
+      default:
+        return [];
+    }
+  };
+
+  const getPartnerStrength = (partner: Partner) => {
+    const score = partner.totalLeads * 0.4 + partner.conversionRate * 0.3 + partner.totalEarnings * 0.3;
+    if (score >= 80) return 'מעולה';
+    if (score >= 60) return 'טוב';
+    if (score >= 40) return 'ממוצע';
+    return 'חלש';
+  };
+
+  const getStrengthColor = (strength: string) => {
+    switch (strength) {
+      case 'מעולה': return 'bg-green-500';
+      case 'טוב': return 'bg-blue-500';
+      case 'ממוצע': return 'bg-yellow-500';
+      case 'חלש': return 'bg-red-500';
+      default: return 'bg-gray-500';
+    }
+  };
+
+  const clearAllFilters = () => {
+    setSearchTerm('');
+    setStatusFilter('');
+    setStrengthFilter('');
+    setDateFrom('');
+    setDateTo('');
+    setRegionFilter('');
+    setSourceFilter('');
+    setCommissionFilter('');
+    setLeadsFilter('');
+  };
+
+  const generatePartnerReport = () => {
+    const csvContent = [
+      ['שם שותף', 'סך לידים', 'סך עמלות', 'אחוז המרה', 'תאריך הצטרפות'],
+      ...partners.map(partner => [
+        partner.name,
+        partner.totalLeads.toString(),
+        partner.totalEarnings.toString(),
+        partner.conversionRate.toString(),
+        partner.joinDate
+      ])
+    ].map(row => row.join(',')).join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `דוח_שותפים_${new Date().toLocaleDateString('he-IL')}.csv`;
+    link.click();
+  };
+
+  // Filtered partners
+  const filteredPartners = partners.filter(partner => {
+    const matchesSearch = !searchTerm || partner.name.toLowerCase().includes(searchTerm.toLowerCase()) || partner.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = !statusFilter || partner.status === statusFilter;
+    const matchesStrength = !strengthFilter || getPartnerStrength(partner) === strengthFilter;
+    const matchesRegion = !regionFilter || partner.region === regionFilter;
+    const matchesSource = !sourceFilter || partner.source === sourceFilter;
+    
+    return matchesSearch && matchesStatus && matchesStrength && matchesRegion && matchesSource;
+  });
+
   return (
     <MainLayout>
       <div className="container mx-auto px-4 py-6" dir="rtl">
@@ -451,17 +583,17 @@ const PartnersManagement: React.FC = () => {
         {/* Tabs Navigation */}
         <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as any)} className="mb-8">
           <TabsList className="grid w-full grid-cols-4 bg-gray-100 rounded-xl p-1">
-            <TabsTrigger value="partners" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
-              השותפים שלי
-            </TabsTrigger>
-            <TabsTrigger value="new-partner" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
-              שותף חדש
-            </TabsTrigger>
             <TabsTrigger value="reports" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
               דוחות
             </TabsTrigger>
+            <TabsTrigger value="partners" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
+              השותפים שלי
+            </TabsTrigger>
             <TabsTrigger value="send-form" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
               שלח טופס לשותף
+            </TabsTrigger>
+            <TabsTrigger value="new-partner" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
+              שותף חדש
             </TabsTrigger>
           </TabsList>
         </Tabs>
@@ -476,93 +608,348 @@ const PartnersManagement: React.FC = () => {
         {/* Partners Tab Content */}
         {activeTab === 'partners' && (
           <div className="space-y-8">
-            {/* Partners List */}
+            {/* Smart Partners Generator */}
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-right text-2xl font-bold">רשימת שותפים</CardTitle>
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2">
-                  <Plus className="h-4 w-4 ml-2" />
-                  הוסף שותף
-                </Button>
+                <CardTitle className="text-right text-2xl font-bold">מחולל שותפים חכם</CardTitle>
+                <div className="flex gap-2">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => generatePartnerReport()}
+                    className="px-4 py-2"
+                  >
+                    <FileText className="h-4 w-4 ml-2" />
+                    דוח לשותף
+                  </Button>
+                  <Button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2">
+                    <Plus className="h-4 w-4 ml-2" />
+                    הוסף שותף
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow className="text-right">
-                      <TableHead>פעולות</TableHead>
-                      <TableHead>סטטוס</TableHead>
-                      <TableHead>תאריך הצטרפות</TableHead>
-                      <TableHead>עמלות חודשיות</TableHead>
-                      <TableHead>סך עמלות</TableHead>
-                      <TableHead>אימייל</TableHead>
-                      <TableHead>שם</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {partners.map((partner) => (
-                      <TableRow key={partner.id} className="text-right">
-                        <TableCell>
-                          <div className="flex justify-end gap-2">
-                            <Button variant="outline" size="sm" onClick={() => setSelectedPartner(partner)}>
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                            <Button variant="outline" size="sm">
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button variant="destructive" size="sm">
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge className={getStatusColor(partner.status)}>
-                            {getStatusText(partner.status)}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>{partner.joinDate}</TableCell>
-                        <TableCell>₪{partner.monthlyEarnings.toLocaleString()}</TableCell>
-                        <TableCell>₪{partner.totalEarnings.toLocaleString()}</TableCell>
-                        <TableCell>{partner.email}</TableCell>
-                        <TableCell className="font-medium">{partner.name}</TableCell>
+                {/* Advanced Filters */}
+                <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {/* Search */}
+                    <div className="relative">
+                      <input
+                        type="text"
+                        placeholder="חיפוש שותפים..."
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-right"
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                      />
+                    </div>
+                    
+                    {/* Status Filter */}
+                    <Select onValueChange={setStatusFilter}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="סטטוס" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">כל הסטטוסים</SelectItem>
+                        <SelectItem value="active">פעיל</SelectItem>
+                        <SelectItem value="inactive">לא פעיל</SelectItem>
+                        <SelectItem value="pending">ממתין</SelectItem>
+                        <SelectItem value="suspended">מושעה</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    
+                    {/* Strength Filter */}
+                    <Select onValueChange={setStrengthFilter}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="חוזק" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">כל הרמות</SelectItem>
+                        <SelectItem value="מעולה">מעולה</SelectItem>
+                        <SelectItem value="טוב">טוב</SelectItem>
+                        <SelectItem value="ממוצע">ממוצע</SelectItem>
+                        <SelectItem value="חלש">חלש</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    
+                    {/* Date Range */}
+                    <div className="flex gap-2">
+                      <input
+                        type="date"
+                        placeholder="מתאריך"
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg"
+                        onChange={(e) => setDateFrom(e.target.value)}
+                      />
+                      <input
+                        type="date"
+                        placeholder="עד תאריך"
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg"
+                        onChange={(e) => setDateTo(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  
+                  {/* Additional Filters Row */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+                    {/* Region Filter */}
+                    <Select onValueChange={setRegionFilter}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="אזור" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">כל האזורים</SelectItem>
+                        <SelectItem value="מרכז">מרכז</SelectItem>
+                        <SelectItem value="צפון">צפון</SelectItem>
+                        <SelectItem value="דרום">דרום</SelectItem>
+                        <SelectItem value="ירושלים">ירושלים</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    
+                    {/* Source Filter */}
+                    <Select onValueChange={setSourceFilter}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="מקור" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">כל המקורות</SelectItem>
+                        <SelectItem value="פייסבוק">פייסבוק</SelectItem>
+                        <SelectItem value="גוגל">גוגל</SelectItem>
+                        <SelectItem value="לינקדאין">לינקדאין</SelectItem>
+                        <SelectItem value="המלצה">המלצה</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    
+                    {/* Commission Range */}
+                    <Select onValueChange={setCommissionFilter}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="טווח עמלות" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">כל הטווחים</SelectItem>
+                        <SelectItem value="0-1000">₪0 - ₪1,000</SelectItem>
+                        <SelectItem value="1000-5000">₪1,000 - ₪5,000</SelectItem>
+                        <SelectItem value="5000-10000">₪5,000 - ₪10,000</SelectItem>
+                        <SelectItem value="10000+">₪10,000+</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    
+                    {/* Leads Range */}
+                    <Select onValueChange={setLeadsFilter}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="טווח לידים" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">כל הטווחים</SelectItem>
+                        <SelectItem value="0-10">0 - 10 לידים</SelectItem>
+                        <SelectItem value="10-50">10 - 50 לידים</SelectItem>
+                        <SelectItem value="50-100">50 - 100 לידים</SelectItem>
+                        <SelectItem value="100+">100+ לידים</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  {/* Clear Filters */}
+                  <div className="flex justify-end mt-4">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={clearAllFilters}
+                    >
+                      נקה סינונים
+                    </Button>
+                  </div>
+                </div>
+                <div className="overflow-x-auto">
+                  <Table className="w-full">
+                    <TableHeader>
+                      <TableRow className="text-right">
+                        <TableHead className="w-[40px] p-2">
+                          <Checkbox 
+                            checked={selectedRows.length === filteredPartners.length && filteredPartners.length > 0} 
+                            onCheckedChange={toggleSelectAll}
+                            aria-label="בחר הכל"
+                          />
+                        </TableHead>
+                        <TableHead className="w-[180px] p-2">שם שותף</TableHead>
+                        <TableHead className="w-[140px] p-2">חוזק</TableHead>
+                        <TableHead className="w-[100px] p-2">סטטוס</TableHead>
+                        <TableHead className="w-[120px] p-2">תת-סטטוס</TableHead>
+                        <TableHead className="w-[80px] p-2">לידים</TableHead>
+                        <TableHead className="w-[100px] p-2">עמלות</TableHead>
+                        <TableHead className="w-[120px] p-2">אחוז המרה</TableHead>
+                        <TableHead className="w-[160px] p-2">פעולות מהירות</TableHead>
+                        <TableHead className="w-[70px] p-2 text-center">הערות</TableHead>
+                        <TableHead className="w-[60px] p-2 text-center">מחק</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-            
-            {/* Advanced Reports Generator */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-right text-xl font-bold flex items-center gap-2">
-                  <BarChart3 className="h-6 w-6 text-purple-600" />
-                  מחולל דוחות מתקדמים
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <AdvancedReportGenerator
-                  data={partners}
-                  columns={[
-                    { key: 'name', label: 'שם', type: 'text', visible: true, sortable: true, filterable: true },
-                    { key: 'email', label: 'אימייל', type: 'email', visible: true, sortable: true, filterable: true },
-                    { key: 'status', label: 'סטטוס', type: 'text', visible: true, sortable: true, filterable: true },
-                    { key: 'joinDate', label: 'תאריך הצטרפות', type: 'date', visible: true, sortable: true, filterable: true },
-                    { key: 'totalLeads', label: 'סך לידים', type: 'number', visible: true, sortable: true, filterable: true },
-                    { key: 'totalSales', label: 'סך מכירות', type: 'number', visible: true, sortable: true, filterable: true },
-                    { key: 'totalEarnings', label: 'סך עמלות', type: 'currency', visible: true, sortable: true, filterable: true },
-                    { key: 'monthlyEarnings', label: 'עמלות חודשיות', type: 'currency', visible: true, sortable: true, filterable: true },
-                    { key: 'commissionPercentage', label: 'אחוז עמלה', type: 'number', visible: true, sortable: true, filterable: true },
-                    { key: 'conversionRate', label: 'אחוז המרה', type: 'number', visible: true, sortable: true, filterable: true },
-                    { key: 'lastActivity', label: 'פעילות אחרונה', type: 'date', visible: true, sortable: true, filterable: true },
-                    { key: 'region', label: 'אזור', type: 'text', visible: true, sortable: true, filterable: true },
-                    { key: 'source', label: 'מקור', type: 'text', visible: true, sortable: true, filterable: true }
-                  ]}
-                  title="דוח שותפים מפורט"
-                  onExport={async (data, config) => {
-                    // Excel export logic
-                    console.log('Exporting partners data:', data, config);
-                  }}
-                />
+                    </TableHeader>
+                    <TableBody>
+                      {filteredPartners.map((partner) => {
+                        const isNew = partner.status === "active" && !viewedPartners.includes(partner.id);
+                        const currentStatus = partnerStatuses[partner.id] || partner.status;
+                        const currentSubStatus = partnerSubStatuses[partner.id] || "";
+                        const strength = getPartnerStrength(partner);
+                        
+                        return (
+                          <TableRow 
+                            key={partner.id} 
+                            className={`${selectedRows.includes(partner.id) ? "bg-primary/5" : ""} ${isNew ? "border-r-4 border-r-blue-500" : ""} cursor-pointer hover:bg-gray-50`}
+                            onClick={() => handlePartnerClick(partner.id)}
+                          >
+                            <TableCell className="p-2" onClick={(e) => toggleSelectRow(partner.id, e)}>
+                              <Checkbox 
+                                checked={selectedRows.includes(partner.id)} 
+                                aria-label={`בחר שותף ${partner.name}`}
+                              />
+                            </TableCell>
+                            
+                            <TableCell className="p-2">
+                              <div className="flex flex-col gap-0.5">
+                                <div className="font-medium text-sm">{partner.name}</div>
+                                <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                                  <Calendar className="h-3 w-3" />
+                                  {partner.joinDate}
+                                </div>
+                              </div>
+                            </TableCell>
+                            
+                            <TableCell className="p-2">
+                              <div className="flex items-center gap-1">
+                                <div className={`w-3 h-3 rounded-full ${getStrengthColor(strength)}`}></div>
+                                <span className="text-sm font-medium">{strength}</span>
+                              </div>
+                            </TableCell>
+                            
+                            <TableCell className="p-2">
+                              <Select 
+                                value={currentStatus} 
+                                onValueChange={(value) => handleStatusChange(partner.id, value)}
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <SelectTrigger className="h-8 text-xs">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="active">פעיל</SelectItem>
+                                  <SelectItem value="inactive">לא פעיל</SelectItem>
+                                  <SelectItem value="pending">ממתין</SelectItem>
+                                  <SelectItem value="suspended">מושעה</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </TableCell>
+                            
+                            <TableCell className="p-2">
+                              <Select 
+                                value={currentSubStatus} 
+                                onValueChange={(value) => handleSubStatusChange(partner.id, value)}
+                                onClick={(e) => e.stopPropagation()}
+                                disabled={!currentStatus}
+                              >
+                                <SelectTrigger className="h-8 text-xs">
+                                  <SelectValue placeholder="בחר תת-סטטוס" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {getSubStatusOptions(currentStatus).map((option) => (
+                                    <SelectItem key={option} value={option}>{option}</SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </TableCell>
+                            
+                            <TableCell className="p-2">
+                              <div className="text-center">
+                                <div className="text-lg font-bold text-blue-600">{partner.totalLeads}</div>
+                                <div className="text-xs text-muted-foreground">לידים</div>
+                              </div>
+                            </TableCell>
+                            
+                            <TableCell className="p-2">
+                              <div className="text-center">
+                                <div className="text-lg font-bold text-green-600">₪{partner.totalEarnings.toLocaleString()}</div>
+                                <div className="text-xs text-muted-foreground">סך הכל</div>
+                              </div>
+                            </TableCell>
+                            
+                            <TableCell className="p-2">
+                              <div className="text-center">
+                                <div className="text-lg font-bold text-purple-600">{partner.conversionRate}%</div>
+                                <div className="text-xs text-muted-foreground">המרה</div>
+                              </div>
+                            </TableCell>
+                            
+                            <TableCell className="p-2">
+                              <div className="flex gap-1">
+                                <a
+                                  href={`tel:${partner.phone}`}
+                                  className="flex flex-col items-center justify-center gap-0.5 p-1 rounded-md bg-green-50 border border-green-200 hover:bg-green-100 transition-colors"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toast.success("פותח שיחה...");
+                                  }}
+                                >
+                                  <Phone className="h-3 w-3 text-green-600" />
+                                  <span className="text-[8px] font-medium text-green-700">שיחה</span>
+                                </a>
+
+                                <a
+                                  href={`https://wa.me/${partner.phone.replace(/[^0-9]/g, '')}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex flex-col items-center justify-center gap-0.5 p-1 rounded-md bg-green-50 border border-green-200 hover:bg-green-100 transition-colors"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toast.success("פותח WhatsApp...");
+                                  }}
+                                >
+                                  <MessageCircle className="h-3 w-3 text-green-600" />
+                                  <span className="text-[8px] font-medium text-green-700">וואטס</span>
+                                </a>
+                                
+                                <a
+                                  href={`mailto:${partner.email}`}
+                                  className="flex flex-col items-center justify-center gap-0.5 p-1 rounded-md bg-purple-50 border border-purple-200 hover:bg-purple-100 transition-colors"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toast.success("פותח מייל...");
+                                  }}
+                                >
+                                  <Mail className="h-3 w-3 text-purple-600" />
+                                  <span className="text-[8px] font-medium text-purple-700">מייל</span>
+                                </a>
+                              </div>
+                            </TableCell>
+                            
+                            <TableCell className="p-2 text-center">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSelectedPartnerForNotes(partner);
+                                  setNotesDialogOpen(true);
+                                }}
+                                className="h-6 w-6 p-0"
+                              >
+                                <StickyNote className="h-3 w-3" />
+                              </Button>
+                            </TableCell>
+                            
+                            <TableCell className="p-2 text-center">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setPartnerToDelete(partner.id);
+                                  setDeleteDialogOpen(true);
+                                }}
+                                className="h-6 w-6 p-0 text-red-600 hover:text-red-700"
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -630,7 +1017,8 @@ const PartnersManagement: React.FC = () => {
                     />
                     <div>
                       <h1 className="text-3xl font-bold">{userProfile.businessName}</h1>
-                      <p className="text-blue-100 text-lg">מערכת ניהול שותפים</p>
+                      <p className="text-blue-100 text-lg">טופס הצטרפות לשותפות</p>
+                      <p className="text-blue-200 text-sm">מערכת ניהול שותפים מתקדמת</p>
                     </div>
                   </div>
                   <div className="text-right">
@@ -793,32 +1181,45 @@ const PartnersManagement: React.FC = () => {
                       <div>
                         <p className="font-bold text-lg mb-2">הסכם שותפות בין {userProfile.businessName} לבין השותף</p>
                         <p className="text-gray-600 text-xs">תאריך: {new Date().toLocaleDateString('he-IL')}</p>
+                        <p className="text-gray-600 text-xs">מסמך רשמי של {userProfile.businessName}</p>
                       </div>
                       
                       <div>
                         <p className="font-bold mb-2">1. הגדרות כלליות:</p>
                         <p className="mr-4">השותף מתחייב לפעול בהתאם לתנאי ההסכם ולחוקי המדינה. השותף יקבל עמלה לפי התנאים המפורטים לעיל.</p>
+                        <p className="mr-4">השותף מתחייב לייצג את {userProfile.businessName} בצורה מקצועית ומכובדת.</p>
                       </div>
                       
                       <div>
                         <p className="font-bold mb-2">2. עמלות ותשלומים:</p>
                         <p className="mr-4">העמלה תשולם לפי התנאים המפורטים לעיל: {commissionData.type === 'percentage' ? `${commissionData.percentage}% מהמכירות` : 'סכום קבוע'}, בתדירות {commissionData.frequency === 'monthly' ? 'חודשית' : commissionData.frequency === 'weekly' ? 'שבועית' : 'רבעונית'}.</p>
                         <p className="mr-4">התשלום יבוצע באמצעות: {commissionData.paymentMethod === 'bank_transfer' ? 'העברה בנקאית' : commissionData.paymentMethod === 'credit_card' ? 'כרטיס אשראי' : commissionData.paymentMethod === 'paypal' ? 'PayPal' : 'מטבע דיגיטלי'}.</p>
+                        <p className="mr-4">כל התשלומים יבוצעו בחשבון הבנק של השותף כפי שמופיע בטופס זה.</p>
                       </div>
                       
                       <div>
                         <p className="font-bold mb-2">3. חובות השותף:</p>
                         <p className="mr-4">השותף מתחייב לפעול ביושר ובהתאם לכללי החברה. השותף לא יפעל נגד האינטרסים של {userProfile.businessName}.</p>
+                        <p className="mr-4">השותף מתחייב לשמור על סודיות המידע העסקי של {userProfile.businessName}.</p>
                       </div>
                       
                       <div>
-                        <p className="font-bold mb-2">4. סיום ההסכם:</p>
+                        <p className="font-bold mb-2">4. חובות החברה:</p>
+                        <p className="mr-4">{userProfile.businessName} מתחייבת לספק לשותף את כל המידע והכלים הנדרשים לביצוע עבודתו.</p>
+                        <p className="mr-4">החברה תספק תמיכה טכנית ומקצועית לשותף לפי הצורך.</p>
+                      </div>
+                      
+                      <div>
+                        <p className="font-bold mb-2">5. סיום ההסכם:</p>
                         <p className="mr-4">כל צד רשאי לסיים את ההסכם בהודעה מוקדמת של 30 יום. במקרה של הפרת תנאי ההסכם, ההסכם יסתיים מיידית.</p>
+                        <p className="mr-4">במקרה של סיום ההסכם, השותף מתחייב להחזיר את כל החומרים והמידע של {userProfile.businessName}.</p>
                       </div>
                       
                       <div>
-                        <p className="font-bold mb-2">5. פרטי קשר:</p>
+                        <p className="font-bold mb-2">6. פרטי קשר:</p>
                         <p className="mr-4">לכל שאלה או בקשה, ניתן לפנות ל-{userProfile.businessName} בטלפון: {userProfile.phone} או באימייל: {userProfile.email}</p>
+                        <p className="mr-4">אתר החברה: {userProfile.website}</p>
+                        <p className="mr-4">הסכם זה נחתם ב-{new Date().toLocaleDateString('he-IL')} ונכנס לתוקף מיידית.</p>
                       </div>
                     </div>
                   </div>
@@ -845,6 +1246,10 @@ const PartnersManagement: React.FC = () => {
                         </div>
                       </div>
                     </div>
+                    <div className="mt-4 text-center">
+                      <p className="text-sm text-green-700">השותף מתחייב לקרוא ולהבין את כל התנאים המפורטים בהסכם זה</p>
+                      <p className="text-xs text-green-600 mt-1">חתימה דיגיטלית זו מהווה אישור על הסכמה מלאה לתנאי ההסכם</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -861,12 +1266,14 @@ const PartnersManagement: React.FC = () => {
                     <div>
                       <h3 className="text-lg font-bold text-gray-900">{userProfile.businessName}</h3>
                       <p className="text-gray-600 text-sm">מערכת ניהול שותפים מקצועית</p>
+                      <p className="text-gray-500 text-xs">כל הזכויות שמורות © {new Date().getFullYear()}</p>
                     </div>
                   </div>
                   <div className="text-right text-sm text-gray-600">
                     <p>טלפון: {userProfile.phone}</p>
                     <p>אימייל: {userProfile.email}</p>
                     <p>אתר: {userProfile.website}</p>
+                    <p className="text-xs text-gray-500 mt-1">מסמך רשמי - {new Date().toLocaleDateString('he-IL')}</p>
                   </div>
                 </div>
               </div>
@@ -1131,6 +1538,13 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     taxExemption: null as File | null, // פטור ממס
     bankLetter: null as File | null, // אישור בנק
     
+    // מסמכים נוספים
+    idDocument: null as File | null, // תעודת זהות
+    businessRegistration: null as File | null, // תעודת רישום עסק
+    incomeCertificate: null as File | null, // אישור הכנסות
+    additionalDocuments: null as File | null, // מסמכים נוספים
+    additionalFiles: [] as File[], // קבצים נוספים מרובים
+    
     // פרטי חשבון בנקאיים
     bankAccountName: '', // שם על החשבון
     bankName: '',
@@ -1302,7 +1716,14 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   };
 
   const handleFileUpload = (file: File, fieldName: string = 'signedContract') => {
-    setFormData(prev => ({ ...prev, [fieldName]: file }));
+    if (fieldName === 'additionalFiles') {
+      setFormData(prev => ({ 
+        ...prev, 
+        additionalFiles: [...(prev.additionalFiles || []), file] 
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, [fieldName]: file }));
+    }
   };
 
   const handleNext = () => {
@@ -1590,43 +2011,95 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     </p>
                   </div>
 
-                  {/* חתימה דיגיטלית על החוזה */}
-                  <div className="space-y-3">
-                    <Label className="text-sm font-medium">חתימה דיגיטלית על החוזה</Label>
-                    <div className="space-y-2">
-                      {signatureData ? (
-                        <div className="border border-gray-200 rounded-lg p-4 bg-white">
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm text-gray-600">חתימה שמורה:</span>
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="sm"
-                              onClick={clearSignature}
-                              className="text-red-600 hover:text-red-700"
-                            >
-                              <Trash2 className="w-4 h-4 ml-1" />
-                              מחק חתימה
-                            </Button>
-                          </div>
-                          <div className="border border-gray-300 rounded p-2 bg-gray-50">
-                            <img src={signatureData} alt="חתימה דיגיטלית" className="max-w-full h-auto" />
-                          </div>
+                  {/* מסמכים נוספים */}
+                  <div className="space-y-4">
+                    <Label className="text-sm font-medium">מסמכים נוספים</Label>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label className="text-right">תעודת זהות</Label>
+                        <div className="flex items-center gap-3 mt-2">
+                          <Input
+                            type="file"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) handleFileUpload(file, 'idDocument');
+                            }}
+                            className="flex-1"
+                          />
+                          {formData.idDocument && (
+                            <Badge variant="outline" className="text-green-600">
+                              {formData.idDocument.name}
+                            </Badge>
+                          )}
                         </div>
-                      ) : (
-                        <div className="border border-dashed border-gray-300 rounded-lg p-6 text-center">
-                          <p className="text-sm text-gray-500 mb-3">אין חתימה דיגיטלית על החוזה</p>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => setShowSignaturePad(true)}
-                            className="flex items-center gap-2"
-                          >
-                            <Edit className="w-4 h-4" />
-                            הוסף חתימה דיגיטלית על החוזה
-                          </Button>
+                      </div>
+
+                      <div>
+                        <Label className="text-right">תעודת רישום עסק</Label>
+                        <div className="flex items-center gap-3 mt-2">
+                          <Input
+                            type="file"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) handleFileUpload(file, 'businessRegistration');
+                            }}
+                            className="flex-1"
+                          />
+                          {formData.businessRegistration && (
+                            <Badge variant="outline" className="text-green-600">
+                              {formData.businessRegistration.name}
+                            </Badge>
+                          )}
                         </div>
-                      )}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label className="text-right">אישור הכנסות</Label>
+                        <div className="flex items-center gap-3 mt-2">
+                          <Input
+                            type="file"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) handleFileUpload(file, 'incomeCertificate');
+                            }}
+                            className="flex-1"
+                          />
+                          {formData.incomeCertificate && (
+                            <Badge variant="outline" className="text-green-600">
+                              {formData.incomeCertificate.name}
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label className="text-right">מסמכים נוספים</Label>
+                        <div className="flex items-center gap-3 mt-2">
+                          <Input
+                            type="file"
+                            accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) handleFileUpload(file, 'additionalDocuments');
+                            }}
+                            className="flex-1"
+                          />
+                          {formData.additionalDocuments && (
+                            <Badge variant="outline" className="text-green-600">
+                              {formData.additionalDocuments.name}
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-xs text-gray-600 text-right mt-1">
+                          מסמכים נוספים כמו המלצות, תעודות מקצועיות וכו'
+                        </p>
+                      </div>
                     </div>
                   </div>
 
@@ -1696,68 +2169,93 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     </p>
                   </div>
 
-                  <div>
-                    <Label htmlFor="contractTerms" className="text-right">תקנון השותפים</Label>
-                    <Textarea
-                      id="contractTerms"
-                      value={formData.contractTerms}
-                      onChange={(e) => handleFieldChange('contractTerms', e.target.value)}
-                      className="text-right"
-                      placeholder="הכנס כאן את תנאי השותפות והתקנון..."
-                      rows={4}
-                    />
-                  </div>
-
-                  <div className="flex items-center space-x-2 space-x-reverse">
-                    <Checkbox
-                      id="termsAccepted"
-                      checked={formData.termsAccepted}
-                      onCheckedChange={(checked) => handleFieldChange('termsAccepted', checked)}
-                    />
-                    <Label htmlFor="termsAccepted" className="text-right text-sm">
-                      אני מקבל את תנאי השותפות והתקנון *
-                    </Label>
-                  </div>
-
-                  {/* חתימה דיגיטלית */}
-                  <div className="space-y-3">
-                    <Label className="text-sm font-medium">חתימה דיגיטלית על התקנון</Label>
-                    <div className="space-y-2">
-                      {signatureData ? (
-                        <div className="border border-gray-200 rounded-lg p-4 bg-white">
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm text-gray-600">חתימה שמורה:</span>
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="sm"
-                              onClick={clearSignature}
-                              className="text-red-600 hover:text-red-700"
-                            >
-                              <Trash2 className="w-4 h-4 ml-1" />
-                              מחק חתימה
-                            </Button>
-                          </div>
-                          <div className="border border-gray-300 rounded p-2 bg-gray-50">
-                            <img src={signatureData} alt="חתימה דיגיטלית" className="max-w-full h-auto" />
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="border border-dashed border-gray-300 rounded-lg p-6 text-center">
-                          <p className="text-sm text-gray-500 mb-3">אין חתימה דיגיטלית</p>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => setShowSignaturePad(true)}
-                            className="flex items-center gap-2"
-                          >
-                            <Edit className="w-4 h-4" />
-                            הוסף חתימה דיגיטלית
-                          </Button>
-                        </div>
-                      )}
+                  {/* העלאת קבצים מרובים */}
+                  <div className="space-y-4">
+                    <Label className="text-sm font-medium">העלאת קבצים נוספים</Label>
+                    
+                    <div className="border border-dashed border-gray-300 rounded-lg p-6 text-center">
+                      <FileText className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                      <p className="text-sm text-gray-500 mb-3">גרור קבצים לכאן או לחץ לבחירה</p>
+                      <div className="flex gap-2 justify-center">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => {
+                            const input = document.createElement('input');
+                            input.type = 'file';
+                            input.multiple = true;
+                            input.accept = '.pdf,.jpg,.jpeg,.png,.doc,.docx';
+                            input.onchange = (e) => {
+                              const files = (e.target as HTMLInputElement).files;
+                              if (files) {
+                                Array.from(files).forEach(file => {
+                                  handleFileUpload(file, 'additionalFiles');
+                                });
+                              }
+                            };
+                            input.click();
+                          }}
+                          className="text-blue-600 hover:text-blue-700"
+                        >
+                          <Plus className="w-4 h-4 ml-1" />
+                          בחר קבצים
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => {
+                            const input = document.createElement('input');
+                            input.type = 'file';
+                            input.multiple = true;
+                            input.accept = '.pdf,.jpg,.jpeg,.png,.doc,.docx';
+                            input.onchange = (e) => {
+                              const files = (e.target as HTMLInputElement).files;
+                              if (files) {
+                                Array.from(files).forEach(file => {
+                                  handleFileUpload(file, 'additionalFiles');
+                                });
+                              }
+                            };
+                            input.click();
+                          }}
+                          className="text-green-600 hover:text-green-700"
+                        >
+                          <Plus className="w-4 h-4 ml-1" />
+                          הוסף עוד
+                        </Button>
+                      </div>
+                      <p className="text-xs text-gray-600 text-right mt-2">
+                        ניתן להעלות מספר קבצים בו זמנית (PDF, JPG, PNG, DOC, DOCX)
+                      </p>
                     </div>
+                    
+                    {/* רשימת קבצים שהועלו */}
+                    {formData.additionalFiles && formData.additionalFiles.length > 0 && (
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium">קבצים שהועלו:</Label>
+                        <div className="space-y-1">
+                          {formData.additionalFiles.map((file, index) => (
+                            <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded border">
+                              <span className="text-sm text-gray-700">{file.name}</span>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  const newFiles = formData.additionalFiles?.filter((_, i) => i !== index) || [];
+                                  handleFieldChange('additionalFiles', newFiles);
+                                }}
+                                className="text-red-600 hover:text-red-700"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
+
                 </div>
               </div>
             </CardContent>
