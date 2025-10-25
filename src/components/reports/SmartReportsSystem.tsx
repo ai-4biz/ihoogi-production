@@ -53,27 +53,6 @@ const SmartReportsSystem: React.FC<SmartReportsSystemProps> = ({ partners, onExp
   const reportTemplates: ReportTemplate[] = [
     // 💰 קטגוריה: כספי (תשלומים ועמלות)
     {
-      id: 'commissions-by-partner',
-      name: 'דוח עמלות לפי שותף',
-      category: 'כספי',
-      icon: DollarSign,
-      description: 'הצגת עמלות נצברות עבור כל שותף בתקופה נתונה',
-      color: 'green',
-      columns: [
-        { key: 'partnerName', label: 'שם שותף', type: 'text', visible: true, sortable: true, filterable: true },
-        { key: 'affiliateId', label: 'מזהה שותף', type: 'text', visible: true, sortable: true, filterable: true },
-        { key: 'period', label: 'תקופה', type: 'text', visible: true, sortable: true, filterable: true },
-        { key: 'commissionType', label: 'סוג עמלה', type: 'text', visible: true, sortable: true, filterable: true },
-        { key: 'commissionRate', label: 'שיעור עמלה (%)', type: 'percentage', visible: true, sortable: true, filterable: true },
-        { key: 'totalSales', label: 'סך מכירות', type: 'currency', visible: true, sortable: true, filterable: true },
-        { key: 'commissionAmount', label: 'סכום עמלה', type: 'currency', visible: true, sortable: true, filterable: true },
-        { key: 'status', label: 'סטטוס', type: 'status', visible: true, sortable: true, filterable: true },
-        { key: 'calculationDate', label: 'תאריך חישוב', type: 'date', visible: true, sortable: true, filterable: true },
-        { key: 'notes', label: 'הערות / בונוס', type: 'text', visible: true, sortable: false, filterable: true }
-      ],
-      filters: ['status', 'commissionType', 'calculationDate']
-    },
-    {
       id: 'payouts-executed',
       name: 'דוח תשלומים שבוצעו',
       category: 'כספי',
@@ -240,25 +219,6 @@ const SmartReportsSystem: React.FC<SmartReportsSystemProps> = ({ partners, onExp
 
     // 👥 קטגוריה: ניהולית (שותפים ופעולות מערכת)
     {
-      id: 'active-partners-report',
-      name: 'דוח שותפים פעילים',
-      category: 'ניהולית',
-      icon: Users,
-      description: 'לראות אילו שותפים מביאים תוצאות',
-      color: 'blue',
-      columns: [
-        { key: 'affiliateId', label: 'מזהה שותף', type: 'text', visible: true, sortable: true, filterable: true },
-        { key: 'partnerName', label: 'שם שותף', type: 'text', visible: true, sortable: true, filterable: true },
-        { key: 'status', label: 'סטטוס', type: 'status', visible: true, sortable: true, filterable: true },
-        { key: 'leadsCount', label: 'מספר לידים', type: 'number', visible: true, sortable: true, filterable: true },
-        { key: 'transactionsCount', label: 'מספר עסקאות', type: 'number', visible: true, sortable: true, filterable: true },
-        { key: 'totalRevenue', label: 'סך הכנסות', type: 'currency', visible: true, sortable: true, filterable: true },
-        { key: 'lastActivity', label: 'תאריך פעילות אחרונה', type: 'date', visible: true, sortable: true, filterable: true },
-        { key: 'changeFromPreviousMonth', label: 'אחוז שינוי לעומת חודש קודם', type: 'percentage', visible: true, sortable: true, filterable: true }
-      ],
-      filters: ['status', 'lastActivity']
-    },
-    {
       id: 'partners-leaderboard',
       name: 'דוח דירוג שותפים',
       category: 'ניהולית',
@@ -275,25 +235,6 @@ const SmartReportsSystem: React.FC<SmartReportsSystemProps> = ({ partners, onExp
         { key: 'rankChange', label: 'שינוי ממקום קודם', type: 'text', visible: true, sortable: false, filterable: true }
       ],
       filters: ['period', 'rank']
-    },
-    {
-      id: 'partners-registry',
-      name: 'דוח רישום שותפים',
-      category: 'ניהולית',
-      icon: FileText,
-      description: 'רישום וניהול כל השותפים במערכת',
-      color: 'green',
-      columns: [
-        { key: 'affiliateId', label: 'מזהה שותף', type: 'text', visible: true, sortable: true, filterable: true },
-        { key: 'fullName', label: 'שם מלא', type: 'text', visible: true, sortable: true, filterable: true },
-        { key: 'email', label: 'אימייל', type: 'text', visible: true, sortable: false, filterable: true },
-        { key: 'phone', label: 'טלפון', type: 'text', visible: true, sortable: false, filterable: true },
-        { key: 'status', label: 'סטטוס', type: 'status', visible: true, sortable: true, filterable: true },
-        { key: 'programType', label: 'סוג תוכנית', type: 'text', visible: true, sortable: true, filterable: true },
-        { key: 'joinDate', label: 'תאריך הצטרפות', type: 'date', visible: true, sortable: true, filterable: true },
-        { key: 'referralSource', label: 'מקור הצטרפות', type: 'text', visible: true, sortable: true, filterable: true }
-      ],
-      filters: ['status', 'programType', 'joinDate']
     },
     {
       id: 'audit-log',
@@ -368,18 +309,6 @@ const SmartReportsSystem: React.FC<SmartReportsSystemProps> = ({ partners, onExp
   // פונקציה ליצירת נתונים דמו
   const generateMockData = (reportId: string) => {
     const mockData: Record<string, any[]> = {
-      'commissions-by-partner': partners.map((partner, index) => ({
-        partnerName: partner.name,
-        affiliateId: partner.id,
-        period: `${new Date().toLocaleDateString('he-IL', { month: 'long' })} 2025`,
-        commissionType: partner.commissionPercentage ? 'אחוז' : 'קבוע',
-        commissionRate: partner.commissionPercentage || 10,
-        totalSales: Math.floor(Math.random() * 100000) + 10000,
-        commissionAmount: Math.floor(Math.random() * 10000) + 1000,
-        status: ['ממתין', 'מאושר', 'שולם'][Math.floor(Math.random() * 3)],
-        calculationDate: new Date().toISOString(),
-        notes: `עמלת חודש ${new Date().toLocaleDateString('he-IL', { month: 'long' })}`
-      })),
       'payouts-executed': partners.map((partner, index) => ({
         paymentId: `P-2025-${String(index + 1).padStart(3, '0')}`,
         partnerName: partner.name,
@@ -467,16 +396,6 @@ const SmartReportsSystem: React.FC<SmartReportsSystemProps> = ({ partners, onExp
         { marketingChannel: 'גוגל', totalVisits: 2000, leadsReceived: 200, conversionRate: 18, totalRevenue: 40000, averageCostPerLead: 120, roi: 250 },
         { marketingChannel: 'וואטסאפ', totalVisits: 1000, leadsReceived: 150, conversionRate: 25, totalRevenue: 25000, averageCostPerLead: 60, roi: 300 }
       ],
-      'active-partners-report': partners.map((partner, index) => ({
-        affiliateId: partner.id,
-        partnerName: partner.name,
-        status: partner.status,
-        leadsCount: Math.floor(Math.random() * 100) + 10,
-        transactionsCount: Math.floor(Math.random() * 50) + 5,
-        totalRevenue: Math.floor(Math.random() * 100000) + 10000,
-        lastActivity: new Date().toISOString(),
-        changeFromPreviousMonth: Math.floor(Math.random() * 40) - 20
-      })),
       'partners-leaderboard': partners.map((partner, index) => ({
         rank: index + 1,
         partnerName: partner.name,
@@ -485,16 +404,6 @@ const SmartReportsSystem: React.FC<SmartReportsSystemProps> = ({ partners, onExp
         conversionRate: Math.floor(Math.random() * 30) + 10,
         period: `${new Date().toLocaleDateString('he-IL', { month: 'long' })} 2025`,
         rankChange: index === 0 ? '⬆️' : index === 1 ? '⬇️' : '➡️'
-      })),
-      'partners-registry': partners.map(partner => ({
-        affiliateId: partner.id,
-        fullName: partner.name,
-        email: partner.email,
-        phone: partner.phone,
-        status: partner.status,
-        programType: 'Basic',
-        joinDate: partner.joinDate,
-        referralSource: 'אתר'
       })),
       'audit-log': Array.from({ length: 20 }, (_, i) => ({
         actionDate: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),

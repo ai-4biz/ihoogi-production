@@ -1190,14 +1190,32 @@ const PartnersManagement: React.FC = () => {
         {/* Reports Tab Content */}
         {activeTab === 'reports' && (
           <div className="space-y-8">
+            {/* Smart Reports System */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-right text-xl font-bold flex items-center gap-2">
+                  <BarChart3 className="h-6 w-6 text-purple-600" />
+                  מערכת דוחות חכמה 👑
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <SmartReportsSystem
+                  partners={partners}
+                  onExport={(data, reportType) => {
+                    console.log('Exporting smart report:', reportType, data);
+                  }}
+                />
+              </CardContent>
+            </Card>
+
             {/* Partner Report */}
             <Card>
               <CardHeader>
                 <CardTitle className="text-right text-xl font-bold flex items-center gap-2">
                   <Users className="h-6 w-6 text-blue-600" />
-                  דוח שותף מפורט
+                  דוח שותפים מפורט
                 </CardTitle>
-                <p className="text-right text-gray-600 text-sm">דוח מפורט עם כל הפרטים של השותף והמנויים שלו</p>
+                <p className="text-right text-gray-600 text-sm">דוח מפורט עם כל הפרטים של השותפים והמנויים שלהם</p>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
@@ -1532,24 +1550,6 @@ const PartnersManagement: React.FC = () => {
                     </div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* Smart Reports System */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-right text-xl font-bold flex items-center gap-2">
-                  <BarChart3 className="h-6 w-6 text-purple-600" />
-                  מערכת דוחות חכמה 👑
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <SmartReportsSystem
-                  partners={partners}
-                  onExport={(data, reportType) => {
-                    console.log('Exporting smart report:', reportType, data);
-                  }}
-                />
               </CardContent>
             </Card>
           </div>
