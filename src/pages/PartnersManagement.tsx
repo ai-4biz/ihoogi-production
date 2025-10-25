@@ -47,7 +47,9 @@ import {
   Globe,
   ChevronDown,
   StickyNote,
-  MessageCircle
+  MessageCircle,
+  Upload,
+  Search
 } from 'lucide-react';
 import { toast } from 'sonner';
 import MainLayout from '@/components/layout/MainLayout';
@@ -143,7 +145,6 @@ const PartnersManagement: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [activeTab, setActiveTab] = useState<'partners' | 'new-partner' | 'reports' | 'send-form'>('partners');
-  const [selectedPartner, setSelectedPartner] = useState<Partner | null>(null);
   const [showAddPartner, setShowAddPartner] = useState(false);
   const [showCommissionDialog, setShowCommissionDialog] = useState(false);
   const [showPartnerDetails, setShowPartnerDetails] = useState(false);
@@ -169,12 +170,24 @@ const PartnersManagement: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [strengthFilter, setStrengthFilter] = useState('');
+  
+  // Partner search states
+  const [partnerSearchTerm, setPartnerSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState<Partner[]>([]);
+  const [selectedPartnerForForm, setSelectedPartnerForForm] = useState<Partner | null>(null);
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
   const [regionFilter, setRegionFilter] = useState('');
   const [sourceFilter, setSourceFilter] = useState('');
   const [commissionFilter, setCommissionFilter] = useState('');
   const [leadsFilter, setLeadsFilter] = useState('');
+  
+  // Partner Report states
+  const [selectedPartnerForReport, setSelectedPartnerForReport] = useState<string>('');
+  const [selectedPartnersForReport, setSelectedPartnersForReport] = useState<string[]>([]);
+  const [countryFilter, setCountryFilter] = useState<string>('');
+  const [companyFilter, setCompanyFilter] = useState<string>('');
+  const [dateFilter, setDateFilter] = useState<string>('');
   
   // User profile data (should come from user context)
   const userProfile = {
@@ -340,6 +353,7 @@ const PartnersManagement: React.FC = () => {
     { value: 'fixed_monthly', label: 'עמלה חודשית קבועה', icon: Calendar },
     { value: 'percentage_monthly', label: 'עמלה חודשית באחוזים', icon: TrendingUp },
     { value: 'one_time', label: 'עמלה חד פעמית', icon: DollarSign },
+    { value: 'yearly_12_split', label: 'מנוי שנתי (חלוקה ל-12 חודשים)', icon: Calendar },
     { value: 'mixed', label: 'עמלה מעורבת', icon: Building },
     { value: 'user_based', label: 'עמלה לפי משתמשים', icon: UserCheck },
     { value: 'time_based', label: 'עמלה לפי זמן', icon: Clock }
@@ -401,6 +415,38 @@ const PartnersManagement: React.FC = () => {
 
   const handleSubStatusChange = (partnerId: string, subStatus: string) => {
     setPartnerSubStatuses(prev => ({ ...prev, [partnerId]: subStatus }));
+  };
+
+  // Function to search partners
+  const searchPartners = (searchTerm: string) => {
+    if (!searchTerm.trim()) {
+      setSearchResults([]);
+      return;
+    }
+    
+    const filtered = partners.filter(partner => 
+      partner.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      partner.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      partner.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      partner.phone.includes(searchTerm)
+    );
+    
+    setSearchResults(filtered);
+  };
+
+  // Function to handle partner search input change
+  const handlePartnerSearchChange = (value: string) => {
+    setPartnerSearchTerm(value);
+    searchPartners(value);
+  };
+
+  // Function to fill form with partner data
+  const fillFormWithPartnerData = (partner: Partner) => {
+    // הצגת הודעה שהטופס מולא
+    toast.success('הטופס מולא בפרטי השותף שנבחר');
+    
+    // עדכון השותף שנבחר
+    setSelectedPartnerForForm(partner);
   };
 
   const getSubStatusOptions = (status: string) => {
@@ -467,6 +513,88 @@ const PartnersManagement: React.FC = () => {
     link.click();
   };
 
+  const generateExcelReport = () => {
+    // יצירת Excel עם כל הפרטים
+    const excelData = [
+      ['שם שותף', 'אימייל', 'טלפון', 'סטטוס', 'תאריך הצטרפות', 'סך לידים', 'סך מכירות', 'סך עמלות', 'עמלות חודשיות', 'אחוז עמלה', 'אחוז המרה', 'פעילות אחרונה', 'אזור', 'מקור'],
+      ...partners.map(partner => [
+        partner.name,
+        partner.email,
+        partner.phone,
+        getStatusText(partner.status),
+        partner.joinDate,
+        partner.totalLeads.toString(),
+        partner.totalSales.toString(),
+        partner.totalEarnings.toString(),
+        partner.monthlyEarnings.toString(),
+        partner.commissionPercentage.toString(),
+        partner.conversionRate.toString(),
+        partner.lastActivity,
+        partner.region || '',
+        partner.source || ''
+      ])
+    ];
+
+    // המרה ל-CSV (Excel יכול לקרוא CSV)
+    const csvContent = excelData.map(row => 
+      row.map(cell => `"${cell}"`).join(',')
+    ).join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `דוח_שותפים_מפורט_${new Date().toLocaleDateString('he-IL')}.xlsx`;
+    link.click();
+    
+    toast.success("דוח Excel נוצר בהצלחה!");
+  };
+
+  const generateDetailedPartnerReport = () => {
+    const selectedPartner = partners.find(p => p.id === selectedPartnerForReport);
+    if (!selectedPartner) return;
+
+    // יצירת דוח מפורט עם השדות שביקשת
+    const excelData = [
+      ['דוח שותף מפורט', ''],
+      ['תאריך יצירת הדוח', new Date().toLocaleDateString('he-IL')],
+      [''],
+      ['פרטי השותף', ''],
+      ['שם השותף', selectedPartner.name],
+      ['אימייל', selectedPartner.email],
+      ['טלפון', selectedPartner.phone],
+      ['תאריך הצטרפות', selectedPartner.joinDate],
+      ['סטטוס', getStatusText(selectedPartner.status)],
+      [''],
+      ['נתוני מנויים', ''],
+      ['שם מנוי', 'תאריך הצטרפות', 'סוג מנוי', 'גובה מנוי', 'תוספות נלוות', 'סטטוס מנוי', 'תאריך חידוש/ביטול', 'רשת מקור', 'גובה עמלה צפוי', 'סטטוס תשלום עמלה'],
+      // דוגמה למנויים (במציאות זה יבוא מהמסד נתונים)
+      ['יוסי כהן', '15/01/2024', 'פרימיום', '₪299/חודש', 'תמיכה 24/7, אחסון מוגבר', 'פעיל', '15/02/2024', 'פייסבוק', '₪89.70', 'שולם'],
+      ['שרה לוי', '20/01/2024', 'בסיסי', '₪99/חודש', 'אין', 'פעיל', '20/02/2024', 'גוגל', '₪29.70', 'שולם'],
+      ['דוד ישראלי', '10/02/2024', 'מקצועי', '₪499/חודש', 'תמיכה VIP, אחסון ללא הגבלה', 'הוקפא', '10/03/2024', 'אינסטגרם', '₪149.70', 'בהמתנה'],
+      [''],
+      ['סיכום', ''],
+      ['סך מנויים פעילים', '2'],
+      ['סך מנויים הוקפאו', '1'],
+      ['סך מנויים בוטלו', '0'],
+      ['סך עמלות צפויות', '₪269.10'],
+      ['סך עמלות שולמו', '₪119.40'],
+      ['סך עמלות בהמתנה', '₪149.70']
+    ];
+
+    // המרה ל-CSV (Excel יכול לקרוא CSV)
+    const csvContent = excelData.map(row => 
+      row.map(cell => `"${cell}"`).join(',')
+    ).join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `דוח_שותף_מפורט_${selectedPartner.name}_${new Date().toLocaleDateString('he-IL')}.xlsx`;
+    link.click();
+    
+    toast.success(`דוח מפורט נוצר עבור ${selectedPartner.name}!`);
+  };
+
   // Filtered partners
   const filteredPartners = partners.filter(partner => {
     const matchesSearch = !searchTerm || partner.name.toLowerCase().includes(searchTerm.toLowerCase()) || partner.email.toLowerCase().includes(searchTerm.toLowerCase());
@@ -518,7 +646,7 @@ const PartnersManagement: React.FC = () => {
                 <DialogTitle className="text-right text-xl font-bold">הוספת שותף חדש</DialogTitle>
               </DialogHeader>
               <div className="p-2">
-                <AddPartnerForm onClose={() => setShowAddPartner(false)} />
+                <AddPartnerForm onClose={() => setShowAddPartner(false)} fillFormWithPartnerData={fillFormWithPartnerData} selectedPartner={selectedPartnerForForm} />
               </div>
             </DialogContent>
           </Dialog>
@@ -593,21 +721,117 @@ const PartnersManagement: React.FC = () => {
               שלח טופס לשותף
             </TabsTrigger>
             <TabsTrigger value="new-partner" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
-              שותף חדש
+              פרטי שותפים
             </TabsTrigger>
           </TabsList>
         </Tabs>
 
-        {/* New Partner Tab Content */}
+        {/* Partner Details Tab Content */}
         {activeTab === 'new-partner' && (
           <div className="space-y-8">
-            <AddPartnerForm onClose={() => setActiveTab('partners')} />
+            {/* Edit Existing Partner Section */}
+            <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50">
+              <CardHeader className="bg-blue-100/50 rounded-t-lg">
+                <CardTitle className="text-right text-xl font-bold text-blue-800 flex items-center gap-2">
+                  <Edit className="h-5 w-5 text-blue-600" />
+                  ערוך שותף קיים
+                </CardTitle>
+                <p className="text-right text-blue-600 text-sm">חפש שותף קיים כדי לערוך את פרטיו</p>
+              </CardHeader>
+              <CardContent className="bg-white/70 rounded-b-lg">
+                <div className="grid grid-cols-1 md:grid-cols-6 gap-3">
+                  {/* נקה סינון */}
+                  <div className="flex items-end">
+                    <Button variant="outline" size="sm" className="border-blue-200 text-blue-600 hover:bg-blue-50 w-full text-xs">
+                      <RefreshCw className="h-3 w-3 mr-1" />
+                      נקה
+                    </Button>
+                  </div>
+                  
+                  {/* חיפוש לפי שם */}
+                  <div>
+                    <Label htmlFor="searchName" className="text-right block mb-1 text-xs font-medium">שם</Label>
+                    <Input
+                      id="searchName"
+                      placeholder="שם שותף..."
+                      className="text-right border-blue-200 focus:border-blue-400 text-sm"
+                    />
+                  </div>
+                  
+                  {/* חיפוש לפי אימייל */}
+                  <div>
+                    <Label htmlFor="searchEmail" className="text-right block mb-1 text-xs font-medium">אימייל</Label>
+                    <Input
+                      id="searchEmail"
+                      placeholder="אימייל שותף..."
+                      className="text-right border-blue-200 focus:border-blue-400 text-sm"
+                    />
+                  </div>
+                  
+                  {/* סינון לפי מדינה */}
+                  <div>
+                    <Label htmlFor="filterCountry" className="text-right block mb-1 text-xs font-medium">מדינה</Label>
+                    <Select>
+                      <SelectTrigger className="text-right border-blue-200 focus:border-blue-400 text-sm h-9">
+                        <SelectValue placeholder="בחר" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="israel">ישראל</SelectItem>
+                        <SelectItem value="usa">ארצות הברית</SelectItem>
+                        <SelectItem value="uk">בריטניה</SelectItem>
+                        <SelectItem value="germany">גרמניה</SelectItem>
+                        <SelectItem value="france">צרפת</SelectItem>
+                        <SelectItem value="all">כל המדינות</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  {/* כפתור חפש */}
+                  <div className="flex items-end">
+                    <Button size="sm" className="bg-blue-600 hover:bg-blue-700 w-full text-xs h-9">
+                      <Search className="h-3 w-3 mr-1" />
+                      חפש
+                    </Button>
+                  </div>
+                  
+                  {/* כפתור עדכון */}
+                  <div className="flex items-end">
+                    <Button size="sm" className="bg-green-600 hover:bg-green-700 w-full text-xs h-9">
+                      <Edit className="h-3 w-3 mr-1" />
+                      עדכון
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Divider */}
+            <div className="flex items-center gap-4">
+              <div className="flex-1 h-px bg-gray-300"></div>
+              <div className="text-gray-500 font-medium">או הוסף שותף חדש</div>
+              <div className="flex-1 h-px bg-gray-300"></div>
+            </div>
+            
+            {/* Add New Partner Form */}
+            <Card className="border-green-200 bg-gradient-to-br from-green-50 to-emerald-50">
+              <CardHeader className="bg-green-100/50 rounded-t-lg">
+                <CardTitle className="text-right text-xl font-bold text-green-800 flex items-center gap-2">
+                  <Plus className="h-5 w-5 text-green-600" />
+                  הוספת שותף חדש
+                </CardTitle>
+                <p className="text-right text-green-600 text-sm">הוסף שותף חדש למערכת</p>
+              </CardHeader>
+              <CardContent className="bg-white/70 rounded-b-lg">
+                <AddPartnerForm onClose={() => setActiveTab('partners')} fillFormWithPartnerData={fillFormWithPartnerData} selectedPartner={selectedPartnerForForm} />
+              </CardContent>
+            </Card>
           </div>
         )}
 
         {/* Partners Tab Content */}
         {activeTab === 'partners' && (
           <div className="space-y-8">
+            {/* Stats Cards */}
             {/* Smart Partners Generator */}
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -619,7 +843,15 @@ const PartnersManagement: React.FC = () => {
                     className="px-4 py-2"
                   >
                     <FileText className="h-4 w-4 ml-2" />
-                    דוח לשותף
+                    דוח קצר לשותף
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => generateExcelReport()}
+                    className="px-4 py-2 text-green-600 hover:text-green-700"
+                  >
+                    <Download className="h-4 w-4 ml-2" />
+                    ייצוא Excel
                   </Button>
                   <Button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2">
                     <Plus className="h-4 w-4 ml-2" />
@@ -958,6 +1190,351 @@ const PartnersManagement: React.FC = () => {
         {/* Reports Tab Content */}
         {activeTab === 'reports' && (
           <div className="space-y-8">
+            {/* Partner Report */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-right text-xl font-bold flex items-center gap-2">
+                  <Users className="h-6 w-6 text-blue-600" />
+                  דוח שותף מפורט
+                </CardTitle>
+                <p className="text-right text-gray-600 text-sm">דוח מפורט עם כל הפרטים של השותף והמנויים שלו</p>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {/* Advanced Search and Selection */}
+                  <div className="space-y-4">
+                    {/* Advanced Search */}
+                    <div className="bg-blue-50 rounded-lg p-4">
+                      <h4 className="text-right font-semibold text-blue-800 mb-3">חיפוש מתקדם</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <Label className="text-right text-sm font-medium mb-2 block">חיפוש לפי שם</Label>
+                          <Input
+                            placeholder="הקלד שם שותף..."
+                            className="text-right"
+                            value={partnerSearchTerm}
+                            onChange={(e) => setPartnerSearchTerm(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-right text-sm font-medium mb-2 block">סינון לפי מדינה</Label>
+                          <Select onValueChange={(value) => setCountryFilter(value)}>
+                            <SelectTrigger className="text-right">
+                              <SelectValue placeholder="בחר מדינה" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="">כל המדינות</SelectItem>
+                              <SelectItem value="israel">ישראל</SelectItem>
+                              <SelectItem value="usa">ארצות הברית</SelectItem>
+                              <SelectItem value="uk">בריטניה</SelectItem>
+                              <SelectItem value="germany">גרמניה</SelectItem>
+                              <SelectItem value="france">צרפת</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label className="text-right text-sm font-medium mb-2 block">סינון לפי סטטוס</Label>
+                          <Select onValueChange={(value) => setStatusFilter(value)}>
+                            <SelectTrigger className="text-right">
+                              <SelectValue placeholder="בחר סטטוס" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="">כל הסטטוסים</SelectItem>
+                              <SelectItem value="active">פעיל</SelectItem>
+                              <SelectItem value="inactive">לא פעיל</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                        <div>
+                          <Label className="text-right text-sm font-medium mb-2 block">סינון לפי חברה</Label>
+                          <Input
+                            placeholder="הקלד שם חברה..."
+                            className="text-right"
+                            value={companyFilter}
+                            onChange={(e) => setCompanyFilter(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-right text-sm font-medium mb-2 block">סינון לפי תאריך הצטרפות</Label>
+                          <Input
+                            type="date"
+                            className="text-right"
+                            value={dateFilter}
+                            onChange={(e) => setDateFilter(e.target.value)}
+                          />
+                        </div>
+                        <div className="flex items-end">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              setPartnerSearchTerm('');
+                              setCountryFilter('');
+                              setStatusFilter('');
+                              setCompanyFilter('');
+                              setDateFilter('');
+                            }}
+                            className="w-full"
+                          >
+                            <RefreshCw className="h-4 w-4 mr-2" />
+                            נקה סינון
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Partners List with Checkboxes */}
+                    <div className="bg-gray-50 rounded-lg p-4 max-h-60 overflow-y-auto">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="text-sm font-medium text-gray-700">
+                          בחר שותפים לדוח ({selectedPartnersForReport.length} נבחרו)
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => setSelectedPartnersForReport(partners.map(p => p.id))}
+                            className="text-xs"
+                          >
+                            בחר הכל
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => setSelectedPartnersForReport([])}
+                            className="text-xs"
+                          >
+                            בטל הכל
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        {partners
+                          .filter(partner => {
+                            // חיפוש לפי שם ואימייל
+                            const nameMatch = !partnerSearchTerm || 
+                              partner.name.toLowerCase().includes(partnerSearchTerm.toLowerCase()) ||
+                              partner.email.toLowerCase().includes(partnerSearchTerm.toLowerCase());
+                            
+                            // סינון לפי מדינה
+                            const countryMatch = !countryFilter || partner.country === countryFilter;
+                            
+                            // סינון לפי סטטוס
+                            const statusMatch = !statusFilter || partner.status === statusFilter;
+                            
+                            // סינון לפי חברה
+                            const companyMatch = !companyFilter || 
+                              (partner.company && partner.company.toLowerCase().includes(companyFilter.toLowerCase()));
+                            
+                            // סינון לפי תאריך
+                            const dateMatch = !dateFilter || partner.joinDate === dateFilter;
+                            
+                            return nameMatch && countryMatch && statusMatch && companyMatch && dateMatch;
+                          })
+                          .map((partner) => (
+                            <div key={partner.id} className="flex items-center justify-between p-2 bg-white rounded border hover:bg-gray-50">
+                              <div className="flex items-center gap-3">
+                                <Checkbox
+                                  checked={selectedPartnersForReport.includes(partner.id)}
+                                  onCheckedChange={(checked) => {
+                                    if (checked) {
+                                      setSelectedPartnersForReport([...selectedPartnersForReport, partner.id]);
+                                    } else {
+                                      setSelectedPartnersForReport(selectedPartnersForReport.filter(id => id !== partner.id));
+                                    }
+                                  }}
+                                />
+                                <div className="text-right">
+                                  <div className="font-medium text-sm">{partner.name}</div>
+                                  <div className="text-xs text-gray-600">{partner.email}</div>
+                                </div>
+                              </div>
+                              <Badge 
+                                variant={partner.status === 'active' ? 'default' : 'secondary'}
+                                className={partner.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}
+                              >
+                                {partner.status === 'active' ? 'פעיל' : 'לא פעיל'}
+                              </Badge>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-3">
+                      <Button 
+                        onClick={() => generateDetailedPartnerReport()}
+                        disabled={selectedPartnersForReport.length === 0}
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2"
+                      >
+                        <FileText className="h-4 w-4 ml-2" />
+                        צור דוח מפורט ({selectedPartnersForReport.length})
+                      </Button>
+                      <Button 
+                        onClick={() => exportPartnersToExcel()}
+                        disabled={selectedPartnersForReport.length === 0}
+                        variant="outline"
+                        className="border-green-200 text-green-600 hover:bg-green-50 px-6 py-2"
+                      >
+                        <Download className="h-4 w-4 ml-2" />
+                        הורד אקסל ({selectedPartnersForReport.length})
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Report Preview */}
+                  {selectedPartnersForReport.length > 0 && (
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <h3 className="text-right font-semibold mb-4">
+                        תצוגה מקדימה של הדוח ({selectedPartnersForReport.length} שותפים נבחרו):
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {selectedPartnersForReport.map((partnerId) => {
+                          const partner = partners.find(p => p.id === partnerId);
+                          if (!partner) return null;
+                          
+                          return (
+                            <div key={partnerId} className="bg-white rounded-lg p-3 border">
+                              <div className="text-sm text-gray-600 mb-1">שותף נבחר</div>
+                              <div className="font-medium">{partner.name}</div>
+                              <div className="text-xs text-gray-500">{partner.email}</div>
+                              <Badge 
+                                variant={partner.status === 'active' ? 'default' : 'secondary'}
+                                className={partner.status === 'active' ? 'bg-green-100 text-green-800 mt-2' : 'bg-gray-100 text-gray-800 mt-2'}
+                              >
+                                {partner.status === 'active' ? 'פעיל' : 'לא פעיל'}
+                              </Badge>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Report Example */}
+                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-6 border border-green-200">
+                    <h3 className="text-right font-semibold text-green-800 mb-4 flex items-center gap-2">
+                      <FileText className="h-5 w-5 text-green-600" />
+                      דוגמה לדוח שותף
+                    </h3>
+                    <div className="bg-white rounded-lg p-4 border border-green-200">
+                      <div className="text-right">
+                        <h4 className="font-bold text-lg mb-4 text-gray-800">דוח שותף: יוסי כהן</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div>
+                            <h5 className="font-semibold text-gray-700 mb-3">פרטי השותף</h5>
+                            <div className="space-y-2 text-sm">
+                              <div className="flex justify-between">
+                                <span className="text-gray-600">שם מלא:</span>
+                                <span className="font-medium">יוסי כהן</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-gray-600">אימייל:</span>
+                                <span className="font-medium">yossi@example.com</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-gray-600">טלפון:</span>
+                                <span className="font-medium">050-1234567</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-gray-600">חברה:</span>
+                                <span className="font-medium">כהן ושות'</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-gray-600">מדינה:</span>
+                                <span className="font-medium">ישראל</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div>
+                            <h5 className="font-semibold text-gray-700 mb-3">פרטי עמלה</h5>
+                            <div className="space-y-2 text-sm">
+                              <div className="flex justify-between">
+                                <span className="text-gray-600">סוג עמלה:</span>
+                                <span className="font-medium">אחוז</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-gray-600">אחוז עמלה:</span>
+                                <span className="font-medium">30%</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-gray-600">תדירות תשלום:</span>
+                                <span className="font-medium">חודשי</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-gray-600">אמצעי תשלום:</span>
+                                <span className="font-medium">העברה בנקאית</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-gray-600">סטטוס:</span>
+                                <Badge className="bg-green-100 text-green-800">פעיל</Badge>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="mt-6">
+                          <h5 className="font-semibold text-gray-700 mb-3">מנויים של השותף</h5>
+                          <div className="overflow-x-auto">
+                            <table className="w-full text-sm">
+                              <thead className="bg-gray-50">
+                                <tr>
+                                  <th className="px-3 py-2 text-right text-gray-600">שם מנוי</th>
+                                  <th className="px-3 py-2 text-right text-gray-600">תאריך הצטרפות</th>
+                                  <th className="px-3 py-2 text-right text-gray-600">סוג מנוי</th>
+                                  <th className="px-3 py-2 text-right text-gray-600">עמלה צפויה</th>
+                                  <th className="px-3 py-2 text-right text-gray-600">סטטוס</th>
+                                </tr>
+                              </thead>
+                              <tbody className="divide-y divide-gray-200">
+                                <tr>
+                                  <td className="px-3 py-2">דני לוי</td>
+                                  <td className="px-3 py-2">15/01/2024</td>
+                                  <td className="px-3 py-2">פרימיום</td>
+                                  <td className="px-3 py-2">₪89.70</td>
+                                  <td className="px-3 py-2">
+                                    <Badge className="bg-green-100 text-green-800">פעיל</Badge>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td className="px-3 py-2">שרה כהן</td>
+                                  <td className="px-3 py-2">22/01/2024</td>
+                                  <td className="px-3 py-2">בסיסי</td>
+                                  <td className="px-3 py-2">₪29.90</td>
+                                  <td className="px-3 py-2">
+                                    <Badge className="bg-green-100 text-green-800">פעיל</Badge>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td className="px-3 py-2">מיכל רוזן</td>
+                                  <td className="px-3 py-2">05/02/2024</td>
+                                  <td className="px-3 py-2">פרימיום</td>
+                                  <td className="px-3 py-2">₪89.70</td>
+                                  <td className="px-3 py-2">
+                                    <Badge className="bg-blue-100 text-blue-800">ממתין</Badge>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                        
+                        <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                          <div className="flex justify-between items-center text-sm">
+                            <span className="text-gray-600">סה"כ עמלה צפויה החודש:</span>
+                            <span className="font-bold text-blue-800">₪209.30</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Smart Reports System */}
             <Card>
               <CardHeader>
@@ -1173,53 +1750,104 @@ const PartnersManagement: React.FC = () => {
                 <div className="border-b border-gray-200 pb-6">
                   <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                     <FileText className="h-6 w-6 text-orange-600" />
-                    הסכם שותפות
+                    חוקים כלליים לשותפים
                   </h2>
                   <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
                     <div className="space-y-6 text-sm text-gray-700 leading-relaxed">
                       
                       <div>
-                        <p className="font-bold text-lg mb-2">הסכם שותפות בין {userProfile.businessName} לבין השותף</p>
+                        <p className="font-bold text-lg mb-2">חוקים כלליים לשותפים</p>
                         <p className="text-gray-600 text-xs">תאריך: {new Date().toLocaleDateString('he-IL')}</p>
-                        <p className="text-gray-600 text-xs">מסמך רשמי של {userProfile.businessName}</p>
+                        <p className="text-gray-600 text-xs">מסמך רשמי - כללים בסיסיים לשותפים</p>
                       </div>
                       
                       <div>
                         <p className="font-bold mb-2">1. הגדרות כלליות:</p>
-                        <p className="mr-4">השותף מתחייב לפעול בהתאם לתנאי ההסכם ולחוקי המדינה. השותף יקבל עמלה לפי התנאים המפורטים לעיל.</p>
-                        <p className="mr-4">השותף מתחייב לייצג את {userProfile.businessName} בצורה מקצועית ומכובדת.</p>
+                        <p className="mr-4">השותף מתחייב לפעול בהתאם לתנאי ההסכם ולחוקי המדינה. השותף יקבל עמלה לפי התנאים המפורטים בהסכם הספציפי.</p>
+                        <p className="mr-4">השותף מתחייב לייצג את החברה בצורה מקצועית ומכובדת.</p>
                       </div>
                       
                       <div>
                         <p className="font-bold mb-2">2. עמלות ותשלומים:</p>
-                        <p className="mr-4">העמלה תשולם לפי התנאים המפורטים לעיל: {commissionData.type === 'percentage' ? `${commissionData.percentage}% מהמכירות` : 'סכום קבוע'}, בתדירות {commissionData.frequency === 'monthly' ? 'חודשית' : commissionData.frequency === 'weekly' ? 'שבועית' : 'רבעונית'}.</p>
-                        <p className="mr-4">התשלום יבוצע באמצעות: {commissionData.paymentMethod === 'bank_transfer' ? 'העברה בנקאית' : commissionData.paymentMethod === 'credit_card' ? 'כרטיס אשראי' : commissionData.paymentMethod === 'paypal' ? 'PayPal' : 'מטבע דיגיטלי'}.</p>
+                        <p className="mr-4">העמלה תשולם לפי התנאים המפורטים בטופס זה.</p>
+                        <p className="mr-4">התשלום יבוצע באמצעות אמצעי התשלום המפורטים בטופס זה.</p>
                         <p className="mr-4">כל התשלומים יבוצעו בחשבון הבנק של השותף כפי שמופיע בטופס זה.</p>
                       </div>
                       
                       <div>
                         <p className="font-bold mb-2">3. חובות השותף:</p>
-                        <p className="mr-4">השותף מתחייב לפעול ביושר ובהתאם לכללי החברה. השותף לא יפעל נגד האינטרסים של {userProfile.businessName}.</p>
-                        <p className="mr-4">השותף מתחייב לשמור על סודיות המידע העסקי של {userProfile.businessName}.</p>
+                        <p className="mr-4">השותף מתחייב לפעול ביושר ובהתאם לכללי החברה. השותף לא יפעל נגד האינטרסים של החברה.</p>
+                        <p className="mr-4">השותף מתחייב לשמור על סודיות המידע העסקי של החברה.</p>
                       </div>
                       
                       <div>
                         <p className="font-bold mb-2">4. חובות החברה:</p>
-                        <p className="mr-4">{userProfile.businessName} מתחייבת לספק לשותף את כל המידע והכלים הנדרשים לביצוע עבודתו.</p>
+                        <p className="mr-4">החברה מתחייבת לספק לשותף את כל המידע והכלים הנדרשים לביצוע עבודתו.</p>
                         <p className="mr-4">החברה תספק תמיכה טכנית ומקצועית לשותף לפי הצורך.</p>
                       </div>
                       
                       <div>
                         <p className="font-bold mb-2">5. סיום ההסכם:</p>
                         <p className="mr-4">כל צד רשאי לסיים את ההסכם בהודעה מוקדמת של 30 יום. במקרה של הפרת תנאי ההסכם, ההסכם יסתיים מיידית.</p>
-                        <p className="mr-4">במקרה של סיום ההסכם, השותף מתחייב להחזיר את כל החומרים והמידע של {userProfile.businessName}.</p>
+                        <p className="mr-4">במקרה של סיום ההסכם, השותף מתחייב להחזיר את כל החומרים והמידע של החברה.</p>
                       </div>
                       
                       <div>
                         <p className="font-bold mb-2">6. פרטי קשר:</p>
-                        <p className="mr-4">לכל שאלה או בקשה, ניתן לפנות ל-{userProfile.businessName} בטלפון: {userProfile.phone} או באימייל: {userProfile.email}</p>
-                        <p className="mr-4">אתר החברה: {userProfile.website}</p>
+                        <p className="mr-4">לכל שאלה או בקשה, ניתן לפנות לחברה באמצעות פרטי הקשר המופיעים בהסכם הספציפי.</p>
                         <p className="mr-4">הסכם זה נחתם ב-{new Date().toLocaleDateString('he-IL')} ונכנס לתוקף מיידית.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* העלאת הסכם ספציפי */}
+                <div className="border-b border-gray-200 pb-6">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <Upload className="h-6 w-6 text-blue-600" />
+                    הסכם ספציפי לחתימה
+                  </h2>
+                  <div className="bg-blue-50 rounded-xl p-6 border border-blue-200">
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="contractUpload" className="text-sm font-medium text-blue-700 mb-2 block">
+                          העלאת הסכם ספציפי לחתימה
+                        </Label>
+                        <div className="flex items-center gap-3">
+                          <Input
+                            id="contractUpload"
+                            type="file"
+                            accept=".pdf,.doc,.docx"
+                            className="flex-1"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                // כאן יהיה הלוגיקה לשמירת הקובץ
+                                console.log('Contract file uploaded:', file.name);
+                              }
+                            }}
+                          />
+                          <Button variant="outline" size="sm">
+                            <Upload className="h-4 w-4 mr-2" />
+                            העלה קובץ
+                          </Button>
+                        </div>
+                        <p className="text-xs text-blue-600 mt-2">
+                          כאן תוכל להעלות את ההסכם הספציפי שלך (PDF, DOC, DOCX) שיישלח לשותף לחתימה בנוסף לחוקים הכלליים.
+                        </p>
+                      </div>
+                      
+                      <div className="bg-white rounded-lg p-4 border border-blue-200">
+                        <div className="flex items-center gap-2 mb-2">
+                          <FileText className="h-4 w-4 text-blue-600" />
+                          <span className="text-sm font-medium text-blue-800">הוראות לחתימה</span>
+                        </div>
+                        <ul className="text-xs text-blue-700 space-y-1 mr-4">
+                          <li>• ההסכם הספציפי יישלח לשותף יחד עם החוקים הכלליים</li>
+                          <li>• השותף יקבל הודעה באימייל עם קישור לחתימה</li>
+                          <li>• לאחר החתימה, הקובץ החתום יוחזר אוטומטית</li>
+                          <li>• ניתן לעקוב אחרי סטטוס החתימה במערכת</li>
+                        </ul>
                       </div>
                     </div>
                   </div>
@@ -1308,10 +1936,10 @@ const PartnersManagement: React.FC = () => {
             <DialogHeader>
               <DialogTitle className="text-right flex items-center gap-3">
                 <Users className="h-6 w-6 text-blue-600" />
-                פרטי שותף - {selectedPartner?.name}
+                פרטי שותף - {selectedPartnerForNotes?.name}
               </DialogTitle>
             </DialogHeader>
-            {selectedPartner && (
+            {selectedPartnerForNotes && (
               <div className="space-y-6 mt-6">
                 {/* Partner Header */}
                 <div className="flex items-start justify-between bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-lg">
@@ -1320,15 +1948,15 @@ const PartnersManagement: React.FC = () => {
                       <Users className="h-10 w-10 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold text-right">{selectedPartner.name}</h3>
-                      <p className="text-gray-600 text-right">{selectedPartner.company}</p>
-                      <p className="text-sm text-gray-500 text-right">{selectedPartner.email}</p>
+                      <h3 className="text-2xl font-bold text-right">{selectedPartnerForNotes.name}</h3>
+                      <p className="text-gray-600 text-right">{selectedPartnerForNotes.company}</p>
+                      <p className="text-sm text-gray-500 text-right">{selectedPartnerForNotes.email}</p>
                       <div className="flex items-center gap-4 mt-2">
-                        <Badge className={getStatusColor(selectedPartner.status)}>
-                          {getStatusText(selectedPartner.status)}
+                        <Badge className={getStatusColor(selectedPartnerForNotes.status)}>
+                          {getStatusText(selectedPartnerForNotes.status)}
                         </Badge>
                         <span className="text-sm text-gray-500">
-                          הצטרף: {new Date(selectedPartner.joinDate).toLocaleDateString('he-IL')}
+                          הצטרף: {new Date(selectedPartnerForNotes.joinDate).toLocaleDateString('he-IL')}
                         </span>
                       </div>
                     </div>
@@ -1339,25 +1967,25 @@ const PartnersManagement: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   <Card>
                     <CardContent className="p-4 text-center">
-                      <p className="text-2xl font-bold text-blue-600">{selectedPartner.totalLeads}</p>
+                      <p className="text-2xl font-bold text-blue-600">{selectedPartnerForNotes.totalLeads}</p>
                       <p className="text-sm text-gray-500">לידים</p>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardContent className="p-4 text-center">
-                      <p className="text-2xl font-bold text-green-600">{selectedPartner.totalSales}</p>
+                      <p className="text-2xl font-bold text-green-600">{selectedPartnerForNotes.totalSales}</p>
                       <p className="text-sm text-gray-500">מכירות</p>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardContent className="p-4 text-center">
-                      <p className="text-2xl font-bold text-orange-600">{selectedPartner.commissionPercentage}%</p>
+                      <p className="text-2xl font-bold text-orange-600">{selectedPartnerForNotes.commissionPercentage}%</p>
                       <p className="text-sm text-gray-500">עמלה</p>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardContent className="p-4 text-center">
-                      <p className="text-2xl font-bold text-purple-600">₪{selectedPartner.totalEarnings.toLocaleString()}</p>
+                      <p className="text-2xl font-bold text-purple-600">₪{selectedPartnerForNotes.totalEarnings.toLocaleString()}</p>
                       <p className="text-sm text-gray-500">סה"כ עמלות</p>
                     </CardContent>
                   </Card>
@@ -1374,7 +2002,7 @@ const PartnersManagement: React.FC = () => {
                   <CardContent>
                     <div className="flex items-center gap-3">
                       <Input 
-                        value={selectedPartner.uniqueLink} 
+                        value={selectedPartnerForNotes.uniqueLink} 
                         readOnly 
                         className="text-right font-mono text-sm"
                       />
@@ -1382,7 +2010,7 @@ const PartnersManagement: React.FC = () => {
                         variant="outline" 
                         size="sm"
                         onClick={() => {
-                          navigator.clipboard.writeText(selectedPartner.uniqueLink);
+                          navigator.clipboard.writeText(selectedPartnerForNotes.uniqueLink);
                           // TODO: Add toast notification using useToast hook
                         }}
                       >
@@ -1400,13 +2028,13 @@ const PartnersManagement: React.FC = () => {
                 </Card>
 
                 {/* Personal Description */}
-                {selectedPartner.personalDescription && (
+                {selectedPartnerForNotes.personalDescription && (
                   <Card>
                     <CardHeader>
                       <CardTitle className="text-right">תיאור אישי</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-gray-700 text-right">{selectedPartner.personalDescription}</p>
+                      <p className="text-gray-700 text-right">{selectedPartnerForNotes.personalDescription}</p>
                     </CardContent>
                   </Card>
                 )}
@@ -1418,7 +2046,7 @@ const PartnersManagement: React.FC = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
-                      {selectedPartner.monthlyPerformance.map((month, index) => (
+                      {selectedPartnerForNotes.monthlyPerformance.map((month, index) => (
                         <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                           <div className="text-right">
                             <p className="font-medium">{month.month}</p>
@@ -1450,10 +2078,10 @@ const PartnersManagement: React.FC = () => {
                   </CardHeader>
                   <CardContent>
                     <Textarea
-                      value={selectedPartner.internalNotes || ''}
+                      value={selectedPartnerForNotes.internalNotes || ''}
                       onChange={(e) => {
                         // TODO: Update partner internal notes in database
-                        // setPartners(prev => prev.map(p => p.id === selectedPartner.id ? {...p, internalNotes: e.target.value} : p));
+                        // setPartners(prev => prev.map(p => p.id === selectedPartnerForNotes.id ? {...p, internalNotes: e.target.value} : p));
                       }}
                       className="text-right min-h-[100px]"
                       placeholder="הוסף הערות פנימיות על השותף..."
@@ -1504,29 +2132,36 @@ const getCommissionDescription = (type: string): string => {
 };
 
 // Add Partner Form Component
-const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+const AddPartnerForm: React.FC<{ onClose: () => void; fillFormWithPartnerData: (partner: Partner) => void; selectedPartner?: Partner }> = ({ onClose, fillFormWithPartnerData, selectedPartner }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [showSignaturePad, setShowSignaturePad] = useState(false);
   const [signatureData, setSignatureData] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     // פרטים אישיים
     name: '',
-    billingName: '', // שם על החשבונית
     email: '',
     phone: '',
+    whatsapp: '', // WhatsApp
     company: '',
     personalId: '',
     address: '',
     city: '',
     zipCode: '',
+    country: '',
+    state: '', // מחוז/מדינה (לשותפים מחו"ל)
+    region: '', // אזור (לשותפים מחו"ל)
     
     // מסמכים משפטיים מתקדמים
+    contractFile: null as File | null, // העלאת חוזה הסכם
+    contractSigned: false, // סטטוס חתימה על החוזה
+    contractSignedDate: '', // תאריך חתימה
     signedContract: null as File | null,
     termsAccepted: false,
     contractTerms: '',
     
     // פרטים משפטיים נוספים
     businessType: 'individual' as 'individual' | 'company' | 'authorized_dealer', // סוג עצמאי/חברה/עוסק מורשה
+    billingName: '', // שם על החשבונית
     businessNumber: '', // מספר עוסק מורשה
     taxId: '', // מספר זהות/חברה לצורך מס
     businessRegistrationDate: '',
@@ -1613,6 +2248,10 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     userThreshold: '',
     timePeriod: '',
     
+    // מנוי שנתי (12 חודשים)
+    yearlyTotalCommission: '', // סכום העמלה השנתית הכולל
+    yearlyMonthlyCommission: '', // סכום העמלה החודשית (אוטומטי)
+    
     // תנאי תשלום משופרים
     paymentCondition: 'after_one_paid_month' as 'after_one_paid_month' | 'after_lead_month_plus_days' | 'immediate' | 'after_lead_conversion_only',
     paymentDelayDays: 3, // ימים נוספים לאחר התנאי הראשי
@@ -1627,6 +2266,11 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     // הגדרות תשלום חדשות
     paymentForBasicSubscription: true, // תשלום עבור מנוי בסיסי
     paymentForAddons: true, // תשלום עבור תוספות
+    
+    // הגדרות מע"מ
+    commissionIncludesVAT: false, // עמלה כוללת מע"מ
+    paymentBeforeVAT: false, // תשלום לפני מע"מ
+    paymentAfterVAT: false, // תשלום אחרי מע"מ
     
     // הגדרות נוספות
     status: 'active' as 'active' | 'inactive',
@@ -1676,8 +2320,75 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     }
   }, [formData.name]);
 
+  // Fill form when partner is selected
+  React.useEffect(() => {
+    if (selectedPartner) {
+      fillFormWithPartnerDataInternal(selectedPartner);
+    }
+  }, [selectedPartner]);
+
   const handleFieldChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Function to fill form with partner data
+  const fillFormWithPartnerDataInternal = (partner: Partner) => {
+    // מילוי פרטים אישיים
+    setFormData(prev => ({
+      ...prev,
+      // פרטים אישיים
+      name: partner.name || '',
+      email: partner.email || '',
+      phone: partner.phone || '',
+      whatsapp: partner.whatsapp || '',
+      company: partner.company || '',
+      personalId: partner.personalId || '',
+      address: partner.address || '',
+      city: partner.city || '',
+      zipCode: partner.zipCode || '',
+      country: partner.country || '',
+      state: partner.state || '',
+      region: partner.region || '',
+      
+      // פרטי עסק
+      billingName: partner.billingName || '',
+      position: partner.position || '',
+      
+      // פרטי בנק
+      bankName: partner.bankName || '',
+      accountNumber: partner.accountNumber || '',
+      branchNumber: partner.branchNumber || '',
+      swiftBicCode: partner.swiftBicCode || '',
+      ibanNumber: partner.ibanNumber || '',
+      
+      // עמלות
+      commissionType: partner.commissionType || 'percentage',
+      commissionPercentage: partner.commissionPercentage || 0,
+      commissionAmount: partner.commissionAmount || 0,
+      commissionFrequency: partner.commissionFrequency || 'monthly',
+      commissionPaymentMethod: partner.commissionPaymentMethod || 'bank_transfer',
+      commissionCondition: partner.commissionCondition || 'after_one_paid_month',
+      commissionMinPayment: partner.commissionMinPayment || 0,
+      
+      // תשלומים
+      paymentTerms: partner.paymentTerms || 'net_30',
+      paymentMethod: partner.paymentMethod || 'bank_transfer',
+      paymentFrequency: partner.paymentFrequency || 'monthly',
+      paymentCondition: partner.paymentCondition || 'after_one_paid_month',
+      paymentDelayDays: partner.paymentDelayDays || 0,
+      
+      // מסמכים משפטיים
+      contractFile: partner.contractFile || null,
+      contractSigned: partner.contractSigned || false,
+      contractSignedDate: partner.contractSignedDate || '',
+      
+      // סטטוס
+      status: partner.status || 'active',
+      notes: partner.notes || ''
+    }));
+    
+    // הצגת הודעה שהטופס מולא
+    toast.success('הטופס מולא בפרטי השותף שנבחר');
   };
 
   const handleSignatureComplete = (signature: string) => {
@@ -1738,6 +2449,97 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     // TODO: Save partner data and close dialog
     console.log('Saving partner:', formData);
     onClose();
+  };
+
+  const generateNewPartnerExcel = () => {
+    // יצירת Excel עם כל הפרטים של הטופס
+    const excelData = [
+      ['פרטי שותף חדש', ''],
+      ['תאריך יצירה', new Date().toLocaleDateString('he-IL')],
+      [''],
+      ['פרטים אישיים', ''],
+      ['שם מלא', formData.name],
+      ['אימייל', formData.email],
+      ['טלפון', formData.phone],
+      ['WhatsApp', formData.whatsapp],
+      ['חברה', formData.company],
+      ['תעודת זהות', formData.personalId],
+      ['כתובת', formData.address],
+      ['עיר', formData.city],
+      ['מיקוד/קוד דואר', formData.zipCode],
+      ['מדינה', formData.country],
+      ['מחוז/מדינה', formData.state],
+      ['אזור', formData.region],
+      [''],
+      ['חוזה הסכם', ''],
+      ['חוזה הועלה', formData.contractFile ? 'כן' : 'לא'],
+      ['סטטוס חתימה', formData.contractSigned ? 'חתום' : 'ממתין לחתימה'],
+      ['תאריך חתימה', formData.contractSignedDate || ''],
+      [''],
+      ['פרטי עסק', ''],
+      ['שם על החשבונית', formData.billingName],
+      ['סוג עסק', formData.businessType],
+      ['מספר עוסק מורשה', formData.businessNumber],
+      ['מספר זהות/חברה', formData.taxId],
+      ['תאריך רישום עסק', formData.businessRegistrationDate],
+      ['כתובת עסק', formData.businessAddress],
+      ['חתימה מורשית', formData.authorizedSignatory],
+      [''],
+      ['פרטי חשבון בנקאיים', ''],
+      ['שם על החשבון', formData.bankAccountName],
+      ['שם הבנק', formData.bankName],
+      ['מספר סניף', formData.bankBranch],
+      ['שם הסניף', formData.bankBranchName],
+      ['מספר חשבון', formData.accountNumber],
+      [''],
+      ['פרטי העברה לחול', ''],
+      ['שם בעל החשבון באנגלית', formData.beneficiaryName],
+      ['כתובת מלאה', formData.beneficiaryAddress],
+      ['שם הבנק באנגלית', formData.bankNameEnglish],
+      ['כתובת הבנק', formData.bankAddress],
+      ['קוד SWIFT', formData.swiftCode],
+      ['קוד IBAN', formData.ibanCode],
+      [''],
+      ['הגדרות עמלה', ''],
+      ['סוג עמלה', formData.commissionType],
+      ['אחוז עמלה', formData.commissionPercentage?.toString() || ''],
+      ['עמלה חודשית קבועה', formData.monthlyCommission?.toString() || ''],
+      ['עמלה חד פעמית', formData.oneTimeCommission?.toString() || ''],
+      ['תדירות תשלום', formData.paymentFrequency],
+      ['שיטת תשלום', formData.paymentMethod],
+      ['תנאי תשלום', formData.paymentCondition],
+      ['עמלה כוללת מע"מ', formData.commissionIncludesVAT ? 'כן' : 'לא'],
+      ['תשלום לפני מע"מ', formData.paymentBeforeVAT ? 'כן' : 'לא'],
+      ['תשלום אחרי מע"מ', formData.paymentAfterVAT ? 'כן' : 'לא'],
+      [''],
+      ['מנוי שנתי (12 חודשים)', ''],
+      ['סכום עמלה שנתי כולל', formData.yearlyTotalCommission || ''],
+      ['סכום עמלה חודשי', formData.yearlyMonthlyCommission || ''],
+      [''],
+      ['מסמכים', ''],
+      ['חוזה חתום', formData.signedContract ? 'הועלה' : 'לא הועלה'],
+      ['רישיון עסק', formData.businessLicense ? 'הועלה' : 'לא הועלה'],
+      ['פטור ממס', formData.taxExemption ? 'הועלה' : 'לא הועלה'],
+      ['אישור בנק', formData.bankLetter ? 'הועלה' : 'לא הועלה'],
+      ['תעודת זהות', formData.idDocument ? 'הועלה' : 'לא הועלה'],
+      ['תעודת רישום עסק', formData.businessRegistration ? 'הועלה' : 'לא הועלה'],
+      ['אישור הכנסות', formData.incomeCertificate ? 'הועלה' : 'לא הועלה'],
+      ['מסמכים נוספים', formData.additionalDocuments ? 'הועלה' : 'לא הועלה'],
+      ['קבצים נוספים', formData.additionalFiles?.length ? `${formData.additionalFiles.length} קבצים` : 'אין קבצים']
+    ];
+
+    // המרה ל-CSV (Excel יכול לקרוא CSV)
+    const csvContent = excelData.map(row => 
+      row.map(cell => `"${cell}"`).join(',')
+    ).join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `טופס_שותף_חדש_${formData.name || 'ללא_שם'}_${new Date().toLocaleDateString('he-IL')}.xlsx`;
+    link.click();
+    
+    toast.success("טופס שותף חדש נוצר ב-Excel בהצלחה!");
   };
 
   const steps = [
@@ -1811,16 +2613,6 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="billingName" className="text-right">שם על החשבונית</Label>
-                    <Input
-                      id="billingName"
-                      value={formData.billingName}
-                      onChange={(e) => handleFieldChange('billingName', e.target.value)}
-                      className="text-right bg-white"
-                      placeholder="שם שיופיע על החשבונית"
-                    />
-                  </div>
-                  <div>
                     <Label htmlFor="email" className="text-right">אימייל *</Label>
                     <Input
                       id="email"
@@ -1843,6 +2635,16 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                       required
                     />
                   </div>
+                  <div>
+                    <Label htmlFor="whatsapp" className="text-right">WhatsApp</Label>
+                    <Input
+                      id="whatsapp"
+                      value={formData.whatsapp}
+                      onChange={(e) => handleFieldChange('whatsapp', e.target.value)}
+                      className="text-right bg-white"
+                      placeholder="050-1234567"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -1853,6 +2655,16 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   פרטי עסק
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="billingName" className="text-right">שם על החשבונית</Label>
+                    <Input
+                      id="billingName"
+                      value={formData.billingName}
+                      onChange={(e) => handleFieldChange('billingName', e.target.value)}
+                      className="text-right bg-white"
+                      placeholder="שם שיופיע על החשבונית"
+                    />
+                  </div>
                   <div>
                     <Label htmlFor="businessType" className="text-right">סוג עסק *</Label>
                     <Select value={formData.businessType} onValueChange={(value) => handleFieldChange('businessType', value)}>
@@ -1947,7 +2759,7 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="zipCode" className="text-right">מיקוד</Label>
+                      <Label htmlFor="zipCode" className="text-right">מיקוד/קוד דואר</Label>
                       <Input
                         id="zipCode"
                         value={formData.zipCode}
@@ -1956,6 +2768,116 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                         placeholder="1234567"
                       />
                     </div>
+                  </div>
+                  
+                  {/* מדינה ומחוזות */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <Label htmlFor="country" className="text-right">מדינה *</Label>
+                      <Select
+                        value={formData.country}
+                        onValueChange={(value) => handleFieldChange('country', value)}
+                      >
+                        <SelectTrigger className="text-right bg-white">
+                          <SelectValue placeholder="בחר מדינה" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="israel">ישראל</SelectItem>
+                          <SelectItem value="usa">ארצות הברית</SelectItem>
+                          <SelectItem value="uk">בריטניה</SelectItem>
+                          <SelectItem value="canada">קנדה</SelectItem>
+                          <SelectItem value="australia">אוסטרליה</SelectItem>
+                          <SelectItem value="germany">גרמניה</SelectItem>
+                          <SelectItem value="france">צרפת</SelectItem>
+                          <SelectItem value="spain">ספרד</SelectItem>
+                          <SelectItem value="italy">איטליה</SelectItem>
+                          <SelectItem value="netherlands">הולנד</SelectItem>
+                          <SelectItem value="other">אחר</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    {/* מחוז/מדינה (רק אם נבחרה ארה"ב) */}
+                    {formData.country === 'usa' && (
+                      <div>
+                        <Label htmlFor="state" className="text-right">מדינה/מחוז</Label>
+                        <Select
+                          value={formData.state}
+                          onValueChange={(value) => handleFieldChange('state', value)}
+                        >
+                          <SelectTrigger className="text-right bg-white">
+                            <SelectValue placeholder="בחר מדינה" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="alabama">Alabama</SelectItem>
+                            <SelectItem value="alaska">Alaska</SelectItem>
+                            <SelectItem value="arizona">Arizona</SelectItem>
+                            <SelectItem value="arkansas">Arkansas</SelectItem>
+                            <SelectItem value="california">California</SelectItem>
+                            <SelectItem value="colorado">Colorado</SelectItem>
+                            <SelectItem value="connecticut">Connecticut</SelectItem>
+                            <SelectItem value="delaware">Delaware</SelectItem>
+                            <SelectItem value="florida">Florida</SelectItem>
+                            <SelectItem value="georgia">Georgia</SelectItem>
+                            <SelectItem value="hawaii">Hawaii</SelectItem>
+                            <SelectItem value="idaho">Idaho</SelectItem>
+                            <SelectItem value="illinois">Illinois</SelectItem>
+                            <SelectItem value="indiana">Indiana</SelectItem>
+                            <SelectItem value="iowa">Iowa</SelectItem>
+                            <SelectItem value="kansas">Kansas</SelectItem>
+                            <SelectItem value="kentucky">Kentucky</SelectItem>
+                            <SelectItem value="louisiana">Louisiana</SelectItem>
+                            <SelectItem value="maine">Maine</SelectItem>
+                            <SelectItem value="maryland">Maryland</SelectItem>
+                            <SelectItem value="massachusetts">Massachusetts</SelectItem>
+                            <SelectItem value="michigan">Michigan</SelectItem>
+                            <SelectItem value="minnesota">Minnesota</SelectItem>
+                            <SelectItem value="mississippi">Mississippi</SelectItem>
+                            <SelectItem value="missouri">Missouri</SelectItem>
+                            <SelectItem value="montana">Montana</SelectItem>
+                            <SelectItem value="nebraska">Nebraska</SelectItem>
+                            <SelectItem value="nevada">Nevada</SelectItem>
+                            <SelectItem value="new-hampshire">New Hampshire</SelectItem>
+                            <SelectItem value="new-jersey">New Jersey</SelectItem>
+                            <SelectItem value="new-mexico">New Mexico</SelectItem>
+                            <SelectItem value="new-york">New York</SelectItem>
+                            <SelectItem value="north-carolina">North Carolina</SelectItem>
+                            <SelectItem value="north-dakota">North Dakota</SelectItem>
+                            <SelectItem value="ohio">Ohio</SelectItem>
+                            <SelectItem value="oklahoma">Oklahoma</SelectItem>
+                            <SelectItem value="oregon">Oregon</SelectItem>
+                            <SelectItem value="pennsylvania">Pennsylvania</SelectItem>
+                            <SelectItem value="rhode-island">Rhode Island</SelectItem>
+                            <SelectItem value="south-carolina">South Carolina</SelectItem>
+                            <SelectItem value="south-dakota">South Dakota</SelectItem>
+                            <SelectItem value="tennessee">Tennessee</SelectItem>
+                            <SelectItem value="texas">Texas</SelectItem>
+                            <SelectItem value="utah">Utah</SelectItem>
+                            <SelectItem value="vermont">Vermont</SelectItem>
+                            <SelectItem value="virginia">Virginia</SelectItem>
+                            <SelectItem value="washington">Washington</SelectItem>
+                            <SelectItem value="west-virginia">West Virginia</SelectItem>
+                            <SelectItem value="wisconsin">Wisconsin</SelectItem>
+                            <SelectItem value="wyoming">Wyoming</SelectItem>
+                            <SelectItem value="dc">Washington D.C.</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    )}
+                    
+                    {/* אזור (לשותפים מחו"ל) */}
+                    {formData.country && formData.country !== 'israel' && (
+                      <div>
+                        <Label htmlFor="region" className="text-right">אזור/מחוז</Label>
+                        <Input
+                          id="region"
+                          value={formData.region}
+                          onChange={(e) => handleFieldChange('region', e.target.value)}
+                          className="text-right bg-white"
+                          placeholder="הזן אזור או מחוז"
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -1987,28 +2909,156 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 </h4>
                 
                 <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="signedContract" className="text-right">חוזה חתום *</Label>
-                    <div className="flex items-center gap-3 mt-2">
-                      <Input
-                        id="signedContract"
-                        type="file"
-                        accept=".pdf,.doc,.docx"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) handleFileUpload(file, 'signedContract');
-                        }}
-                        className="flex-1"
-                      />
-                      {formData.signedContract && (
-                        <Badge variant="outline" className="text-green-600">
-                          {formData.signedContract.name}
-                        </Badge>
-                      )}
+                  {/* חוזה הסכם */}
+                  <div className="p-4 bg-white rounded-lg border border-purple-200">
+                    <h5 className="font-semibold text-purple-800 mb-3 flex items-center gap-2">
+                      <FileText className="h-4 w-4 text-purple-600" />
+                      חוזה הסכם
+                    </h5>
+                    
+                    {/* העלאת חוזה מקורי */}
+                    <div className="mb-4">
+                      <Label htmlFor="contractFile" className="text-right block mb-2">העלאת חוזה הסכם</Label>
+                      <div className="flex items-center gap-3">
+                        <Input
+                          id="contractFile"
+                          type="file"
+                          accept=".pdf,.doc,.docx"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              handleFieldChange('contractFile', file);
+                            }
+                          }}
+                          className="flex-1"
+                        />
+                        {formData.contractFile && (
+                          <div className="flex items-center gap-2">
+                            <Badge variant="outline" className="text-green-600">
+                              {formData.contractFile.name}
+                            </Badge>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                // הורדת הקובץ המקורי
+                                const url = URL.createObjectURL(formData.contractFile!);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = formData.contractFile!.name;
+                                a.click();
+                                URL.revokeObjectURL(url);
+                              }}
+                            >
+                              <Download className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <p className="text-xs text-gray-600 text-right mt-1">
-                      יש להעלות חוזה שותפים חתום (PDF, DOC, DOCX)
-                    </p>
+
+                    {/* חוזה חתום */}
+                    <div>
+                      <Label htmlFor="signedContract" className="text-right block mb-2">חוזה חתום</Label>
+                      <div className="space-y-3">
+                        {/* אפשרות 1: העלאת קובץ חתום */}
+                        <div>
+                          <Label className="text-sm text-gray-600 mb-2 block">אפשרות 1: העלאת קובץ חתום</Label>
+                          <div className="flex items-center gap-3">
+                            <Input
+                              id="signedContract"
+                              type="file"
+                              accept=".pdf,.doc,.docx"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  handleFileUpload(file, 'signedContract');
+                                  handleFieldChange('contractSigned', true);
+                                  handleFieldChange('contractSignedDate', new Date().toISOString());
+                                }
+                              }}
+                              className="flex-1"
+                            />
+                            {formData.signedContract && (
+                              <div className="flex items-center gap-2">
+                                <Badge variant="outline" className="text-green-600">
+                                  {formData.signedContract.name}
+                                </Badge>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => {
+                                    // הורדת הקובץ החתום
+                                    const url = URL.createObjectURL(formData.signedContract!);
+                                    const a = document.createElement('a');
+                                    a.href = url;
+                                    a.download = formData.signedContract!.name;
+                                    a.click();
+                                    URL.revokeObjectURL(url);
+                                  }}
+                                >
+                                  <Download className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* אפשרות 2: קבלת טופס חתום */}
+                        <div className="border-t pt-3">
+                          <Label className="text-sm text-gray-600 mb-2 block">אפשרות 2: קבלת טופס חתום מהטופס שנשלח</Label>
+                          <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <FileText className="h-4 w-4 text-blue-600" />
+                                <span className="text-sm text-blue-800">טופס חתום מהשותף</span>
+                              </div>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => {
+                                  // כאן יהיה הלוגיקה לקבלת הטופס החתום
+                                  toast.success("הטופס החתום התקבל בהצלחה!");
+                                  handleFieldChange('contractSigned', true);
+                                  handleFieldChange('contractSignedDate', new Date().toISOString());
+                                }}
+                              >
+                                <Download className="h-4 w-4 mr-1" />
+                                קבל טופס חתום
+                              </Button>
+                            </div>
+                            <p className="text-xs text-blue-600 mt-2">
+                              הטופס החתום יגיע אוטומטית לאחר שהשותף ימלא ויחתום על הטופס שנשלח לו
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <p className="text-xs text-gray-600 text-right mt-2">
+                        ניתן לבחור באחת מהאפשרויות: העלאת קובץ חתום או קבלת טופס חתום מהטופס שנשלח לשותף
+                      </p>
+                    </div>
+
+                    {/* סטטוס חתימה */}
+                    <div className="mt-3 p-2 bg-gray-50 rounded border">
+                      <div className="flex items-center gap-2">
+                        {formData.contractSigned ? (
+                          <>
+                            <CheckCircle className="h-4 w-4 text-green-600" />
+                            <span className="text-green-600 font-medium text-sm">חוזה חתום</span>
+                            {formData.contractSignedDate && (
+                              <span className="text-xs text-gray-500">
+                                ({new Date(formData.contractSignedDate).toLocaleDateString('he-IL')})
+                              </span>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            <Clock className="h-4 w-4 text-orange-500" />
+                            <span className="text-orange-600 font-medium text-sm">ממתין לחתימה</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
                   </div>
 
                   {/* מסמכים נוספים */}
@@ -3231,6 +4281,54 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 </div>
               )}
 
+              {formData.commissionType === 'yearly_12_split' && (
+                <div className="p-4 bg-gradient-to-r from-purple-50 to-violet-50 rounded-lg border border-purple-200">
+                  <h5 className="font-semibold text-purple-800 mb-4 flex items-center gap-2">
+                    <Calendar className="h-5 w-5 text-purple-600" />
+                    מנוי שנתי (חלוקה ל-12 חודשים)
+                  </h5>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label className="text-right">סכום העמלה השנתית הכולל (₪)</Label>
+                        <Input
+                          type="number"
+                          value={formData.yearlyTotalCommission}
+                          onChange={(e) => {
+                            const total = parseFloat(e.target.value) || 0;
+                            const monthly = total / 12;
+                            handleFieldChange('yearlyTotalCommission', e.target.value);
+                            handleFieldChange('yearlyMonthlyCommission', monthly.toFixed(2));
+                          }}
+                          className="text-right bg-white"
+                          placeholder="2400"
+                        />
+                        <p className="text-xs text-gray-600 text-right mt-1">
+                          סכום העמלה השנתית הכולל
+                        </p>
+                      </div>
+                      <div>
+                        <Label className="text-right">סכום העמלה החודשית (₪)</Label>
+                        <Input
+                          type="number"
+                          value={formData.yearlyMonthlyCommission}
+                          readOnly
+                          className="text-right bg-gray-100"
+                          placeholder="200"
+                        />
+                        <p className="text-xs text-gray-600 text-right mt-1">
+                          מחושב אוטומטית (1/12 מהסכום השנתי)
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="bg-purple-100 p-3 rounded text-sm text-purple-800">
+                      <strong>מידע:</strong> העמלה השנתית תחולק ל-12 תשלומים חודשיים שווים.
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* הגדרות תשלום */}
               <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
                 <h4 className="font-semibold text-green-800 mb-4 flex items-center gap-2">
@@ -3252,6 +4350,32 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                       checked={formData.paymentForAddons || false}
                       onCheckedChange={(checked) => handleFieldChange('paymentForAddons', checked)}
                     />
+                  </div>
+
+                  {/* הגדרות מע"מ */}
+                  <div className="flex items-center justify-between gap-4 p-3 bg-white rounded-lg border">
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="commissionIncludesVAT"
+                          checked={formData.commissionIncludesVAT || false}
+                          onCheckedChange={(checked) => handleFieldChange('commissionIncludesVAT', checked)}
+                        />
+                        <Label htmlFor="commissionIncludesVAT" className="text-sm font-medium">
+                          כולל מעמ
+                        </Label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id="paymentBeforeVAT"
+                          checked={formData.paymentBeforeVAT || false}
+                          onCheckedChange={(checked) => handleFieldChange('paymentBeforeVAT', checked)}
+                        />
+                        <Label htmlFor="paymentBeforeVAT" className="text-sm font-medium">
+                          לפני מעמ
+                        </Label>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -3402,6 +4526,14 @@ const AddPartnerForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           <div className="flex gap-3">
         <Button variant="outline" onClick={onClose}>
           ביטול
+        </Button>
+        <Button 
+          variant="outline" 
+          onClick={() => generateNewPartnerExcel()}
+          className="text-green-600 hover:text-green-700"
+        >
+          <Download className="h-4 w-4 mr-2" />
+          ייצוא Excel
         </Button>
             {currentStep < 3 ? (
               <Button onClick={handleNext}>
