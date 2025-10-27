@@ -40,6 +40,9 @@ export function generateQuestionnaireThankYouEmail(params: {
   questionnaireTitle: string;
   logoUrl?: string;
   profileImageUrl?: string;
+  businessImageUrl?: string;
+  linkUrl?: string;
+  linkText?: string;
   personalMessage?: string;
 }): string {
   // Get branding or use params
@@ -68,6 +71,22 @@ export function generateQuestionnaireThankYouEmail(params: {
         </div>
       </div>
       
+      <!-- Business Image -->
+      ${params.businessImageUrl ? `
+      <div style="padding: 20px 30px; border-bottom: 1px solid #e5e7eb;">
+        <img src="${params.businessImageUrl}" alt="Business Image" style="width: 100%; height: auto; border-radius: 12px; object-fit: cover;">
+      </div>
+      ` : ''}
+      
+      <!-- Link -->
+      ${params.linkUrl ? `
+      <div style="padding: 20px 30px; text-align: center; border-bottom: 1px solid #e5e7eb;">
+        <a href="${params.linkUrl}" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
+          ${params.linkText || "לצפייה"}
+        </a>
+      </div>
+      ` : ''}
+      
       <!-- Content -->
       <div style="padding: 30px; direction: rtl; text-align: right;">
         <p style="font-size: 16px; color: #4b5563; line-height: 1.6;">תודה רבה על המענה ושהקדשת את הזמן! 👍</p>
@@ -95,6 +114,9 @@ export function generateQuestionnaireReminderEmail(params: {
   questionnaireTitle: string;
   logoUrl?: string;
   profileImageUrl?: string;
+  businessImageUrl?: string;
+  linkUrl?: string;
+  linkText?: string;
   timeLeft?: string;
 }): string {
   // Get branding or use params
@@ -122,6 +144,22 @@ export function generateQuestionnaireReminderEmail(params: {
           <p style="font-size: 16px; color: #059669; font-weight: 600; margin: 0;">תזכורת</p>
         </div>
       </div>
+      
+      <!-- Business Image -->
+      ${params.businessImageUrl ? `
+      <div style="padding: 20px 30px; border-bottom: 1px solid #e5e7eb;">
+        <img src="${params.businessImageUrl}" alt="Business Image" style="width: 100%; height: auto; border-radius: 12px; object-fit: cover;">
+      </div>
+      ` : ''}
+      
+      <!-- Link -->
+      ${params.linkUrl ? `
+      <div style="padding: 20px 30px; text-align: center; border-bottom: 1px solid #e5e7eb;">
+        <a href="${params.linkUrl}" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
+          ${params.linkText || "לצפייה"}
+        </a>
+      </div>
+      ` : ''}
       
       <!-- Content -->
       <div style="padding: 30px; direction: rtl; text-align: right;">

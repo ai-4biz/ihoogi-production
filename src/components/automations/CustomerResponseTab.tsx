@@ -43,6 +43,7 @@ interface TemplateForm {
   logoUrl?: string;
   profileImageUrl?: string;
   linkUrl?: string;
+  linkText?: string;
   uploadedImage?: File;
   useProfileLogo?: boolean;
   useProfileImage?: boolean;
@@ -641,6 +642,31 @@ const CustomerResponseTab = () => {
                       })()}
                     </div>
                   </div>
+                  
+                  {/* Business Image */}
+                  {formData.uploadedImage && (
+                    <div className="p-5 border-b border-gray-200">
+                      <div className="bg-gray-100 rounded-lg overflow-hidden">
+                        <img 
+                          src={URL.createObjectURL(formData.uploadedImage)} 
+                          alt="Business" 
+                          className="w-full h-auto object-cover"
+                        />
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Link */}
+                  {formData.linkUrl && (
+                    <div className="p-5 text-center border-b border-gray-200">
+                      <a 
+                        href={formData.linkUrl} 
+                        className="inline-block px-8 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg font-semibold hover:opacity-90 transition"
+                      >
+                        {formData.linkText || "לצפייה"}
+                      </a>
+                    </div>
+                  )}
                   
                   {/* Content */}
                   <div className="p-6 min-h-[200px] bg-gray-50/30" dir="rtl">
