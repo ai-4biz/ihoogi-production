@@ -551,21 +551,38 @@ const CustomerResponseTab = () => {
                     <div className="flex items-center gap-3">
                       {(() => {
                         const branding = getUserBranding();
+                        console.log('Branding data:', branding); // Debug
                         return (
                           <>
-                            {branding.logoUrl && (
+                            {branding?.logoUrl ? (
                               <img 
                                 src={branding.logoUrl} 
                                 alt="Logo" 
                                 className="h-12 w-12 object-contain"
+                                onError={(e) => {
+                                  console.error('Failed to load logo:', branding.logoUrl);
+                                  e.currentTarget.style.display = 'none';
+                                }}
                               />
+                            ) : (
+                              <div className="h-12 w-12 bg-gray-200 rounded-lg flex items-center justify-center text-gray-400 text-xs">
+                                לוגו
+                              </div>
                             )}
-                            {branding.profileImageUrl && (
+                            {branding?.profileImageUrl ? (
                               <img 
                                 src={branding.profileImageUrl} 
                                 alt="Profile" 
                                 className="h-12 w-12 object-cover rounded-lg"
+                                onError={(e) => {
+                                  console.error('Failed to load profile:', branding.profileImageUrl);
+                                  e.currentTarget.style.display = 'none';
+                                }}
                               />
+                            ) : (
+                              <div className="h-12 w-12 bg-gray-200 rounded-lg flex items-center justify-center text-gray-400 text-xs">
+                                פרופיל
+                              </div>
                             )}
                           </>
                         );
