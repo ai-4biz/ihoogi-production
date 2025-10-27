@@ -217,83 +217,6 @@ const CustomerResponseTab = () => {
         <p className="text-muted-foreground text-lg">יצירת תבניות מענה פשוטות ונוחות</p>
       </div>
 
-      {/* תבניות מערכת אוטומטיות */}
-      <Card className="p-6 shadow-sm border-2 border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10">
-        <div className="mb-6">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center">
-              <Bot className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-foreground">תבניות אוטומטיות של המערכת</h2>
-              <p className="text-sm text-muted-foreground">אלה נשלחות אוטומטית מהמערכת</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Thank You Template */}
-          <div className="border-2 border-green-200 bg-green-50/10 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
-                <Mail className="h-6 w-6 text-green-600" />
-              </div>
-              <div>
-                <h4 className="font-bold text-green-700">מייל תודה אוטומטי</h4>
-                <p className="text-xs text-muted-foreground">שולח לאחר מענה לשאלון</p>
-              </div>
-            </div>
-            <div className="bg-white rounded-lg p-3 border border-green-200 shadow-sm">
-              <div 
-                className="bg-gray-50 rounded overflow-auto max-h-[400px] p-2"
-                dangerouslySetInnerHTML={{ __html: (() => {
-                  const branding = getUserBranding();
-                  return generateQuestionnaireThankYouEmail({
-                    firstName: "דוד",
-                    businessName: branding.businessName || "העסק שלי",
-                    questionnaireTitle: "שאלון שירות",
-                    logoUrl: branding.logoUrl,
-                    profileImageUrl: branding.profileImageUrl,
-                    personalMessage: "תודה רבה על הזמן שהשקעת! התשובות שלך עוזרות לנו לשפר את השירות."
-                  });
-                })()}}
-              >
-              </div>
-            </div>
-          </div>
-
-          {/* Reminder Template */}
-          <div className="border-2 border-orange-200 bg-orange-50/10 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-10 h-10 bg-orange-500/20 rounded-lg flex items-center justify-center">
-                <Clock className="h-6 w-6 text-orange-600" />
-              </div>
-              <div>
-                <h4 className="font-bold text-orange-700">מייל תזכורת אוטומטי</h4>
-                <p className="text-xs text-muted-foreground">שולח ללקוחות שלא ענו</p>
-              </div>
-            </div>
-            <div className="bg-white rounded-lg p-3 border border-orange-200 shadow-sm">
-              <div 
-                className="bg-gray-50 rounded overflow-auto max-h-[400px] p-2"
-                dangerouslySetInnerHTML={{ __html: (() => {
-                  const branding = getUserBranding();
-                  return generateQuestionnaireReminderEmail({
-                    firstName: "דוד",
-                    businessName: branding.businessName || "העסק שלי",
-                    questionnaireTitle: "שאלון שירות",
-                    logoUrl: branding.logoUrl,
-                    profileImageUrl: branding.profileImageUrl,
-                    timeLeft: "בעוד 2 ימים"
-                  });
-                })()}}
-              >
-              </div>
-            </div>
-          </div>
-        </div>
-      </Card>
-
       {/* תבניות משתמש - יצירה ידנית */}
       <Card className="p-6 shadow-sm border border-border" dir="rtl">
         <div className="mb-6">
@@ -558,7 +481,18 @@ const CustomerResponseTab = () => {
               {/* שורה שנייה: קישור והעלת תמונה */}
               <div className="flex items-center gap-4">
                 <div className="flex-1">
-                  <Label htmlFor="link-url" className="text-sm font-medium text-right block mb-1">קישור (אופציונלי)</Label>
+                  <Label htmlFor="link-text" className="text-sm font-medium text-right block mb-1">טקסט כפתור הקישור</Label>
+                  <Input
+                    id="link-text"
+                    value={formData.linkText || ''}
+                    onChange={(e) => handleFieldChange('linkText', e.target.value)}
+                    placeholder="לצפייה, לכניסה, לפרטים..."
+                    className="text-right"
+                    dir="rtl"
+                  />
+                </div>
+                <div className="flex-1">
+                  <Label htmlFor="link-url" className="text-sm font-medium text-right block mb-1">כתובת הקישור (URL)</Label>
                   <Input
                     id="link-url"
                     value={formData.linkUrl || ''}
@@ -612,17 +546,28 @@ const CustomerResponseTab = () => {
             <div className="border rounded-lg p-4 bg-gray-50 min-h-[200px]">
               {previewChannel === "email" && (
                 <div className="bg-white rounded-lg shadow-sm overflow-hidden" dir="rtl">
-                  {/* Top Banner: Logo + Business Name + Message */}
+                  {/* Top Banner: Logo + Profile Image + Business Name + Message */}
                   <div className="flex items-center justify-between p-4 bg-gradient-to-r from-primary/10 to-primary/5 rounded-t-lg border-b border-primary/20">
                     <div className="flex items-center gap-3">
                       {(() => {
                         const branding = getUserBranding();
-                        return branding.logoUrl && (
-                          <img 
-                            src={branding.logoUrl} 
-                            alt="Logo" 
-                            className="h-12 w-12 object-contain"
-                          />
+                        return (
+                          <>
+                            {branding.logoUrl && (
+                              <img 
+                                src={branding.logoUrl} 
+                                alt="Logo" 
+                                className="h-12 w-12 object-contain"
+                              />
+                            )}
+                            {branding.profileImageUrl && (
+                              <img 
+                                src={branding.profileImageUrl} 
+                                alt="Profile" 
+                                className="h-12 w-12 object-cover rounded-lg"
+                              />
+                            )}
+                          </>
                         );
                       })()}
                     </div>
@@ -652,7 +597,7 @@ const CustomerResponseTab = () => {
                           alt="Business" 
                           className="w-full h-auto object-cover"
                         />
-                      </div>
+                        </div>
                     </div>
                   )}
                   
@@ -665,16 +610,16 @@ const CustomerResponseTab = () => {
                       >
                         {formData.linkText || "לצפייה"}
                       </a>
-                    </div>
-                  )}
-                  
+                      </div>
+                    )}
+                    
                   {/* Content */}
                   <div className="p-6 min-h-[200px] bg-gray-50/30" dir="rtl">
                     <div className="text-base text-gray-800 text-right leading-relaxed whitespace-pre-wrap">
                       {formData.body || "תודה רבה על המענה ושהקדשת את הזמן! 👍"}
                     </div>
-                  </div>
-                  
+                    </div>
+                    
                   {/* Bottom Banner: Logo + Business Details + Signature */}
                   <div className="bg-gradient-to-br from-gray-50 to-gray-100 border-t p-6 flex items-center justify-between" dir="rtl">
                     {(() => {
@@ -694,7 +639,7 @@ const CustomerResponseTab = () => {
                           <div className="text-center">
                             <p className="text-base font-semibold text-gray-800 mb-1">{branding.businessName || "שם העסק"}</p>
                             <p className="text-green-600 font-semibold">בברכה</p>
-                          </div>
+                      </div>
                         </>
                       );
                     })()}
