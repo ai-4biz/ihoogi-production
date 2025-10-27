@@ -14,6 +14,7 @@ interface FormPreviewProps {
   formDescription?: string;
   logoUrl?: string;
   profileImageUrl?: string;
+  businessName?: string;
 }
 
 const FormPreview = ({ 
@@ -21,7 +22,8 @@ const FormPreview = ({
   formTitle = "שאלון לדוגמה",
   formDescription = "נשמח אם תוכל למלא את השאלון הבא",
   logoUrl,
-  profileImageUrl 
+  profileImageUrl,
+  businessName
 }: FormPreviewProps) => {
   const renderQuestion = (question: Question) => {
     switch (question.type) {
@@ -121,34 +123,43 @@ const FormPreview = ({
   return (
     <div className="w-full max-w-2xl mx-auto p-6 bg-background">
       <Card className="p-8 shadow-lg">
-        {/* Header with logo and profile */}
-        <div className="flex flex-col items-center mb-8">
-          {logoUrl && (
-            <div className="mb-4">
+        {/* Banner with logo, profile and business name */}
+        <div className="flex items-center justify-between mb-8 p-4 bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg border border-primary/20">
+          <div className="flex items-center gap-3">
+            {logoUrl && (
               <img 
                 src={logoUrl} 
                 alt="Logo" 
-                className="h-24 w-24 object-contain rounded-lg"
+                className="h-12 w-12 object-contain"
               />
-            </div>
-          )}
-          
-          {profileImageUrl && (
-            <div className="mb-4">
+            )}
+            
+            {profileImageUrl && (
               <img 
                 src={profileImageUrl} 
                 alt="Profile" 
-                className="h-16 w-16 object-cover rounded-full border-4 border-primary"
+                className="h-12 w-12 object-cover"
               />
-            </div>
-          )}
+            )}
+          </div>
           
-          <h1 className="text-3xl font-bold text-primary mb-2">
+          {businessName && (
+            <h2 className="text-xl font-bold text-primary">
+              {businessName}
+            </h2>
+          )}
+        </div>
+
+        {/* Title */}
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-primary mb-2">
             {formTitle}
           </h1>
-          <p className="text-muted-foreground text-center">
-            {formDescription}
-          </p>
+          {formDescription && (
+            <p className="text-muted-foreground">
+              {formDescription}
+            </p>
+          )}
         </div>
 
         {/* Questions */}

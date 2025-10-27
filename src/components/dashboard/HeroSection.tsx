@@ -40,7 +40,7 @@ const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
     {
       icon: <MessageSquare className="w-8 h-8 text-primary" />,
       title: "כלי מכירה חכם",
-      description: "כל שאלון הופך לשיחה אמיתית שמושכת לקוחות חדשים. iHoogi מדברת בשפה שלך, מציגה אותך בצורה מקצועית ועוזרת ללקוחות להבין בדיוק מה אתה מציע."
+      description: "כל שאלון הופך לשיחה אמיתית שמושכת לקוחות חדשים. iHoogi מדברת בשפה שלכם, מציגה אתכם בצורה מקצועית ועוזרת ללקוחות להבין בדיוק מה אתם מציעים."
     },
     {
       icon: <MapPin className="w-8 h-8 text-primary" />,
@@ -50,12 +50,12 @@ const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
     {
       icon: <Zap className="w-8 h-8 text-primary" />,
       title: "אוטומציה שעובדת בשבילך",
-      description: "המענה ללקוחות שלך נשלח אוטומטית, בזמן הנכון ובסגנון שלך. iHoogi מתזכרת, עוקבת, ומוודאת שאף לקוח לא נשכח בדרך."
+      description: "המענה ללקוחות שלכם נשלח אוטומטית, בזמן הנכון ובסגנון שלכם. iHoogi מתזכרת, עוקבת, ומוודאת שאף לקוח לא נשכח בדרך."
     },
     {
       icon: <Target className="w-8 h-8 text-primary" />,
       title: "שותפים שצומחים איתך",
-      description: "עם תוכנית השותפים של iHoogi, כל מי שממליץ עליך או מביא לקוחות חדשים – מרוויח איתך. דרך חכמה להגדיל את החשיפה, לחזק שיתופי פעולה ולהגדיל הכנסות, בלי מאמץ."
+      description: "עם תוכנית השותפים של iHoogi, כל מי שממליץ עליכם או מביא לקוחות חדשים – מרוויח איתכם. דרך חכמה להגדיל את החשיפה, לחזק שיתופי פעולה ולהגדיל הכנסות, בלי מאמץ."
     }
   ];
 
@@ -81,7 +81,7 @@ const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
             ברוכים הבאים ל-<span className="text-primary">iHoogi</span>
           </h1>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            מערכת חכמה ששואלת, אוספת ומרכזת את כל הפניות שמגיעות אליך – ומקדמת אותך לסגירת עסקה, בקלות ובחיוך.
+            מערכת חכמה ששואלת, אוספת ומרכזת את כל הפניות שמגיעות אליכם – ומקדמת אתכם לסגירת עסקה, בקלות ובחיוך.
           </p>
         </div>
 

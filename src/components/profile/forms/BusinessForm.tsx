@@ -47,6 +47,8 @@ const BusinessForm = () => {
   // Preview URLs for logo and avatar
   const [logoPreview, setLogoPreview] = useState("");
   const [avatarPreview, setAvatarPreview] = useState("");
+  const [logoSizeWarning, setLogoSizeWarning] = useState("");
+  const [profileSizeWarning, setProfileSizeWarning] = useState("");
 
   // Load user name from localStorage or mock data
   useEffect(() => {
@@ -104,7 +106,25 @@ const BusinessForm = () => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setLogo(file);
-      setLogoPreview(URL.createObjectURL(file));
+      const previewUrl = URL.createObjectURL(file);
+      
+      // בדיקת גודל התמונה
+      const img = new Image();
+      img.src = previewUrl;
+      img.onload = () => {
+        const width = img.width;
+        const height = img.height;
+        
+        if (width > 512 || height > 512) {
+          setLogoSizeWarning(`גדול מדי (${width}x${height}). מומלץ עד 256x256px לטעינה מהירה.`);
+        } else if (width < 128 || height < 128) {
+          setLogoSizeWarning(`קטן מדי (${width}x${height}). מומלץ לפחות 128x128px לאיכות טובה.`);
+        } else {
+          setLogoSizeWarning("");
+        }
+      };
+      
+      setLogoPreview(previewUrl);
     }
   };
 
@@ -112,7 +132,25 @@ const BusinessForm = () => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setAvatar(file);
-      setAvatarPreview(URL.createObjectURL(file));
+      const previewUrl = URL.createObjectURL(file);
+      
+      // בדיקת גודל התמונה
+      const img = new Image();
+      img.src = previewUrl;
+      img.onload = () => {
+        const width = img.width;
+        const height = img.height;
+        
+        if (width > 512 || height > 512) {
+          setProfileSizeWarning(`גדול מדי (${width}x${height}). מומלץ עד 256x256px לטעינה מהירה.`);
+        } else if (width < 128 || height < 128) {
+          setProfileSizeWarning(`קטן מדי (${width}x${height}). מומלץ לפחות 128x128px לאיכות טובה.`);
+        } else {
+          setProfileSizeWarning("");
+        }
+      };
+      
+      setAvatarPreview(previewUrl);
     }
   };
 
@@ -355,7 +393,7 @@ const BusinessForm = () => {
           <div className="bg-white rounded-lg p-4 shadow-sm border border-border">
             <h3 className="text-base font-semibold mb-4 text-right">לוגו העסק</h3>
             <div className="space-y-3">
-              <div className="flex items-center justify-center border-2 border-dashed border-primary/30 rounded-lg p-3 h-[100px] bg-primary/5">
+              <div className="flex items-center justify-center p-3 h-[100px]">
                 {logoPreview ? (
                   <img 
                     src={logoPreview} 
@@ -366,7 +404,7 @@ const BusinessForm = () => {
                   <div className="text-center">
                     <Upload className="h-8 w-8 mx-auto mb-2 text-primary" />
                     <p className="text-sm text-muted-foreground">העלה לוגו</p>
-                    <p className="text-xs text-muted-foreground">מומלץ 200×200 פיקסלים</p>
+                    <p className="text-xs text-muted-foreground">מומלץ 256×256 פיקסלים</p>
                   </div>
                 )}
               </div>
@@ -388,24 +426,29 @@ const BusinessForm = () => {
                   העלה לוגו
                 </Button>
               </div>
+              {logoSizeWarning && (
+                <div className="text-xs text-amber-600 bg-amber-50 dark:bg-amber-950/20 p-2 rounded-md">
+                  ⚠️ {logoSizeWarning}
+                </div>
+              )}
             </div>
           </div>
 
           <div className="bg-white rounded-lg p-4 shadow-sm border border-border">
             <h3 className="text-base font-semibold mb-4 text-right">תמונת פרופיל</h3>
             <div className="space-y-3">
-              <div className="flex items-center justify-center border-2 border-dashed border-secondary/30 rounded-lg p-3 h-[100px] bg-secondary/5">
+              <div className="flex items-center justify-center p-3 h-[100px]">
                 {avatarPreview ? (
                   <img 
                     src={avatarPreview} 
                     alt="Avatar preview" 
-                    className="h-[70px] w-[70px] object-cover rounded-full" 
+                    className="h-[70px] w-[70px] object-cover" 
                   />
                 ) : (
                   <div className="text-center">
                     <Upload className="h-8 w-8 mx-auto mb-2 text-secondary" />
                     <p className="text-sm text-muted-foreground">העלה תמונת פרופיל</p>
-                    <p className="text-xs text-muted-foreground">מומלץ 200×200 פיקסלים</p>
+                    <p className="text-xs text-muted-foreground">מומלץ 256×256 פיקסלים</p>
                   </div>
                 )}
               </div>
@@ -427,6 +470,11 @@ const BusinessForm = () => {
                   העלה תמונה
                 </Button>
               </div>
+              {profileSizeWarning && (
+                <div className="text-xs text-amber-600 bg-amber-50 dark:bg-amber-950/20 p-2 rounded-md">
+                  ⚠️ {profileSizeWarning}
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -21,8 +21,37 @@ import {
   User,
   Link,
   Image,
-  Upload
+  Upload,
+  Mail,
+  Clock
 } from "lucide-react";
+import { generateQuestionnaireThankYouEmail, generateQuestionnaireReminderEmail, getUserBranding } from "@/lib/automationTemplates";
+
+// Helper function to generate user email template HTML
+function generateUserEmailPreview(templateData: TemplateForm): string {
+  const branding = getUserBranding();
+  const logoUrl = branding.logoUrl || "";
+  const profileImageUrl = branding.profileImageUrl || "";
+  const businessName = branding.businessName || "העסק שלי";
+  
+  let content = `<div style="padding: 30px; direction: rtl; font-family: Arial, sans-serif;">`;
+  
+  // Banner with logo, profile and business name (like in the form)
+  content += `<div style="background: linear-gradient(to left, #10b98120 0%, #10b98110 100%); padding: 20px; border-radius: 12px; border: 1px solid #10b98130; margin-bottom: 30px; display: flex; align-items: center; justify-content: space-between;">`;
+  content += `<div style="display: flex; align-items: center; gap: 12px;">`;
+  if (logoUrl) content += `<img src="${logoUrl}" alt="Logo" style="width: 48px; height: 48px; object-contain;">`;
+  if (profileImageUrl) content += `<img src="${profileImageUrl}" alt="Profile" style="width: 48px; height: 48px; object-cover;">`;
+  content += `</div>`;
+  content += `<h2 style="font-size: 20px; color: #10b981; font-weight: bold; margin: 0;">${businessName}</h2>`;
+  content += `</div>`;
+  
+  // Content based on form data
+  content += `<p style="font-size: 16px; margin-bottom: 15px; font-weight: 600;">${templateData.templateName || "נושא ההודעה"}</p>`;
+  content += `<p style="font-size: 15px; color: #374151; line-height: 1.6; white-space: pre-wrap;">${templateData.templateContent || "תוכן ההודעה..."}</p>`;
+  
+  content += `</div>`;
+  return content;
+}
 
 interface TemplateForm {
   name: string;
@@ -213,11 +242,81 @@ const CustomerResponseTab = () => {
         <p className="text-muted-foreground text-lg">יצירת תבניות מענה פשוטות ונוחות</p>
       </div>
 
-      {/* Main Form */}
+      {/* תבניות מערכת אוטומטיות */}
+      <Card className="p-6 shadow-sm border-2 border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10">
+        <div className="mb-6">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center">
+              <Bot className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-foreground">תבניות אוטומטיות של המערכת</h2>
+              <p className="text-sm text-muted-foreground">אלה נשלחות אוטומטית מהמערכת</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Thank You Template */}
+          <div className="border-2 border-green-200 bg-green-50/10 rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
+                <Mail className="h-6 w-6 text-green-600" />
+              </div>
+              <div>
+                <h4 className="font-bold text-green-700">מייל תודה אוטומטי</h4>
+                <p className="text-xs text-muted-foreground">שולח לאחר מענה לשאלון</p>
+              </div>
+            </div>
+            <div className="bg-white rounded-lg p-3 border border-green-200 shadow-sm">
+              <div 
+                className="bg-gray-50 rounded overflow-auto max-h-[400px] p-2"
+                dangerouslySetInnerHTML={{ __html: generateQuestionnaireThankYouEmail({
+                  firstName: "דוד",
+                  businessName: "העסק שלי",
+                  questionnaireTitle: "שאלון שירות",
+                  personalMessage: "תודה רבה על הזמן שהשקעת! התשובות שלך עוזרות לנו לשפר את השירות."
+                })}}
+              >
+              </div>
+            </div>
+          </div>
+
+          {/* Reminder Template */}
+          <div className="border-2 border-orange-200 bg-orange-50/10 rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-10 h-10 bg-orange-500/20 rounded-lg flex items-center justify-center">
+                <Clock className="h-6 w-6 text-orange-600" />
+              </div>
+              <div>
+                <h4 className="font-bold text-orange-700">מייל תזכורת אוטומטי</h4>
+                <p className="text-xs text-muted-foreground">שולח ללקוחות שלא ענו</p>
+              </div>
+            </div>
+            <div className="bg-white rounded-lg p-3 border border-orange-200 shadow-sm">
+              <div 
+                className="bg-gray-50 rounded overflow-auto max-h-[400px] p-2"
+                dangerouslySetInnerHTML={{ __html: generateQuestionnaireReminderEmail({
+                  firstName: "דוד",
+                  businessName: "העסק שלי",
+                  questionnaireTitle: "שאלון שירות",
+                  timeLeft: "בעוד 2 ימים"
+                })}}
+              >
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      {/* תבניות משתמש - יצירה ידנית */}
       <Card className="p-6 shadow-sm border border-border" dir="rtl">
         <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-2 text-right">טופס יצירת תבנית</h2>
-          <p className="text-muted-foreground text-right">יצירת תבנית מענה לקוח בפשטות</p>
+          <div className="flex items-center gap-2 mb-2">
+            <User className="h-6 w-6 text-primary" />
+            <h2 className="text-xl font-semibold text-right">תבניות משתמש - יצירה ידנית</h2>
+          </div>
+          <p className="text-muted-foreground text-right">יצירת תבניות מענה מותאמות אישית שלך</p>
         </div>
 
         {/* שם התבנית */}
@@ -498,7 +597,8 @@ const CustomerResponseTab = () => {
             </div>
           </div>
 
-          {/* תצוגה מקדימה */}
+
+          {/* תצוגה מקדימה של התבנית הנוצרת */}
           <div className="mt-6">
             <h3 className="text-lg font-semibold text-right mb-4">תצוגה מקדימה</h3>
             
@@ -526,34 +626,44 @@ const CustomerResponseTab = () => {
 
             <div className="border rounded-lg p-4 bg-gray-50 min-h-[200px]">
               {previewChannel === "email" && (
-                <div className="space-y-3" dir="rtl">
-                  <div className="text-center">
-                    <div className="text-xs text-muted-foreground mb-2">תבנית: {formData.name || "שם התבנית"}</div>
+                <div className="bg-white rounded-lg shadow-sm overflow-hidden" dir="rtl">
+                  {/* Banner with logo, profile and business name (exactly like the form!) */}
+                  <div className="flex items-center justify-between p-4 bg-gradient-to-r from-primary/10 to-primary/5 rounded-t-lg border-b border-primary/20">
+                    <div className="flex items-center gap-3">
+                      {(() => {
+                        const branding = getUserBranding();
+                        return (
+                          <>
+                            {branding.logoUrl && (
+                              <img 
+                                src={branding.logoUrl} 
+                                alt="Logo" 
+                                className="h-12 w-12 object-contain"
+                              />
+                            )}
+                            {branding.profileImageUrl && (
+                              <img 
+                                src={branding.profileImageUrl} 
+                                alt="Profile" 
+                                className="h-12 w-12 object-cover"
+                              />
+                            )}
+                          </>
+                        );
+                      })()}
+                    </div>
+                    {(() => {
+                      const branding = getUserBranding();
+                      return branding.businessName && (
+                        <h2 className="text-xl font-bold text-primary">
+                          {branding.businessName}
+                        </h2>
+                      );
+                    })()}
                   </div>
                   
-                  {/* Logo and Profile Images */}
-                  {(formData.useProfileLogo || formData.useProfileImage) && (
-                    <div className="flex justify-center gap-4 mb-4">
-                      {formData.useProfileLogo && (
-                        <div className="flex flex-col items-center">
-                          <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center border border-primary/20">
-                            <span className="text-primary font-bold">Logo</span>
-                          </div>
-                          <span className="text-xs text-muted-foreground mt-1">לוגו מהפרופיל</span>
-                        </div>
-                      )}
-                      {formData.useProfileImage && (
-                        <div className="flex flex-col items-center">
-                          <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center border border-primary/20">
-                            <User className="h-6 w-6 text-primary" />
-                          </div>
-                          <span className="text-xs text-muted-foreground mt-1">תמונה מהפרופיל</span>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                  
-                  <div className="bg-white p-4 rounded border shadow-sm">
+                  {/* Content */}
+                  <div className="p-6 space-y-4">
                     <div className="text-sm font-medium text-gray-700 mb-2 text-right">
                       📧 נושא: {formData.subject || "נושא המייל"}
                     </div>
@@ -596,6 +706,11 @@ const CustomerResponseTab = () => {
                         </a>
                       </div>
                     )}
+                  </div>
+                  
+                  {/* Footer */}
+                  <div className="bg-gradient-to-br from-gray-50 to-gray-100 border-t p-4 text-center">
+                    <p className="text-xs text-gray-500">© 2024 iHoogi - כל הזכויות שמורות</p>
                   </div>
                 </div>
               )}

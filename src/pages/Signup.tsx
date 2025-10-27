@@ -38,10 +38,10 @@ const Signup = () => {
   }, []);
 
   const benefits = [
-    { icon: <MessageSquare className="w-7 h-7 text-primary" />, title: "כלי מכירה חכם", description: "שאלונים מעוצבים ומותאמים אישית לכל פלטפורמה." },
-    { icon: <MapPin className="w-7 h-7 text-primary" />, title: "מרכז במקום אחד", description: "כל התשובות והלידים מרוכזים – פייסבוק, ווטסאפ, אתר ועוד." },
-    { icon: <Target className="w-7 h-7 text-primary" />, title: "לידים חיים וממוקדים", description: "מקדמים את התהליך ומשפרים משמעותית את סיכויי הסגירה." },
-    { icon: <Zap className="w-7 h-7 text-primary" />, title: "אוטומציה שעובדת בשבילך", description: "חיסכון זמן עם אוטומציות חכמות שעונות ללקוח בזמן." },
+    { icon: <MessageSquare className="w-7 h-7 text-primary" />, title: "🧠 כלי מכירה חכם", description: "כל שאלון הופך לשיחה שמושכת לקוחות ומציגה אתכם בצורה מקצועית." },
+    { icon: <MapPin className="w-7 h-7 text-primary" />, title: "📍 הכול במקום אחד", description: "פניות, תשובות והודעות – מסודרות במסך אחד, מכל הערוצים." },
+    { icon: <Zap className="w-7 h-7 text-primary" />, title: "⚙️ אוטומציה שעובדת בשבילכם", description: "iHoogi עונה, מתזכרת ושומרת על קשר עם הלקוחות גם כשאתם עסוקים." },
+    { icon: <Target className="w-7 h-7 text-primary" />, title: "🤝 שותפים שצומחים איתכם", description: "המערכת שמגדילה הכנסות בעזרת שיתופים ושותפים שממליצים עליכם." },
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -62,7 +62,7 @@ const Signup = () => {
             ברוכים הבאים ל-<span className="text-primary">iHoogi</span>
           </h1>
           <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
-            מערכת שאלונים חכמה שמייצרת לידים חמים ומרכזת הכל במקום אחד – אוטומטית.
+            מערכת חכמה ששואלת, מרכזת ומקדמת אותך למכירה
           </p>
         </div>
 
@@ -131,7 +131,7 @@ const Signup = () => {
                 required 
               />
               <Label htmlFor="terms" className="text-sm cursor-pointer">
-                אני מסכים/ה ל
+                אני מסכים ל
                 <button 
                   type="button"
                   onClick={() => window.open('/terms-of-service', '_blank')}
@@ -144,7 +144,7 @@ const Signup = () => {
             </div>
             <div className="flex items-start gap-2">
               <Checkbox id="marketing" checked={formData.marketingAccepted} onCheckedChange={(c) => setFormData({ ...formData, marketingAccepted: c as boolean })} />
-              <Label htmlFor="marketing" className="text-sm cursor-pointer">אני מסכים/ה לקבל תוכן שיווקי</Label>
+              <Label htmlFor="marketing" className="text-sm cursor-pointer">אני מסכים לקבל תוכן שיווקי</Label>
             </div>
 
             <Button type="submit" className="w-full py-6 text-lg" disabled={!formData.termsAccepted}>
@@ -153,7 +153,7 @@ const Signup = () => {
 
             <div className="space-y-2">
               <Button type="button" variant="outline" className="w-full py-6 text-lg" onClick={() => navigate("/login")}>
-                כבר רשום/ה? התחבר/י
+                כבר רשום? התחבר
               </Button>
             </div>
           </form>
