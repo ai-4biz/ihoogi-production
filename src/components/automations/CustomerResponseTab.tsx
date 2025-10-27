@@ -27,32 +27,6 @@ import {
 } from "lucide-react";
 import { generateQuestionnaireThankYouEmail, generateQuestionnaireReminderEmail, getUserBranding } from "@/lib/automationTemplates";
 
-// Helper function to generate user email template HTML
-function generateUserEmailPreview(templateData: TemplateForm): string {
-  const branding = getUserBranding();
-  const logoUrl = branding.logoUrl || "";
-  const profileImageUrl = branding.profileImageUrl || "";
-  const businessName = branding.businessName || "העסק שלי";
-  
-  let content = `<div style="padding: 30px; direction: rtl; font-family: Arial, sans-serif;">`;
-  
-  // Banner with logo, profile and business name (like in the form)
-  content += `<div style="background: linear-gradient(to left, #10b98120 0%, #10b98110 100%); padding: 20px; border-radius: 12px; border: 1px solid #10b98130; margin-bottom: 30px; display: flex; align-items: center; justify-content: space-between;">`;
-  content += `<div style="display: flex; align-items: center; gap: 12px;">`;
-  if (logoUrl) content += `<img src="${logoUrl}" alt="Logo" style="width: 48px; height: 48px; object-contain;">`;
-  if (profileImageUrl) content += `<img src="${profileImageUrl}" alt="Profile" style="width: 48px; height: 48px; object-cover;">`;
-  content += `</div>`;
-  content += `<h2 style="font-size: 20px; color: #10b981; font-weight: bold; margin: 0;">${businessName}</h2>`;
-  content += `</div>`;
-  
-  // Content based on form data
-  content += `<p style="font-size: 16px; margin-bottom: 15px; font-weight: 600;">${templateData.templateName || "נושא ההודעה"}</p>`;
-  content += `<p style="font-size: 15px; color: #374151; line-height: 1.6; white-space: pre-wrap;">${templateData.templateContent || "תוכן ההודעה..."}</p>`;
-  
-  content += `</div>`;
-  return content;
-}
-
 interface TemplateForm {
   name: string;
   subject: string;
@@ -271,12 +245,17 @@ const CustomerResponseTab = () => {
             <div className="bg-white rounded-lg p-3 border border-green-200 shadow-sm">
               <div 
                 className="bg-gray-50 rounded overflow-auto max-h-[400px] p-2"
-                dangerouslySetInnerHTML={{ __html: generateQuestionnaireThankYouEmail({
-                  firstName: "דוד",
-                  businessName: "העסק שלי",
-                  questionnaireTitle: "שאלון שירות",
-                  personalMessage: "תודה רבה על הזמן שהשקעת! התשובות שלך עוזרות לנו לשפר את השירות."
-                })}}
+                dangerouslySetInnerHTML={{ __html: (() => {
+                  const branding = getUserBranding();
+                  return generateQuestionnaireThankYouEmail({
+                    firstName: "דוד",
+                    businessName: branding.businessName || "העסק שלי",
+                    questionnaireTitle: "שאלון שירות",
+                    logoUrl: branding.logoUrl,
+                    profileImageUrl: branding.profileImageUrl,
+                    personalMessage: "תודה רבה על הזמן שהשקעת! התשובות שלך עוזרות לנו לשפר את השירות."
+                  });
+                })()}}
               >
               </div>
             </div>
@@ -296,12 +275,17 @@ const CustomerResponseTab = () => {
             <div className="bg-white rounded-lg p-3 border border-orange-200 shadow-sm">
               <div 
                 className="bg-gray-50 rounded overflow-auto max-h-[400px] p-2"
-                dangerouslySetInnerHTML={{ __html: generateQuestionnaireReminderEmail({
-                  firstName: "דוד",
-                  businessName: "העסק שלי",
-                  questionnaireTitle: "שאלון שירות",
-                  timeLeft: "בעוד 2 ימים"
-                })}}
+                dangerouslySetInnerHTML={{ __html: (() => {
+                  const branding = getUserBranding();
+                  return generateQuestionnaireReminderEmail({
+                    firstName: "דוד",
+                    businessName: branding.businessName || "העסק שלי",
+                    questionnaireTitle: "שאלון שירות",
+                    logoUrl: branding.logoUrl,
+                    profileImageUrl: branding.profileImageUrl,
+                    timeLeft: "בעוד 2 ימים"
+                  });
+                })()}}
               >
               </div>
             </div>
@@ -627,90 +611,67 @@ const CustomerResponseTab = () => {
             <div className="border rounded-lg p-4 bg-gray-50 min-h-[200px]">
               {previewChannel === "email" && (
                 <div className="bg-white rounded-lg shadow-sm overflow-hidden" dir="rtl">
-                  {/* Banner with logo, profile and business name (exactly like the form!) */}
+                  {/* Top Banner: Logo + Business Name + Message */}
                   <div className="flex items-center justify-between p-4 bg-gradient-to-r from-primary/10 to-primary/5 rounded-t-lg border-b border-primary/20">
                     <div className="flex items-center gap-3">
                       {(() => {
                         const branding = getUserBranding();
+                        return branding.logoUrl && (
+                          <img 
+                            src={branding.logoUrl} 
+                            alt="Logo" 
+                            className="h-12 w-12 object-contain"
+                          />
+                        );
+                      })()}
+                    </div>
+                    <div className="text-right">
+                      {(() => {
+                        const branding = getUserBranding();
                         return (
                           <>
-                            {branding.logoUrl && (
-                              <img 
-                                src={branding.logoUrl} 
-                                alt="Logo" 
-                                className="h-12 w-12 object-contain"
-                              />
+                            {branding.businessName && (
+                              <h2 className="text-xl font-bold text-primary mb-1">
+                                {branding.businessName}
+                              </h2>
                             )}
-                            {branding.profileImageUrl && (
-                              <img 
-                                src={branding.profileImageUrl} 
-                                alt="Profile" 
-                                className="h-12 w-12 object-cover"
-                              />
-                            )}
+                            <p className="text-base font-semibold text-green-600">פנייתך התקבלה – הצוות שלנו כבר מטפל בה.</p>
                           </>
                         );
                       })()}
                     </div>
-                    {(() => {
-                      const branding = getUserBranding();
-                      return branding.businessName && (
-                        <h2 className="text-xl font-bold text-primary">
-                          {branding.businessName}
-                        </h2>
-                      );
-                    })()}
                   </div>
                   
                   {/* Content */}
-                  <div className="p-6 space-y-4">
-                    <div className="text-sm font-medium text-gray-700 mb-2 text-right">
-                      📧 נושא: {formData.subject || "נושא המייל"}
+                  <div className="p-6 min-h-[200px] bg-gray-50/30" dir="rtl">
+                    <div className="text-base text-gray-800 text-right leading-relaxed whitespace-pre-wrap">
+                      {formData.body || "תודה רבה על המענה ושהקדשת את הזמן! 👍"}
                     </div>
-                    
-                    {/* AI Response - אם מעל המענה האישי */}
-                    {formData.aiResponse && formData.personalMessagePosition === "above" && (
-                      <div className="mb-3 p-3 bg-blue-50 rounded text-sm text-right border-r-4 border-blue-300">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Bot className="h-4 w-4 text-blue-600" />
-                          <span className="text-blue-800 font-medium">מענה AI</span>
-                        </div>
-                        <div className="text-gray-700 whitespace-pre-wrap">
-                          {formData.aiResponse}
-                        </div>
-                      </div>
-                    )}
-                    
-                    {/* Personal Message */}
-                    <div className="text-sm text-gray-800 whitespace-pre-wrap text-right leading-relaxed">
-                      {formData.body || "תוכן המענה האישי יופיע כאן..."}
-                    </div>
-                    
-                    {/* AI Response - אחרי המענה האישי */}
-                    {formData.aiResponse && formData.personalMessagePosition === "below" && (
-                      <div className="mt-3 p-3 bg-blue-50 rounded text-sm text-right border-r-4 border-blue-300">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Bot className="h-4 w-4 text-blue-600" />
-                          <span className="text-blue-800 font-medium">מענה AI</span>
-                        </div>
-                        <div className="text-gray-700 whitespace-pre-wrap">
-                          {formData.aiResponse}
-                        </div>
-                      </div>
-                    )}
-                    
-                    {formData.linkUrl && (
-                      <div className="mt-3 pt-3 border-t border-gray-200">
-                        <a href={formData.linkUrl} className="text-primary text-sm hover:underline text-right block">
-                          🔗 {formData.linkUrl}
-                        </a>
-                      </div>
-                    )}
                   </div>
                   
-                  {/* Footer */}
-                  <div className="bg-gradient-to-br from-gray-50 to-gray-100 border-t p-4 text-center">
-                    <p className="text-xs text-gray-500">© 2024 iHoogi - כל הזכויות שמורות</p>
+                  {/* Bottom Banner: Logo + Business Details + Signature */}
+                  <div className="bg-gradient-to-br from-gray-50 to-gray-100 border-t p-6 flex items-center justify-between" dir="rtl">
+                    {(() => {
+                      const branding = getUserBranding();
+                      return (
+                        <>
+                          {/* Right side: Logo */}
+                          {branding.logoUrl && (
+                            <img 
+                              src={branding.logoUrl} 
+                              alt="Logo" 
+                              className="h-12 w-12 object-contain"
+                            />
+                          )}
+                          
+                          {/* Left side: Business Name + Signature */}
+                          <div className="text-center">
+                            <p className="text-base font-semibold text-gray-800 mb-1">{branding.businessName || "שם העסק"}</p>
+                            <p className="text-green-600 font-semibold">בברכה</p>
+                          </div>
+                        </>
+                      );
+                    })()}
                   </div>
                 </div>
               )}

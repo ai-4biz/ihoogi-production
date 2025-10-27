@@ -57,51 +57,29 @@ export function generateQuestionnaireThankYouEmail(params: {
   <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
     <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
       
-      <!-- Header with User Logo and Profile -->
-      <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px 30px; text-align: center; position: relative;">
-        <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 20px;">
-          ${params.logoUrl ? `<img src="${params.logoUrl}" alt="Logo" style="width: 64px; height: 64px; object-contain;">` : ''}
-          ${params.profileImageUrl ? `<img src="${params.profileImageUrl}" alt="Profile" style="width: 64px; height: 64px; object-cover;">` : ''}
+      <!-- Top Banner: Logo + Business Name + Message -->
+      <div style="background: linear-gradient(to left, #10b98120 0%, #10b98110 100%); padding: 30px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #10b98130;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          ${logoUrl ? `<img src="${logoUrl}" alt="Logo" style="width: 48px; height: 48px; object-contain;">` : ''}
         </div>
-        ${params.businessName ? `<h2 style="color: white; font-size: 20px; margin: 0;">${params.businessName}</h2>` : ''}
-        <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0; font-weight: 700; text-shadow: 0 2px 10px rgba(0,0,0,0.1);">תודה רבה!</h1>
-        <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin: 10px 0 0 0;">השלמת את השאלון בהצלחה! 🎯</p>
+        <div style="text-align: right;">
+          ${businessName ? `<h2 style="font-size: 20px; color: #10b981; font-weight: bold; margin: 0 0 5px 0;">${businessName}</h2>` : ''}
+          <p style="font-size: 16px; color: #059669; font-weight: 600; margin: 0;">פנייתך התקבלה – הצוות שלנו כבר מטפל בה.</p>
+        </div>
       </div>
       
       <!-- Content -->
-      <div style="padding: 40px 30px; direction: rtl; text-align: right;">
-        <p style="font-size: 20px; margin-bottom: 15px; color: #1f2937; font-weight: 600;">היי ${params.firstName},</p>
-        <p style="font-size: 16px; margin-bottom: 25px; color: #4b5563; line-height: 1.6;">וואו! 🎉 השלמת את השאלון "${params.questionnaireTitle}" בהצלחה! תודה רבה על הזמן והמאמץ שהשקעת.</p>
-        
-        ${params.personalMessage ? `
-        <!-- Personal Message -->
-        <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-right: 5px solid #2D66F2; padding: 25px; border-radius: 15px; margin: 30px 0; box-shadow: 0 4px 15px rgba(45, 102, 242, 0.1);">
-          <div style="display: flex; align-items: center; margin-bottom: 15px;">
-            <span style="font-size: 32px; margin-left: 15px;">💬</span>
-            <h3 style="color: #1e40af; margin: 0; font-size: 20px; font-weight: 700;">מענה אישי</h3>
-          </div>
-          <div style="background: white; padding: 20px; border-radius: 10px; color: #374151; font-size: 15px; line-height: 1.8; white-space: pre-wrap;">${params.personalMessage}</div>
-        </div>
-        ` : ''}
-        
-        <!-- Success Box -->
-        <div style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-right: 5px solid #10b981; padding: 25px; border-radius: 15px; margin: 30px 0;">
-          <h3 style="color: #065f46; margin: 0 0 15px 0; font-size: 20px; font-weight: 700;">✅ השאלון הושלם!</h3>
-          <div style="background: white; padding: 15px; border-radius: 10px;">
-            <p style="margin: 8px 0; color: #374151; font-size: 15px;"><strong style="color: #10b981;">📝 שאלון:</strong> ${params.questionnaireTitle}</p>
-            <p style="margin: 8px 0; color: #374151; font-size: 15px;"><strong style="color: #10b981;">📅 תאריך השלמה:</strong> {{completionDate}}</p>
-          </div>
-        </div>
-        
-        <p style="font-size: 15px; color: #6b7280; margin-top: 30px; text-align: center; line-height: 1.6;">
-          אני תמיד כאן בשבילך! 💙<br>
-          ${businessName}
-        </p>
+      <div style="padding: 30px; direction: rtl; text-align: right;">
+        <p style="font-size: 16px; color: #4b5563; line-height: 1.6;">תודה רבה על המענה ושהקדשת את הזמן! 👍</p>
       </div>
       
-      <!-- Footer -->
-      <div style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-top: 2px solid #e5e7eb; padding: 30px; text-align: center;">
-        <p style="color: #9ca3af; font-size: 13px; margin: 10px 0 0 0;">© 2024 iHoogi - הפלטפורמה החכמה ליצירת שאלונים. כל הזכויות שמורות.</p>
+      <!-- Bottom Banner: Logo + Business Details + Signature -->
+      <div style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-top: 2px solid #e5e7eb; padding: 30px; display: flex; align-items: center; justify-content: space-between; direction: rtl;">
+        ${logoUrl ? `<img src="${logoUrl}" alt="Logo" style="width: 48px; height: 48px; object-contain;">` : '<div style="width: 48px; height: 48px;"></div>'}
+        <div style="text-align: center; direction: rtl;">
+          ${businessName ? `<p style="color: #1f2937; font-size: 16px; font-weight: 600; margin: 0 0 5px 0;">${businessName}</p>` : ''}
+          <p style="color: #059669; font-size: 15px; font-weight: 600; margin: 0;">בברכה</p>
+        </div>
       </div>
       
     </div>
@@ -134,42 +112,29 @@ export function generateQuestionnaireReminderEmail(params: {
   <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
     <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
       
-      <!-- Header with User Logo and Profile -->
-      <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); padding: 40px 30px; text-align: center; position: relative;">
-        <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 20px;">
-          ${params.logoUrl ? `<img src="${params.logoUrl}" alt="Logo" style="width: 64px; height: 64px; object-contain;">` : ''}
-          ${params.profileImageUrl ? `<img src="${params.profileImageUrl}" alt="Profile" style="width: 64px; height: 64px; object-cover;">` : ''}
+      <!-- Top Banner: Logo + Business Name + Message -->
+      <div style="background: linear-gradient(to left, #10b98120 0%, #10b98110 100%); padding: 30px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #10b98130;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          ${logoUrl ? `<img src="${logoUrl}" alt="Logo" style="width: 48px; height: 48px; object-contain;">` : ''}
         </div>
-        ${params.businessName ? `<h2 style="color: white; font-size: 20px; margin: 0;">${params.businessName}</h2>` : ''}
-        <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0; font-weight: 700;">תזכורת לשאלון</h1>
-        <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin: 10px 0 0 0;">השאלון שלך מחכה לך! 🎯</p>
+        <div style="text-align: right;">
+          ${businessName ? `<h2 style="font-size: 20px; color: #10b981; font-weight: bold; margin: 0 0 5px 0;">${businessName}</h2>` : ''}
+          <p style="font-size: 16px; color: #059669; font-weight: 600; margin: 0;">תזכורת</p>
+        </div>
       </div>
       
       <!-- Content -->
-      <div style="padding: 40px 30px; direction: rtl; text-align: right;">
-        <p style="font-size: 20px; color: #1f2937; font-weight: 600;">היי ${params.firstName},</p>
-        <p style="font-size: 16px; color: #4b5563; line-height: 1.6;">לא שכחתי אותך! 😊 השאלון "${params.questionnaireTitle}" עדיין מחכה לתגובה שלך.</p>
-        
-        <!-- Urgency Box -->
-        <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-right: 5px solid #f59e0b; padding: 25px; border-radius: 15px; margin: 30px 0;">
-          <h3 style="color: #92400e; margin: 0 0 15px 0;">⚠️ זמן מוגבל!</h3>
-          <div style="background: white; padding: 15px; border-radius: 10px;">
-            <p style="color: #92400e; margin: 0;">
-              <strong>⏰ ${params.timeLeft || 'השאלון ייסגר בקרוב'}</strong><br>
-              אל תפספס את ההזדמנות לתת את הדעה שלך!
-            </p>
-          </div>
-        </div>
-        
-        <p style="font-size: 15px; color: #6b7280; margin-top: 30px; text-align: center; line-height: 1.6;">
-          תמיד כאן בשבילך! 💙<br>
-          ${businessName}
-        </p>
+      <div style="padding: 30px; direction: rtl; text-align: right;">
+        <p style="font-size: 16px; color: #4b5563; line-height: 1.6;">השאלון "${params.questionnaireTitle}" עדיין מחכה לתגובה שלך.</p>
       </div>
       
-      <!-- Footer -->
-      <div style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-top: 2px solid #e5e7eb; padding: 30px; text-align: center;">
-        <p style="color: #9ca3af; font-size: 13px; margin: 10px 0 0 0;">© 2024 iHoogi - הפלטפורמה החכמה ליצירת שאלונים. כל הזכויות שמורות.</p>
+      <!-- Bottom Banner: Logo + Business Details + Signature -->
+      <div style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-top: 2px solid #e5e7eb; padding: 30px; display: flex; align-items: center; justify-content: space-between; direction: rtl;">
+        ${logoUrl ? `<img src="${logoUrl}" alt="Logo" style="width: 48px; height: 48px; object-contain;">` : '<div style="width: 48px; height: 48px;"></div>'}
+        <div style="text-align: center; direction: rtl;">
+          ${businessName ? `<p style="color: #1f2937; font-size: 16px; font-weight: 600; margin: 0 0 5px 0;">${businessName}</p>` : ''}
+          <p style="color: #059669; font-size: 15px; font-weight: 600; margin: 0;">בברכה</p>
+        </div>
       </div>
       
     </div>
