@@ -51,15 +51,15 @@ const emailDesigns: EmailDesign[] = [
   <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
     <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
       
-      <!-- Header with iHoogi Avatar -->
+      <!-- Header - iHoogi Speaking Centered -->
       <div style="background: linear-gradient(135deg, hsl(221.2, 83.2%, 53.3%) 0%, hsl(217.2, 91.2%, 59.8%) 100%); padding: 40px 30px; text-align: center;">
-        <div style="display: inline-block; position: relative;">
-          <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
-          <div style="position: absolute; bottom: -5px; right: -5px; background: hsl(221.2, 83.2%, 53.3%); width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
-            <span style="font-size: 16px;">👋</span>
+        <div style="display: inline-block; margin-bottom: 20px;">
+          <div style="background: white; width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.2); margin: 0 auto;">
+            <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; object-fit: contain;">
           </div>
         </div>
-        <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0; font-weight: 700;">ברוכים הבאים ל-iHoogi!</h1>
+        <h1 style="color: white; font-size: 32px; margin: 0 0 10px 0; font-weight: 700;">ברוכים הבאים ל-iHoogi!</h1>
+        <p style="color: rgba(255,255,255,0.95); font-size: 18px; margin: 0; font-weight: 600;">🦉 אני iHoogi, כאן לעזור לך</p>
       </div>
       
       <!-- Content -->
@@ -122,16 +122,15 @@ const emailDesigns: EmailDesign[] = [
   <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
     <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
       
-      <!-- Header -->
-      <div style="background: linear-gradient(135deg, hsl(221.2, 83.2%, 53.3%) 0%, hsl(217.2, 91.2%, 59.8%) 100%); padding: 40px 30px; text-align: center;">
-        <div style="display: inline-block; position: relative;">
-          <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
-          <div style="position: absolute; bottom: -5px; right: -5px; background: hsl(221.2, 83.2%, 53.3%); width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
-            <span style="font-size: 16px;">🔐</span>
+      <!-- Header - iHoogi Speaking Centered -->
+      <div style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); padding: 40px 30px; text-align: center;">
+        <div style="display: inline-block; margin-bottom: 20px;">
+          <div style="background: white; width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.2); margin: 0 auto;">
+            <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; object-fit: contain;">
           </div>
         </div>
-        <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0; font-weight: 700;">איפוס סיסמה</h1>
-        <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin: 10px 0 0 0;">בקשת איפוס סיסמה לחשבון שלך 🔒</p>
+        <h1 style="color: white; font-size: 32px; margin: 0 0 10px 0; font-weight: 700;">איפוס סיסמה</h1>
+        <p style="color: rgba(255,255,255,0.95); font-size: 18px; margin: 0; font-weight: 600;">🦉 אני iHoogi, כאן לעזור לך 🔒</p>
       </div>
       
       <!-- Content -->
@@ -193,15 +192,15 @@ const emailDesigns: EmailDesign[] = [
   <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
     <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
       
-      <!-- Header -->
+      <!-- Header - iHoogi Speaking Centered -->
       <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px 30px; text-align: center;">
-        <div style="display: inline-block; position: relative;">
-          <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
-          <div style="position: absolute; bottom: -5px; right: -5px; background: #2D66F2; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
-            <span style="font-size: 16px;">💬</span>
+        <div style="display: inline-block; margin-bottom: 20px;">
+          <div style="background: white; width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.2); margin: 0 auto;">
+            <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; object-fit: contain;">
           </div>
         </div>
-        <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0;">קיבלת תשובה!</h1>
+        <h1 style="color: white; font-size: 32px; margin: 0 0 10px 0; font-weight: 700;">קיבלת תשובה!</h1>
+        <p style="color: rgba(255,255,255,0.95); font-size: 18px; margin: 0; font-weight: 600;">🦉 עניתי על הפנייה שלך 💬</p>
       </div>
       
       <!-- Content -->
@@ -256,15 +255,15 @@ const emailDesigns: EmailDesign[] = [
   <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
     <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
       
-      <!-- Header -->
+      <!-- Header - iHoogi Speaking Centered -->
       <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); padding: 40px 30px; text-align: center;">
-        <div style="display: inline-block; position: relative;">
-          <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
-          <div style="position: absolute; bottom: -5px; right: -5px; background: #10b981; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
-            <span style="font-size: 16px;">🤝</span>
+        <div style="display: inline-block; margin-bottom: 20px;">
+          <div style="background: white; width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.2); margin: 0 auto;">
+            <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; object-fit: contain;">
           </div>
         </div>
-        <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0;">הזמנה מיוחדת!</h1>
+        <h1 style="color: white; font-size: 32px; margin: 0 0 10px 0; font-weight: 700;">הזמנה מיוחדת!</h1>
+        <p style="color: rgba(255,255,255,0.95); font-size: 18px; margin: 0; font-weight: 600;">🦉 iHoogi מזמין אותך להצטרף 🤝</p>
       </div>
       
       <!-- Content -->
@@ -321,16 +320,15 @@ const emailDesigns: EmailDesign[] = [
   <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
     <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
       
-      <!-- Header with iHoogi Avatar -->
+      <!-- Header - iHoogi Speaking Centered -->
       <div style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); padding: 40px 30px; text-align: center;">
-        <div style="display: inline-block; position: relative;">
-          <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
-          <div style="position: absolute; bottom: -5px; right: -5px; background: #f59e0b; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
-            <span style="font-size: 16px;">📋</span>
+        <div style="display: inline-block; margin-bottom: 20px;">
+          <div style="background: white; width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.2); margin: 0 auto;">
+            <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; object-fit: contain;">
           </div>
         </div>
-        <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0;">הזמנה לשאלון</h1>
-        <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin: 10px 0 0 0;">{{questionnaireTitle}} 🎯</p>
+        <h1 style="color: white; font-size: 32px; margin: 0 0 10px 0; font-weight: 700;">הזמנה לשאלון</h1>
+        <p style="color: rgba(255,255,255,0.95); font-size: 18px; margin: 0; font-weight: 600;">🦉 iHoogi שלח לך שאלון 📋</p>
       </div>
       
       <!-- Content -->
@@ -403,16 +401,15 @@ const emailDesigns: EmailDesign[] = [
   <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
     <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
       
-      <!-- Header with iHoogi Avatar -->
+      <!-- Header - iHoogi Speaking Centered -->
       <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); padding: 40px 30px; text-align: center;">
-        <div style="display: inline-block; position: relative;">
-          <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
-          <div style="position: absolute; bottom: -5px; right: -5px; background: #ef4444; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
-            <span style="font-size: 16px;">⏰</span>
+        <div style="display: inline-block; margin-bottom: 20px;">
+          <div style="background: white; width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.2); margin: 0 auto;">
+            <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; object-fit: contain;">
           </div>
         </div>
-        <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0;">תזכורת לשאלון</h1>
-        <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin: 10px 0 0 0;">השאלון שלך מחכה לך! 🎯</p>
+        <h1 style="color: white; font-size: 32px; margin: 0 0 10px 0; font-weight: 700;">תזכורת לשאלון</h1>
+        <p style="color: rgba(255,255,255,0.95); font-size: 18px; margin: 0; font-weight: 600;">🦉 iHoogi מזכיר לך ⏰</p>
       </div>
       
       <!-- Content -->
@@ -487,16 +484,15 @@ const emailDesigns: EmailDesign[] = [
   <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
     <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
       
-      <!-- Header with iHoogi Avatar -->
+      <!-- Header - iHoogi Speaking Centered -->
       <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px 30px; text-align: center;">
-        <div style="display: inline-block; position: relative;">
-          <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
-          <div style="position: absolute; bottom: -5px; right: -5px; background: #f59e0b; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
-            <span style="font-size: 16px;">🎉</span>
+        <div style="display: inline-block; margin-bottom: 20px;">
+          <div style="background: white; width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.2); margin: 0 auto;">
+            <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; object-fit: contain;">
           </div>
         </div>
-        <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0;">תודה רבה!</h1>
-        <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin: 10px 0 0 0;">השלמת את השאלון בהצלחה! 🎯</p>
+        <h1 style="color: white; font-size: 32px; margin: 0 0 10px 0; font-weight: 700;">תודה רבה!</h1>
+        <p style="color: rgba(255,255,255,0.95); font-size: 18px; margin: 0; font-weight: 600;">🦉 iHoogi מודה לך 🎉</p>
       </div>
       
       <!-- Content -->
@@ -572,16 +568,15 @@ const emailDesigns: EmailDesign[] = [
   <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
     <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
       
-      <!-- Header with iHoogi Avatar -->
+      <!-- Header - iHoogi Speaking Centered -->
       <div style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); padding: 40px 30px; text-align: center;">
-        <div style="display: inline-block; position: relative;">
-          <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; border-radius: 50%; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
-          <div style="position: absolute; bottom: -5px; right: -5px; background: #f59e0b; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white;">
-            <span style="font-size: 16px;">⚠️</span>
+        <div style="display: inline-block; margin-bottom: 20px;">
+          <div style="background: white; width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.2); margin: 0 auto;">
+            <img src="/hoogi-new-avatar.png" alt="iHoogi" style="width: 100px; height: 100px; object-fit: contain;">
           </div>
         </div>
-        <h1 style="color: white; font-size: 32px; margin: 20px 0 0 0;">הודעת שגיאה</h1>
-        <p style="color: rgba(255,255,255,0.9); font-size: 18px; margin: 10px 0 0 0;">{{errorType}} 🚨</p>
+        <h1 style="color: white; font-size: 32px; margin: 0 0 10px 0; font-weight: 700;">הודעת שגיאה</h1>
+        <p style="color: rgba(255,255,255,0.95); font-size: 18px; margin: 0; font-weight: 600;">🦉 iHoogi מתנצל ⚠️</p>
       </div>
       
       <!-- Content -->
@@ -772,10 +767,19 @@ const emailDesigns: EmailDesign[] = [
             </CardHeader>
             <CardContent>
               {/* Preview Box */}
-              <div className={`bg-gradient-to-br ${design.gradient} p-6 rounded-lg mb-4 h-40 flex items-center justify-center`}>
+              <div className={`bg-gradient-to-br ${design.gradient} p-6 rounded-lg mb-4 h-48 flex flex-col items-center justify-center`}>
+                {/* iHoogi Logo in White Circle */}
+                <div className="bg-white rounded-full w-20 h-20 flex items-center justify-center mb-3 shadow-lg">
+                  <img 
+                    src="/hoogi-new-avatar.png" 
+                    alt="iHoogi" 
+                    className="w-16 h-16 object-contain"
+                  />
+                </div>
+                
                 <div className="text-white text-center">
-                  <div className="text-5xl mb-2">{design.emoji}</div>
-                  <p className="font-semibold">{design.name}</p>
+                  <p className="font-bold text-lg mb-1">{design.name}</p>
+                  <p className="text-sm font-semibold opacity-95">🦉 iHoogi {design.emoji}</p>
                 </div>
               </div>
 

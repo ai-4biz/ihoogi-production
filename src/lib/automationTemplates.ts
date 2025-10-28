@@ -60,15 +60,24 @@ export function generateQuestionnaireThankYouEmail(params: {
   <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
     <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
       
-      <!-- Top Banner: Logo + Profile Image + Business Name + Message -->
-      <div style="background: linear-gradient(to left, #10b98120 0%, #10b98110 100%); padding: 30px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #10b98130;">
+      <!-- Top Banner: iHoogi Logo + User Business Branding + Message -->
+      <div style="background: linear-gradient(to left, #10b98120 0%, #10b98110 100%); padding: 30px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #10b98140;">
+        <!-- Right Side: User Business Branding -->
         <div style="display: flex; align-items: center; gap: 12px;">
-          ${logoUrl ? `<img src="${logoUrl}" alt="Logo" style="width: 48px; height: 48px; object-contain;">` : ''}
-          ${profileImageUrl ? `<img src="${profileImageUrl}" alt="Profile" style="width: 48px; height: 48px; object-cover; border-radius: 8px;">` : ''}
+          ${logoUrl ? `<img src="${logoUrl}" alt="Logo" style="width: 48px; height: 48px; object-fit: contain;">` : ''}
+          ${profileImageUrl ? `<img src="${profileImageUrl}" alt="Profile" style="width: 48px; height: 48px; object-fit: cover; border-radius: 8px;">` : ''}
         </div>
-        <div style="text-align: right;">
+        
+        <!-- Center: Business Name + Message -->
+        <div style="text-align: center; flex: 1;">
           ${businessName ? `<h2 style="font-size: 20px; color: #10b981; font-weight: bold; margin: 0 0 5px 0;">${businessName}</h2>` : ''}
           <p style="font-size: 16px; color: #059669; font-weight: 600; margin: 0;">פנייתך התקבלה – הצוות שלנו כבר מטפל בה.</p>
+        </div>
+        
+        <!-- Left Side: iHoogi Logo -->
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <img src="https://raw.githubusercontent.com/ihoogi/assets/main/hoogi-new-avatar.png" alt="iHoogi" style="width: 60px; height: 60px; object-fit: contain;">
+          <span style="font-size: 14px; color: white; font-weight: 700;">🦉 שלום מ-iHoogi</span>
         </div>
       </div>
       
@@ -135,15 +144,24 @@ export function generateQuestionnaireReminderEmail(params: {
   <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
     <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
       
-      <!-- Top Banner: Logo + Profile Image + Business Name + Message -->
-      <div style="background: linear-gradient(to left, #10b98120 0%, #10b98110 100%); padding: 30px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #10b98130;">
+      <!-- Top Banner: iHoogi Logo + User Business Branding + Message -->
+      <div style="background: linear-gradient(to left, #10b98120 0%, #10b98110 100%); padding: 30px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #10b98140;">
+        <!-- Right Side: User Business Branding -->
         <div style="display: flex; align-items: center; gap: 12px;">
-          ${logoUrl ? `<img src="${logoUrl}" alt="Logo" style="width: 48px; height: 48px; object-contain;">` : ''}
-          ${profileImageUrl ? `<img src="${profileImageUrl}" alt="Profile" style="width: 48px; height: 48px; object-cover; border-radius: 8px;">` : ''}
+          ${logoUrl ? `<img src="${logoUrl}" alt="Logo" style="width: 48px; height: 48px; object-fit: contain;">` : ''}
+          ${profileImageUrl ? `<img src="${profileImageUrl}" alt="Profile" style="width: 48px; height: 48px; object-fit: cover; border-radius: 8px;">` : ''}
         </div>
-        <div style="text-align: right;">
+        
+        <!-- Center: Business Name + Message -->
+        <div style="text-align: center; flex: 1;">
           ${businessName ? `<h2 style="font-size: 20px; color: #10b981; font-weight: bold; margin: 0 0 5px 0;">${businessName}</h2>` : ''}
           <p style="font-size: 16px; color: #059669; font-weight: 600; margin: 0;">תזכורת</p>
+        </div>
+        
+        <!-- Left Side: iHoogi Logo -->
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <img src="https://raw.githubusercontent.com/ihoogi/assets/main/hoogi-new-avatar.png" alt="iHoogi" style="width: 60px; height: 60px; object-fit: contain;">
+          <span style="font-size: 14px; color: white; font-weight: 700;">🦉 תזכורת מ-iHoogi</span>
         </div>
       </div>
       

@@ -7,36 +7,38 @@ import { Badge } from "@/components/ui/badge";
 const Subscriptions = () => {
   const plans = [
     {
-      id: "basic",
-      name: "בסיסי",
-      price: "₪39",
+      id: "basic-paid",
+      name: "Basic",
+      price: "₪179",
       period: "חודשי",
-      description: "מתאים ליחידים או חברות קטנות שרק מתחילים",
+      description: "עצמאים קטנים שרוצים לנהל לידים פשוט",
       features: [
-        "עד 100 לידים בחודש",
-        "עד 5 שאלונים פעילים",
-        "200 הודעות מייל",
-        "מענה סטנדרטי",
-        "תמיכה בדוא\"ל בלבד"
+        "100 לידים בחודש",
+        "1 שאלון פעיל",
+        "מענה סטנדרטי / אישי (ללא AI)",
+        "300 מייל (כולל 2 תזכורות)",
+        "תזכורות מייל בלבד",
+        "עיצוב ממותג"
       ],
-      color: "from-blue-500/20 to-blue-500/5",
-      borderColor: "border-blue-500",
-      icon: <Users className="h-8 w-8 text-blue-500" />
+      color: "from-green-500/20 to-green-500/5",
+      borderColor: "border-green-500",
+      icon: <MessageSquare className="h-8 w-8 text-green-500" />,
+      popular: true
     },
     {
       id: "pro",
-      name: "מקצועי",
-      price: "₪99",
+      name: "Pro",
+      price: "₪290",
       period: "חודשי",
-      description: "לעסקים צומחים שצריכים פתרון מקיף יותר",
-      popular: true,
+      description: "בעלי עסקים פעילים שרוצים אוטומציה מלאה",
       features: [
-        "עד 300 לידים בחודש",
-        "עד 15 שאלונים פעילים",
-        "500 הודעות מייל",
-        "100 הודעות WhatsApp",
-        "AI מענה חכם",
-        "תמיכה בצ'אט ודוא\"ל"
+        "300 לידים בחודש",
+        "3 שאלונים פעילים",
+        "מענה אישי מעוצב + AI",
+        "900 מייל",
+        "300 וואטסאפ",
+        "תזכורות מייל + וואטסאפ",
+        "עיצוב ממותג"
       ],
       color: "from-primary/20 to-primary/5",
       borderColor: "border-primary",
@@ -44,18 +46,18 @@ const Subscriptions = () => {
     },
     {
       id: "premium",
-      name: "פרימיום",
-      price: "₪199",
+      name: "Premium",
+      price: "₪480",
       period: "חודשי",
-      description: "לארגונים גדולים עם צרכים מורכבים",
+      description: "משרדים וקהילות עם נפח לקוחות גבוה",
       features: [
-        "עד 1000 לידים בחודש",
-        "עד 50 שאלונים פעילים",
-        "1500 הודעות מייל",
-        "500 הודעות WhatsApp",
-        "AI מענה חכם מתקדם",
-        "תמיכה VIP",
-        "אינטגרציות מתקדמות"
+        "600 לידים בחודש",
+        "6 שאלונים פעילים",
+        "מענה חכם + AI משולב (כולל למידת סגנון)",
+        "1800 מייל",
+        "600 וואטסאפ",
+        "תזכורות חכם (עד 3 תזכורות)",
+        "עיצוב ממותג"
       ],
       color: "from-purple-500/20 to-purple-500/5",
       borderColor: "border-purple-500",
@@ -78,6 +80,81 @@ const Subscriptions = () => {
           <p className="text-xl text-muted-foreground mb-8">
             כל התוכניות כוללות גישה מלאה לכל התכונות הבסיסיות של iHoogi
           </p>
+        </div>
+
+        {/* Additional Info - Moved to Top */}
+        <div className="max-w-4xl mx-auto w-full bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950/20 dark:to-blue-950/20 rounded-2xl p-8 border-2 border-green-500/30 shadow-lg">
+          <div className="text-center">
+            <h3 className="text-3xl font-bold mb-4 bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+              🎁 התחל בחינם עוד היום!
+            </h3>
+            <p className="text-lg text-foreground mb-6 font-medium">
+              התנסה בכל יכולות המערכת עם <span className="text-green-600 dark:text-green-400 font-bold">10 לידים חינם</span> - ללא צורך בכרטיס אשראי
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="flex items-center justify-center gap-3 bg-white/60 dark:bg-gray-800/60 rounded-lg p-3">
+                <div className="w-4 h-4 bg-green-500 rounded-full flex-shrink-0"></div>
+                <span className="text-sm font-medium">10 לידים חינם</span>
+              </div>
+              <div className="flex items-center justify-center gap-3 bg-white/60 dark:bg-gray-800/60 rounded-lg p-3">
+                <div className="w-4 h-4 bg-blue-500 rounded-full flex-shrink-0"></div>
+                <span className="text-sm font-medium">ללא כרטיס אשראי</span>
+              </div>
+              <div className="flex items-center justify-center gap-3 bg-white/60 dark:bg-gray-800/60 rounded-lg p-3">
+                <div className="w-4 h-4 bg-purple-500 rounded-full flex-shrink-0"></div>
+                <span className="text-sm font-medium">שדרוג בכל עת</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Coming Soon - Partners Program Banner */}
+        <div className="max-w-4xl mx-auto w-full bg-gradient-to-r from-orange-50 via-yellow-50 to-amber-50 dark:from-orange-950/20 dark:via-yellow-950/20 dark:to-amber-950/20 rounded-2xl p-8 border-2 border-orange-400/40 shadow-lg relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
+          <div className="text-center relative z-10">
+            <div className="inline-block mb-4">
+              <Badge className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-6 py-2 text-lg font-bold shadow-lg animate-bounce">
+                🚀 חדש בקרוב
+              </Badge>
+            </div>
+            <h3 className="text-2xl md:text-3xl font-bold mb-6 bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">
+              🤝 תוכנית שותפים - שתי דרכים להצלחה!
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+              {/* Option 1 - Build Your Own */}
+              <div className="bg-white/80 dark:bg-gray-800/80 rounded-xl p-6 border-2 border-orange-300/50 hover:border-orange-400 transition-all hover:shadow-xl">
+                <div className="text-4xl mb-3">🏗️</div>
+                <h4 className="text-xl font-bold mb-3 text-orange-600 dark:text-orange-400">
+                  בנה את רשת השותפים שלך
+                </h4>
+                <p className="text-sm text-foreground font-medium mb-2">
+                  רוצה לבנות מערך של שותפים שיעזרו לך בבניית העסק?
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  פתח <span className="text-orange-600 dark:text-orange-400 font-bold">תוכנית שותפים משלך</span> והרחב את הפעילות בקלות
+                </p>
+              </div>
+
+              {/* Option 2 - Join iHoogi Partners */}
+              <div className="bg-white/80 dark:bg-gray-800/80 rounded-xl p-6 border-2 border-green-300/50 hover:border-green-400 transition-all hover:shadow-xl">
+                <div className="text-4xl mb-3">💰</div>
+                <h4 className="text-xl font-bold mb-3 text-green-600 dark:text-green-400">
+                  הצטרף לשותפים של iHoogi
+                </h4>
+                <p className="text-sm text-foreground font-medium mb-2">
+                  הפוך כל המלצה להכנסה פסיבית!
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  קבל <span className="text-green-600 dark:text-green-400 font-bold">עמלה חודשית</span> עבור כל משתמש שהצטרף דרכך - <span className="font-bold">כל עוד המנוי פעיל</span>
+                </p>
+              </div>
+            </div>
+
+            <p className="text-sm text-muted-foreground italic">
+              💡 שתי האפשרויות יהיו זמינות בקרוב - הירשם עכשיו ותהיה הראשון לדעת!
+            </p>
+          </div>
         </div>
 
         {/* Pricing Cards */}
@@ -140,30 +217,6 @@ const Subscriptions = () => {
               </Button>
             </div>
           ))}
-        </div>
-
-        {/* Additional Info */}
-        <div className="max-w-4xl mx-auto w-full bg-gradient-to-r from-primary/5 to-secondary/5 rounded-2xl p-8 border border-primary/20">
-          <div className="text-center">
-            <h3 className="text-2xl font-bold mb-4">מתלבט באיזה תוכנית לבחור?</h3>
-            <p className="text-muted-foreground mb-6">
-              כל התוכניות מגיעות עם 14 יום ניסיון חינם. תוכל לשדרג או להוריד דרגה בכל עת.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span className="text-sm">14 יום ניסיון חינם</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                <span className="text-sm">שינויים בכל עת</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                <span className="text-sm">תמיכה 24/7</span>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* FAQ Section */}

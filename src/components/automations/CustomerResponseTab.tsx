@@ -546,63 +546,26 @@ const CustomerResponseTab = () => {
             <div className="border rounded-lg p-4 bg-gray-50 min-h-[200px]">
               {previewChannel === "email" && (
                 <div className="bg-white rounded-lg shadow-sm overflow-hidden" dir="rtl">
-                  {/* Top Banner: Logo + Profile Image + Business Name + Message */}
-                  <div className="flex items-center justify-between p-4 bg-gradient-to-r from-primary/10 to-primary/5 rounded-t-lg border-b border-primary/20">
-                    <div className="flex items-center gap-3">
-                      {(() => {
-                        const branding = getUserBranding();
-                        console.log('Branding data:', branding); // Debug
-                        return (
-                          <>
-                            {branding?.logoUrl ? (
-                              <img 
-                                src={branding.logoUrl} 
-                                alt="Logo" 
-                                className="h-12 w-12 object-contain"
-                                onError={(e) => {
-                                  console.error('Failed to load logo:', branding.logoUrl);
-                                  e.currentTarget.style.display = 'none';
-                                }}
-                              />
-                            ) : (
-                              <div className="h-12 w-12 bg-gray-200 rounded-lg flex items-center justify-center text-gray-400 text-xs">
-                                לוגו
-                              </div>
-                            )}
-                            {branding?.profileImageUrl ? (
-                              <img 
-                                src={branding.profileImageUrl} 
-                                alt="Profile" 
-                                className="h-12 w-12 object-cover rounded-lg"
-                                onError={(e) => {
-                                  console.error('Failed to load profile:', branding.profileImageUrl);
-                                  e.currentTarget.style.display = 'none';
-                                }}
-                              />
-                            ) : (
-                              <div className="h-12 w-12 bg-gray-200 rounded-lg flex items-center justify-center text-gray-400 text-xs">
-                                פרופיל
-                              </div>
-                            )}
-                          </>
-                        );
-                      })()}
+                  {/* Top Banner: iHoogi Centered */}
+                  <div className="p-6 bg-gradient-to-r from-primary to-primary/90 text-center">
+                    <div className="bg-white rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-4 shadow-lg">
+                      <img 
+                        src="/hoogi-new-avatar.png" 
+                        alt="iHoogi" 
+                        className="h-20 w-20 object-contain"
+                      />
                     </div>
-                    <div className="text-right">
-                      {(() => {
-                        const branding = getUserBranding();
-                        return (
-                          <>
-                            {branding.businessName && (
-                              <h2 className="text-xl font-bold text-primary mb-1">
-                                {branding.businessName}
-                              </h2>
-                            )}
-                            <p className="text-base font-semibold text-green-600">פנייתך התקבלה – הצוות שלנו כבר מטפל בה.</p>
-                          </>
-                        );
-                      })()}
-                    </div>
+                    {(() => {
+                      const branding = getUserBranding();
+                      return (
+                        <>
+                          <h2 className="text-2xl font-bold text-white mb-2">
+                            {branding.businessName || "קיבלת תשובה"}
+                          </h2>
+                          <p className="text-lg font-semibold text-white/95">🦉 iHoogi עונה לך</p>
+                        </>
+                      );
+                    })()}
                   </div>
                   
                   {/* Business Image */}
