@@ -1,0 +1,221 @@
+<div class="register-page">
+  <!-- Landing Hero Section -->
+  <app-landing-hero variant="signup"></app-landing-hero>
+
+  <!-- Form Section -->
+  <div class="form-container">
+    <h2 class="form-title">{{ lang.t('register.formTitle') }}</h2>
+    <form (ngSubmit)="handleRegister()" class="register-form">
+      <!-- Full Name -->
+      <div class="form-group">
+        <label for="fullName" class="form-label">{{ lang.t('register.fullName') }}</label>
+        <input
+          type="text"
+          id="fullName"
+          [(ngModel)]="fullName"
+          name="fullName"
+          class="form-input"
+          [disabled]="isLoading"
+          required
+        >
+      </div>
+
+      <!-- Email Row -->
+      <div class="form-row">
+        <div class="form-group-half">
+          <label for="email" class="form-label">{{ lang.t('register.email') }}</label>
+          <input
+            type="email"
+            id="email"
+            [(ngModel)]="email"
+            name="email"
+            class="form-input"
+            [class.error]="emailError"
+            (blur)="onEmailBlur()"
+            (input)="onEmailChange()"
+            [disabled]="isLoading"
+            required
+          >
+          @if (emailError) {
+            <span class="error-message">{{ emailError }}</span>
+          }
+        </div>
+        <div class="form-group-half">
+          <label for="emailConfirm" class="form-label">{{ lang.t('register.emailConfirm') }}</label>
+          <input
+            type="text"
+            id="emailConfirm"
+            [(ngModel)]="emailConfirm"
+            name="emailConfirm"
+            class="form-input"
+            [class.error]="emailConfirmError"
+            (blur)="onEmailConfirmBlur()"
+            (paste)="$event.preventDefault()"
+            (copy)="$event.preventDefault()"
+            autocomplete="nope"
+            [disabled]="isLoading"
+            required
+          >
+          @if (emailConfirmError) {
+            <span class="error-message">{{ emailConfirmError }}</span>
+          }
+        </div>
+      </div>
+
+      <!-- Password Row -->
+      <div class="form-row">
+        <div class="form-group-half">
+          <label for="password" class="form-label">{{ lang.t('register.password') }}</label>
+          <div class="password-input-wrapper">
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              id="password"
+              [(ngModel)]="password"
+              name="password"
+              class="form-input"
+              [class.error]="passwordError"
+              (blur)="onPasswordBlur()"
+              [disabled]="isLoading"
+              required
+            >
+            <button
+              type="button"
+              class="password-toggle-btn"
+              (click)="togglePasswordVisibility()"
+              [disabled]="isLoading"
+            >
+              @if (showPassword) {
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              } @else {
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              }
+            </button>
+          </div>
+          @if (passwordError) {
+            <span class="error-message">{{ passwordError }}</span>
+          } @else {
+            <span class="helper-text">{{ lang.t('register.passwordRequirement') }}</span>
+          }
+        </div>
+        <div class="form-group-half">
+          <label for="passwordConfirm" class="form-label">{{ lang.t('register.passwordConfirm') }}</label>
+          <div class="password-input-wrapper">
+            <input
+              [type]="showPasswordConfirm ? 'text' : 'password'"
+              id="passwordConfirm"
+              [(ngModel)]="passwordConfirm"
+              name="passwordConfirm"
+              class="form-input"
+              [class.error]="passwordConfirmError"
+              (blur)="onPasswordConfirmBlur()"
+              (paste)="$event.preventDefault()"
+              (copy)="$event.preventDefault()"
+              autocomplete="new-password"
+              [disabled]="isLoading"
+              required
+            >
+            <button
+              type="button"
+              class="password-toggle-btn"
+              (click)="togglePasswordConfirmVisibility()"
+              [disabled]="isLoading"
+            >
+              @if (showPasswordConfirm) {
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              } @else {
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              }
+            </button>
+          </div>
+          @if (passwordConfirmError) {
+            <span class="error-message">{{ passwordConfirmError }}</span>
+          }
+        </div>
+      </div>
+
+      <!-- Language Dropdown -->
+      <div class="form-group">
+        <label for="language" class="form-label">{{ lang.t('register.language') }}</label>
+        <select
+          id="language"
+          [(ngModel)]="language"
+          name="language"
+          class="form-select"
+          [disabled]="isLoading"
+        >
+          <option value="עברית">{{ lang.t('register.languageHe') }}</option>
+          <option value="English">{{ lang.t('register.languageEn') }}</option>
+        </select>
+      </div>
+
+      <!-- Checkboxes -->
+      <div class="checkbox-group">
+        <input
+          type="checkbox"
+          id="agreeToTerms"
+          [(ngModel)]="agreeToTerms"
+          name="agreeToTerms"
+          class="checkbox-input"
+          [disabled]="isLoading"
+          required
+        >
+        <label for="agreeToTerms" class="checkbox-label">
+          {{ lang.t('register.agreeToPrefix') }}
+          <button
+            type="button"
+            (click)="openTerms()"
+            class="terms-link"
+          >
+            {{ lang.t('register.termsOfService') }}
+          </button>
+          <span class="required-mark">*</span>
+        </label>
+      </div>
+
+      <div class="checkbox-group">
+        <input
+          type="checkbox"
+          id="agreeToMarketing"
+          [(ngModel)]="agreeToMarketing"
+          name="agreeToMarketing"
+          class="checkbox-input"
+          [disabled]="isLoading"
+        >
+        <label for="agreeToMarketing" class="checkbox-label">
+          {{ lang.t('register.agreeToMarketing') }}
+        </label>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="submit-btn"
+        [disabled]="isLoading || !agreeToTerms"
+      >
+        {{ isLoading ? lang.t('register.submitting') : lang.t('register.submit') }}
+      </button>
+
+      <!-- Login Link -->
+      <button
+        type="button"
+        class="login-btn"
+        (click)="navigateToLogin()"
+        [disabled]="isLoading"
+      >
+        {{ lang.t('register.alreadyRegistered') }}
+      </button>
+    </form>
+  </div>
+</div>
