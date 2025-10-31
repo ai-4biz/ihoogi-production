@@ -184,16 +184,27 @@ ${links ? `קישורים/מסמכים: ${links}` : ''}
 
     // --- שמירה לטבלת Supabase ---
     // 1. Create questionnaire
+    const questionnaireTitle = businessName || topic || 'New Questionnaire';
     const { data: questionnaire, error: questionnaireError } = await supabase
       .from("questionnaires")
       .insert({
-        title: businessName || topic,
+        title: questionnaireTitle,
         created_at: new Date().toISOString()
       })
-      .select()
+      .select('id, title, created_at')
       .single();
 
-    if (questionnaireError) throw questionnaireError;
+    if (questionnaireError) {
+      console.error("[ERROR] Failed to create questionnaire:", questionnaireError);
+      throw questionnaireError;
+    }
+
+    // Log for debugging
+    console.log("[DEBUG] Created questionnaire:", { 
+      id: questionnaire?.id, 
+      title: questionnaire?.title,
+      titleFromVar: questionnaireTitle
+    });
 
     // 2. Create questions in the questions table
     const questionsToInsert = validQuestions.map((q, index) => ({
@@ -251,10 +262,13 @@ ${links ? `קישורים/מסמכים: ${links}` : ''}
       };
     });
 
+    // Ensure title is always returned - use questionnaire.title if available, otherwise fallback
+    const finalTitle = questionnaire?.title || questionnaireTitle || businessName || topic || 'New Questionnaire';
+    
     return new Response(JSON.stringify({
       success: true,
       questionnaire_id: questionnaire.id,
-      title: questionnaire.title,
+      title: finalTitle,
       questions: formattedQuestions
     }), {
       status: 200,
