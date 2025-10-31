@@ -398,39 +398,11 @@ export class QuestionnaireLive implements OnInit {
         channel: this.detectedChannel
       };
 
-      // Trigger automation by calling the Edge Function directly
-      if (insertedLead) {
-        this.triggerAutomation(insertedLead);
-      }
+      // Automation will be triggered automatically by the database trigger when the lead is created
+      // No manual call needed to avoid duplicates
     } catch (error) {
       console.error('Error in saveLeadData:', error);
       // Don't throw error - lead saving is optional
-    }
-  }
-
-  private async triggerAutomation(lead: any) {
-    try {
-      console.log('🚀 [CLIENT] Triggering automation for lead:', lead.id);
-      console.log('📦 [CLIENT] Lead data:', lead);
-
-      // Call the on-new-lead Edge Function to trigger automation
-      const { data, error } = await this.supabaseService.client.functions.invoke('on-new-lead', {
-        body: {
-          type: 'INSERT',
-          table: 'leads',
-          record: lead
-        }
-      });
-
-      if (error) {
-        console.error('❌ [CLIENT] Error triggering automation:', error);
-        // Don't throw - automation failure shouldn't affect the submission
-      } else {
-        console.log('✅ [CLIENT] Automation triggered successfully:', data);
-      }
-    } catch (error) {
-      console.error('❌ [CLIENT] Error in triggerAutomation:', error);
-      // Don't throw - automation failure shouldn't affect the submission
     }
   }
 
