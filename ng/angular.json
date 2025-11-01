@@ -59,6 +59,27 @@
                 }
               ]
             },
+            "staging": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2MB",
+                  "maximumError": "5MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "50kB",
+                  "maximumError": "100kB"
+                }
+              ],
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ]
+            },
             "development": {
               "optimization": false,
               "extractLicenses": false,
@@ -72,6 +93,9 @@
           "configurations": {
             "production": {
               "buildTarget": "ng:build:production"
+            },
+            "staging": {
+              "buildTarget": "ng:build:staging"
             },
             "development": {
               "buildTarget": "ng:build:development"
