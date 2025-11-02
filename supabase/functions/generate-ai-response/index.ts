@@ -23,10 +23,10 @@ serve(async (req) => {
       emailLength = 'medium'
     } = await req.json()
 
-    // Validate required fields
-    if (!mainCategory || !subcategory || !clientAnswers) {
+    // Validate required fields (subcategory is optional)
+    if (!mainCategory || !clientAnswers) {
       return new Response(
-        JSON.stringify({ error: 'Missing required fields: mainCategory, subcategory, or clientAnswers' }),
+        JSON.stringify({ error: 'Missing required fields: mainCategory or clientAnswers' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
@@ -45,7 +45,7 @@ serve(async (req) => {
 
 📌 Business Owner Info:
 - Main Field: ${mainCategory}
-- Subcategory: ${subcategory}
+${subcategory ? `- Subcategory: ${subcategory}` : ''}
 ${businessDescription ? `- Business Description / Value Proposition: ${businessDescription}` : ''}
 ${websiteUrl ? `- Website or Portfolio Link: ${websiteUrl}` : ''}
 ${socialMediaLinks ? `- Social Media Links: ${socialMediaLinks}` : ''}
