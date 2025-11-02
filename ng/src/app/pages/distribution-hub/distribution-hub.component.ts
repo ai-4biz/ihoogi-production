@@ -71,9 +71,6 @@ export class DistributionHubComponent implements OnInit {
   selectedTemplateId: string = ''; // "" = לא נבחר, "none" = ללא מענה, או ID תבנית
   availableTemplates: AutomationTemplate[] = [];
   
-  // Selected channels for the template
-  selectedChannels: Array<'email' | 'whatsapp' | 'sms'> = [];
-  
   // Link texts - Custom text per link type
   linkTexts: { [key: string]: string } = {
     form: '',
@@ -198,16 +195,10 @@ export class DistributionHubComponent implements OnInit {
     window.history.back();
   }
 
-    // Updated: Handle questionnaire selection (Step 1)
-  async onQuestionnaireChange(previousId?: string) {
-    // Get the previous questionnaire ID before reset (ngModelChange provides the new value)
-    // We need to track this differently - save it before the change or use a different approach
-    // For now, we'll reset all custom texts when changing questionnaires
-    // since ngModelChange fires after the value changes, we can't easily get the old value
-    
-    // Reset state - including custom texts (this ensures clean state for new questionnaire)
+  // Updated: Handle questionnaire selection (Step 1)
+  async onQuestionnaireChange() {
+    // Reset state
     this.selectedTemplateId = '';
-    this.selectedChannels = [];
     this.formLink = '';
     this.chatLink = '';
     this.qrLink = '';
@@ -217,15 +208,11 @@ export class DistributionHubComponent implements OnInit {
     this.selectedTemplates = [];
     this.selectedSocialNetwork = null;
     this.showLinksSection = false;
-    
-    // Always reset custom texts when changing questionnaire
-    // The old texts are already stored in localStorage per questionnaire
-    // So when we change, we reset the current values
     this.linkTexts = { form: '', chat: '', qr: '' };
     this.savedTexts = { form: '', chat: '', qr: '' };
 
     if (this.selectedQuestionnaire) {
-      // Load saved texts for the NEW questionnaire (if they exist)
+      // Load saved texts for this questionnaire
       this.loadSavedTexts();
       this.generateLinks();
       await this.loadExistingDistribution();
@@ -237,37 +224,10 @@ export class DistributionHubComponent implements OnInit {
   // Updated: Handle template selection (Step 2)
   onTemplateChange(templateId: string): void {
     this.selectedTemplateId = templateId;
-    
-    // Reset channels when template changes or when "none" is selected
-    // NO default selection - user must choose freely
-    if (templateId === 'none' || !templateId) {
-      this.selectedChannels = [];
-    } else {
-      // Clear channels - let user choose freely (multiple selection)
-      this.selectedChannels = [];
-    }
-    
     // Generate links if questionnaire is selected
     if (this.selectedQuestionnaire && templateId) {
       this.generateLinks();
     }
-  }
-
-  // Toggle channel selection
-  toggleChannel(channel: 'email' | 'whatsapp' | 'sms'): void {
-    const index = this.selectedChannels.indexOf(channel);
-    if (index > -1) {
-      // Remove channel
-      this.selectedChannels = this.selectedChannels.filter(c => c !== channel);
-    } else {
-      // Add channel
-      this.selectedChannels.push(channel);
-    }
-  }
-
-  // Check if channel is selected
-  isChannelSelected(channel: 'email' | 'whatsapp' | 'sms'): boolean {
-    return this.selectedChannels.includes(channel);
   }
 
   // Legacy - keeping for backward compatibility
@@ -305,7 +265,7 @@ export class DistributionHubComponent implements OnInit {
     this.qrLink = '';
   }
 
-  // Copy link only (plain link)
+  // Copy link or custom text (if saved)
   async copyLink(link: string, type: string): Promise<void> {
     if (!link) {
       this.toast.show(
@@ -315,68 +275,21 @@ export class DistributionHubComponent implements OnInit {
       return;
     }
 
-    const success = await this.copyToClipboard(link);
+    // If saved text exists, copy it. Otherwise, copy the link
+    const savedText = this.savedTexts[type];
+    const textToCopy = (savedText && savedText.trim()) ? savedText : link;
+
+    const success = await this.copyToClipboard(textToCopy);
     if (success) {
-      this.toast.show(
-        this.lang.currentLanguage === 'he' ? 'הקישור הועתק ללוח' : 'Link copied to clipboard',
-        'success'
-      );
+      const message = (savedText && savedText.trim())
+        ? (this.lang.currentLanguage === 'he' ? 'המלל הועתק ללוח' : 'Text copied to clipboard')
+        : (this.lang.currentLanguage === 'he' ? 'הקישור הועתק ללוח' : 'Link copied to clipboard');
+      this.toast.show(message, 'success');
     } else {
       this.toast.show(
         this.lang.currentLanguage === 'he' ? 'שגיאה בהעתקה' : 'Copy failed',
         'error'
       );
-    }
-  }
-
-  // Copy clickable link (HTML format - text as clickable link)
-  async copyClickableLink(link: string, type: string): Promise<void> {
-    if (!link) {
-      this.toast.show(
-        this.lang.currentLanguage === 'he' ? 'אין קישור להעתקה' : 'No link to copy',
-        'error'
-      );
-      return;
-    }
-
-    const savedText = this.savedTexts[type];
-    if (!savedText || !savedText.trim()) {
-      this.toast.show(
-        this.lang.currentLanguage === 'he' ? 'אין מלל שמור להעתקה' : 'No saved text to copy',
-        'error'
-      );
-      return;
-    }
-
-    // Copy as HTML link format
-    try {
-      const htmlLink = `<a href="${link}">${savedText}</a>`;
-      const htmlBlob = new Blob([htmlLink], { type: 'text/html' });
-      const textBlob = new Blob([savedText], { type: 'text/plain' });
-      const clipboardItem = new ClipboardItem({
-        'text/html': htmlBlob,
-        'text/plain': textBlob
-      });
-      await navigator.clipboard.write([clipboardItem]);
-      
-      this.toast.show(
-        this.lang.currentLanguage === 'he' ? 'המלל כקישור קליקבילי הועתק ללוח' : 'Text as clickable link copied to clipboard',
-        'success'
-      );
-    } catch (error) {
-      // Fallback to plain text
-      const success = await this.copyToClipboard(savedText);
-      if (success) {
-        this.toast.show(
-          this.lang.currentLanguage === 'he' ? 'המלל הועתק ללוח' : 'Text copied to clipboard',
-          'success'
-        );
-      } else {
-        this.toast.show(
-          this.lang.currentLanguage === 'he' ? 'שגיאה בהעתקה' : 'Copy failed',
-          'error'
-        );
-      }
     }
   }
 
@@ -477,18 +390,7 @@ export class DistributionHubComponent implements OnInit {
 
   // Check if Step 2 is valid
   isStep2Valid(): boolean {
-    // Template must be selected
-    if (!this.selectedTemplateId || this.selectedTemplateId === '') {
-      return false;
-    }
-    
-    // If "none" is selected, it's valid
-    if (this.selectedTemplateId === 'none') {
-      return true;
-    }
-    
-    // If a template is selected, at least one channel must be selected
-    return this.selectedChannels.length > 0;
+    return !!(this.selectedTemplateId && this.selectedTemplateId !== '');
   }
 
   async loadExistingDistribution() {
@@ -574,15 +476,11 @@ export class DistributionHubComponent implements OnInit {
     let automationTemplateIds: Array<{ template_id: string; channels: Array<'email' | 'whatsapp' | 'sms'> }> = [];
     
     if (this.selectedTemplateId && this.selectedTemplateId !== 'none') {
-      // If a template is selected, use the selected channels
-      // If no channels selected, default to email
-      const channels: Array<'email' | 'whatsapp' | 'sms'> = this.selectedChannels.length > 0 
-        ? this.selectedChannels 
-        : ['email'];
-      
+      // If a template is selected, we need to determine channels
+      // For now, default to email (can be enhanced later)
       automationTemplateIds = [{
         template_id: this.selectedTemplateId,
-        channels: channels
+        channels: ['email'] // Default channel - can be enhanced to allow channel selection
       }];
     }
     // If "none" is selected, automationTemplateIds stays empty
