@@ -293,8 +293,8 @@
                       </div>
                     }
 
-                    <!-- Buttons for single choice questions (not "Other", any required status) - hide for last question -->
-                    @if (message.questionIndex === currentQuestionIndex && isSingleChoiceQuestion(questions[message.questionIndex]) && !isOtherSelected(questions[message.questionIndex].id) && currentQuestionIndex !== questions.length - 1) {
+                    <!-- Buttons for single choice questions (not "Other", any required status) -->
+                    @if (message.questionIndex === currentQuestionIndex && isSingleChoiceQuestion(questions[message.questionIndex]) && !isOtherSelected(questions[message.questionIndex].id)) {
                       <div class="flex justify-start gap-2 mt-3 sm:mt-4">
                         <!-- Continue button if question was already answered (user went back) -->
                         @if (responses[questions[message.questionIndex].id]) {
@@ -306,7 +306,7 @@
                             [class.cursor-not-allowed]="isScrolling"
                             [style.background-color]="primaryColor"
                             [style.pointer-events]="isScrolling ? 'none' : 'auto'">
-                            המשך
+                            {{ currentQuestionIndex === questions.length - 1 ? 'שלח' : 'המשך' }}
                           </button>
                         }
                         @if (currentQuestionIndex > 0) {
