@@ -6,6 +6,6 @@ export const environment = {
   baseUrl: 'https://ai-4biz.com/',
   siteUrl: 'https://ai-4biz.com/',
   defaultLocale: 'he',
-  appName: 'Answer Tool',
+  appName: 'Answer',
   bypassProfileGuard: false
 };
