@@ -1,0 +1,32 @@
+<div class="profile-page" [class.rtl]="lang.currentLanguage === 'he'" [class.ltr]="lang.currentLanguage === 'en'">
+  <!-- Page Title -->
+  <h1 class="page-title">{{ lang.t('profile.myProfile') }}</h1>
+
+  <!-- Tabs -->
+  <div class="tabs-container">
+    <div class="tabs-list">
+	    <button
+					    class="tab-button"
+					    [class.active]="activeTab === 'details'"
+					    (click)="setActiveTab('details')">
+		    {{ lang.t('profile.businessDetails') }}
+	    </button>
+      <button
+        class="tab-button"
+        [class.active]="activeTab === 'billing'"
+        (click)="setActiveTab('billing')">
+        {{ lang.t('profile.billing') }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Tab Content -->
+  <div class="tab-content-wrapper">
+    @if (activeTab === 'details') {
+      <app-profile-details />
+    }
+    @if (activeTab === 'billing') {
+      <app-profile-billing />
+    }
+  </div>
+</div>

@@ -1,0 +1,387 @@
+<div class="leads-container" [attr.dir]="lang.currentLanguage === 'he' ? 'rtl' : 'ltr'">
+  <div class="leads-card">
+    <!-- Title -->
+    <h1 class="leads-title">
+      <svg class="title-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      </svg>
+      {{ lang.t('leads.leadsAndResponses') }}
+    </h1>
+
+    <!-- Tabs -->
+    <div class="tabs-container">
+      <div class="tabs-list">
+        <button
+          [class.active]="activeTab === 'leads'"
+          (click)="activeTab = 'leads'"
+          class="tab-trigger">
+          {{ lang.t('questionnaires.leads') }}
+        </button>
+        <button
+          [class.active]="activeTab === 'answers-analytics'"
+          (click)="activeTab = 'answers-analytics'"
+          class="tab-trigger">
+          <svg class="tab-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          {{ lang.t('leads.answersAnalytics') }}
+        </button>
+      </div>
+
+      <!-- Leads Tab Content -->
+      @if (activeTab === 'leads') {
+        <div class="tab-content">
+          @if (loading) {
+            <div class="loading-state">
+              <p>{{ lang.t('common.loading') }}</p>
+            </div>
+          } @else if (leads.length === 0) {
+            <div class="empty-state">
+              <p class="empty-title">{{ lang.t('leads.noLeadsToDisplay') }}</p>
+              <p class="empty-subtitle">{{ lang.t('leads.newLeadsAppear') }}</p>
+            </div>
+          } @else {
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+              <!-- Search input -->
+              <div class="filter-search">
+                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <input
+                  type="text"
+                  [(ngModel)]="filterText"
+                  (ngModelChange)="applyFilters()"
+                  [placeholder]="lang.t('leads.searchPlaceholder')"
+                  class="filter-input">
+              </div>
+
+              <!-- Date from -->
+              <input
+                type="date"
+                [(ngModel)]="filterDateFrom"
+                (ngModelChange)="applyFilters()"
+                [placeholder]="lang.t('leads.fromDate')"
+                class="filter-date">
+
+              <!-- Date to -->
+              <input
+                type="date"
+                [(ngModel)]="filterDateTo"
+                (ngModelChange)="applyFilters()"
+                [placeholder]="lang.t('leads.toDate')"
+                class="filter-date">
+
+              <!-- Channel filter -->
+              <select
+                [(ngModel)]="filterChannel"
+                (ngModelChange)="applyFilters()"
+                class="filter-select">
+                <option value="">{{ lang.t('leads.allChannels') }}</option>
+                <option value="email">{{ lang.t('leads.channelEmail') }}</option>
+                <option value="whatsapp">{{ lang.t('leads.channelWhatsApp') }}</option>
+                <option value="sms">{{ lang.t('leads.channelSMS') }}</option>
+                <option value="website">{{ lang.t('leads.channelWebsite') }}</option>
+                <option value="facebook">{{ lang.t('leads.channelFacebook') }}</option>
+                <option value="instagram">{{ lang.t('leads.channelInstagram') }}</option>
+                <option value="other">{{ lang.t('leads.channel_other') }}</option>
+              </select>
+
+              <!-- Status filter -->
+              <select
+                [(ngModel)]="filterStatus"
+                (ngModelChange)="applyFilters()"
+                class="filter-select">
+                <option value="">{{ lang.t('leads.allStatuses') }}</option>
+                <option value="new,in-progress">{{ lang.t('leads.statusWaitingForHandling') }}</option>
+                <option value="new">{{ lang.t('leads.statusNew') }}</option>
+                <option value="in-progress">{{ lang.t('leads.statusInProgress') }}</option>
+                <option value="reminder">{{ lang.t('leads.statusReminder') }}</option>
+                <option value="closed-success">{{ lang.t('leads.statusClosedSuccess') }}</option>
+                <option value="not-relevant">{{ lang.t('leads.statusNotRelevant') }}</option>
+                <option value="no-answer">{{ lang.t('leads.statusNoAnswer') }}</option>
+                <option value="cancelled">{{ lang.t('leads.statusCancelled') }}</option>
+              </select>
+
+              <!-- Questionnaire filter -->
+              <select
+                [(ngModel)]="filterQuestionnaire"
+                (ngModelChange)="onQuestionnaireFilterChange()"
+                class="filter-select">
+                <option value="">{{ lang.t('leads.allQuestionnaires') }}</option>
+                @for (q of getUniqueQuestionnaires(); track q) {
+                  <option [value]="q">{{ q }}</option>
+                }
+              </select>
+
+              <!-- Partner filter -->
+              <select
+                [(ngModel)]="filterPartner"
+                (ngModelChange)="applyFilters()"
+                class="filter-select">
+                <option value="">{{ lang.t('leads.allPartners') }}</option>
+                @for (p of getUniquePartners(); track p) {
+                  <option [value]="p">{{ p.substring(0, 8) }}...</option>
+                }
+              </select>
+
+              <!-- Reset button -->
+              <button
+                (click)="resetFilters()"
+                class="filter-reset-btn">
+                {{ lang.t('leads.resetFilters') }}
+              </button>
+
+              <!-- Export button -->
+              <button
+                (click)="exportToExcel()"
+                class="filter-export-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                {{ lang.t('leads.exportExcel') }}
+              </button>
+            </div>
+
+            @if (filteredLeads.length === 0) {
+              <div class="empty-state">
+                <p class="empty-title">{{ lang.t('leads.noLeadsFound') }}</p>
+                <p class="empty-subtitle">{{ lang.t('leads.tryDifferentFilters') }}</p>
+              </div>
+            } @else {
+            <!-- Table header -->
+            <div class="table-header">
+              <div class="header-cell header-checkbox">
+                <input
+                  type="checkbox"
+                  class="checkbox"
+                  [checked]="isAllSelected()"
+                  (change)="toggleAllLeads()">
+              </div>
+              <div class="header-cell header-client-name">{{ lang.t('leads.clientName') }}</div>
+              <div class="header-cell header-questionnaire">{{ lang.t('leads.questionnaire') }}</div>
+              <div class="header-cell header-partner">{{ lang.t('leads.partner') }}</div>
+              <div class="header-cell header-channel">{{ lang.t('leads.channel') }}</div>
+              <div class="header-cell header-status">{{ lang.t('leads.status') }}</div>
+              <div class="header-cell header-sub-status">{{ lang.t('leads.subStatus') }}</div>
+              <div class="header-cell header-automations">{{ lang.t('leads.automations') }}</div>
+              <div class="header-cell header-quick-actions">{{ lang.t('leads.quickActions') }}</div>
+              <div class="header-cell header-comments">{{ lang.t('leads.comments') }}</div>
+              <div class="header-cell header-actions">{{ lang.t('common.delete') }}</div>
+            </div>
+
+            <!-- Leads list -->
+            <div class="leads-list">
+              @for (lead of filteredLeads; track lead.id) {
+                <div class="lead-row">
+                  <!-- Checkbox -->
+                  <div class="cell cell-checkbox">
+                    <input
+                      type="checkbox"
+                      class="checkbox"
+                      [checked]="isLeadSelected(lead.id)"
+                      (change)="toggleLeadSelection(lead.id)">
+                  </div>
+
+                  <!-- Client Name -->
+                  <div class="cell cell-client-name">
+                    <div class="client-info">
+                      <div class="avatar">{{ lead.client_name.charAt(0) }}</div>
+                      <div class="client-details">
+                        <span class="client-name">{{ lead.client_name }}</span>
+                        <div class="client-date">
+                          <svg class="calendar-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                          </svg>
+                          <span class="date-value">{{ getFormattedDateDDMMYYYY(lead.created_at) }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Questionnaire Title -->
+                  <div class="cell cell-questionnaire">
+                    <button class="questionnaire-title-btn" (click)="openLeadDetails(lead)">
+                      {{ lead.questionnaire_title }}
+                    </button>
+                  </div>
+
+                  <!-- Partner -->
+                  <div class="cell cell-partner">
+                    @if (lead.partner_id) {
+                      <span>{{ lead.partner_id.substring(0, 8) }}...</span>
+                    } @else {
+                      <span class="no-data">{{ lang.t('leads.notAssigned') }}</span>
+                    }
+                  </div>
+
+                  <!-- Channel -->
+                  <div class="cell cell-channel">
+                    <span class="channel-chip">
+                      {{ getChannelLabel(lead.channel || '') }}
+                    </span>
+                  </div>
+
+                  <!-- Status -->
+                  <div class="cell cell-status">
+                    <select class="status-select" [(ngModel)]="lead.status" (change)="onStatusChange(lead.id, lead.status)">
+                      <option value="new">{{ lang.t('leads.statusNew') }}</option>
+                      <option value="in-progress">{{ lang.t('leads.statusInProgress') }}</option>
+                      <option value="reminder">{{ lang.t('leads.statusReminder') }}</option>
+                      <option value="closed-success">{{ lang.t('leads.statusClosedSuccess') }}</option>
+                      <option value="not-relevant">{{ lang.t('leads.statusNotRelevant') }}</option>
+                      <option value="no-answer">{{ lang.t('leads.statusNoAnswer') }}</option>
+                      <option value="cancelled">{{ lang.t('leads.statusCancelled') }}</option>
+                    </select>
+                  </div>
+
+                  <!-- Sub Status -->
+                  <div class="cell cell-sub-status">
+                    <select
+                      class="sub-status-select"
+                      [value]="lead.sub_status || ''"
+                      (change)="onSubStatusChange(lead.id, $event)"
+                      [disabled]="getSubStatusOptions(lead.status).length === 0">
+                      @if (getSubStatusOptions(lead.status).length > 0) {
+                        <option value="">{{ lang.t('leads.subStatus') }}</option>
+                        @for (option of getSubStatusOptions(lead.status); track option) {
+                          <option [value]="option">{{ option }}</option>
+                        }
+                      } @else {
+                        <option value="">---------</option>
+                      }
+                    </select>
+                  </div>
+
+                  <!-- Automations -->
+                  <div class="cell cell-automations">
+                    @if (lead.automations && lead.automations.length > 0) {
+                      <span class="automation-badge" [ngClass]="getAutomationClass(lead.automations[0])">
+                        {{ lead.automations[0] }}
+                      </span>
+                    } @else {
+                      <span class="automations-list">{{ lang.t('leads.noAutomation') }}</span>
+                    }
+                  </div>
+
+                  <!-- Quick Actions -->
+                  <div class="cell cell-quick-actions">
+                    <div class="quick-actions-buttons">
+                      <a [href]="lead.phone ? 'tel:' + lead.phone : 'javascript:void(0)'"
+                         [class.disabled]="!lead.phone"
+                         class="quick-action-btn phone-btn"
+                         [title]="lead.phone ? lang.t('leads.call') : lang.t('leads.noPhone')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                        </svg>
+                      </a>
+                      <a [href]="lead.phone ? getWhatsAppLink(lead.phone) : 'javascript:void(0)'"
+                         [class.disabled]="!lead.phone"
+                         target="_blank"
+                         rel="noopener noreferrer"
+                         class="quick-action-btn whatsapp-btn"
+                         [title]="lead.phone ? lang.t('leads.whatsapp') : lang.t('leads.noPhone')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                      </a>
+                      <a [href]="lead.phone ? 'sms:' + lead.phone : 'javascript:void(0)'"
+                         [class.disabled]="!lead.phone"
+                         class="quick-action-btn sms-btn"
+                         [title]="lead.phone ? lang.t('leads.sms') : lang.t('leads.noPhone')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                      </a>
+                      <a [href]="lead.email ? 'mailto:' + lead.email : 'javascript:void(0)'"
+                         [class.disabled]="!lead.email"
+                         class="quick-action-btn email-btn"
+                         [title]="lead.email ? lang.t('leads.email') : lang.t('leads.noEmail')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                          <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
+
+                  <!-- Comments -->
+                  <div class="cell cell-comments">
+                    <div class="comments-container">
+                      <button
+                        class="comment-icon-btn"
+                        (click)="toggleCommentPopup($event, lead.id, lead.comments)"
+                        [class.has-comment]="lead.comments"
+                        [title]="lead.comments || lang.t('leads.addComment')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Actions -->
+                  <div class="cell cell-actions">
+                    <div class="action-buttons">
+                      <button class="action-btn" [title]="lang.t('common.delete')" (click)="deleteLead(lead.id, lead.client_name)">🗑️</button>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+            }
+          }
+        </div>
+      }
+
+      <!-- Answers Analytics Tab Content -->
+      @if (activeTab === 'answers-analytics') {
+        <div class="tab-content">
+          <div class="analytics-placeholder">
+            <p>{{ lang.t('leads.analyticsComingSoon') }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Comment Popup (rendered outside table to float freely) -->
+@if (openCommentPopup) {
+  <div class="comment-popup" [style.top]="popupPosition.top" [style.left]="popupPosition.left">
+    <textarea
+      [(ngModel)]="editingComment"
+      [placeholder]="lang.t('leads.addCommentPlaceholder')"
+      rows="4"
+      class="comment-textarea">
+    </textarea>
+    <div class="comment-popup-actions">
+      <button class="save-btn" (click)="saveComment(openCommentPopup)">
+        {{ lang.t('common.save') }}
+      </button>
+      <button class="cancel-btn" (click)="openCommentPopup = null; editingComment = ''">
+        {{ lang.t('common.cancel') }}
+      </button>
+    </div>
+  </div>
+}
+
+<!-- Lead Details Dialog -->
+@if (selectedLead) {
+  <app-lead-details-dialog
+    [leadId]="selectedLead.id"
+    [questionnaireTitle]="selectedLead.questionnaire_title || 'Untitled'"
+    [clientName]="selectedLead.client_name"
+    [answerJson]="selectedLead.answer_json"
+    [questionnaireId]="selectedLead.questionnaire_id"
+    (close)="closeLeadDetails()">
+  </app-lead-details-dialog>
+}

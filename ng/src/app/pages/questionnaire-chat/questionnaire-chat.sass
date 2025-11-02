@@ -1,0 +1,18 @@
+.chat-header
+  display: flex
+
+.overflow-y-auto
+  scroll-behavior: smooth
+  scroll-padding: 1rem
+
+input, textarea
+  &:focus
+    ring-color: var(--focus-color, #199f3a)
+
+.option-selected
+  transform: scale(1.02)
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)
+
+button
+  &:active
+    transform: scale(0.98)
