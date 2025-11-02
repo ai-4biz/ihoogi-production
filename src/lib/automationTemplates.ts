@@ -60,25 +60,16 @@ export function generateQuestionnaireThankYouEmail(params: {
   <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
     <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
       
-      <!-- Top Banner: iHoogi Logo + User Business Branding + Message -->
-      <div style="background: linear-gradient(to left, #10b98120 0%, #10b98110 100%); padding: 30px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #10b98140;">
-        <!-- Right Side: User Business Branding -->
-        <div style="display: flex; align-items: center; gap: 12px;">
-          ${logoUrl ? `<img src="${logoUrl}" alt="Logo" style="width: 48px; height: 48px; object-fit: contain;">` : ''}
-          ${profileImageUrl ? `<img src="${profileImageUrl}" alt="Profile" style="width: 48px; height: 48px; object-fit: cover; border-radius: 8px;">` : ''}
-        </div>
-        
-        <!-- Center: Business Name + Message -->
-        <div style="text-align: center; flex: 1;">
-          ${businessName ? `<h2 style="font-size: 20px; color: #10b981; font-weight: bold; margin: 0 0 5px 0;">${businessName}</h2>` : ''}
-          <p style="font-size: 16px; color: #059669; font-weight: 600; margin: 0;">פנייתך התקבלה – הצוות שלנו כבר מטפל בה.</p>
-        </div>
-        
-        <!-- Left Side: iHoogi Logo -->
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <img src="https://raw.githubusercontent.com/ihoogi/assets/main/hoogi-new-avatar.png" alt="iHoogi" style="width: 60px; height: 60px; object-fit: contain;">
-          <span style="font-size: 14px; color: white; font-weight: 700;">🦉 שלום מ-iHoogi</span>
-        </div>
+      <!-- Top Banner: Business Logo, Profile Image and Name -->
+      <div style="background: linear-gradient(to left, #10b98120 0%, #10b98110 100%); padding: 30px; text-align: center; border-bottom: 2px solid #10b98140;">
+        ${(logoUrl || profileImageUrl) ? `
+          <div style="margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 12px;">
+            ${logoUrl ? `<img src="${logoUrl}" alt="Logo" style="width: 64px; height: 64px; object-fit: contain;">` : ''}
+            ${profileImageUrl ? `<img src="${profileImageUrl}" alt="Profile" style="width: 64px; height: 64px; object-fit: cover; border-radius: 8px;">` : ''}
+          </div>
+        ` : ''}
+        ${businessName ? `<h2 style="font-size: 24px; color: #10b981; font-weight: bold; margin: 0 0 10px 0;">${businessName}</h2>` : ''}
+        <p style="font-size: 16px; color: #059669; font-weight: 600; margin: 0;">פנייתך התקבלה – הצוות שלנו כבר מטפל בה.</p>
       </div>
       
       <!-- Business Image -->
@@ -109,6 +100,13 @@ export function generateQuestionnaireThankYouEmail(params: {
           ${businessName ? `<p style="color: #1f2937; font-size: 16px; font-weight: 600; margin: 0 0 5px 0;">${businessName}</p>` : ''}
           <p style="color: #059669; font-size: 15px; font-weight: 600; margin: 0;">בברכה</p>
         </div>
+      </div>
+      
+      <!-- Footer: Auto-sent message -->
+      <div style="background: #e5e7eb; border-top: 1px solid #d1d5db; padding: 20px; text-align: center; direction: rtl;">
+        <p style="font-size: 11px; color: #6b7280; line-height: 1.6; margin: 0;">
+          נשלח באופן אוטומטי באמצעות <a href="https://www.ai-4biz.com" target="_blank" rel="noopener noreferrer" style="color: #2563eb; text-decoration: underline;">iHoogi</a> – מערכת שאלונים חכמה המחברת עסקים ללקוחותיהם, מבית <a href="https://www.ai-4biz.com" target="_blank" rel="noopener noreferrer" style="color: #2563eb; text-decoration: underline;">AI-4Biz</a>, בשם העסק שמולו פנית.
+        </p>
       </div>
       
     </div>
@@ -144,25 +142,16 @@ export function generateQuestionnaireReminderEmail(params: {
   <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
     <div style="background: white; border-radius: 20px; padding: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden;">
       
-      <!-- Top Banner: iHoogi Logo + User Business Branding + Message -->
-      <div style="background: linear-gradient(to left, #10b98120 0%, #10b98110 100%); padding: 30px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #10b98140;">
-        <!-- Right Side: User Business Branding -->
-        <div style="display: flex; align-items: center; gap: 12px;">
-          ${logoUrl ? `<img src="${logoUrl}" alt="Logo" style="width: 48px; height: 48px; object-fit: contain;">` : ''}
-          ${profileImageUrl ? `<img src="${profileImageUrl}" alt="Profile" style="width: 48px; height: 48px; object-fit: cover; border-radius: 8px;">` : ''}
-        </div>
-        
-        <!-- Center: Business Name + Message -->
-        <div style="text-align: center; flex: 1;">
-          ${businessName ? `<h2 style="font-size: 20px; color: #10b981; font-weight: bold; margin: 0 0 5px 0;">${businessName}</h2>` : ''}
-          <p style="font-size: 16px; color: #059669; font-weight: 600; margin: 0;">תזכורת</p>
-        </div>
-        
-        <!-- Left Side: iHoogi Logo -->
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <img src="https://raw.githubusercontent.com/ihoogi/assets/main/hoogi-new-avatar.png" alt="iHoogi" style="width: 60px; height: 60px; object-fit: contain;">
-          <span style="font-size: 14px; color: white; font-weight: 700;">🦉 תזכורת מ-iHoogi</span>
-        </div>
+      <!-- Top Banner: Business Logo, Profile Image and Name -->
+      <div style="background: linear-gradient(to left, #10b98120 0%, #10b98110 100%); padding: 30px; text-align: center; border-bottom: 2px solid #10b98140;">
+        ${(logoUrl || profileImageUrl) ? `
+          <div style="margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 12px;">
+            ${logoUrl ? `<img src="${logoUrl}" alt="Logo" style="width: 64px; height: 64px; object-fit: contain;">` : ''}
+            ${profileImageUrl ? `<img src="${profileImageUrl}" alt="Profile" style="width: 64px; height: 64px; object-fit: cover; border-radius: 8px;">` : ''}
+          </div>
+        ` : ''}
+        ${businessName ? `<h2 style="font-size: 24px; color: #10b981; font-weight: bold; margin: 0 0 10px 0;">${businessName}</h2>` : ''}
+        <p style="font-size: 16px; color: #059669; font-weight: 600; margin: 0;">תזכורת</p>
       </div>
       
       <!-- Business Image -->
@@ -193,6 +182,13 @@ export function generateQuestionnaireReminderEmail(params: {
           ${businessName ? `<p style="color: #1f2937; font-size: 16px; font-weight: 600; margin: 0 0 5px 0;">${businessName}</p>` : ''}
           <p style="color: #059669; font-size: 15px; font-weight: 600; margin: 0;">בברכה</p>
         </div>
+      </div>
+      
+      <!-- Footer: Auto-sent message -->
+      <div style="background: #e5e7eb; border-top: 1px solid #d1d5db; padding: 20px; text-align: center; direction: rtl;">
+        <p style="font-size: 11px; color: #6b7280; line-height: 1.6; margin: 0;">
+          נשלח באופן אוטומטי באמצעות <a href="https://www.ai-4biz.com" target="_blank" rel="noopener noreferrer" style="color: #2563eb; text-decoration: underline;">iHoogi</a> – מערכת שאלונים חכמה המחברת עסקים ללקוחותיהם, מבית <a href="https://www.ai-4biz.com" target="_blank" rel="noopener noreferrer" style="color: #2563eb; text-decoration: underline;">AI-4Biz</a>, בשם העסק שמולו פנית.
+        </p>
       </div>
       
     </div>

@@ -1,8 +1,9 @@
 import MainLayout from "@/components/layout/MainLayout";
 import { Button } from "@/components/ui/button";
-import { Check, Zap, MessageSquare, Mail, Users, Star } from "lucide-react";
+import { Check, Zap, MessageSquare, Mail, Users, Star, TrendingUp, DollarSign, Handshake } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 
 const Subscriptions = () => {
   const plans = [
@@ -69,17 +70,169 @@ const Subscriptions = () => {
     toast.success(`התוכנית ${plans.find(p => p.id === planId)?.name} נבחרה בהצלחה!`);
   };
 
+  // תוספות מהירות (Add-ons)
+  const addOns = [
+    {
+      id: "leads-100",
+      name: "+100 לידים",
+      price: "₪49",
+      description: "הרחבת מכסת לידים (כולל 300 הודעות מייל)",
+      icon: "🧲",
+      note: "חד־פעמית; לא משנה את המנוי — הרווח גדל"
+    },
+    {
+      id: "leads-300",
+      name: "+300 לידים",
+      price: "₪99",
+      description: "הרחבה לעסקים פעילים (כולל 900 הודעות מייל)",
+      icon: "🧲",
+      note: "משתלם למנויי Basic/Pro"
+    },
+    {
+      id: "leads-600",
+      name: "+600 לידים",
+      price: "₪149",
+      description: "הרחבה גדולה (כולל 1800 הודעות מייל)",
+      icon: "🧲",
+      note: "למשרדים"
+    },
+    {
+      id: "email-500",
+      name: "+500 הודעות מייל",
+      price: "₪29",
+      description: "הודעות נוספות למענה או תזכורות",
+      icon: "📧",
+      note: "למי שעובר את המכסה"
+    },
+    {
+      id: "whatsapp-500",
+      name: "+500 הודעות וואטסאפ",
+      price: "₪59",
+      description: "תוספת הודעות וואטסאפ",
+      icon: "💬",
+      note: "מענה/תזכורות נוספות"
+    },
+    {
+      id: "whatsapp-1000",
+      name: "+1000 הודעות וואטסאפ",
+      price: "₪99",
+      description: "מיועד לקמפיינים ומשרדים גדולים",
+      icon: "💬",
+      note: "נרכש לפי הצורך בלבד"
+    }
+  ];
+
+  const handleAddOn = (addonName: string) => {
+    toast.success(`${addonName} נוסף בהצלחה!`);
+  };
+
+  // Mock data - נתונים לדוגמה (בעתיד יגיעו מה-API)
+  const stats = {
+    totalUsers: 284, // סהכ משתמשים
+    newUsers: 24, // משתמשים חדשים
+    revenueFromPartners: 35800, // הכנסות ממשתמשים דרך שותפים
+    totalCommissions: 5890, // סהכ עמלות
+    activePartners: 8 // מספר שותפים פעילים
+  };
+
   return (
     <MainLayout initialState="root">
       <div className="flex flex-col w-full space-y-8 p-4 md:p-8 bg-background" dir="rtl">
         {/* Header */}
         <div className="text-center max-w-4xl mx-auto">
           <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6">
-            בחר את התוכנית המתאימה לך
+            המנויים שלי
           </h1>
           <p className="text-xl text-muted-foreground mb-8">
             כל התוכניות כוללות גישה מלאה לכל התכונות הבסיסיות של iHoogi
           </p>
+        </div>
+
+        {/* Statistics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto w-full">
+          {/* סהכ משתמשים / משתמשים חדשים */}
+          <Card className="border-0 shadow-md bg-gradient-to-br from-blue-500/10 to-blue-500/5 hover:shadow-lg transition-shadow">
+            <CardContent className="p-6 !pt-6">
+              <div className="flex items-center justify-between mb-2">
+                <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                <div className="text-right">
+                  <div className="text-3xl font-bold text-foreground">{stats.totalUsers}</div>
+                  <div className="text-sm text-muted-foreground">סה"כ משתמשים</div>
+                </div>
+              </div>
+              <div className="mt-3 pt-3 border-t border-border">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-muted-foreground">משתמשים חדשים</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-lg font-bold text-green-600 dark:text-green-400">+{stats.newUsers}</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* הכנסות ממשתמשים דרך שותפים */}
+          <Card className="border-0 shadow-md bg-gradient-to-br from-green-500/10 to-green-500/5 hover:shadow-lg transition-shadow">
+            <CardContent className="p-6 !pt-6">
+              <div className="flex items-center justify-between mb-2">
+                <TrendingUp className="h-6 w-6 text-green-600 dark:text-green-400" />
+                <div className="text-right">
+                  <div className="text-3xl font-bold text-foreground">
+                    ₪{stats.revenueFromPartners.toLocaleString()}
+                  </div>
+                  <div className="text-sm text-muted-foreground">הכנסות ממשתמשים דרך שותפים</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* סהכ עמלות */}
+          <Card className="border-0 shadow-md bg-gradient-to-br from-purple-500/10 to-purple-500/5 hover:shadow-lg transition-shadow">
+            <CardContent className="p-6 !pt-6">
+              <div className="flex items-center justify-between mb-2">
+                <DollarSign className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                <div className="text-right flex-1">
+                  <div className="text-3xl font-bold text-foreground">
+                    ₪{stats.totalCommissions.toLocaleString()}
+                  </div>
+                  <div className="text-sm text-muted-foreground">סה"כ עמלות</div>
+                </div>
+              </div>
+              {/* תאריך - חודש מימין, יום משמאל */}
+              <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
+                <div className="text-left">
+                  <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                    {new Date().getDate().toString().padStart(2, '0')}
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                    {new Date().toLocaleDateString('he-IL', { month: 'long' })}
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* מספר שותפים פעילים - בעיגול קטן */}
+          <Card className="border-0 shadow-md bg-gradient-to-br from-orange-500/10 to-orange-500/5 hover:shadow-lg transition-shadow relative">
+            <CardContent className="p-6 !pt-6">
+              <div className="flex items-center justify-between mb-2">
+                <Handshake className="h-6 w-6 text-orange-600 dark:text-orange-400" />
+                <div className="text-right">
+                  <div className="text-sm text-muted-foreground mb-2">שותפים פעילים</div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-3xl font-bold text-foreground">{stats.activePartners}</span>
+                    <div className="w-3 h-3 bg-orange-500 rounded-full animate-pulse"></div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+            {/* עיגול קטן בפינה */}
+            <div className="absolute -top-2 -right-2 w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center shadow-lg">
+              <span className="text-xs font-bold text-white">{stats.activePartners}</span>
+            </div>
+          </Card>
         </div>
 
         {/* Additional Info - Moved to Top */}
@@ -217,6 +370,51 @@ const Subscriptions = () => {
               </Button>
             </div>
           ))}
+        </div>
+
+        {/* תוספות מהירות */}
+        <div className="max-w-7xl mx-auto w-full space-y-6 mt-12">
+          <div className="text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+              תוספות מהירות
+            </h2>
+            <p className="text-muted-foreground">
+              הרחב את המנוי שלך עם תוספות לפי הצורך
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {addOns.map((addon) => (
+              <Card key={addon.id} className="hover:shadow-md transition-shadow">
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-2xl">{addon.icon}</span>
+                        <h3 className="font-semibold">{addon.name}</h3>
+                      </div>
+                      <p className="text-sm text-muted-foreground mb-2">{addon.description}</p>
+                      {addon.note && (
+                        <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-600 dark:bg-blue-950/20 dark:text-blue-400">
+                          {addon.note}
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="text-right">
+                      <div className="text-xl font-bold text-primary">{addon.price}</div>
+                    </div>
+                  </div>
+                  <Button 
+                    className="w-full" 
+                    variant="outline"
+                    onClick={() => handleAddOn(addon.name)}
+                  >
+                    הוסף
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
 
         {/* FAQ Section */}

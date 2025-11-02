@@ -546,23 +546,40 @@ const CustomerResponseTab = () => {
             <div className="border rounded-lg p-4 bg-gray-50 min-h-[200px]">
               {previewChannel === "email" && (
                 <div className="bg-white rounded-lg shadow-sm overflow-hidden" dir="rtl">
-                  {/* Top Banner: iHoogi Centered */}
+                  {/* Top Banner: Business Logo, Profile Image and Name */}
                   <div className="p-6 bg-gradient-to-r from-primary to-primary/90 text-center">
-                    <div className="bg-white rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-4 shadow-lg">
-                      <img 
-                        src="/hoogi-new-avatar.png" 
-                        alt="iHoogi" 
-                        className="h-20 w-20 object-contain"
-                      />
-                    </div>
                     {(() => {
                       const branding = getUserBranding();
                       return (
                         <>
+                          {(branding.logoUrl || branding.profileImageUrl) && (
+                            <div className="mb-4 flex items-center justify-center gap-3">
+                              {branding.logoUrl && (
+                                <img 
+                                  src={branding.logoUrl} 
+                                  alt="Business Logo" 
+                                  className="h-16 w-16 object-contain"
+                                  onError={(e) => {
+                                    e.currentTarget.style.display = 'none';
+                                  }}
+                                />
+                              )}
+                              {branding.profileImageUrl && (
+                                <img 
+                                  src={branding.profileImageUrl} 
+                                  alt="Profile" 
+                                  className="h-16 w-16 object-cover rounded-lg"
+                                  onError={(e) => {
+                                    e.currentTarget.style.display = 'none';
+                                  }}
+                                />
+                              )}
+                            </div>
+                          )}
                           <h2 className="text-2xl font-bold text-white mb-2">
                             {branding.businessName || "קיבלת תשובה"}
                           </h2>
-                          <p className="text-lg font-semibold text-white/95">🦉 iHoogi עונה לך</p>
+                          <p className="text-lg font-semibold text-white/95">פנייתך התקבלה – הצוות שלנו כבר מטפל בה</p>
                         </>
                       );
                     })()}
@@ -619,10 +636,35 @@ const CustomerResponseTab = () => {
                           <div className="text-center">
                             <p className="text-base font-semibold text-gray-800 mb-1">{branding.businessName || "שם העסק"}</p>
                             <p className="text-green-600 font-semibold">בברכה</p>
-                      </div>
+                          </div>
                         </>
                       );
                     })()}
+                  </div>
+
+                  {/* Footer: Auto-sent message */}
+                  <div className="bg-gray-200/50 border-t border-gray-300 p-4 text-center" dir="rtl">
+                    <p className="text-xs text-gray-600 leading-relaxed">
+                      נשלח באופן אוטומטי באמצעות{' '}
+                      <a 
+                        href="https://www.ai-4biz.com" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800 underline"
+                      >
+                        iHoogi
+                      </a>
+                      {' '}– מערכת שאלונים חכמה המחברת עסקים ללקוחותיהם, מבית{' '}
+                      <a 
+                        href="https://www.ai-4biz.com" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800 underline"
+                      >
+                        AI-4Biz
+                      </a>
+                      , בשם העסק שמולו פנית.
+                    </p>
                   </div>
                 </div>
               )}

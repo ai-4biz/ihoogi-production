@@ -632,8 +632,21 @@ const PartnersManagement: React.FC = () => {
           </div>
         </div>
 
-        {/* Add Partner Button */}
-        <div className="flex justify-end mb-6">
+        {/* Add Partner Button with Partners Count */}
+        <div className="flex justify-end items-center gap-4 mb-6">
+          {/* מספר שותפים פעילים */}
+          <Card className="border-0 shadow-md bg-gradient-to-br from-orange-500/10 to-orange-500/5">
+            <CardContent className="px-4 py-3 !pt-3">
+              <div className="flex items-center gap-3">
+                <Users className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+                <div className="text-right">
+                  <div className="text-lg font-bold text-foreground">8</div>
+                  <div className="text-xs text-muted-foreground">שותפים פעילים</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
           <Dialog open={showAddPartner} onOpenChange={setShowAddPartner}>
             <DialogTrigger asChild>
               <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3">
@@ -652,56 +665,96 @@ const PartnersManagement: React.FC = () => {
           </Dialog>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">סך משתמשים שהובאו</p>
-                  <p className="text-2xl font-bold">73</p>
+        {/* Stats Cards - רחבים יותר, קצרים יותר */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-full mx-auto w-full mb-4">
+          {/* סהכ משתמשים / משתמשים חדשים */}
+          <Card className="border-0 shadow-md bg-gradient-to-br from-blue-500/10 to-blue-500/5 hover:shadow-lg transition-shadow h-full flex flex-col">
+            <CardContent className="p-4 !pt-4 flex-1 flex flex-col">
+              <div className="flex items-center justify-between mb-2">
+                <Users className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+                <div className="text-right flex-1">
+                  <div className="text-2xl font-bold text-foreground">284</div>
+                  <div className="text-xs text-muted-foreground">סה"כ משתמשים</div>
                 </div>
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                  <UserCheck className="h-6 w-6 text-purple-600" />
+              </div>
+              <div className="pt-2 border-t border-border mt-auto">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-muted-foreground">חדשים</span>
+                  <span className="text-xs font-bold text-green-600 dark:text-green-400">+24</span>
                 </div>
               </div>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">סך עמלות החודש</p>
-                  <p className="text-2xl font-bold">₪3,700</p>
+
+          {/* הכנסות ממשתמשים דרך שותפים */}
+          <Card className="border-0 shadow-md bg-gradient-to-br from-green-500/10 to-green-500/5 hover:shadow-lg transition-shadow h-full flex flex-col">
+            <CardContent className="p-4 !pt-4 flex-1 flex flex-col">
+              <div className="flex items-center justify-between mb-2">
+                <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-400 flex-shrink-0" />
+                <div className="text-right flex-1">
+                  <div className="text-2xl font-bold text-foreground">₪35,800</div>
+                  <div className="text-xs text-muted-foreground">הכנסות דרך שותפים</div>
                 </div>
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                  <DollarSign className="h-6 w-6 text-green-600" />
+              </div>
+              {/* חודש קודם + חודש עכשיו */}
+              <div className="pt-2 border-t border-border space-y-1 mt-auto">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-muted-foreground">
+                    {(() => {
+                      const prevMonth = new Date();
+                      prevMonth.setMonth(prevMonth.getMonth() - 1);
+                      return prevMonth.toLocaleDateString('he-IL', { month: 'long' });
+                    })()}
+                  </span>
+                  <span className="text-xs font-bold text-green-600 dark:text-green-400">₪28,500</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-muted-foreground">
+                    {new Date().toLocaleDateString('he-IL', { month: 'long' })}
+                  </span>
+                  <span className="text-xs font-bold text-green-600 dark:text-green-400">₪35,800</span>
                 </div>
               </div>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">שותפים פעילים</p>
-                  <p className="text-2xl font-bold">2</p>
-                </div>
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                  <CheckCircle className="h-6 w-6 text-green-600" />
+
+          {/* סהכ עמלות */}
+          <Card className="border-0 shadow-md bg-gradient-to-br from-purple-500/10 to-purple-500/5 hover:shadow-lg transition-shadow h-full flex flex-col">
+            <CardContent className="p-4 !pt-4 flex-1 flex flex-col">
+              <div className="flex items-center justify-between mb-2">
+                <DollarSign className="h-5 w-5 text-purple-600 dark:text-purple-400 flex-shrink-0" />
+                <div className="text-right flex-1">
+                  <div className="text-2xl font-bold text-foreground">₪5,890</div>
+                  <div className="text-xs text-muted-foreground">סה"כ עמלות</div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">סך השותפים</p>
-                  <p className="text-2xl font-bold">2</p>
+              {/* חודש לפני הקודם, חודש קודם, חודש עכשיו */}
+              <div className="pt-2 border-t border-border space-y-1 mt-auto">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-muted-foreground">
+                    {(() => {
+                      const twoMonthsAgo = new Date();
+                      twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
+                      return twoMonthsAgo.toLocaleDateString('he-IL', { month: 'long' });
+                    })()}
+                  </span>
+                  <span className="text-xs font-bold text-purple-600 dark:text-purple-400">₪4,200</span>
                 </div>
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <Users className="h-6 w-6 text-blue-600" />
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-muted-foreground">
+                    {(() => {
+                      const prevMonth = new Date();
+                      prevMonth.setMonth(prevMonth.getMonth() - 1);
+                      return prevMonth.toLocaleDateString('he-IL', { month: 'long' });
+                    })()}
+                  </span>
+                  <span className="text-xs font-bold text-purple-600 dark:text-purple-400">₪5,100</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-muted-foreground">
+                    {new Date().toLocaleDateString('he-IL', { month: 'long' })}
+                  </span>
+                  <span className="text-xs font-bold text-purple-600 dark:text-purple-400">₪5,890</span>
                 </div>
               </div>
             </CardContent>
@@ -710,17 +763,29 @@ const PartnersManagement: React.FC = () => {
 
         {/* Tabs Navigation */}
         <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as any)} className="mb-8">
-          <TabsList className="grid w-full grid-cols-4 bg-gray-100 rounded-xl p-1">
-            <TabsTrigger value="reports" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
+          <TabsList className="grid w-full grid-cols-4 bg-orange-100/50 dark:bg-orange-900/20 rounded-xl p-2 gap-2 border-2 border-orange-300/50">
+            <TabsTrigger 
+              value="reports" 
+              className="rounded-lg data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-lg font-bold text-base py-3 transition-all hover:bg-orange-400/80"
+            >
               דוחות
             </TabsTrigger>
-            <TabsTrigger value="partners" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
+            <TabsTrigger 
+              value="partners" 
+              className="rounded-lg data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-lg font-bold text-base py-3 transition-all hover:bg-orange-400/80"
+            >
               השותפים שלי
             </TabsTrigger>
-            <TabsTrigger value="send-form" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
+            <TabsTrigger 
+              value="send-form" 
+              className="rounded-lg data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-lg font-bold text-base py-3 transition-all hover:bg-orange-400/80"
+            >
               שלח טופס לשותף
             </TabsTrigger>
-            <TabsTrigger value="new-partner" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">
+            <TabsTrigger 
+              value="new-partner" 
+              className="rounded-lg data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-lg font-bold text-base py-3 transition-all hover:bg-orange-400/80"
+            >
               פרטי שותפים
             </TabsTrigger>
           </TabsList>
