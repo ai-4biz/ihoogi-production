@@ -217,8 +217,8 @@
                       }
                     }
 
-                    <!-- Submit/Skip buttons for multi-choice questions (inside bubble) - hide for last question -->
-                    @if (message.questionIndex === currentQuestionIndex && isMultiChoiceQuestion(questions[message.questionIndex]) && currentQuestionIndex !== questions.length - 1) {
+                    <!-- Submit/Skip buttons for multi-choice questions (inside bubble) -->
+                    @if (message.questionIndex === currentQuestionIndex && isMultiChoiceQuestion(questions[message.questionIndex])) {
                       <div class="flex justify-start gap-2 mt-3 sm:mt-4">
                         <button
                           (click)="submitCurrentAnswer(); $event.stopPropagation()"
@@ -228,7 +228,7 @@
                           [class.cursor-not-allowed]="isScrolling"
                           [style.background-color]="primaryColor"
                           [style.pointer-events]="isScrolling ? 'none' : 'auto'">
-                          המשך
+                          {{ currentQuestionIndex === questions.length - 1 ? 'שלח' : 'המשך' }}
                         </button>
                         @if (currentQuestionIndex > 0) {
                           <button
@@ -241,7 +241,7 @@
                             {{ lang.currentLanguage === 'he' ? 'חזור' : 'Back' }}
                           </button>
                         }
-                        @if (!questions[message.questionIndex].is_required) {
+                        @if (canSkipQuestion(questions[message.questionIndex])) {
                           <button
                             (click)="skipCurrentQuestion(); $event.stopPropagation()"
                             [disabled]="isScrolling"
@@ -279,7 +279,7 @@
                             {{ lang.currentLanguage === 'he' ? 'חזור' : 'Back' }}
                           </button>
                         }
-                        @if (!questions[message.questionIndex].is_required) {
+                        @if (canSkipQuestion(questions[message.questionIndex])) {
                           <button
                             (click)="skipCurrentQuestion(); $event.stopPropagation()"
                             [disabled]="isScrolling"
@@ -320,7 +320,7 @@
                             {{ lang.currentLanguage === 'he' ? 'חזור' : 'Back' }}
                           </button>
                         }
-                        @if (!questions[message.questionIndex].is_required) {
+                        @if (canSkipQuestion(questions[message.questionIndex])) {
                           <button
                             (click)="skipCurrentQuestion(); $event.stopPropagation()"
                             [disabled]="isScrolling"
@@ -449,7 +449,7 @@
                 </svg>
               </button>
             }
-            @if (!getCurrentQuestion()!.is_required) {
+            @if (canSkipQuestion(getCurrentQuestion()!)) {
               <button
                 (click)="skipCurrentQuestion()"
                 [disabled]="isScrolling"
@@ -516,7 +516,7 @@
                 </svg>
               </button>
             }
-            @if (!getCurrentQuestion()!.is_required) {
+            @if (canSkipQuestion(getCurrentQuestion()!)) {
               <button
                 (click)="skipCurrentQuestion()"
                 [disabled]="isScrolling"
@@ -631,7 +631,7 @@
                 {{ lang.currentLanguage === 'he' ? 'חזור' : 'Back' }}
               </button>
             }
-            @if (!getCurrentQuestion()!.is_required) {
+            @if (canSkipQuestion(getCurrentQuestion()!)) {
               <button
                 (click)="skipCurrentQuestion()"
                 [disabled]="isScrolling"
@@ -700,7 +700,7 @@
                 </svg>
               </button>
             }
-            @if (!getCurrentQuestion()!.is_required) {
+            @if (canSkipQuestion(getCurrentQuestion()!)) {
               <button
                 (click)="skipCurrentQuestion()"
                 [disabled]="isScrolling"
@@ -767,7 +767,7 @@
                 </svg>
               </button>
             }
-            @if (!getCurrentQuestion()!.is_required) {
+            @if (canSkipQuestion(getCurrentQuestion()!)) {
               <button
                 (click)="skipCurrentQuestion()"
                 [disabled]="isScrolling"
@@ -882,7 +882,7 @@
                 {{ lang.currentLanguage === 'he' ? 'חזור' : 'Back' }}
               </button>
             }
-            @if (!getCurrentQuestion()!.is_required) {
+            @if (canSkipQuestion(getCurrentQuestion()!)) {
               <button
                 (click)="skipCurrentQuestion()"
                 [disabled]="isScrolling"
