@@ -1116,6 +1116,20 @@ export class QuestionnaireLive implements OnInit {
   }
 
   backToCreation() {
+    // Check if we came from distribution hub
+    const fromDistributionHub = this.route.snapshot.queryParamMap.get('from') === 'distribution-hub';
+    
+    if (fromDistributionHub) {
+      // Navigate back to distribution hub with the questionnaire ID
+      const id = this.route.snapshot.paramMap.get('id');
+      if (id) {
+        this.router.navigate(['/distribution-hub'], {
+          queryParams: { questionnaireId: id }
+        });
+        return;
+      }
+    }
+
     // Clear preview data when navigating away
     if (this.isPreviewMode) {
       sessionStorage.removeItem('preview_questionnaire');

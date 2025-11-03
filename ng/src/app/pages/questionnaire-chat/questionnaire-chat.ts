@@ -1153,6 +1153,17 @@ export class QuestionnaireChat implements OnInit, OnDestroy, AfterViewChecked {
     return false;
   }
 
+  canSkipQuestion(question: Question): boolean {
+    // Can skip if question is not required
+    if (!question.is_required) {
+      return true;
+    }
+
+    // Can also skip if it was already answered (user went back to it)
+    const wasAlreadyAnswered = this.responses[question.id] !== undefined && this.responses[question.id] !== null;
+    return wasAlreadyAnswered;
+  }
+
   skipCurrentQuestion() {
     // Prevent skipping during scroll animation
     if (this.isScrolling) {
@@ -1162,8 +1173,8 @@ export class QuestionnaireChat implements OnInit, OnDestroy, AfterViewChecked {
     const question = this.getCurrentQuestion();
     if (!question) return;
 
-    // Only allow skipping if question is not required
-    if (question.is_required) {
+    // Check if we can skip this question
+    if (!this.canSkipQuestion(question)) {
       const message = this.lang.currentLanguage === 'he'
         ? 'לא ניתן לדלג על שאלה חובה'
         : 'Cannot skip a required question';
@@ -1204,6 +1215,17 @@ export class QuestionnaireChat implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   goBackToEdit() {
+    // Check if we came from distribution hub
+    const fromDistributionHub = this.route.snapshot.queryParamMap.get('from') === 'distribution-hub';
+    
+    if (fromDistributionHub && this.questionnaire && this.questionnaire.id !== 'preview') {
+      // Navigate back to distribution hub with the questionnaire ID
+      this.router.navigate(['/distribution-hub'], {
+        queryParams: { questionnaireId: this.questionnaire.id }
+      });
+      return;
+    }
+
     // For preview mode, close the tab and clear preview data
     if (this.questionnaire && this.questionnaire.id === 'preview') {
       sessionStorage.removeItem('preview_questionnaire');
