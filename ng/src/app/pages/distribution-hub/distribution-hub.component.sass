@@ -1000,109 +1000,6 @@
     &:hover
       background: #16a34a
 
-// Link Row First (Plain Link)
-.link-row-first
-  display: flex
-  align-items: center
-  gap: 0.75rem
-  padding: 0.875rem 1rem
-  background: rgba(107, 114, 128, 0.05)
-  border: 1px solid rgba(107, 114, 128, 0.2)
-  border-radius: 0.5rem
-  margin-bottom: 0.75rem
-
-  .link-url-text
-    flex: 1
-    font-family: monospace
-    font-size: 0.75rem
-    color: #6b7280
-    word-break: break-all
-    text-align: right
-    line-height: 1.5
-
-    @media (min-width: 640px)
-      font-size: 0.875rem
-
-  .copy-btn
-    flex-shrink: 0
-    padding: 0.5rem 0.75rem
-    background: #3b82f6
-    border: none
-    border-radius: 0.375rem
-    color: white
-    cursor: pointer
-    transition: all 0.2s
-    display: flex
-    align-items: center
-    justify-content: center
-    min-width: 44px
-    min-height: 44px
-
-    &:hover:not(:disabled)
-      background: #2563eb
-      transform: translateY(-1px)
-      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3)
-
-    &:disabled
-      opacity: 0.5
-      cursor: not-allowed
-
-    .copy-icon
-      font-size: 1rem
-
-// Link Row Second (Clickable Text Link)
-.link-row-second
-  display: flex
-  align-items: center
-  gap: 0.75rem
-  padding: 0.875rem 1rem
-  background: rgba(168, 85, 247, 0.05)
-  border: 1px solid rgba(168, 85, 247, 0.2)
-  border-radius: 0.5rem
-  margin-top: 0.5rem
-
-  .clickable-text-link
-    flex: 1
-    color: #9333ea
-    text-decoration: underline
-    text-decoration-color: #9333ea
-    font-size: 0.875rem
-    font-weight: 500
-    text-align: right
-    word-break: break-word
-    transition: color 0.2s
-
-    @media (min-width: 640px)
-      font-size: 1rem
-
-    &:hover
-      color: #7e22ce
-      text-decoration-color: #7e22ce
-
-  .copy-btn-link
-    flex-shrink: 0
-    padding: 0.5rem 0.75rem
-    background: #a855f7
-    border: none
-    border-radius: 0.375rem
-    color: white
-    cursor: pointer
-    transition: all 0.2s
-    display: flex
-    align-items: center
-    justify-content: center
-    min-width: 44px
-    min-height: 44px
-    white-space: nowrap
-
-    &:hover
-      background: #9333ea
-      transform: translateY(-1px)
-      box-shadow: 0 2px 8px rgba(168, 85, 247, 0.3)
-
-    .copy-icon
-      font-size: 1rem
-
 // Custom Link Input
 .custom-link-input-group
   margin-top: 1.5rem
@@ -2321,14 +2218,6 @@
     .copy-icon
       font-size: 1rem
 
-// Save Status Indicator
-.save-status-indicator
-  display: flex
-  align-items: center
-  gap: 0.5rem
-  font-size: 0.9rem
-  margin-top: 0.5rem
-
 // Custom Text Section
 .custom-text-section
   margin-top: 1rem
@@ -2348,36 +2237,6 @@
   text-align: right
   line-height: 1.4
   flex: 1
-
-.custom-text-box
-  display: flex
-  align-items: center
-  gap: 0.75rem
-  margin-top: 0.5rem
-
-.custom-text-input
-  flex: 1
-  padding: 0.875rem 1rem
-  border: 1px solid #e5e7eb
-  border-radius: 0.5rem
-  background: white
-  color: #1f2937
-  font-size: 0.875rem
-  text-align: right
-  direction: rtl
-  min-height: 44px
-
-  @media (min-width: 640px)
-    font-size: 1rem
-    padding: 1rem
-
-  &:focus
-    outline: none
-    border-color: #3b82f6
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1)
-
-  &::placeholder
-    color: #9ca3af
 
 .btn-save-text
   display: flex
