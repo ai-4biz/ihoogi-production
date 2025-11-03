@@ -16,6 +16,20 @@
       <p class="page-subtitle">
         {{ lang.t('distribution.subtitle') }}
       </p>
+      
+      <!-- Save Status Indicator -->
+      @if (selectedQuestionnaire) {
+        <div class="save-status-indicator" style="margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+          @if (isSaving) {
+            <span style="color: #9c27b0;">💾 שומר...</span>
+          } @else if (lastSaved) {
+            <span style="color: #4caf50;">✓ נשמר {{ formatTime(lastSaved) }}</span>
+          }
+          @if (currentDistribution) {
+            <span style="color: #2196f3; margin-right: 1rem;">✅ יש distribution פעיל</span>
+          }
+        </div>
+      }
     </div>
   </div>
 
@@ -70,6 +84,52 @@
           </div>
         }
 
+        <!-- Channel Selection (only when template is selected) -->
+        @if (selectedTemplateId && selectedTemplateId !== 'none') {
+          <div class="channels-selection">
+            <label class="channels-label">
+              בחר ערוצי שליחה (ניתן לבחור כמה):
+            </label>
+            <div class="channels-checkboxes">
+              <label class="channel-checkbox">
+                <input
+                  type="checkbox"
+                  [checked]="isChannelSelected('email')"
+                  (change)="toggleChannel('email')">
+                <span class="channel-label">
+                  <span class="channel-icon">📧</span>
+                  Email
+                </span>
+              </label>
+              <label class="channel-checkbox">
+                <input
+                  type="checkbox"
+                  [checked]="isChannelSelected('whatsapp')"
+                  (change)="toggleChannel('whatsapp')">
+                <span class="channel-label">
+                  <span class="channel-icon">💬</span>
+                  WhatsApp
+                </span>
+              </label>
+              <label class="channel-checkbox">
+                <input
+                  type="checkbox"
+                  [checked]="isChannelSelected('sms')"
+                  (change)="toggleChannel('sms')">
+                <span class="channel-label">
+                  <span class="channel-icon">📱</span>
+                  SMS
+                </span>
+              </label>
+            </div>
+            @if (selectedChannels.length === 0) {
+              <p class="channels-error-text">
+                יש לבחור לפחות ערוץ אחד
+              </p>
+            }
+          </div>
+        }
+
         <!-- Error message if not selected -->
         @if (!isStep2Valid() && selectedQuestionnaire) {
           <p class="step-error-text">
@@ -99,20 +159,20 @@
               <span class="link-type-label">לינק טופס</span>
             </div>
 
-            <!-- Link Display -->
-            <div class="link-box">
-              <code class="link-url-text">{{ formLink || 'לא זמין' }}</code>
-              <button class="copy-btn" (click)="copyLink(formLink, 'form')" [disabled]="!formLink">
-                <span class="copy-icon">📋</span>
-              </button>
-            </div>
-
-            <!-- Custom Text Section -->
+            <!-- Custom Text Section (First - Text on top) -->
             <div class="custom-text-section">
-              <div class="custom-text-header">
-                <label class="custom-text-label">
-                  טקסט מותאם אישית (אופציונלי) - הלינק יופיע כמלל זה בעת העתקה
-                </label>
+              <label class="custom-text-label">
+                טקסט מותאם אישית (אופציונלי) - בעת העתקה יועתק המלל והלינק יחד
+              </label>
+              <div class="custom-text-box">
+                <input
+                  [(ngModel)]="linkTexts['form']"
+                  (ngModelChange)="onTextChange()"
+                  placeholder="הכנס כאן את המלל שבו תרצה שהלינק יופיע..."
+                  class="custom-text-input"
+                  dir="rtl"
+                  type="text"
+                />
                 <button
                   class="btn-save-text"
                   (click)="saveCustomText('form')"
@@ -121,13 +181,6 @@
                   שמור
                 </button>
               </div>
-              <textarea
-                [(ngModel)]="linkTexts['form']"
-                placeholder="הכנס כאן את המלל שבו תרצה שהלינק יופיע..."
-                class="custom-textarea"
-                dir="rtl"
-                rows="3"
-              ></textarea>
               @if (linkTexts['form']?.trim()) {
                 <p class="preview-text">
                   <span class="preview-label">תצוגה מקדימה:</span> {{ linkTexts['form'] }}
@@ -136,26 +189,41 @@
               @if (savedTexts['form'] && savedTexts['form'].trim()) {
                 <p class="saved-indicator">
                   <span class="check-icon">✓</span>
-                  המלל נשמר - בעת העתקה יועתק המלל במקום הלינק
+                  המלל נשמר - יופיע בשורה השנייה כקישור קליקבילי עם אפשרות העתקה
                 </p>
               }
             </div>
+
+            <!-- Link Display: Row 1 - Link with copy -->
+            <div class="link-row-first">
+              <code class="link-url-text">{{ formLink || 'לא זמין' }}</code>
+              <button class="copy-btn" (click)="copyLink(formLink, 'form')" [disabled]="!formLink" title="העתק לינק">
+                <span class="copy-icon">📋</span>
+              </button>
+            </div>
+
+            <!-- Row 2 - Clickable text link (if text saved) -->
+            @if (savedTexts['form'] && savedTexts['form'].trim()) {
+              <div class="link-row-second">
+                <a [href]="formLink" target="_blank" class="clickable-text-link">
+                  {{ savedTexts['form'] }}
+                </a>
+                <button class="copy-btn-link" (click)="copyClickableLink(formLink, 'form')" title="העתק מלל כקישור קליקבילי">
+                  <span class="copy-icon">📋</span>
+                </button>
+              </div>
+            }
 
             <!-- Action Buttons -->
             <div class="action-buttons-row">
               <button class="action-btn preview-btn" (click)="previewLink(formLink, 'form')" [disabled]="!formLink">
                 הצג טופס
               </button>
-              <button class="action-btn demo-btn" (click)="previewTemplate()" [disabled]="selectedTemplateId === 'none' || !selectedTemplateId">
-                דמו מענה ללקוח
-              </button>
               <button class="action-btn edit-btn" (click)="editQuestionnaire()">
                 עריכה
               </button>
-              <button class="action-btn delete-btn" (click)="deleteQuestionnaire()">
-                מחיקה
-              </button>
             </div>
+
           </div>
 
           <!-- Row 2: Chat Link -->
@@ -165,18 +233,20 @@
               <span class="link-type-label">לינק צ'אט</span>
             </div>
 
-            <div class="link-box">
-              <code class="link-url-text">{{ chatLink || 'לא זמין' }}</code>
-              <button class="copy-btn" (click)="copyLink(chatLink, 'chat')" [disabled]="!chatLink">
-                <span class="copy-icon">📋</span>
-              </button>
-            </div>
-
+            <!-- Custom Text Section (First - Text on top) -->
             <div class="custom-text-section">
-              <div class="custom-text-header">
-                <label class="custom-text-label">
-                  טקסט מותאם אישית (אופציונלי) - הלינק יופיע כמלל זה בעת העתקה
-                </label>
+              <label class="custom-text-label">
+                טקסט מותאם אישית (אופציונלי) - בעת העתקה יועתק המלל והלינק יחד
+              </label>
+              <div class="custom-text-box">
+                <input
+                  [(ngModel)]="linkTexts['chat']"
+                  (ngModelChange)="onTextChange()"
+                  placeholder="הכנס כאן את המלל שבו תרצה שהלינק יופיע..."
+                  class="custom-text-input"
+                  dir="rtl"
+                  type="text"
+                />
                 <button
                   class="btn-save-text"
                   (click)="saveCustomText('chat')"
@@ -185,13 +255,6 @@
                   שמור
                 </button>
               </div>
-              <textarea
-                [(ngModel)]="linkTexts['chat']"
-                placeholder="הכנס כאן את המלל שבו תרצה שהלינק יופיע..."
-                class="custom-textarea"
-                dir="rtl"
-                rows="3"
-              ></textarea>
               @if (linkTexts['chat']?.trim()) {
                 <p class="preview-text">
                   <span class="preview-label">תצוגה מקדימה:</span> {{ linkTexts['chat'] }}
@@ -200,25 +263,41 @@
               @if (savedTexts['chat'] && savedTexts['chat'].trim()) {
                 <p class="saved-indicator">
                   <span class="check-icon">✓</span>
-                  המלל נשמר - בעת העתקה יועתק המלל במקום הלינק
+                  המלל נשמר - יופיע בשורה השנייה כקישור קליקבילי עם אפשרות העתקה
                 </p>
               }
             </div>
 
+            <!-- Link Display: Row 1 - Link with copy -->
+            <div class="link-row-first">
+              <code class="link-url-text">{{ chatLink || 'לא זמין' }}</code>
+              <button class="copy-btn" (click)="copyLink(chatLink, 'chat')" [disabled]="!chatLink" title="העתק לינק">
+                <span class="copy-icon">📋</span>
+              </button>
+            </div>
+
+            <!-- Row 2 - Clickable text link (if text saved) -->
+            @if (savedTexts['chat'] && savedTexts['chat'].trim()) {
+              <div class="link-row-second">
+                <a [href]="chatLink" target="_blank" class="clickable-text-link">
+                  {{ savedTexts['chat'] }}
+                </a>
+                <button class="copy-btn-link" (click)="copyClickableLink(chatLink, 'chat')" title="העתק מלל כקישור קליקבילי">
+                  <span class="copy-icon">📋</span>
+                </button>
+              </div>
+            }
+
+            <!-- Action Buttons -->
             <div class="action-buttons-row">
               <button class="action-btn preview-btn" (click)="previewLink(chatLink, 'chat')" [disabled]="!chatLink">
                 הצג צ'אט
               </button>
-              <button class="action-btn demo-btn" (click)="previewTemplate()" [disabled]="selectedTemplateId === 'none' || !selectedTemplateId">
-                דמו מענה ללקוח
-              </button>
               <button class="action-btn edit-btn" (click)="editQuestionnaire()">
                 עריכה
               </button>
-              <button class="action-btn delete-btn" (click)="deleteQuestionnaire()">
-                מחיקה
-              </button>
             </div>
+
           </div>
 
           <!-- Row 3: QR Link -->
@@ -228,18 +307,20 @@
               <span class="link-type-label">לינק QR</span>
             </div>
 
-            <div class="link-box">
-              <code class="link-url-text">{{ qrLink || 'לא זמין' }}</code>
-              <button class="copy-btn" (click)="copyLink(qrLink, 'qr')" [disabled]="!qrLink">
-                <span class="copy-icon">📋</span>
-              </button>
-            </div>
-
+            <!-- Custom Text Section (First - Text on top) -->
             <div class="custom-text-section">
-              <div class="custom-text-header">
-                <label class="custom-text-label">
-                  טקסט מותאם אישית (אופציונלי) - הלינק יופיע כמלל זה בעת העתקה
-                </label>
+              <label class="custom-text-label">
+                טקסט מותאם אישית (אופציונלי) - בעת העתקה יועתק המלל והלינק יחד
+              </label>
+              <div class="custom-text-box">
+                <input
+                  [(ngModel)]="linkTexts['qr']"
+                  (ngModelChange)="onTextChange()"
+                  placeholder="הכנס כאן את המלל שבו תרצה שהלינק יופיע..."
+                  class="custom-text-input"
+                  dir="rtl"
+                  type="text"
+                />
                 <button
                   class="btn-save-text"
                   (click)="saveCustomText('qr')"
@@ -248,13 +329,6 @@
                   שמור
                 </button>
               </div>
-              <textarea
-                [(ngModel)]="linkTexts['qr']"
-                placeholder="הכנס כאן את המלל שבו תרצה שהלינק יופיע..."
-                class="custom-textarea"
-                dir="rtl"
-                rows="3"
-              ></textarea>
               @if (linkTexts['qr']?.trim()) {
                 <p class="preview-text">
                   <span class="preview-label">תצוגה מקדימה:</span> {{ linkTexts['qr'] }}
@@ -263,39 +337,43 @@
               @if (savedTexts['qr'] && savedTexts['qr'].trim()) {
                 <p class="saved-indicator">
                   <span class="check-icon">✓</span>
-                  המלל נשמר - בעת העתקה יועתק המלל במקום הלינק
+                  המלל נשמר - יופיע בשורה השנייה כקישור קליקבילי עם אפשרות העתקה
                 </p>
               }
             </div>
 
+            <!-- Link Display: Row 1 - Link with copy -->
+            <div class="link-row-first">
+              <code class="link-url-text">{{ qrLink || 'לא זמין' }}</code>
+              <button class="copy-btn" (click)="copyLink(qrLink, 'qr')" [disabled]="!qrLink" title="העתק לינק">
+                <span class="copy-icon">📋</span>
+              </button>
+            </div>
+
+            <!-- Row 2 - Clickable text link (if text saved) -->
+            @if (savedTexts['qr'] && savedTexts['qr'].trim()) {
+              <div class="link-row-second">
+                <a [href]="qrLink" target="_blank" class="clickable-text-link">
+                  {{ savedTexts['qr'] }}
+                </a>
+                <button class="copy-btn-link" (click)="copyClickableLink(qrLink, 'qr')" title="העתק מלל כקישור קליקבילי">
+                  <span class="copy-icon">📋</span>
+                </button>
+              </div>
+            }
+
+            <!-- Action Buttons -->
             <div class="action-buttons-row">
               <button class="action-btn preview-btn" (click)="previewLink(qrLink, 'qr')" [disabled]="!qrLink">
                 הצג QR
               </button>
-              <button class="action-btn demo-btn" (click)="previewTemplate()" [disabled]="selectedTemplateId === 'none' || !selectedTemplateId">
-                דמו מענה ללקוח
-              </button>
               <button class="action-btn edit-btn" (click)="editQuestionnaire()">
                 עריכה
               </button>
-              <button class="action-btn delete-btn" (click)="deleteQuestionnaire()">
-                מחיקה
-              </button>
             </div>
+
           </div>
         </div>
-      </div>
-    }
-
-    <!-- Legacy: Show Links Button (for backward compatibility) -->
-    @if (canShowStep3() && !showLinksSection) {
-      <div class="show-links-section">
-        <button
-          class="btn-show-links"
-          (click)="handleShowLinks()">
-          <span class="link-icon">🔗</span>
-          {{ lang.t('distribution.generateLinks') || 'הצג קישורים' }}
-        </button>
       </div>
     }
 

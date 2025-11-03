@@ -1215,6 +1215,17 @@ export class QuestionnaireChat implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   goBackToEdit() {
+    // Check if we came from distribution hub
+    const fromDistributionHub = this.route.snapshot.queryParamMap.get('from') === 'distribution-hub';
+    
+    if (fromDistributionHub && this.questionnaire && this.questionnaire.id !== 'preview') {
+      // Navigate back to distribution hub with the questionnaire ID
+      this.router.navigate(['/distribution-hub'], {
+        queryParams: { questionnaireId: this.questionnaire.id }
+      });
+      return;
+    }
+
     // For preview mode, close the tab and clear preview data
     if (this.questionnaire && this.questionnaire.id === 'preview') {
       sessionStorage.removeItem('preview_questionnaire');
