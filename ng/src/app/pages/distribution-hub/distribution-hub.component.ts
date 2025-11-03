@@ -69,6 +69,7 @@ export class DistributionHubComponent implements OnInit {
 
   // Template management - Updated: Single template selection
   selectedTemplateId: string = ''; // "" = לא נבחר, "none" = ללא מענה, או ID תבנית
+  selectedChannels: Array<'email' | 'whatsapp' | 'sms'> = ['email'];
   availableTemplates: AutomationTemplate[] = [];
   
   // Link texts - Custom text per link type
