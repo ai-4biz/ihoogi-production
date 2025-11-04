@@ -1,0 +1,11 @@
+{
+  "name": "ihoogi-production",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "cd ng && npm install && npm run build -- --configuration=production",
+    "build:staging": "cd ng && npm install && npm run build -- --configuration=staging"
+  },
+  "description": "ihoogi production application"
+}
+
