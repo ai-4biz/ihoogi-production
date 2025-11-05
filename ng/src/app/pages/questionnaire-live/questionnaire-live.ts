@@ -204,32 +204,39 @@ export class QuestionnaireLive implements OnInit {
       let data;
 
       if (isDistributionToken) {
-        // Load distribution first to get questionnaire_id using RPC (bypasses RLS)
-        const { data: distributions, error: distError } = await this.supabaseService.client
-          .rpc('get_distribution_by_token', { p_token: tokenOrId });
+        // For distribution tokens, use the service method which handles RLS properly
+        // It uses a join query that works with anonymous users
+        console.log('Loading distribution token via service method');
+        data = await this.questionnaireService.fetchQuestionnaireByToken(tokenOrId);
+        
+        // If service method fails, try RPC as fallback
+        if (!data) {
+          console.warn('Service method returned no data, trying RPC fallback');
+          const { data: distributions, error: distError } = await this.supabaseService.client
+            .rpc('get_distribution_by_token', { p_token: tokenOrId });
 
-        if (distError || !distributions || distributions.length === 0) {
-          console.error('Distribution not found or inactive:', distError);
-          // Fallback to direct query in case RPC doesn't exist yet
-          const { data: distribution, error: fallbackError } = await this.supabaseService.client
-            .from('distributions')
-            .select('questionnaire_id, is_active')
-            .eq('token', tokenOrId)
-            .eq('is_active', true)
-            .single();
+          if (!distError && distributions && distributions.length > 0) {
+            const distribution = distributions[0];
+            console.log('Distribution found (via RPC):', distribution);
+            data = await this.questionnaireService.fetchQuestionnaireForReview(distribution.questionnaire_id);
+          } else {
+            // Last resort: direct query (may fail due to RLS)
+            console.warn('RPC failed, trying direct query fallback:', distError);
+            const { data: distribution, error: fallbackError } = await this.supabaseService.client
+              .from('distributions')
+              .select('questionnaire_id, is_active')
+              .eq('token', tokenOrId)
+              .eq('is_active', true)
+              .single();
 
-          if (fallbackError || !distribution) {
-            console.error('Distribution not found (fallback also failed):', fallbackError);
-            throw new Error('Distribution not found or inactive. Please check the URL.');
+            if (!fallbackError && distribution) {
+              console.log('Distribution found (via direct query):', distribution);
+              data = await this.questionnaireService.fetchQuestionnaireForReview(distribution.questionnaire_id);
+            } else {
+              console.error('All methods failed to load distribution:', { distError, fallbackError });
+              throw new Error('Distribution not found or inactive. Please check the URL.');
+            }
           }
-
-          console.log('Distribution found (via fallback):', distribution);
-          data = await this.questionnaireService.fetchQuestionnaireForReview(distribution.questionnaire_id);
-        } else {
-          const distribution = distributions[0];
-          console.log('Distribution found (via RPC):', distribution);
-          // Load questionnaire by ID from distribution
-          data = await this.questionnaireService.fetchQuestionnaireForReview(distribution.questionnaire_id);
         }
       } else if (isUUID) {
         // Load by ID (for authenticated/owner view)
