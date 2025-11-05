@@ -284,7 +284,9 @@ export class QuestionnairesComponent implements OnInit {
           show_logo: questionnaire.show_logo ?? true,
           show_profile_image: questionnaire.show_profile_image ?? true,
           link_url: questionnaire.link_url || null,
-          attachment_url: questionnaire.attachment_url || null
+          link_label: questionnaire.link_label || null,
+          attachment_url: questionnaire.attachment_url || null,
+          attachment_size: questionnaire.attachment_size || null
         },
         questions: previewQuestions,
         options: allOptions,
@@ -300,8 +302,10 @@ export class QuestionnairesComponent implements OnInit {
 
       sessionStorage.setItem('preview_questionnaire', JSON.stringify(previewData));
 
-      // Open preview in new tab with absolute URL (form view by default)
-      const url = `${environment.siteUrl}/questionnaires/live/preview`;
+      // Open preview in new tab - use same route as create-questionnaire
+      const url = this.router.serializeUrl(
+        this.router.createUrlTree(['/questionnaires/live', 'preview'])
+      );
       window.open(url, '_blank');
     } catch (error: any) {
       console.error('Error loading questionnaire for preview:', error);
@@ -645,7 +649,9 @@ export class QuestionnairesComponent implements OnInit {
           show_logo: questionnaire.show_logo ?? true,
           show_profile_image: questionnaire.show_profile_image ?? true,
           link_url: questionnaire.link_url || null,
-          attachment_url: questionnaire.attachment_url || null
+          link_label: questionnaire.link_label || null,
+          attachment_url: questionnaire.attachment_url || null,
+          attachment_size: questionnaire.attachment_size || null
         },
         questions: previewQuestions,
         options: allOptions,
@@ -661,8 +667,10 @@ export class QuestionnairesComponent implements OnInit {
 
       sessionStorage.setItem('preview_questionnaire', JSON.stringify(previewData));
 
-      // Open preview in new tab with absolute URL (form view by default)
-      const url = `${environment.siteUrl}/questionnaires/live/preview`;
+      // Open preview in new tab - use same route as create-questionnaire
+      const url = this.router.serializeUrl(
+        this.router.createUrlTree(['/questionnaires/live', 'preview'])
+      );
       window.open(url, '_blank');
     } catch (error: any) {
       console.error('Error loading questionnaire for preview:', error);
