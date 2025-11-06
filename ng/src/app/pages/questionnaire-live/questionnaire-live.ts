@@ -66,7 +66,13 @@ export class QuestionnaireLive implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private referralTracking: ReferralTrackingService
-  ) {}
+  ) {
+    // TEMP: Production diagnostics
+    if (typeof window !== 'undefined') {
+      console.info('[QLIVE] init at', window.location.href);
+      console.time('[QLIVE] load');
+    }
+  }
 
   ngOnInit() {
     console.log('=== QuestionnaireLive ngOnInit called ===');
@@ -269,13 +275,25 @@ export class QuestionnaireLive implements OnInit {
             this.multiResponses[q.id] = {};
           }
         });
+        // TEMP: Production diagnostics - success path
+        if (typeof window !== 'undefined') {
+          console.timeEnd('[QLIVE] load');
+        }
       } else {
         console.error('No data returned from service');
         this.toastService.show('Questionnaire not found', 'error');
+        // TEMP: Production diagnostics
+        if (typeof window !== 'undefined') {
+          console.timeEnd('[QLIVE] load');
+        }
       }
     } catch (error: any) {
       console.error('Error loading questionnaire:', error);
       this.toastService.show(error.message || 'Failed to load questionnaire', 'error');
+      // TEMP: Production diagnostics
+      if (typeof window !== 'undefined') {
+        console.timeEnd('[QLIVE] load');
+      }
     } finally {
       this.isLoading = false;
     }

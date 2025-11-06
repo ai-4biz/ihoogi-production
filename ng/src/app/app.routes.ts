@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 import { ProfileCompletionGuard } from './core/guards/profile-completion.guard';
 import { CanDeactivateGuard } from './core/guards/can-deactivate.guard';
+import { tokenResolver } from './core/resolvers/token.resolver';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/landing', pathMatch: 'full' },
@@ -12,7 +13,7 @@ export const routes: Routes = [
   { path: 'terms', loadComponent: () => import('./pages/terms/terms.component').then(m => m.TermsComponent) },
   { path: 'onboarding', loadComponent: () => import('./pages/onboarding/onboarding.component').then(m => m.OnboardingComponent) },
   { path: 'auth/update-password', loadComponent: () => import('./pages/update-password/update-password.component').then(m => m.UpdatePasswordComponent) },
-  { path: 'q/:token', loadComponent: () => import('./pages/questionnaire-live/questionnaire-live').then(m => m.QuestionnaireLive) },
+  { path: 'q/:token', resolve: { _t: tokenResolver }, loadComponent: () => import('./pages/questionnaire-live/questionnaire-live').then(m => m.QuestionnaireLive) },
   { path: 'q/:token/chat', loadComponent: () => import('./pages/questionnaire-chat/questionnaire-chat').then(m => m.QuestionnaireChat) },
   { path: 'q/:token/qr', loadComponent: () => import('./pages/questionnaire-qr/questionnaire-qr.component').then(m => m.QuestionnaireQrComponent) },
   { path: 'questionnaires/chat/preview', loadComponent: () => import('./pages/questionnaire-chat/questionnaire-chat').then(m => m.QuestionnaireChat) },
