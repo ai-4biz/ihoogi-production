@@ -1,6 +1,7 @@
 {
-  "buildCommand": "cd ng && npm install && npm run build",
+  "buildCommand": "cd ng && npm ci && npm run build",
   "outputDirectory": "ng/dist/ng/browser",
+  "installCommand": "cd ng && npm ci",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
