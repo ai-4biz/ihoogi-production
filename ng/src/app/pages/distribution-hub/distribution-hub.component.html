@@ -16,322 +16,366 @@
       <p class="page-subtitle">
         {{ lang.t('distribution.subtitle') }}
       </p>
+      
+      <!-- Save Status Indicator -->
+      @if (selectedQuestionnaire) {
+        <div class="save-status-indicator" style="margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+          @if (isSaving) {
+            <span style="color: #9c27b0;">💾 שומר...</span>
+          } @else if (lastSaved) {
+            <span style="color: #4caf50;">✓ נשמר {{ formatTime(lastSaved) }}</span>
+          }
+          @if (currentDistribution) {
+            <span style="color: #2196f3; margin-right: 1rem;">✅ יש distribution פעיל</span>
+          }
+        </div>
+      }
     </div>
   </div>
 
   <!-- Main Card -->
   <div class="main-card">
-    <!-- Survey Selection -->
-    <div class="survey-selection-card">
+    <!-- Step 1: Select Questionnaire -->
+    <div class="step-card gradient-green">
+      <label class="step-label">שלב 1: בחר שאלון</label>
       <select
         [(ngModel)]="selectedQuestionnaire"
         (ngModelChange)="onQuestionnaireChange()"
         class="select-input"
         name="questionnaire">
-        <option value="">{{ lang.t('distribution.selectPlaceholder') }}</option>
+        <option value="">{{ lang.t('distribution.selectPlaceholder') || 'בחר שאלון...' }}</option>
         @for (q of questionnaires; track q.id) {
           <option [value]="q.id">{{ q.title }}</option>
         }
       </select>
     </div>
 
-    <!-- Customer Response Section -->
-    <div class="customer-response-card">
-      <div class="mb-6">
-        <div class="card-header-row">
-          <h3 class="section-subtitle">{{ lang.t('distribution.autoResponse') }}</h3>
+    <!-- Step 2: Select Automatic Customer Response (Required) -->
+    @if (selectedQuestionnaire) {
+      <div class="step-card gradient-green">
+        <div class="step-header-row">
+          <label class="step-label">שלב 2: בחר מענה אוטומטי ללקוח <span class="required-star">*</span></label>
           <button
-            class="btn-create-template"
+            class="btn-create-template-outline"
             (click)="navigateToAutomations()">
             <span class="plus-icon">+</span>
-            {{ lang.t('distribution.createNewTemplate') }}
+            צור מענה חדש ללקוח
             <span class="external-icon">↗</span>
           </button>
         </div>
-        <p class="help-text text-right">
-          {{ lang.t('distribution.templatesInfo') }}
-        </p>
-      </div>
 
-      <!-- Selected Templates Display -->
-      @if (selectedTemplates.length > 0) {
-        <div class="mb-6 space-y-3">
-          <label class="template-label">{{ lang.t('distribution.templatesSelected') }} ({{ selectedTemplates.length }}/3)</label>
-          <div class="space-y-3">
-            @for (template of selectedTemplates; track $index; let idx = $index) {
-              <div class="template-item">
-                <!-- Template Name and Remove Button -->
-                <div class="template-header-row">
-                  <div class="flex items-center gap-2">
-                    <span class="template-name">{{ template.name }}</span>
-                    @if (template.channels.length === 0) {
-                      <span class="warning-badge">⚠️</span>
-                    }
-                  </div>
-                  <button
-                    class="btn-remove"
-                    (click)="removeTemplate(idx)">
-                    {{ lang.t('distribution.remove') }}
-                  </button>
-                </div>
+        <select
+          [(ngModel)]="selectedTemplateId"
+          (ngModelChange)="onTemplateChange($event)"
+          class="select-input"
+          name="template">
+          <option value="">בחר תבנית...</option>
+          <option value="none">ללא מענה אוטומטי ללקוח</option>
+          @for (template of availableTemplates; track template.id) {
+            <option [value]="template.id">{{ template.name }}</option>
+          }
+        </select>
 
-                <!-- Channel Selection -->
-                <div class="channels-section">
-                  <label class="channels-label">{{ lang.t('distribution.sendingChannels') }}
-                    @if (template.channels.length === 0) {
-                      <span class="required-indicator">*</span>
-                    }
-                  </label>
-                  <div class="channels-grid">
-                    <!-- Email -->
-                    <div
-                      class="channel-card"
-                      [class.selected]="template.channels.includes('email')"
-                      [class.available]="!template.channels.includes('email') && !isChannelUsedByOtherTemplates(idx, 'email')"
-                      [class.disabled]="!template.channels.includes('email') && isChannelUsedByOtherTemplates(idx, 'email')"
-                      (click)="(!isChannelUsedByOtherTemplates(idx, 'email') || template.channels.includes('email')) && toggleChannelForTemplate(idx, 'email')">
-                      <input
-                        type="checkbox"
-                        [checked]="template.channels.includes('email')"
-                        [disabled]="!template.channels.includes('email') && isChannelUsedByOtherTemplates(idx, 'email')"
-                        class="channel-checkbox">
-                      <span class="channel-icon">✉️</span>
-                      <span class="channel-label">מייל</span>
-                    </div>
-
-                    <!-- WhatsApp -->
-                    <div
-                      class="channel-card"
-                      [class.selected]="template.channels.includes('whatsapp')"
-                      [class.available]="!template.channels.includes('whatsapp') && !isChannelUsedByOtherTemplates(idx, 'whatsapp')"
-                      [class.disabled]="!template.channels.includes('whatsapp') && isChannelUsedByOtherTemplates(idx, 'whatsapp')"
-                      (click)="(!isChannelUsedByOtherTemplates(idx, 'whatsapp') || template.channels.includes('whatsapp')) && toggleChannelForTemplate(idx, 'whatsapp')">
-                      <input
-                        type="checkbox"
-                        [checked]="template.channels.includes('whatsapp')"
-                        [disabled]="!template.channels.includes('whatsapp') && isChannelUsedByOtherTemplates(idx, 'whatsapp')"
-                        class="channel-checkbox">
-                      <span class="channel-icon">💬</span>
-                      <span class="channel-label">וואטסאפ</span>
-                    </div>
-
-                    <!-- SMS -->
-                    <div
-                      class="channel-card"
-                      [class.selected]="template.channels.includes('sms')"
-                      [class.available]="!template.channels.includes('sms') && !isChannelUsedByOtherTemplates(idx, 'sms')"
-                      [class.disabled]="!template.channels.includes('sms') && isChannelUsedByOtherTemplates(idx, 'sms')"
-                      (click)="(!isChannelUsedByOtherTemplates(idx, 'sms') || template.channels.includes('sms')) && toggleChannelForTemplate(idx, 'sms')">
-                      <input
-                        type="checkbox"
-                        [checked]="template.channels.includes('sms')"
-                        [disabled]="!template.channels.includes('sms') && isChannelUsedByOtherTemplates(idx, 'sms')"
-                        class="channel-checkbox">
-                      <span class="channel-icon">📱</span>
-                      <span class="channel-label">SMS</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            }
-          </div>
-        </div>
-      }
-
-      <!-- Add Template - only if less than 3 and has available channels -->
-      @if (selectedTemplates.length < 3 && getUsedChannels().length < 3) {
-        <div class="space-y-4">
-          <label class="template-label">{{ lang.t('distribution.addTemplateLabel') }} ({{ selectedTemplates.length }}/3)</label>
-
-          <!-- Template Selection -->
-          <div class="space-y-3">
-            <div>
-              <label class="template-select-label">{{ lang.t('distribution.chooseResponseTemplate') }}</label>
-              <select
-                [(ngModel)]="newTemplateId"
-                (ngModelChange)="addTemplate()"
-                class="select-input"
-                [disabled]="!selectedQuestionnaire"
-                name="newTemplate">
-                <option value="">{{ selectedQuestionnaire ? lang.t('distribution.chooseResponseTemplate') : lang.t('distribution.selectTemplateFirst') }}</option>
-                @for (template of availableTemplates; track template.id) {
-                  <option
-                    [value]="template.id"
-                    [disabled]="isTemplateAlreadySelected(template.id)">
-                    {{ template.name }}{{ isTemplateAlreadySelected(template.id) ? ' (' + lang.t('distribution.alreadySelected') + ')' : '' }}
-                  </option>
-                }
-              </select>
-            </div>
-          </div>
-        </div>
-      }
-
-      @if (!selectedQuestionnaire) {
-        <p class="help-text">{{ lang.t('distribution.selectQuestionnaireToActivate') }}</p>
-      }
-
-      <!-- Message when all channels are used -->
-      @if (selectedTemplates.length > 0 && getUsedChannels().length === 3 && selectedTemplates.length < 3) {
-        <div class="warning-message">
-          <p class="warning-text">
-            {{ lang.t('distribution.allChannelsInUse') }}
-          </p>
-        </div>
-      }
-
-      @if (selectedTemplates.length > 0 && selectedQuestionnaire) {
-        <div class="success-message">
-          <p class="success-text">
-            {{ lang.t('distribution.autoResponseActive') }} {{ selectedTemplates.length }} {{ lang.t('distribution.templates') }}
-          </p>
-          <div class="success-details">
-            @for (template of selectedTemplates; track $index) {
-              @if (template.channels.length > 0) {
-                <p>
-                  • {{ template.name }}: {{ getFormattedChannels(template) }}
-                </p>
-              }
-            }
-          </div>
-        </div>
-      }
-
-      <!-- Show Links Button -->
-      @if (!showLinksSection) {
-        <div class="show-links-section">
-          <button
-            class="btn-show-links"
-            [disabled]="!selectedQuestionnaire"
-            (click)="handleShowLinks()">
-            <span class="link-icon">🔗</span>
-            {{ lang.t('distribution.generateLinks') }}
-          </button>
-        </div>
-      }
-    </div>
-
-    <!-- Quick Links Section -->
-    @if (selectedQuestionnaire && showLinksSection) {
-      <div class="quick-links-section">
-        <h3 class="section-subtitle mb-4">{{ lang.t('distribution.createLink') }}</h3>
-
-        <!-- Warning: No Automation -->
-        @if (selectedTemplates.length === 0) {
-          <div class="warning-message mb-4" style="background-color: #fef3c7; border: 1px solid #fbbf24; border-radius: 8px; padding: 12px 16px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="font-size: 20px;">⚠️</span>
-              <p style="margin: 0; color: #92400e; font-weight: 500; text-align: right;">
-                שים לב: לא נבחרו תבניות אוטומציה. הקישורים יעבדו, אך לא יישלחו הודעות אוטומטיות ללקוחות.
-              </p>
-            </div>
+        <!-- Info message if template was taken from bot -->
+        @if (selectedTemplateId && selectedTemplateId !== 'none') {
+          <div class="template-info-box">
+            <span class="bot-icon">🤖</span>
+            <span>תבנית זו נלקחה מבוט</span>
           </div>
         }
 
-        <div class="quick-links-grid">
-          <!-- Form Link -->
-          <button
-            class="quick-link-btn form-btn"
-            [class.selected]="currentMode === 'form'"
-            (click)="handleBuildLink('form')">
-            <span class="quick-link-icon">📋</span>
-            <span class="quick-link-label">{{ lang.t('distribution.form') }}</span>
-          </button>
+        <!-- Channel Selection (only when template is selected) -->
+        @if (selectedTemplateId && selectedTemplateId !== 'none') {
+          <div class="channels-selection">
+            <label class="channels-label">
+              בחר ערוצי שליחה (ניתן לבחור כמה):
+            </label>
+            <div class="channels-checkboxes">
+              <label class="channel-checkbox">
+                <input
+                  type="checkbox"
+                  [checked]="isChannelSelected('email')"
+                  (change)="toggleChannel('email')">
+                <span class="channel-label">
+                  <span class="channel-icon">📧</span>
+                  Email
+                </span>
+              </label>
+              <label class="channel-checkbox">
+                <input
+                  type="checkbox"
+                  [checked]="isChannelSelected('whatsapp')"
+                  (change)="toggleChannel('whatsapp')">
+                <span class="channel-label">
+                  <span class="channel-icon">💬</span>
+                  WhatsApp
+                </span>
+              </label>
+              <label class="channel-checkbox">
+                <input
+                  type="checkbox"
+                  [checked]="isChannelSelected('sms')"
+                  (change)="toggleChannel('sms')">
+                <span class="channel-label">
+                  <span class="channel-icon">📱</span>
+                  SMS
+                </span>
+              </label>
+            </div>
+            @if (selectedChannels.length === 0) {
+              <p class="channels-error-text">
+                יש לבחור לפחות ערוץ אחד
+              </p>
+            }
+          </div>
+        }
 
-          <!-- Chat Link -->
-          <button
-            class="quick-link-btn chat-btn"
-            [class.selected]="currentMode === 'chat'"
-            (click)="handleBuildLink('chat')">
-            <span class="quick-link-icon">💬</span>
-            <span class="quick-link-label">{{ lang.t('distribution.chat') }}</span>
-          </button>
-
-          <!-- QR Link -->
-          <button
-            class="quick-link-btn qr-btn"
-            [class.selected]="currentMode === 'qr'"
-            (click)="handleBuildLink('qr')">
-            <span class="quick-link-icon">QR</span>
-            <span class="quick-link-label">{{ lang.t('distribution.qr') }}</span>
-          </button>
-        </div>
-      </div>
-    }
-
-    <!-- Social Network Selection -->
-    @if (selectedQuestionnaire && showLinksSection && currentMode) {
-      <div class="social-network-section">
-        <div class="section-header">
-          <h3 class="section-subtitle mb-2">
-            <span class="header-icon">🔗</span>
-            {{ lang.t('distribution.socialNetworksTitle') }}
-          </h3>
-          <p class="help-text text-right mb-4">
-            {{ lang.t('distribution.socialNetworksSubtitle') }}
+        <!-- Error message if not selected -->
+        @if (!isStep2Valid() && selectedQuestionnaire) {
+          <p class="step-error-text">
+            יש לבחור מענה אוטומטי או "ללא מענה אוטומטי ללקוח" כדי להמשיך
           </p>
+        }
+      </div>
+    }
+
+    <!-- Step 3: Distribution Links (Only after template selection) -->
+    @if (canShowStep3()) {
+      <div class="step-card gradient-purple">
+        <label class="step-label">שלב 3: קישורי הפצה</label>
+
+        <!-- Info box about automatic detection -->
+        <div class="info-box">
+          <span class="bot-icon">🤖</span>
+          <span>הלינק יזהה אוטומטית את המיקום (WhatsApp, אתר, דף נחיתה) כשמישהו לוחץ עליו</span>
         </div>
 
-        <!-- Main Networks (Top 5) -->
-        <div class="networks-subsection">
-          <h4 class="subsection-title">{{ lang.t('distribution.mainNetworks') }}</h4>
-          <div class="main-networks-grid">
-            @for (network of mainNetworks; track network.id) {
-              <div class="network-item">
-                <div
-                  class="social-network-card {{ network.colorClass }}"
-                  [class.selected]="selectedSocialNetwork === network.id"
-                  (click)="selectSocialNetwork(network.id)">
-                  @if (selectedSocialNetwork === network.id) {
-                    <div class="selected-badge">✓</div>
-                  }
-                  <div class="social-icon">{{ network.icon }}</div>
-                  <div class="social-label">{{ network.name }}</div>
-                </div>
-                <div class="network-info">
-                  <span class="click-rate-badge">{{ network.clickRate }}</span>
-                  <p class="network-description">{{ network.description }}</p>
-                </div>
+        <!-- Link Rows: Form, Chat, QR -->
+        <div class="links-container space-y-4">
+          <!-- Row 1: Form Link -->
+          <div class="link-row">
+            <div class="link-row-header">
+              <span class="file-icon">📄</span>
+              <span class="link-type-label">לינק טופס</span>
+            </div>
+
+            <!-- Custom Text Section (First - Text on top) -->
+            <div class="custom-text-section">
+              <label class="custom-text-label">
+                טקסט מותאם אישית (אופציונלי) - בעת העתקה יועתק המלל והלינק יחד
+              </label>
+              <div class="custom-text-box">
+                <input
+                  [(ngModel)]="linkTexts['form']"
+                  (ngModelChange)="onTextChange()"
+                  placeholder="הכנס כאן את המלל שבו תרצה שהלינק יופיע..."
+                  class="custom-text-input"
+                  dir="rtl"
+                  type="text"
+                />
+                <button
+                  class="btn-save-text"
+                  (click)="saveCustomText('form')"
+                  [class.saved]="savedTexts['form'] && savedTexts['form'].trim()">
+                  <span class="save-icon">💾</span>
+                  שמור
+                </button>
+              </div>
+              @if (linkTexts['form']?.trim()) {
+                <p class="preview-text">
+                  <span class="preview-label">תצוגה מקדימה:</span> {{ linkTexts['form'] }}
+                </p>
+              }
+              @if (savedTexts['form'] && savedTexts['form'].trim()) {
+                <p class="saved-indicator">
+                  <span class="check-icon">✓</span>
+                  המלל נשמר - יופיע בשורה השנייה כקישור קליקבילי עם אפשרות העתקה
+                </p>
+              }
+            </div>
+
+            <!-- Link Display: Row 1 - Link with copy -->
+            <div class="link-row-first">
+              <code class="link-url-text">{{ formLink || 'לא זמין' }}</code>
+              <button class="copy-btn" (click)="copyLink(formLink, 'form')" [disabled]="!formLink" title="העתק לינק">
+                <span class="copy-icon">📋</span>
+              </button>
+            </div>
+
+            <!-- Row 2 - Clickable text link (if text saved) -->
+            @if (savedTexts['form'] && savedTexts['form'].trim()) {
+              <div class="link-row-second">
+                <a [href]="formLink" target="_blank" class="clickable-text-link">
+                  {{ savedTexts['form'] }}
+                </a>
+                <button class="copy-btn-link" (click)="copyClickableLink(formLink, 'form')" title="העתק מלל כקישור קליקבילי">
+                  <span class="copy-icon">📋</span>
+                </button>
               </div>
             }
-          </div>
-        </div>
 
-        <!-- Additional Networks -->
-        <div class="networks-subsection">
-          <h4 class="subsection-title">{{ lang.t('distribution.additionalNetworks') }}</h4>
-          <div class="additional-networks-grid">
-            @for (network of additionalNetworks; track network.id) {
-              <div class="network-item">
-                <div
-                  class="social-network-card {{ network.colorClass }}"
-                  [class.selected]="selectedSocialNetwork === network.id"
-                  (click)="selectSocialNetwork(network.id)">
-                  @if (selectedSocialNetwork === network.id) {
-                    <div class="selected-badge">✓</div>
-                  }
-                  <div class="social-icon">{{ network.icon }}</div>
-                  <div class="social-label">{{ network.name }}</div>
-                </div>
-                <div class="network-info">
-                  <span class="click-rate-badge secondary">{{ network.clickRate }}</span>
-                </div>
+            <!-- Action Buttons -->
+            <div class="action-buttons-row">
+              <button class="action-btn preview-btn" (click)="previewLink(formLink, 'form')" [disabled]="!formLink">
+                הצג טופס
+              </button>
+              <button class="action-btn edit-btn" (click)="editQuestionnaire()">
+                עריכה
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Row 2: Chat Link -->
+          <div class="link-row">
+            <div class="link-row-header">
+              <span class="chat-icon">💬</span>
+              <span class="link-type-label">לינק צ'אט</span>
+            </div>
+
+            <!-- Custom Text Section (First - Text on top) -->
+            <div class="custom-text-section">
+              <label class="custom-text-label">
+                טקסט מותאם אישית (אופציונלי) - בעת העתקה יועתק המלל והלינק יחד
+              </label>
+              <div class="custom-text-box">
+                <input
+                  [(ngModel)]="linkTexts['chat']"
+                  (ngModelChange)="onTextChange()"
+                  placeholder="הכנס כאן את המלל שבו תרצה שהלינק יופיע..."
+                  class="custom-text-input"
+                  dir="rtl"
+                  type="text"
+                />
+                <button
+                  class="btn-save-text"
+                  (click)="saveCustomText('chat')"
+                  [class.saved]="savedTexts['chat'] && savedTexts['chat'].trim()">
+                  <span class="save-icon">💾</span>
+                  שמור
+                </button>
+              </div>
+              @if (linkTexts['chat']?.trim()) {
+                <p class="preview-text">
+                  <span class="preview-label">תצוגה מקדימה:</span> {{ linkTexts['chat'] }}
+                </p>
+              }
+              @if (savedTexts['chat'] && savedTexts['chat'].trim()) {
+                <p class="saved-indicator">
+                  <span class="check-icon">✓</span>
+                  המלל נשמר - יופיע בשורה השנייה כקישור קליקבילי עם אפשרות העתקה
+                </p>
+              }
+            </div>
+
+            <!-- Link Display: Row 1 - Link with copy -->
+            <div class="link-row-first">
+              <code class="link-url-text">{{ chatLink || 'לא זמין' }}</code>
+              <button class="copy-btn" (click)="copyLink(chatLink, 'chat')" [disabled]="!chatLink" title="העתק לינק">
+                <span class="copy-icon">📋</span>
+              </button>
+            </div>
+
+            <!-- Row 2 - Clickable text link (if text saved) -->
+            @if (savedTexts['chat'] && savedTexts['chat'].trim()) {
+              <div class="link-row-second">
+                <a [href]="chatLink" target="_blank" class="clickable-text-link">
+                  {{ savedTexts['chat'] }}
+                </a>
+                <button class="copy-btn-link" (click)="copyClickableLink(chatLink, 'chat')" title="העתק מלל כקישור קליקבילי">
+                  <span class="copy-icon">📋</span>
+                </button>
               </div>
             }
-          </div>
-        </div>
 
-        <!-- Instructions -->
-        <div class="instructions-card">
-          <h4 class="instructions-title">{{ lang.t('distribution.howItWorks') }}</h4>
-          <div class="instructions-list">
-            <p>{{ lang.t('distribution.instruction1') }}</p>
-            <p>{{ lang.t('distribution.instruction2') }}</p>
-            <p>{{ lang.t('distribution.instruction3') }}</p>
-            <p>{{ lang.t('distribution.instruction4') }}</p>
+            <!-- Action Buttons -->
+            <div class="action-buttons-row">
+              <button class="action-btn preview-btn" (click)="previewLink(chatLink, 'chat')" [disabled]="!chatLink">
+                הצג צ'אט
+              </button>
+              <button class="action-btn edit-btn" (click)="editQuestionnaire()">
+                עריכה
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Row 3: QR Link -->
+          <div class="link-row">
+            <div class="link-row-header">
+              <span class="qr-icon">📱</span>
+              <span class="link-type-label">לינק QR</span>
+            </div>
+
+            <!-- Custom Text Section (First - Text on top) -->
+            <div class="custom-text-section">
+              <label class="custom-text-label">
+                טקסט מותאם אישית (אופציונלי) - בעת העתקה יועתק המלל והלינק יחד
+              </label>
+              <div class="custom-text-box">
+                <input
+                  [(ngModel)]="linkTexts['qr']"
+                  (ngModelChange)="onTextChange()"
+                  placeholder="הכנס כאן את המלל שבו תרצה שהלינק יופיע..."
+                  class="custom-text-input"
+                  dir="rtl"
+                  type="text"
+                />
+                <button
+                  class="btn-save-text"
+                  (click)="saveCustomText('qr')"
+                  [class.saved]="savedTexts['qr'] && savedTexts['qr'].trim()">
+                  <span class="save-icon">💾</span>
+                  שמור
+                </button>
+              </div>
+              @if (linkTexts['qr']?.trim()) {
+                <p class="preview-text">
+                  <span class="preview-label">תצוגה מקדימה:</span> {{ linkTexts['qr'] }}
+                </p>
+              }
+              @if (savedTexts['qr'] && savedTexts['qr'].trim()) {
+                <p class="saved-indicator">
+                  <span class="check-icon">✓</span>
+                  המלל נשמר - יופיע בשורה השנייה כקישור קליקבילי עם אפשרות העתקה
+                </p>
+              }
+            </div>
+
+            <!-- Link Display: Row 1 - Link with copy -->
+            <div class="link-row-first">
+              <code class="link-url-text">{{ qrLink || 'לא זמין' }}</code>
+              <button class="copy-btn" (click)="copyLink(qrLink, 'qr')" [disabled]="!qrLink" title="העתק לינק">
+                <span class="copy-icon">📋</span>
+              </button>
+            </div>
+
+            <!-- Row 2 - Clickable text link (if text saved) -->
+            @if (savedTexts['qr'] && savedTexts['qr'].trim()) {
+              <div class="link-row-second">
+                <a [href]="qrLink" target="_blank" class="clickable-text-link">
+                  {{ savedTexts['qr'] }}
+                </a>
+                <button class="copy-btn-link" (click)="copyClickableLink(qrLink, 'qr')" title="העתק מלל כקישור קליקבילי">
+                  <span class="copy-icon">📋</span>
+                </button>
+              </div>
+            }
+
+            <!-- Action Buttons -->
+            <div class="action-buttons-row">
+              <button class="action-btn preview-btn" (click)="previewLink(qrLink, 'qr')" [disabled]="!qrLink">
+                הצג QR
+              </button>
+              <button class="action-btn edit-btn" (click)="editQuestionnaire()">
+                עריכה
+              </button>
+            </div>
+
           </div>
         </div>
       </div>
     }
+
   </div>
 </div>

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LanguageService } from '../../core/services/language.service';
@@ -59,6 +59,9 @@ export class DistributionHubComponent implements OnInit {
   @ViewChild('previewSection') previewSection?: ElementRef;
 
   selectedQuestionnaire = '';
+  private saveTimeout: any = null; // For debouncing auto-save
+  isSaving = false; // Track saving state
+  lastSaved: Date | null = null; // Track last save time
   questionnaires: Questionnaire[] = [];
   loading = false;
   currentMode: LinkMode = null;
@@ -67,110 +70,40 @@ export class DistributionHubComponent implements OnInit {
   selectedSocialNetwork: 'whatsapp' | 'facebook' | 'instagram' | 'linkedin' | 'youtube' | 'telegram' | 'email' | 'sms' | 'website' | null = null;
   showLinksSection = false;
 
-  // Social networks configuration - now using getters for translations
-  get socialNetworks() {
-    return [
-      {
-        id: 'whatsapp' as const,
-        name: this.lang.t('distribution.network.whatsapp'),
-        icon: '💬',
-        colorClass: 'whatsapp-card',
-        priority: 1,
-        description: this.lang.t('distribution.desc.whatsapp'),
-        clickRate: '45-60%'
-      },
-      {
-        id: 'facebook' as const,
-        name: this.lang.t('distribution.network.facebook'),
-        icon: '📘',
-        colorClass: 'facebook-card',
-        priority: 2,
-        description: this.lang.t('distribution.desc.facebook'),
-        clickRate: '25-35%'
-      },
-      {
-        id: 'instagram' as const,
-        name: this.lang.t('distribution.network.instagram'),
-        icon: '📷',
-        colorClass: 'instagram-card',
-        priority: 3,
-        description: this.lang.t('distribution.desc.instagram'),
-        clickRate: '15-25%'
-      },
-      {
-        id: 'linkedin' as const,
-        name: this.lang.t('distribution.network.linkedin'),
-        icon: '💼',
-        colorClass: 'linkedin-card',
-        priority: 4,
-        description: this.lang.t('distribution.desc.linkedin'),
-        clickRate: '10-18%'
-      },
-      {
-        id: 'youtube' as const,
-        name: this.lang.t('distribution.network.youtube'),
-        icon: '🎥',
-        colorClass: 'youtube-card',
-        priority: 5,
-        description: this.lang.t('distribution.desc.youtube'),
-        clickRate: '8-12%'
-      },
-      {
-        id: 'telegram' as const,
-        name: this.lang.t('distribution.network.telegram'),
-        icon: '✈️',
-        colorClass: 'telegram-card',
-        priority: 6,
-        description: this.lang.t('distribution.desc.telegram'),
-        clickRate: '8-12%'
-      },
-      {
-        id: 'email' as const,
-        name: this.lang.t('distribution.network.email'),
-        icon: '✉️',
-        colorClass: 'email-card',
-        priority: 7,
-        description: this.lang.t('distribution.desc.email'),
-        clickRate: '8-12%'
-      },
-      {
-        id: 'sms' as const,
-        name: this.lang.t('distribution.network.sms'),
-        icon: '📱',
-        colorClass: 'sms-card',
-        priority: 8,
-        description: this.lang.t('distribution.desc.sms'),
-        clickRate: '8-12%'
-      },
-      {
-        id: 'website' as const,
-        name: this.lang.t('distribution.network.website'),
-        icon: '🌐',
-        colorClass: 'website-card',
-        priority: 9,
-        description: this.lang.t('distribution.desc.website'),
-        clickRate: '5-10%'
-      }
-    ];
-  }
-
-  // Main networks (first 5)
-  get mainNetworks() {
-    return this.socialNetworks.slice(0, 5);
-  }
-
-  // Additional networks (remaining)
-  get additionalNetworks() {
-    return this.socialNetworks.slice(5);
-  }
-
-  // Saved links
-  savedLinks: SavedLink[] = [];
-
-  // Template management
-  selectedTemplates: SelectedTemplate[] = [];
+  // Template management - Updated: Single template selection
+  selectedTemplateId: string = ''; // "" = לא נבחר, "none" = ללא מענה, או ID תבנית
   availableTemplates: AutomationTemplate[] = [];
+  
+  // Selected channels for the template
+  selectedChannels: Array<'email' | 'whatsapp' | 'sms'> = [];
+  
+  // Link texts - Custom text per link type
+  linkTexts: { [key: string]: string } = {
+    form: '',
+    chat: '',
+    qr: ''
+  };
+
+  // Saved texts (persisted)
+  savedTexts: { [key: string]: string } = {
+    form: '',
+    chat: '',
+    qr: ''
+  };
+
+  // Generated links
+  formLink: string = '';
+  chatLink: string = '';
+  qrLink: string = '';
+
+  // Template preview
+  showTemplatePreview: boolean = false;
+  templatePreviewHtml: string = '';
+
+  // Legacy - keeping for backward compatibility (not used in new UI)
+  selectedTemplates: SelectedTemplate[] = [];
   newTemplateId = '';
+  savedLinks: SavedLink[] = [];
 
   constructor(
     public lang: LanguageService,
@@ -188,11 +121,20 @@ export class DistributionHubComponent implements OnInit {
 
     // Load saved links from localStorage
     this.loadSavedLinks();
-
-    // Check for questionnaireId from query params
-    this.route.queryParams.subscribe(params => {
+    
+    // Check for questionnaireId from query params (when returning from preview)
+    this.route.queryParams.subscribe(async params => {
       if (params['questionnaireId']) {
-        this.selectedQuestionnaire = params['questionnaireId'];
+        const newQuestionnaireId = params['questionnaireId'];
+        // Only reload if questionnaire changed
+        if (this.selectedQuestionnaire !== newQuestionnaireId) {
+          this.selectedQuestionnaire = newQuestionnaireId;
+          // Load saved data for this questionnaire
+          await this.loadSavedDistributionData();
+        } else {
+          // Same questionnaire - just reload the data to ensure we have latest
+          await this.loadSavedDistributionData();
+        }
       }
     });
   }
@@ -265,25 +207,324 @@ export class DistributionHubComponent implements OnInit {
     window.history.back();
   }
 
+    // Updated: Handle questionnaire selection (Step 1)
   async onQuestionnaireChange() {
-    // Hide the generated link when questionnaire selection changes
+    if (!this.selectedQuestionnaire) {
+      this.resetLinks();
+      return;
+    }
+
+    // Reset state first
+    this.selectedTemplateId = '';
+    this.selectedChannels = [];
+    this.formLink = '';
+    this.chatLink = '';
+    this.qrLink = '';
     this.currentMode = null;
     this.currentUrl = '';
     this.currentDistribution = null;
     this.selectedTemplates = [];
     this.selectedSocialNetwork = null;
     this.showLinksSection = false;
+    this.linkTexts = { form: '', chat: '', qr: '' };
+    this.savedTexts = { form: '', chat: '', qr: '' };
 
-    // Load existing distribution if available
-    await this.loadExistingDistribution();
+    // Always load saved data for the selected questionnaire (even if selecting it again)
+    // This ensures that if user selected a questionnaire, filled data, went away, and came back
+    // all the data will be loaded automatically
+    await this.loadSavedDistributionData();
+    
+    // Generate links after loading data
+    this.generateLinks();
   }
 
+  // Updated: Handle template selection (Step 2)
+  onTemplateChange(templateId: string): void {
+    this.selectedTemplateId = templateId;
+    
+    // Reset channels when template changes or when "none" is selected
+    // NO default selection - user must choose freely
+    if (templateId === 'none' || !templateId) {
+      this.selectedChannels = [];
+    } else {
+      // Clear channels - let user choose freely (multiple selection)
+      this.selectedChannels = [];
+    }
+    
+    // Generate links if questionnaire is selected
+    if (this.selectedQuestionnaire && templateId) {
+      this.generateLinks();
+    }
+    
+    // Auto-save on template change
+    if (this.selectedQuestionnaire) {
+      this.saveDistributionData(this.selectedQuestionnaire);
+    }
+  }
+
+  // Toggle channel selection
+  toggleChannel(channel: 'email' | 'whatsapp' | 'sms'): void {
+    const index = this.selectedChannels.indexOf(channel);
+    if (index > -1) {
+      // Remove channel
+      this.selectedChannels = this.selectedChannels.filter(c => c !== channel);
+    } else {
+      // Add channel
+      this.selectedChannels.push(channel);
+    }
+    
+    // Auto-save on channel change
+    if (this.selectedQuestionnaire) {
+      this.saveDistributionData(this.selectedQuestionnaire);
+    }
+  }
+
+  // Check if channel is selected
+  isChannelSelected(channel: 'email' | 'whatsapp' | 'sms'): boolean {
+    return this.selectedChannels.includes(channel);
+  }
+
+  // Legacy - keeping for backward compatibility
   async onTemplatesChange() {
     // Hide the links section when templates change
     this.currentMode = null;
     this.currentUrl = '';
     this.selectedSocialNetwork = null;
     this.showLinksSection = false;
+  }
+
+  // Generate universal links (Step 3)
+  generateLinks(): void {
+    if (!this.selectedQuestionnaire) {
+      return;
+    }
+
+    const baseUrl = environment.siteUrl || window.location.origin;
+    
+    // Get distribution token if available, otherwise use questionnaire token
+    const questionnaire = this.questionnaires.find(q => q.id === this.selectedQuestionnaire);
+    const token = this.currentDistribution?.token || questionnaire?.token || this.selectedQuestionnaire;
+
+    // Universal links with tracking parameter (src) - will auto-detect location when clicked
+    // The src parameter allows tracking where the lead came from (form/chat/qr)
+    this.formLink = `${baseUrl}/q/${token}?src=form`;
+    this.chatLink = `${baseUrl}/q/${token}/chat?src=chat`;
+    this.qrLink = `${baseUrl}/q/${token}/qr?src=qr`;
+  }
+
+  // Reset links
+  resetLinks(): void {
+    this.formLink = '';
+    this.chatLink = '';
+    this.qrLink = '';
+  }
+
+  // Copy link only (plain link)
+  async copyLink(link: string, type: string): Promise<void> {
+    if (!link) {
+      this.toast.show(
+        this.lang.currentLanguage === 'he' ? 'אין קישור להעתקה' : 'No link to copy',
+        'error'
+      );
+      return;
+    }
+
+    const success = await this.copyToClipboard(link);
+    if (success) {
+      this.toast.show(
+        this.lang.currentLanguage === 'he' ? 'הקישור הועתק ללוח' : 'Link copied to clipboard',
+        'success'
+      );
+    } else {
+      this.toast.show(
+        this.lang.currentLanguage === 'he' ? 'שגיאה בהעתקה' : 'Copy failed',
+        'error'
+      );
+    }
+  }
+
+  // Copy clickable link (HTML format - text as clickable link)
+  async copyClickableLink(link: string, type: string): Promise<void> {
+    if (!link) {
+      this.toast.show(
+        this.lang.currentLanguage === 'he' ? 'אין קישור להעתקה' : 'No link to copy',
+        'error'
+      );
+      return;
+    }
+
+    const savedText = this.savedTexts[type];
+    if (!savedText || !savedText.trim()) {
+      this.toast.show(
+        this.lang.currentLanguage === 'he' ? 'אין מלל שמור להעתקה' : 'No saved text to copy',
+        'error'
+      );
+      return;
+    }
+
+    // Copy as HTML link format
+    try {
+      const htmlLink = `<a href="${link}">${savedText}</a>`;
+      const htmlBlob = new Blob([htmlLink], { type: 'text/html' });
+      const textBlob = new Blob([savedText], { type: 'text/plain' });
+      const clipboardItem = new ClipboardItem({
+        'text/html': htmlBlob,
+        'text/plain': textBlob
+      });
+      await navigator.clipboard.write([clipboardItem]);
+      
+      this.toast.show(
+        this.lang.currentLanguage === 'he' ? 'המלל כקישור קליקבילי הועתק ללוח' : 'Text as clickable link copied to clipboard',
+        'success'
+      );
+    } catch (error) {
+      // Fallback to plain text
+      const success = await this.copyToClipboard(savedText);
+      if (success) {
+        this.toast.show(
+          this.lang.currentLanguage === 'he' ? 'המלל הועתק ללוח' : 'Text copied to clipboard',
+          'success'
+        );
+      } else {
+        this.toast.show(
+          this.lang.currentLanguage === 'he' ? 'שגיאה בהעתקה' : 'Copy failed',
+          'error'
+        );
+      }
+    }
+  }
+
+  // Preview template (demo customer response)
+  previewTemplate(): void {
+    if (!this.selectedTemplateId || this.selectedTemplateId === 'none') {
+      return;
+    }
+
+    const template = this.availableTemplates.find(t => t.id === this.selectedTemplateId);
+    if (!template) {
+      return;
+    }
+
+    // Open template preview in a new tab or modal
+    // For now, navigate to automations page with template preview
+    this.router.navigate(['/automations'], {
+      queryParams: { tab: 'templates', preview: this.selectedTemplateId }
+    });
+  }
+
+  // Preview link (navigate to questionnaire view)
+  previewLink(link: string, type: 'form' | 'chat' | 'qr'): void {
+    if (!this.selectedQuestionnaire) {
+      this.toast.show(
+        this.lang.currentLanguage === 'he' ? 'יש לבחור שאלון תחילה' : 'Please select a questionnaire first',
+        'error'
+      );
+      return;
+    }
+
+    // IMPORTANT: Save all data before navigating to preview
+    // This ensures data is saved even if user closes browser or navigates away
+    this.saveDistributionData(this.selectedQuestionnaire);
+
+    // Get questionnaire token or ID
+    const questionnaire = this.questionnaires.find(q => q.id === this.selectedQuestionnaire);
+    const token = questionnaire?.token || this.selectedQuestionnaire;
+
+    // Navigate based on type with query parameter to indicate coming from distribution hub:
+    // - form: Show questionnaire in form view (like in create/edit and questionnaires list)
+    // - chat: Show questionnaire in chat view (chat tab)
+    // - qr: Same as form (shows the form)
+    if (type === 'form' || type === 'qr') {
+      // Navigate to form view (owner preview mode) with from=distribution-hub
+      this.router.navigate(['/questionnaires/live', this.selectedQuestionnaire], {
+        queryParams: { from: 'distribution-hub' }
+      });
+    } else if (type === 'chat') {
+      // Navigate to chat view (chat tab) with from=distribution-hub
+      this.router.navigate(['/questionnaires/chat', this.selectedQuestionnaire], {
+        queryParams: { from: 'distribution-hub' }
+      });
+    }
+  }
+
+  // Edit questionnaire
+  editQuestionnaire(): void {
+    if (!this.selectedQuestionnaire) {
+      return;
+    }
+    this.router.navigate(['/questionnaires/edit', this.selectedQuestionnaire]);
+  }
+
+  // Delete questionnaire
+  async deleteQuestionnaire(): Promise<void> {
+    if (!this.selectedQuestionnaire) {
+      return;
+    }
+
+    const confirmMessage = this.lang.currentLanguage === 'he'
+      ? 'האם אתה בטוח שברצונך למחוק את השאלון?'
+      : 'Are you sure you want to delete this questionnaire?';
+
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+
+    try {
+      const { error } = await this.supabaseService.client
+        .from('questionnaires')
+        .delete()
+        .eq('id', this.selectedQuestionnaire);
+
+      if (error) throw error;
+
+      this.toast.show(
+        this.lang.currentLanguage === 'he' ? 'השאלון נמחק בהצלחה' : 'Questionnaire deleted successfully',
+        'success'
+      );
+
+      // Reset form and reload questionnaires
+      this.resetForm();
+      await this.loadQuestionnaires();
+    } catch (error: any) {
+      console.error('Error deleting questionnaire:', error);
+      this.toast.show(
+        this.lang.currentLanguage === 'he' ? 'שגיאה במחיקת השאלון' : 'Error deleting questionnaire',
+        'error'
+      );
+    }
+  }
+
+  // Reset form
+  resetForm(): void {
+    this.selectedQuestionnaire = '';
+    this.selectedTemplateId = '';
+    this.formLink = '';
+    this.chatLink = '';
+    this.qrLink = '';
+    this.linkTexts = { form: '', chat: '', qr: '' };
+    this.showLinksSection = false;
+    this.currentDistribution = null;
+  }
+
+  // Check if Step 3 can be shown
+  canShowStep3(): boolean {
+    return !!(this.selectedQuestionnaire && this.selectedTemplateId && this.selectedTemplateId !== '');
+  }
+
+  // Check if Step 2 is valid
+  isStep2Valid(): boolean {
+    // Template must be selected
+    if (!this.selectedTemplateId || this.selectedTemplateId === '') {
+      return false;
+    }
+    
+    // If "none" is selected, it's valid
+    if (this.selectedTemplateId === 'none') {
+      return true;
+    }
+    
+    // If a template is selected, at least one channel must be selected
+    return this.selectedChannels.length > 0;
   }
 
   async loadExistingDistribution() {
@@ -302,8 +543,12 @@ export class DistributionHubComponent implements OnInit {
       if (existingDistributions && existingDistributions.length > 0) {
         this.currentDistribution = existingDistributions[0] as Distribution;
 
-        // Don't auto-load templates - let user select them manually
-        // This ensures a clean slate when changing questionnaires
+        // Load template and channels from existing distribution
+        if (this.currentDistribution.automation_template_ids && this.currentDistribution.automation_template_ids.length > 0) {
+          const templateMapping = this.currentDistribution.automation_template_ids[0];
+          this.selectedTemplateId = templateMapping.template_id;
+          this.selectedChannels = templateMapping.channels || ['email'];
+        }
       }
     } catch (error) {
       console.error('Error loading existing distribution:', error);
@@ -319,24 +564,27 @@ export class DistributionHubComponent implements OnInit {
       return;
     }
 
-    // Validate that all selected templates have at least one channel (if any templates are selected)
-    if (this.selectedTemplates.length > 0) {
-      const templatesWithoutChannels = this.selectedTemplates.filter(t => t.channels.length === 0);
-      if (templatesWithoutChannels.length > 0) {
-        this.toast.show(
-          this.lang.t('distribution.templatesMissingChannels'),
-          'error'
-        );
-        return;
-      }
+    // Updated: Validate Step 2 - template must be selected (even if "none")
+    if (!this.isStep2Valid()) {
+      this.toast.show(
+        this.lang.currentLanguage === 'he'
+          ? 'יש לבחור מענה אוטומטי או "ללא מענה אוטומטי ללקוח" כדי להמשיך'
+          : 'Please select an automatic response or "No automatic customer response" to continue',
+        'error'
+      );
+      return;
     }
 
-    // Save the distribution first (creates/updates distribution even without templates)
+    // Save the distribution first (creates/updates distribution)
     const success = await this.saveDistribution();
 
     // Only show the links section if distribution was saved successfully
     if (success) {
       this.showLinksSection = true;
+      // Generate links if not already generated
+      if (!this.formLink) {
+        this.generateLinks();
+      }
     } else {
       console.error('Failed to save distribution - not showing links section');
     }
@@ -358,20 +606,29 @@ export class DistributionHubComponent implements OnInit {
     const questionnaire = this.questionnaires.find(q => q.id === this.selectedQuestionnaire);
     if (!questionnaire) return false;
 
-    // Prepare automation template data - only include templates with at least one channel
-    const automationTemplateIds = this.selectedTemplates
-      .filter(template => template.channels.length > 0)
-      .map(template => ({
-        template_id: template.id,
-        channels: template.channels
-      }));
+    // Updated: Prepare automation template data - single template selection
+    let automationTemplateIds: Array<{ template_id: string; channels: Array<'email' | 'whatsapp' | 'sms'> }> = [];
+    
+    if (this.selectedTemplateId && this.selectedTemplateId !== 'none') {
+      // If a template is selected, use the selected channels
+      // If no channels selected, default to email
+      const channels: Array<'email' | 'whatsapp' | 'sms'> = this.selectedChannels.length > 0 
+        ? this.selectedChannels 
+        : ['email'];
+      
+      automationTemplateIds = [{
+        template_id: this.selectedTemplateId,
+        channels: channels
+      }];
+    }
+    // If "none" is selected, automationTemplateIds stays empty
 
     // Generate or reuse distribution token
     const distributionToken = this.currentDistribution?.token || this.generateDistributionToken();
 
     const distributionData = {
       questionnaire_id: this.selectedQuestionnaire,
-      automation_template_ids: automationTemplateIds, // Can be empty array if no templates
+      automation_template_ids: automationTemplateIds, // Empty array if "none" selected
       token: distributionToken,
       is_active: true
     };
@@ -505,9 +762,19 @@ export class DistributionHubComponent implements OnInit {
 
     this.selectedSocialNetwork = network;
 
-    // Get network name
-    const networkData = this.socialNetworks.find(n => n.id === network);
-    const networkName = networkData?.name || network;
+    // Get network name (translated)
+    const networkNames: { [key: string]: string } = {
+      'whatsapp': 'WhatsApp',
+      'facebook': 'Facebook',
+      'instagram': 'Instagram',
+      'linkedin': 'LinkedIn',
+      'youtube': 'YouTube',
+      'telegram': 'Telegram',
+      'email': 'Email',
+      'sms': 'SMS',
+      'website': 'Website'
+    };
+    const networkName = networkNames[network] || network;
 
     // Create URL with tracking parameter
     let urlWithTracking: string;
@@ -698,7 +965,201 @@ export class DistributionHubComponent implements OnInit {
   }
 
   navigateToAutomations() {
+    const confirmMessage = this.lang.currentLanguage === 'he'
+      ? 'אתה יוצא מהמסך למסך יצירת מענה ללקוח. האם להמשיך?'
+      : 'You are leaving this page to create a customer response template. Continue?';
+    
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+    
     this.router.navigate(['/automations'], { queryParams: { tab: 'templates' } });
+  }
+
+  // Save custom text for a specific link type
+  saveCustomText(type: string): void {
+    const text = this.linkTexts[type]?.trim() || '';
+    this.savedTexts[type] = text;
+    
+    // Save to localStorage
+    this.saveTextsToStorage();
+    
+    // Auto-save all distribution data
+    if (this.selectedQuestionnaire) {
+      this.saveDistributionData(this.selectedQuestionnaire);
+    }
+    
+    const message = text
+      ? (this.lang.currentLanguage === 'he' ? 'המלל נשמר בהצלחה' : 'Text saved successfully')
+      : (this.lang.currentLanguage === 'he' ? 'המלל נמחק' : 'Text cleared');
+    this.toast.show(message, 'success');
+  }
+
+  // Load saved texts from localStorage
+  loadSavedTexts(): void {
+    try {
+      const savedTextsData = localStorage.getItem(`hoogi-saved-texts-${this.selectedQuestionnaire}`);
+      if (savedTextsData) {
+        this.savedTexts = JSON.parse(savedTextsData);
+        // Also populate linkTexts with saved texts
+        Object.keys(this.savedTexts).forEach(key => {
+          if (this.savedTexts[key]) {
+            this.linkTexts[key] = this.savedTexts[key];
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error loading saved texts:', error);
+      this.savedTexts = { form: '', chat: '', qr: '' };
+    }
+  }
+
+  // Save all distribution data (template, channels, texts) for a questionnaire
+  // This saves to localStorage AND database so data persists everywhere
+  async saveDistributionData(questionnaireId: string): Promise<void> {
+    if (!questionnaireId) return;
+    
+    this.isSaving = true;
+    
+    try {
+      const distributionData = {
+        templateId: this.selectedTemplateId || '',
+        channels: [...(this.selectedChannels || [])], // Create a copy of the array
+        linkTexts: {
+          form: this.linkTexts['form'] || '',
+          chat: this.linkTexts['chat'] || '',
+          qr: this.linkTexts['qr'] || ''
+        },
+        savedTexts: {
+          form: this.savedTexts['form'] || '',
+          chat: this.savedTexts['chat'] || '',
+          qr: this.savedTexts['qr'] || ''
+        },
+        timestamp: new Date().toISOString()
+      };
+      
+      // 1. Save to localStorage - this persists even after browser close
+      localStorage.setItem(`hoogi-distribution-data-${questionnaireId}`, JSON.stringify(distributionData));
+      
+      // 2. Also save texts separately for backward compatibility
+      this.saveTextsToStorage();
+      
+      // 3. Auto-save to database if template and channels are selected
+      // This ensures data persists across devices/browsers
+      if (this.selectedTemplateId && this.selectedTemplateId !== 'none' && this.selectedChannels.length > 0) {
+        try {
+          // Silently save to DB (don't show links section, just save)
+          await this.saveDistribution();
+          console.log('✅ Distribution auto-saved to database');
+        } catch (dbError) {
+          console.warn('⚠️ Failed to auto-save to database (will use localStorage only):', dbError);
+          // Don't throw - localStorage backup is still there
+        }
+      }
+      
+      // Update last saved time
+      this.lastSaved = new Date();
+    } catch (error) {
+      console.error('Error saving distribution data:', error);
+    } finally {
+      this.isSaving = false;
+    }
+  }
+
+  // Load all saved distribution data (template, channels, texts) for a questionnaire
+  async loadSavedDistributionData(): Promise<void> {
+    if (!this.selectedQuestionnaire) return;
+    
+    try {
+      // Load saved distribution data from localStorage
+      const savedDataKey = `hoogi-distribution-data-${this.selectedQuestionnaire}`;
+      const savedDataStr = localStorage.getItem(savedDataKey);
+      
+      if (savedDataStr) {
+        const savedData = JSON.parse(savedDataStr);
+        
+        // Restore template and channels
+        if (savedData.templateId !== undefined && savedData.templateId !== null) {
+          this.selectedTemplateId = savedData.templateId;
+        }
+        if (savedData.channels && Array.isArray(savedData.channels)) {
+          this.selectedChannels = [...savedData.channels];
+        }
+        
+        // Restore link texts and saved texts
+        if (savedData.linkTexts) {
+          this.linkTexts = {
+            form: savedData.linkTexts.form || '',
+            chat: savedData.linkTexts.chat || '',
+            qr: savedData.linkTexts.qr || ''
+          };
+        }
+        if (savedData.savedTexts) {
+          this.savedTexts = {
+            form: savedData.savedTexts.form || '',
+            chat: savedData.savedTexts.chat || '',
+            qr: savedData.savedTexts.qr || ''
+          };
+        }
+      }
+      
+      // Also load existing distribution from database (if exists)
+      await this.loadExistingDistribution();
+      
+      // If database has different template/channels, use those (database is source of truth)
+      if (this.currentDistribution?.automation_template_ids && this.currentDistribution.automation_template_ids.length > 0) {
+        const templateMapping = this.currentDistribution.automation_template_ids[0];
+        if (templateMapping) {
+          this.selectedTemplateId = templateMapping.template_id || '';
+          this.selectedChannels = templateMapping.channels || [];
+        }
+      }
+      
+      // Load saved texts from localStorage (per questionnaire) - for backward compatibility
+      this.loadSavedTexts();
+      
+      // Generate links if questionnaire and template are selected
+      if (this.selectedQuestionnaire) {
+        this.generateLinks();
+      }
+    } catch (error) {
+      console.error('Error loading saved distribution data:', error);
+    }
+  }
+  
+  // Auto-save when text changes (called from template via ngModelChange)
+  onTextChange(): void {
+    if (this.selectedQuestionnaire) {
+      // Clear previous timeout
+      if (this.saveTimeout) {
+        clearTimeout(this.saveTimeout);
+      }
+      // Debounce: save after 1 second of no changes
+      this.saveTimeout = setTimeout(() => {
+        this.saveDistributionData(this.selectedQuestionnaire);
+        this.saveTimeout = null;
+      }, 1000);
+    }
+  }
+
+
+  // Save texts to localStorage
+  saveTextsToStorage(): void {
+    try {
+      if (this.selectedQuestionnaire) {
+        localStorage.setItem(`hoogi-saved-texts-${this.selectedQuestionnaire}`, JSON.stringify(this.savedTexts));
+      }
+    } catch (error) {
+      console.error('Error saving texts:', error);
+    }
+  }
+
+  // Format time for display
+  formatTime(date: Date): string {
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+    return `${hours}:${minutes}:${seconds}`;
   }
 
   getChannelNameInHebrew(channel: 'email' | 'whatsapp' | 'sms'): string {
