@@ -37,6 +37,26 @@ interface AutomationTemplate {
   use_profile_image?: boolean;
 }
 
+interface BusinessContactSettingsRow {
+  return_email?: string | null;
+  return_phone?: string | null;
+  return_whatsapp?: string | null;
+  enabled_channels?: string[] | null;
+}
+
+interface ResolvedContactSettings {
+  email: string | null;
+  phone: string | null;
+  whatsapp: string | null;
+  enabledChannels: string[];
+}
+
+interface ContactCTAElements {
+  htmlSection: string;
+  textFooter: string;
+  whatsappFooter: string;
+}
+
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 const INCOMING_SECRET = Deno.env.get("INCOMING_WEBHOOK_SECRET") ?? "";
@@ -154,6 +174,20 @@ async function handleAutomation(lead: LeadRecord) {
 
     console.log("✅ [AUTOMATION] Owner profile loaded");
 
+    const { data: businessContactSettings, error: contactSettingsError } = await supabase
+      .from('business_contact_settings')
+      .select('return_email, return_phone, return_whatsapp, enabled_channels')
+      .eq('business_id', questionnaire.owner_id)
+      .maybeSingle();
+
+    if (contactSettingsError && contactSettingsError.code !== 'PGRST116') {
+      console.error("⚠️ [AUTOMATION] Error loading business contact settings:", contactSettingsError);
+    }
+
+    const resolvedContactSettings = resolveContactSettings(ownerProfile, businessContactSettings);
+    const contactCTA = buildContactCTAElements(resolvedContactSettings);
+    const replyToEmail = resolvedContactSettings.email || ownerProfile.email || null;
+
     // Track which channels have been used to prevent duplicates
     const sentChannels = new Set<string>();
 
@@ -197,6 +231,16 @@ async function handleAutomation(lead: LeadRecord) {
         image_url: template.image_url
       });
 
+      const templateChannels = Array.isArray(channels) ? channels : [];
+      const effectiveChannels = templateChannels.filter((channel: string) =>
+        resolvedContactSettings.enabledChannels.includes(channel)
+      );
+
+      if (!effectiveChannels.length) {
+        console.log("⚠️ [AUTOMATION] No channels allowed by business contact settings for template:", template_id);
+        continue;
+      }
+
       // Only handle personal type templates for now
       console.log("🔍 [AUTOMATION] Checking template conditions - type:", template.message_type, "has_body:", !!template.body);
 
@@ -223,6 +267,9 @@ async function handleAutomation(lead: LeadRecord) {
           attachment_image_url: template.image_url
         });
 
+        const plainTextBody = appendContactFooter(messageBody, contactCTA.textFooter);
+        const whatsappBody = appendContactFooter(messageBody, contactCTA.whatsappFooter);
+
         // Build HTML email with template elements
         const htmlEmail = buildEmailHTML(
           messageBody,
@@ -231,40 +278,41 @@ async function handleAutomation(lead: LeadRecord) {
           linkUrl,
           template.image_url,
           ownerProfile.company || 'Our Team',
-          questionnaire.link_label || 'לחץ כאן'
+          questionnaire.link_label || 'לחץ כאן',
+          contactCTA.htmlSection
         );
 
         // Send on each configured channel
-        console.log("📤 [AUTOMATION] Sending on", channels.length, "channel(s):", channels);
+        console.log("📤 [AUTOMATION] Sending on", effectiveChannels.length, "channel(s):", effectiveChannels);
 
-        for (const channel of channels) {
+        for (const channel of effectiveChannels) {
           console.log("📬 [AUTOMATION] Processing channel:", channel);
 
           // Skip if this channel was already used
           if (sentChannels.has(channel)) {
-            console.log("⏭️ [AUTOMATION] Skipping", channel, "- already sent in previous template");
+            console.log("⏭️ [AUTOMATION] Skipping", channel, "- already  sent in previous template");
             continue;
           }
 
           if (channel === 'email' && contact.email) {
             console.log("📧 [AUTOMATION] Sending email to:", contact.email);
             console.log("📧 [AUTOMATION] Email subject:", subject);
-            await sendAutomationEmail(contact.email, subject, htmlEmail, messageBody, ownerProfile.email);
+            await sendAutomationEmail(contact.email, subject, htmlEmail, plainTextBody, replyToEmail || undefined);
             sentChannels.add('email');
           } else if (channel === 'email' && !contact.email) {
-            console.log("⚠️ [AUTOMATION] Email channel selected but no contact email");
+            console.log("⚠️ [AUTOMATION] Email channel selected but no ccontact email");
           } else if (channel === 'whatsapp' && contact.phone) {
             console.log("📱 [WHATSAPP] Sending WhatsApp to:", contact.phone);
-            await sendAutomationWhatsApp(contact.phone, messageBody, template.image_url || null);
+            await sendAutomationWhatsApp(contact.phone, whatsappBody, template.image_url || null);
             sentChannels.add('whatsapp');
           } else if (channel === 'whatsapp' && !contact.phone) {
-            console.log("⚠️ [AUTOMATION] WhatsApp channel selected but no contact phone");
+            console.log("⚠️ [AUTOMATION] WhatsApp channel selected but nno contact phone");
           } else if (channel === 'sms' && contact.phone) {
             console.log("💬 [SMS] Sending SMS to:", contact.phone);
-            await sendAutomationSMS(contact.phone, messageBody);
+            await sendAutomationSMS(contact.phone, whatsappBody);
             sentChannels.add('sms');
           } else if (channel === 'sms' && !contact.phone) {
-            console.log("⚠️ [AUTOMATION] SMS channel selected but no contact phone");
+            console.log("⚠️ [AUTOMATION] SMS channel selected but no contact phoone");
           }
         }
       } else if (template.message_type === 'ai') {
@@ -339,6 +387,9 @@ async function handleAutomation(lead: LeadRecord) {
               linkUrl = 'https://' + linkUrl;
             }
 
+            const fallbackPlainText = appendContactFooter(fallbackMessage, contactCTA.textFooter);
+            const fallbackWhatsapp = appendContactFooter(fallbackMessage, contactCTA.whatsappFooter);
+
             const htmlEmail = buildEmailHTML(
               fallbackMessage,
               template.use_profile_logo ? ownerProfile.logo_url : null,
@@ -346,33 +397,34 @@ async function handleAutomation(lead: LeadRecord) {
               linkUrl,
               template.image_url,
               ownerProfile.company || 'Our Team',
-              distribution.link_text || 'לחץ כאן'
+              distribution.link_text || 'לחץ כאן',
+              contactCTA.htmlSection
             );
 
-            console.log("📤 [AUTOMATION] Sending AI message (fallback) on", channels.length, "channel(s)");
-            for (const channel of channels) {
+            console.log("📤 [AUTOMATION] Sending AI message (fallback) on", effectiveChannels.length, "channel(s)");
+            for (const channel of effectiveChannels) {
               // Skip if this channel was already used
               if (sentChannels.has(channel)) {
-                console.log("⏭️ [AUTOMATION] Skipping", channel, "- already sent in previous template");
+                console.log("⏭️ [AUTOMATION] Skipping", channel, "- already  sentt in previous template");
                 continue;
               }
 
               if (channel === 'email' && contact.email) {
                 console.log("📧 [AUTOMATION] Sending AI email to:", contact.email);
-                await sendAutomationEmail(contact.email, subject, htmlEmail, fallbackMessage, ownerProfile.email);
+                await sendAutomationEmail(contact.email, subject, htmlEmail, fallbackPlainText, replyToEmail || undefined);
                 sentChannels.add('email');
               } else if (channel === 'whatsapp' && contact.phone) {
                 console.log("📱 [WHATSAPP] Sending AI WhatsApp (fallback) to:", contact.phone);
-                await sendAutomationWhatsApp(contact.phone, fallbackMessage, template.image_url || null);
+                await sendAutomationWhatsApp(contact.phone, fallbackWhatsapp, template.image_url || null);
                 sentChannels.add('whatsapp');
               } else if (channel === 'whatsapp' && !contact.phone) {
-                console.log("⚠️ [AUTOMATION] WhatsApp channel selected but no contact phone");
+                console.log("⚠️ [AUTOMATION] WhatsApp channel selected but no coontact phone");
               } else if (channel === 'sms' && contact.phone) {
                 console.log("💬 [SMS] Sending AI SMS (fallback) to:", contact.phone);
-                await sendAutomationSMS(contact.phone, fallbackMessage);
+                await sendAutomationSMS(contact.phone, fallbackWhatsapp);
                 sentChannels.add('sms');
               } else if (channel === 'sms' && !contact.phone) {
-                console.log("⚠️ [AUTOMATION] SMS channel selected but no contact phone");
+                console.log("⚠️ [AUTOMATION] SMS channel selected but no contactt phone");
               }
             }
           } else {
@@ -390,6 +442,9 @@ async function handleAutomation(lead: LeadRecord) {
               linkUrl = 'https://' + linkUrl;
             }
 
+            const aiPlainText = appendContactFooter(aiMessage, contactCTA.textFooter);
+            const aiWhatsappText = appendContactFooter(aiMessage, contactCTA.whatsappFooter);
+
             const htmlEmail = buildEmailHTML(
               aiMessage,
               template.use_profile_logo ? ownerProfile.logo_url : null,
@@ -397,33 +452,34 @@ async function handleAutomation(lead: LeadRecord) {
               linkUrl,
               template.image_url,
               ownerProfile.company || 'Our Team',
-              distribution.link_text || 'לחץ כאן'
+              distribution.link_text || 'לחץ כאן',
+              contactCTA.htmlSection
             );
 
-            console.log("📤 [AUTOMATION] Sending AI message on", channels.length, "channel(s)");
-            for (const channel of channels) {
+            console.log("📤 [AUTOMATION] Sending AI message on", effectiveChannels.length, "channel(s)");
+            for (const channel of effectiveChannels) {
               // Skip if this channel was already used
               if (sentChannels.has(channel)) {
-                console.log("⏭️ [AUTOMATION] Skipping", channel, "- already sent in previous template");
+                console.log("⏭️ [AUTOMATION] Skipping", channel, "- already sentt in previous template");
                 continue;
               }
 
               if (channel === 'email' && contact.email) {
                 console.log("📧 [AUTOMATION] Sending AI email to:", contact.email);
-                await sendAutomationEmail(contact.email, subject, htmlEmail, aiMessage, ownerProfile.email);
+                await sendAutomationEmail(contact.email, subject, htmlEmail, aiPlainText, replyToEmail || undefined);
                 sentChannels.add('email');
               } else if (channel === 'whatsapp' && contact.phone) {
                 console.log("📱 [WHATSAPP] Sending AI WhatsApp to:", contact.phone);
-                await sendAutomationWhatsApp(contact.phone, aiMessage, template.image_url || null);
+                await sendAutomationWhatsApp(contact.phone, aiWhatsappText, template.image_url || null);
                 sentChannels.add('whatsapp');
               } else if (channel === 'whatsapp' && !contact.phone) {
-                console.log("⚠️ [AUTOMATION] WhatsApp channel selected but no contact phone");
+                console.log("⚠️ [AUTOMATION] WhatsApp channel selected but no coontact phone");
               } else if (channel === 'sms' && contact.phone) {
                 console.log("💬 [SMS] Sending AI SMS to:", contact.phone);
-                await sendAutomationSMS(contact.phone, aiMessage);
+                await sendAutomationSMS(contact.phone, aiWhatsappText);
                 sentChannels.add('sms');
               } else if (channel === 'sms' && !contact.phone) {
-                console.log("⚠️ [AUTOMATION] SMS channel selected but no contact phone");
+                console.log("⚠️ [AUTOMATION] SMS channel selected but no contactt phone");
               }
             }
           }
@@ -518,6 +574,97 @@ function getPublicUrl(url: string | null, urlType: string = 'unknown'): string |
   return publicUrl;
 }
 
+function resolveContactSettings(
+  ownerProfile: any,
+  settings: BusinessContactSettingsRow | null
+): ResolvedContactSettings {
+  const email = (settings?.return_email || ownerProfile.email || '').trim() || null;
+  const phone = (settings?.return_phone || ownerProfile.phone || '').trim() || null;
+  const whatsapp = (settings?.return_whatsapp || phone || '').trim() || null;
+
+  const availableChannels: string[] = [];
+  if (email) availableChannels.push('email');
+  if (phone) availableChannels.push('sms');
+  if (whatsapp) availableChannels.push('whatsapp');
+
+  let enabledChannels = Array.isArray(settings?.enabled_channels)
+    ? settings!.enabled_channels!.map((channel) => `${channel}`.trim()).filter(Boolean)
+    : [];
+
+  if (enabledChannels.length) {
+    enabledChannels = enabledChannels.filter((channel) => availableChannels.includes(channel));
+  } else {
+    enabledChannels = [...availableChannels];
+  }
+
+  if (!enabledChannels.length) {
+    enabledChannels = availableChannels.length ? [...availableChannels] : ['email'];
+  }
+
+  return {
+    email,
+    phone,
+    whatsapp,
+    enabledChannels
+  };
+}
+
+function buildContactCTAElements(settings: ResolvedContactSettings): ContactCTAElements {
+  const htmlButtons: string[] = [];
+  const textLines: string[] = [];
+
+  if (settings.email) {
+    const mailHref = `mailto:${settings.email}`;
+    htmlButtons.push(`<a href="${mailHref}" style="background-color:#2563eb;color:white;padding:10px 18px;text-decoration:none;border-radius:999px;display:inline-block;font-size:14px;">📧 שלח מייל</a>`);
+    textLines.push(`📧 שלח מייל: ${settings.email}`);
+  }
+
+  if (settings.phone) {
+    const telHref = `tel:${sanitizePhoneForTel(settings.phone)}`;
+    htmlButtons.push(`<a href="${telHref}" style="background-color:#16a34a;color:white;padding:10px 18px;text-decoration:none;border-radius:999px;display:inline-block;font-size:14px;">📞 חזור טלפונית</a>`);
+    textLines.push(`📞 טלפון: ${settings.phone}`);
+  }
+
+  if (settings.whatsapp) {
+    const whatsappHref = formatWhatsAppLink(settings.whatsapp);
+    if (whatsappHref) {
+      htmlButtons.push(`<a href="${whatsappHref}" style="background-color:#0ea5e9;color:white;padding:10px 18px;text-decoration:none;border-radius:999px;display:inline-block;font-size:14px;">💬 WhatsApp</a>`);
+      textLines.push(`💬 וואטסאפ: ${settings.whatsapp}`);
+    }
+  }
+
+  const textFooter = textLines.length ? `ליצירת קשר עם העסק:\n${textLines.join('\n')}` : '';
+  const htmlSection = htmlButtons.length
+    ? `<div style="text-align:center;margin:25px 0 10px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">${htmlButtons.join('')}</div>`
+    : '';
+
+  return {
+    htmlSection,
+    textFooter,
+    whatsappFooter: textFooter
+  };
+}
+
+function appendContactFooter(message: string, footer: string): string {
+  if (!footer) return message;
+  return `${message}\n\n${footer}`;
+}
+
+function sanitizePhoneForTel(phone: string): string {
+  return phone.replace(/[^\d+]/g, '');
+}
+
+function formatWhatsAppLink(phone: string): string | null {
+  const digits = phone.replace(/[^+\d]/g, '');
+  if (!digits) return null;
+  const normalized = digits.startsWith('+')
+    ? digits.substring(1)
+    : digits.startsWith('0')
+      ? `972${digits.substring(1)}`
+      : digits;
+  return normalized ? `https://wa.me/${normalized}` : null;
+}
+
 function buildEmailHTML(
   messageBody: string,
   logoUrl: string | null,
@@ -525,7 +672,8 @@ function buildEmailHTML(
   linkUrl: string | null,
   attachmentImageUrl: string | null,
   businessName: string,
-  linkText: string = 'לחץ כאן'
+  linkText: string = 'לחץ כאן',
+  ctaHtml: string | null = null
 ): string {
   // Convert line breaks to <br> tags
   const formattedBody = messageBody.replace(/\n/g, '<br>');
@@ -546,7 +694,7 @@ function buildEmailHTML(
   console.log("📝 [EMAIL] Link text:", linkText);
 
   // Safe email template - Progressive enhancement approach
-  return `
+  let html = `
 <!DOCTYPE html>
 <html dir="rtl">
 <head>
@@ -592,6 +740,12 @@ function buildEmailHTML(
 </body>
 </html>
   `.trim();
+
+  if (ctaHtml) {
+    html = html.replace('</body>', `${ctaHtml}</body>`);
+  }
+
+  return html;
 }
 
 function generateMessage(
@@ -616,213 +770,4 @@ function generateMessage(
 
   switch (template.template_type) {
     case 'standard':
-      message = `Hello ${firstName},\n\nThank you for completing our questionnaire. Your submission has been received and we will get back to you soon.\n\nBest regards,\n${businessName}`;
-      break;
-
-    case 'personal':
-      message = replaceVariables(template.message_body || 'Thank you for your response!', contact, ownerProfile);
-      break;
-
-    case 'ai':
-      // AI message placeholder - can be enhanced with actual AI integration
-      message = `Hello ${firstName},\n\nThank you for completing the questionnaire. Based on your responses, we will review your information and get back to you with personalized recommendations.\n\nBest regards,\n${businessName}`;
-      break;
-
-    case 'combined':
-      const aiPart = `Hello ${firstName},\n\nThank you for your responses. We will review your information and provide personalized recommendations.`;
-      const personalPart = replaceVariables(template.message_body || '', contact, ownerProfile);
-      message = `${aiPart}\n\n---\n\n${personalPart}`;
-      break;
-  }
-
-  return { subject, message };
-}
-
-async function sendAutomationEmail(
-  to: string,
-  subject: string,
-  htmlBody: string,
-  textBody: string,
-  replyTo?: string
-): Promise<void> {
-  try {
-    console.log("📧 [EMAIL] Sending automation email to:", to);
-
-    // Create Supabase client to call the send-automation-email function
-    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-
-    const { data, error } = await supabase.functions.invoke('send-automation-email', {
-      body: {
-        to,
-        subject,
-        html: htmlBody,
-        text: textBody,
-        replyTo
-      }
-    });
-
-    // Log the full response first
-    console.log("📬 [EMAIL] Response from send-automation-email:", JSON.stringify({ data, error }));
-
-    // Check for errors - both in error field and data.error
-    if (error) {
-      console.error("❌ [EMAIL] Invoke error:", error);
-      throw error;
-    }
-
-    if (data && data.error) {
-      console.error("❌ [EMAIL] Email service error:", data.error);
-      console.error("📋 [EMAIL] Full response:", JSON.stringify(data));
-      throw new Error(data.error);
-    }
-
-    if (data && data.success) {
-      console.log("✅ [EMAIL] Email sent successfully to:", to);
-      console.log("📧 [EMAIL] Email ID:", data.id);
-    } else {
-      console.error("⚠️ [EMAIL] Unexpected response - data:", JSON.stringify(data));
-      console.error("⚠️ [EMAIL] Unexpected response - error:", JSON.stringify(error));
-      console.error("⚠️ [EMAIL] data.success:", data?.success);
-      console.error("⚠️ [EMAIL] typeof data:", typeof data);
-      throw new Error("Unexpected email response");
-    }
-  } catch (error) {
-    console.error("❌ [EMAIL] Error in sendAutomationEmail:", error);
-    console.error("📍 [EMAIL] Failed to send to:", to);
-    // Don't throw - continue even if email fails
-  }
-}
-
-async function sendAutomationSMS(
-  recipient: string,
-  message: string
-): Promise<void> {
-  try {
-    console.log("💬 [SMS] Sending automation SMS to:", recipient);
-
-    // Create Supabase client to call the send-sms function
-    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-
-    const { data, error } = await supabase.functions.invoke('send-sms', {
-      body: {
-        recipient,
-        message
-      }
-    });
-
-    if (error) {
-      console.error("❌ [SMS] Error sending SMS:", error);
-      throw error;
-    }
-
-    console.log("✅ [SMS] SMS sent successfully");
-  } catch (error) {
-    console.error("❌ [SMS] Error in sendAutomationSMS:", error);
-    // Don't throw - continue even if SMS fails
-  }
-}
-
-async function sendAutomationWhatsApp(
-  recipient: string,
-  message: string,
-  mediaUrl: string | null = null
-): Promise<void> {
-  try {
-    console.log("📱 [WHATSAPP] Sending automation WhatsApp to:", recipient);
-
-    // Create Supabase client to call the send-whatsapp function
-    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-
-    const requestBody: { recipient: string; message: string; mediaUrl?: string } = {
-      recipient,
-      message
-    };
-
-    // Add mediaUrl if provided
-    if (mediaUrl) {
-      // Convert to public URL if it's a storage path
-      const publicMediaUrl = getPublicUrl(mediaUrl, 'whatsapp_media');
-      if (publicMediaUrl) {
-        requestBody.mediaUrl = publicMediaUrl;
-      }
-    }
-
-    const { data, error } = await supabase.functions.invoke('send-whatsapp', {
-      body: requestBody
-    });
-
-    if (error) {
-      console.error("❌ [WHATSAPP] Error sending WhatsApp:", error);
-      throw error;
-    }
-
-    console.log("✅ [WHATSAPP] WhatsApp message sent successfully");
-  } catch (error) {
-    console.error("❌ [WHATSAPP] Error in sendAutomationWhatsApp:", error);
-    // Don't throw - continue even if WhatsApp fails
-  }
-}
-
-serve(async (req) => {
-  console.log("📥 [WEBHOOK] Received request:", req.method);
-
-  // Handle CORS preflight requests
-  if (req.method === 'OPTIONS') {
-    console.log("✅ [WEBHOOK] CORS preflight");
-    return new Response('ok', { headers: corsHeaders });
-  }
-
-  try {
-    if (req.method !== "POST") {
-      console.log("❌ [WEBHOOK] Method not allowed:", req.method);
-      return new Response("Method Not Allowed", {
-        status: 405,
-        headers: corsHeaders
-      });
-    }
-
-    const hasValidSignature = assertSignature(req);
-    console.log("🔐 [WEBHOOK] Signature validation:", hasValidSignature ? "PASSED" : "FAILED");
-
-    if (!hasValidSignature) {
-      return new Response("Forbidden", {
-        status: 403,
-        headers: corsHeaders
-      });
-    }
-
-    const payload = (await req.json()) as TriggerPayload;
-    console.log("📦 [WEBHOOK] Raw payload:", JSON.stringify(payload));
-    console.log("📦 [WEBHOOK] Payload received:", {
-      type: payload?.type,
-      table: payload?.table,
-      recordId: payload?.record?.id
-    });
-    console.log("📦 [WEBHOOK] Payload keys:", Object.keys(payload || {}));
-
-    if (payload?.type !== "INSERT" || payload?.table !== "leads") {
-      console.log("⏭️  [WEBHOOK] Ignored - not a lead INSERT");
-      return new Response("Ignored", {
-        status: 200,
-        headers: corsHeaders
-      });
-    }
-
-    const lead = payload.record;
-
-    // Handle automation in background
-    await handleAutomation(lead);
-
-    console.log("✅ [WEBHOOK] Request completed successfully");
-    return new Response("OK", {
-      status: 200,
-      headers: corsHeaders
-    });
-  } catch (err) {
-    console.error("❌ [WEBHOOK] Error:", err);
-    return new Response("Internal Error", {
-      status: 500,
-      headers: corsHeaders
-    });
-  }
-});
+      message = `Hello ${firstName},\n\nThank you for completing our questionnaire. Your submission has been received and we will get back to you soon.\n\nBest regards,\n${businessName}`
