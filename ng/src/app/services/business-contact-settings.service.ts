@@ -26,7 +26,7 @@ export class BusinessContactSettingsService {
       .maybeSingle();
 
     if (error) {
-      if (error.code === '42P01' || error.code === 'PGRST116') {
+      if (error.code === '42P01' || error.code === 'PGRST116' || error.code === 'PGRST205') {
         console.warn('[BusinessContactSettingsService] table not available yet', error);
         return null;
       }
@@ -57,7 +57,7 @@ export class BusinessContactSettingsService {
       .maybeSingle();
 
     if (error) {
-      if (error.code === '42P01' || error.code === 'PGRST116') {
+      if (error.code === '42P01' || error.code === 'PGRST116' || error.code === 'PGRST205') {
         console.warn('[BusinessContactSettingsService] table not available yet (upsert skipped)', error);
         return null;
       }

@@ -218,7 +218,6 @@
       <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-4">
         <div class="text-right space-y-1">
           <h3 class="text-base md:text-lg font-semibold text-foreground">ערוצי מענה ללקוח</h3>
-          <p class="text-xs text-muted-foreground">ההודעות האוטומטיות הן חד-כיווניות. הלקוח יבחר כפתור והמידע יעדכן את פרטי הלקוח.</p>
         </div>
         <div class="text-xs text-emerald-700 bg-white/70 border border-emerald-200 px-3 py-1 rounded-full" *ngIf="contactSettings.enabled_channels.length">
           ערוצים זמינים: {{ contactSettings.enabled_channels.join(', ') }}
@@ -231,22 +230,17 @@
         </div>
       } @else {
         <div class="space-y-6">
-          <div>
-            <label class="text-sm font-medium text-right block mb-2">בחר ערוצים</label>
-            <div class="flex flex-wrap gap-2 md:gap-3">
-              @for (channel of contactChannels; track channel.id) {
-                <button
-                  type="button"
-                  class="flex items-center gap-2 px-4 py-2 text-sm rounded-full transition-all"
-                  [class.btn-primary]="isChannelEnabled(channel.id)"
-                  [class.btn-outline]="!isChannelEnabled(channel.id)"
-                  (click)="toggleChannel(channel.id)">
-                  <span class="text-lg leading-none">{{ channel.icon }}</span>
-                  <span>{{ channel.label }}</span>
-                </button>
-              }
-            </div>
-            <p class="text-xs text-muted-foreground text-right mt-2">בחר את הערוצים שמהם תרצה לקבל את המשך הטיפול בליד.</p>
+          <div class="flex flex-wrap gap-4" dir="rtl">
+            @for (channel of contactChannels; track channel.id) {
+              <label class="flex items-center gap-2 text-sm font-medium text-right">
+                <input
+                  type="checkbox"
+                  class="checkbox"
+                  [checked]="isChannelEnabled(channel.id)"
+                  (change)="toggleChannel(channel.id)">
+                <span>{{ channel.label }}</span>
+              </label>
+            }
           </div>
 
           <div class="grid gap-4 md:grid-cols-3">
@@ -258,7 +252,6 @@
                 class="input text-right w-full"
                 dir="ltr"
                 [disabled]="!isChannelEnabled('email')">
-              <p class="text-xs text-muted-foreground text-right">ישמש את כפתור המייל להמשך טיפול.</p>
             </div>
 
             <div class="space-y-2">
@@ -269,7 +262,6 @@
                 class="input text-right w-full"
                 dir="ltr"
                 [disabled]="!isChannelEnabled('sms')">
-              <p class="text-xs text-muted-foreground text-right">מספר לקבלת הודעות חד-כיווניות.</p>
             </div>
 
             <div class="space-y-2">
@@ -280,7 +272,6 @@
                 class="input text-right w-full"
                 dir="ltr"
                 [disabled]="!isChannelEnabled('whatsapp')">
-              <p class="text-xs text-muted-foreground text-right">מוכן לעבוד מיד כשנחבר את ה-API.</p>
             </div>
           </div>
         </div>
