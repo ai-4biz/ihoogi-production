@@ -213,6 +213,80 @@
       </div>
     </div>
 
+    <!-- Customer Response Settings Section (Emerald Gradient) -->
+    <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl p-4 md:p-6 shadow-sm border border-emerald-200/50 hover:shadow-md transition-shadow mt-6" dir="rtl">
+      <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-4">
+        <div class="text-right space-y-1">
+          <h3 class="text-base md:text-lg font-semibold text-foreground">ערוצי מענה ללקוח</h3>
+          <p class="text-xs text-muted-foreground">ההודעות האוטומטיות הן חד-כיווניות. הלקוח יבחר כפתור והמידע יעדכן את פרטי הלקוח.</p>
+        </div>
+        <div class="text-xs text-emerald-700 bg-white/70 border border-emerald-200 px-3 py-1 rounded-full" *ngIf="contactSettings.enabled_channels.length">
+          ערוצים זמינים: {{ contactSettings.enabled_channels.join(', ') }}
+        </div>
+      </div>
+
+      @if (contactSettingsLoading) {
+        <div class="flex items-center justify-center text-sm text-muted-foreground py-6">
+          טוען הגדרות מענה...
+        </div>
+      } @else {
+        <div class="space-y-6">
+          <div>
+            <label class="text-sm font-medium text-right block mb-2">בחר ערוצים</label>
+            <div class="flex flex-wrap gap-2 md:gap-3">
+              @for (channel of contactChannels; track channel.id) {
+                <button
+                  type="button"
+                  class="flex items-center gap-2 px-4 py-2 text-sm rounded-full transition-all"
+                  [class.btn-primary]="isChannelEnabled(channel.id)"
+                  [class.btn-outline]="!isChannelEnabled(channel.id)"
+                  (click)="toggleChannel(channel.id)">
+                  <span class="text-lg leading-none">{{ channel.icon }}</span>
+                  <span>{{ channel.label }}</span>
+                </button>
+              }
+            </div>
+            <p class="text-xs text-muted-foreground text-right mt-2">בחר את הערוצים שמהם תרצה לקבל את המשך הטיפול בליד.</p>
+          </div>
+
+          <div class="grid gap-4 md:grid-cols-3">
+            <div class="space-y-2">
+              <label class="text-sm font-medium text-right block">מייל לחזרה</label>
+              <input
+                type="email"
+                [(ngModel)]="contactSettings.return_email"
+                class="input text-right w-full"
+                dir="ltr"
+                [disabled]="!isChannelEnabled('email')">
+              <p class="text-xs text-muted-foreground text-right">ישמש את כפתור המייל להמשך טיפול.</p>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-sm font-medium text-right block">מספר SMS</label>
+              <input
+                type="tel"
+                [(ngModel)]="contactSettings.return_phone"
+                class="input text-right w-full"
+                dir="ltr"
+                [disabled]="!isChannelEnabled('sms')">
+              <p class="text-xs text-muted-foreground text-right">מספר לקבלת הודעות חד-כיווניות.</p>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-sm font-medium text-right block">מספר וואטסאפ</label>
+              <input
+                type="tel"
+                [(ngModel)]="contactSettings.return_whatsapp"
+                class="input text-right w-full"
+                dir="ltr"
+                [disabled]="!isChannelEnabled('whatsapp')">
+              <p class="text-xs text-muted-foreground text-right">מוכן לעבוד מיד כשנחבר את ה-API.</p>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
     <!-- Separator -->
     <div class="border-t border-gray-200 my-6"></div>
 

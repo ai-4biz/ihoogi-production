@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { LanguageService } from '../../../core/services/language.service';
 import { SupabaseService } from '../../../core/services/supabase.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { BusinessContactSettingsService } from '../../../services/business-contact-settings.service';
 
 interface TemplateForm {
   name: string;
@@ -63,13 +64,26 @@ export class CreateAutomationTemplateComponent implements OnInit {
   profileImageUrl = '';
   cachedAIResponse: string = '';
   cachedMessageLength: 'short' | 'medium' | 'long' = 'medium';
+  contactSettingsLoading = false;
+  contactSettings = {
+    return_email: '',
+    return_phone: '',
+    return_whatsapp: '',
+    enabled_channels: ['email'] as string[]
+  };
+  readonly contactChannels = [
+    { id: 'email', label: 'מייל', icon: '📧' },
+    { id: 'sms', label: 'SMS', icon: '📱' },
+    { id: 'whatsapp', label: 'וואטסאפ', icon: '💬' }
+  ];
 
   constructor(
     public lang: LanguageService,
     private supabase: SupabaseService,
     private toast: ToastService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private businessContactSettingsService: BusinessContactSettingsService
   ) {}
 
   ngOnInit() {
@@ -83,6 +97,33 @@ export class CreateAutomationTemplateComponent implements OnInit {
     });
 
     this.loadUserProfile();
+    this.loadBusinessContactSettings();
+  }
+
+  async loadBusinessContactSettings() {
+    try {
+      const user = this.supabase.currentUser;
+      if (!user) {
+        return;
+      }
+
+      this.contactSettingsLoading = true;
+      const existing = await this.businessContactSettingsService.getByBusinessId(user.id);
+
+      this.contactSettings = {
+        return_email: existing?.return_email ?? '',
+        return_phone: existing?.return_phone ?? '',
+        return_whatsapp: existing?.return_whatsapp ?? '',
+        enabled_channels: Array.isArray(existing?.enabled_channels) && existing.enabled_channels.length
+          ? existing.enabled_channels
+          : ['email']
+      };
+    } catch (error) {
+      console.error('Error loading business contact settings:', error);
+      this.toast.show('לא ניתן היה לטעון את הגדרות המענה ללקוח', 'error');
+    } finally {
+      this.contactSettingsLoading = false;
+    }
   }
 
   async loadTemplate(id: string) {
@@ -304,6 +345,22 @@ export class CreateAutomationTemplateComponent implements OnInit {
     this.formData.reminderSubStatus = '';
   }
 
+  isChannelEnabled(channel: string) {
+    return this.contactSettings.enabled_channels.includes(channel);
+  }
+
+  toggleChannel(channel: string) {
+    const enabled = this.isChannelEnabled(channel);
+    if (enabled) {
+      if (this.contactSettings.enabled_channels.length === 1) {
+        return;
+      }
+      this.contactSettings.enabled_channels = this.contactSettings.enabled_channels.filter(c => c !== channel);
+    } else {
+      this.contactSettings.enabled_channels = [...this.contactSettings.enabled_channels, channel];
+    }
+  }
+
   onImageUpload(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
@@ -330,6 +387,10 @@ export class CreateAutomationTemplateComponent implements OnInit {
       return;
     }
 
+    if (!this.validateContactSettings()) {
+      return;
+    }
+
     try {
       this.saving = true;
       const user = this.supabase.currentUser;
@@ -338,6 +399,8 @@ export class CreateAutomationTemplateComponent implements OnInit {
         this.toast.show('יש להתחבר למערכת', 'error');
         return;
       }
+
+      await this.saveBusinessContactSettings(user.id);
 
       const templateData = {
         name: this.formData.name,
@@ -391,5 +454,44 @@ export class CreateAutomationTemplateComponent implements OnInit {
 
   goBack() {
     this.router.navigate(['/automations'], { queryParams: { tab: 'templates' } });
+  }
+
+  private validateContactSettings(): boolean {
+    if (!this.contactSettings.enabled_channels.length) {
+      this.toast.show('בחר לפחות ערוץ אחד למענה הלקוח', 'error');
+      return false;
+    }
+
+    if (this.isChannelEnabled('email') && !this.contactSettings.return_email.trim()) {
+      this.toast.show('נא להזין כתובת מייל לחזרה', 'error');
+      return false;
+    }
+
+    if (this.isChannelEnabled('sms') && !this.contactSettings.return_phone.trim()) {
+      this.toast.show('נא להזין מספר טלפון לשליחת SMS', 'error');
+      return false;
+    }
+
+    if (this.isChannelEnabled('whatsapp') && !this.contactSettings.return_whatsapp.trim()) {
+      this.toast.show('נא להזין מספר וואטסאפ פעיל', 'error');
+      return false;
+    }
+
+    return true;
+  }
+
+  private async saveBusinessContactSettings(businessId: string) {
+    try {
+      await this.businessContactSettingsService.upsert({
+        business_id: businessId,
+        return_email: this.contactSettings.return_email.trim() || null,
+        return_phone: this.contactSettings.return_phone.trim() || null,
+        return_whatsapp: this.contactSettings.return_whatsapp.trim() || null,
+        enabled_channels: this.contactSettings.enabled_channels
+      });
+    } catch (error) {
+      console.error('Error saving business contact settings:', error);
+      this.toast.show('שמירת הגדרות המענה נכשלה', 'error');
+    }
   }
 }
