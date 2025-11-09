@@ -69,6 +69,7 @@ export class QuestionnaireChat implements OnInit, OnDestroy, AfterViewChecked {
 
   // Referral tracking
   private detectedChannel: string = 'direct';
+  private entryMethod: string | null = null;
   private distributionToken: string | null = null;
 
   constructor(
@@ -86,6 +87,13 @@ export class QuestionnaireChat implements OnInit, OnDestroy, AfterViewChecked {
   ngOnInit() {
     // Detect referral source/channel
     this.detectedChannel = this.referralTracking.detectChannel();
+    const srcParam = new URLSearchParams(window.location.search).get('src');
+    if (srcParam) {
+      const normalizedEntry = srcParam.toLowerCase().trim().replace(/['"’`´״׳]+$/g, '');
+      if (['form', 'chat', 'qr'].includes(normalizedEntry)) {
+        this.entryMethod = normalizedEntry;
+      }
+    }
     console.log('Detected channel:', this.detectedChannel);
 
     // Prevent body scroll
@@ -1036,7 +1044,7 @@ export class QuestionnaireChat implements OnInit, OnDestroy, AfterViewChecked {
           p_phone: phone,
           p_name: name,
           p_distribution_token: this.distributionToken,
-          p_channel: this.detectedChannel
+          p_channel: this.entryMethod ? `${this.detectedChannel}:${this.entryMethod}` : this.detectedChannel
         });
 
       if (leadError) {
@@ -1055,7 +1063,7 @@ export class QuestionnaireChat implements OnInit, OnDestroy, AfterViewChecked {
         phone,
         name,
         distribution_token: this.distributionToken,
-        channel: this.detectedChannel
+        channel: this.entryMethod ? `${this.detectedChannel}:${this.entryMethod}` : this.detectedChannel
       };
 
       // Automation will be triggered automatically by the database trigger when the lead is created

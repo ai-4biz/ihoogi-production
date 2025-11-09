@@ -1,5 +1,551 @@
 // supabase/functions/on-new-lead/index.ts
 // Deno Edge Function – triggered by DB on lead INSERT via webhook
+// Handles questionnaire automations, enriches outgoing messages with CTA buttons,
+// and records the template/channel metadata back onto the lead
+
+import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+type Json = Record<string, unknown>;
+
+type LeadRecord = {
+  id: string;
+  email?: string | null;
+  phone?: string | null;
+  name?: string | null;
+  channel?: string | null;
+  distribution_token?: string | null;
+  questionnaire_id?: string | null;
+  client_name?: string | null;
+  answer_json?: Record<string, any> | null;
+  automations?: Json[] | null;
+  created_at?: string;
+};
+
+type TriggerPayload = {
+  type: "INSERT" | "UPDATE" | "DELETE";
+  table: string;
+  record: LeadRecord;
+};
+
+interface AutomationTemplate {
+  id: string;
+  name: string;
+  message_type: "personal" | "ai";
+  subject?: string;
+  body?: string | null;
+  ai_message_length?: string | null;
+  user_id: string;
+  link_url?: string | null;
+  image_url?: string | null;
+  use_profile_logo?: boolean | null;
+  use_profile_image?: boolean | null;
+}
+
+interface DistributionRecord {
+  id: string;
+  automation_template_ids: Array<{
+    template_id: string;
+    channels: Array<"email" | "whatsapp" | "sms">;
+  }>;
+  token?: string | null;
+  link_text?: string | null;
+}
+
+interface BusinessContactSettingsRow {
+  return_email?: string | null;
+  return_phone?: string | null;
+  return_whatsapp?: string | null;
+  enabled_channels?: string[] | null;
+}
+
+interface ResolvedContactSettings {
+  email: string | null;
+  phone: string | null;
+  whatsapp: string | null;
+  enabledChannels: string[];
+}
+
+interface ContactCTAElements {
+  htmlSection: string;
+  textFooter: string;
+  whatsappFooter: string;
+}
+
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+const INCOMING_SECRET = Deno.env.get("INCOMING_WEBHOOK_SECRET") ?? "";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
+function assertSignature(req: Request) {
+  if (!INCOMING_SECRET) return true; // Skip validation in dev
+  const sig = req.headers.get("x-webhook-secret") || "";
+  return sig === INCOMING_SECRET;
+}
+
+function parseChannel(channel?: string | null): { detected: string | null; entryMethod: string | null } {
+  if (!channel) return { detected: null, entryMethod: null };
+  const [detected, entryMethod] = channel.split(":");
+  return {
+    detected: detected || null,
+    entryMethod: entryMethod || null,
+  };
+}
+
+function resolveChannelLabel(channelInfo: { detected: string | null; entryMethod: string | null }) {
+  if (!channelInfo.detected && !channelInfo.entryMethod) return null;
+  const parts: string[] = [];
+  if (channelInfo.detected) parts.push(channelInfo.detected);
+  if (channelInfo.entryMethod) parts.push(channelInfo.entryMethod);
+  return parts.join(" / ");
+}
+
+function resolveContactSettings(
+  ownerProfile: any,
+  row: BusinessContactSettingsRow | null,
+): ResolvedContactSettings {
+  const enabled = Array.isArray(row?.enabled_channels) && row!.enabled_channels!.length
+    ? row!.enabled_channels!
+    : ["email", "whatsapp", "sms"];
+
+  return {
+    email: row?.return_email ?? ownerProfile?.email ?? null,
+    phone: row?.return_phone ?? ownerProfile?.phone ?? null,
+    whatsapp: row?.return_whatsapp ?? ownerProfile?.whatsapp ?? ownerProfile?.phone ?? null,
+    enabledChannels: enabled,
+  };
+}
+
+function buildContactCTAElements(settings: ResolvedContactSettings): ContactCTAElements {
+  const buttons: string[] = [];
+  const plainLines: string[] = [];
+  const whatsappLines: string[] = [];
+
+  if (settings.email) {
+    buttons.push(`
+      <a href="mailto:${settings.email}" style="background-color:#199f3a;color:white;padding:10px 20px;text-decoration:none;display:inline-block;border-radius:6px;font-size:15px;margin:5px;">
+        📧 שלח מייל
+      </a>
+    `);
+    plainLines.push(`מייל: ${settings.email}`);
+    whatsappLines.push(`📧 מייל: ${settings.email}`);
+  }
+
+  if (settings.phone) {
+    buttons.push(`
+      <a href="tel:${settings.phone}" style="background-color:#199f3a;color:white;padding:10px 20px;text-decoration:none;display:inline-block;border-radius:6px;font-size:15px;margin:5px;">
+        📞 שיחת טלפון
+      </a>
+    `);
+    plainLines.push(`טלפון: ${settings.phone}`);
+    whatsappLines.push(`📞 טלפון: ${settings.phone}`);
+  }
+
+  if (settings.whatsapp) {
+    buttons.push(`
+      <a href="https://wa.me/${settings.whatsapp}" target="_blank" style="background-color:#25D366;color:white;padding:10px 20px;text-decoration:none;display:inline-block;border-radius:6px;font-size:15px;margin:5px;">
+        💬 וואטסאפ
+      </a>
+    `);
+    plainLines.push(`וואטסאפ: https://wa.me/${settings.whatsapp}`);
+    whatsappLines.push(`💬 וואטסאפ: https://wa.me/${settings.whatsapp}`);
+  }
+
+  if (!buttons.length) {
+    return {
+      htmlSection: "",
+      textFooter: "",
+      whatsappFooter: "",
+    };
+  }
+
+  return {
+    htmlSection: `
+      <div style="text-align:center;margin-top:24px;">
+        <p style="font-size:14px;color:#555;margin-bottom:12px;">ליצירת קשר ישיר עם העסק:</p>
+        ${buttons.join("")}
+      </div>
+    `,
+    textFooter: `\n\n---\nליצירת קשר עם העסק:\n${plainLines.join("\n")}`,
+    whatsappFooter: `\n\n————\n${whatsappLines.join("\n")}`,
+  };
+}
+
+function appendContactFooter(body: string, footer: string) {
+  if (!footer) return body;
+  return `${body.trim()}${footer}`;
+}
+
+function extractContactInfo(answerJson: Record<string, any>, questions: any[]): { name: string; email: string | null; phone: string | null } {
+  const contact = {
+    name: "",
+    email: null as string | null,
+    phone: null as string | null,
+  };
+
+  if (questions.length >= 1) {
+    const nameValue = answerJson?.[questions[0].id];
+    const name = Array.isArray(nameValue) ? nameValue.join(", ") : nameValue;
+    if (typeof name === "string") contact.name = name;
+  }
+
+  if (questions.length >= 2) {
+    const emailValue = answerJson?.[questions[1].id];
+    const email = Array.isArray(emailValue) ? emailValue[0] : emailValue;
+    if (typeof email === "string") contact.email = email;
+  }
+
+  if (questions.length >= 3) {
+    const phoneValue = answerJson?.[questions[2].id];
+    const phone = Array.isArray(phoneValue) ? phoneValue[0] : phoneValue;
+    if (typeof phone === "string") contact.phone = phone;
+  }
+
+  return contact;
+}
+
+function replaceVariables(template: string, contact: { name: string; email: string | null; phone: string | null }, ownerProfile: any) {
+  if (!template) return "";
+  return template
+    .replace(/\{\{firstName\}\}/g, contact.name.split(" ")[0] || contact.name)
+    .replace(/\{\{fullName\}\}/g, contact.name || "")
+    .replace(/\{\{businessName\}\}/g, ownerProfile.company || ownerProfile.email?.split("@")[0] || "Our Team")
+    .replace(/\{\{email\}\}/g, contact.email || "")
+    .replace(/\{\{phone\}\}/g, contact.phone || "");
+}
+
+function getPublicUrl(url?: string | null, urlType = "unknown") {
+  if (!url) return null;
+  if (url.startsWith("http://") || url.startsWith("https://")) return url;
+  if (!SUPABASE_URL) return url;
+
+  const cleanPath = url.startsWith("/") ? url.slice(1) : url;
+  return `${SUPABASE_URL}/storage/v1/object/public/${cleanPath}`;
+}
+
+function buildEmailHTML(
+  messageBody: string,
+  logoUrl: string | null,
+  profileImageUrl: string | null,
+  linkUrl: string | null,
+  attachmentImageUrl: string | null,
+  businessName: string,
+  linkText: string = "לחץ כאן",
+  contactSection: string = "",
+) {
+  const formattedBody = messageBody.replace(/\n/g, "<br>");
+  const publicLogoUrl = getPublicUrl(logoUrl, "logo");
+  const publicProfileImageUrl = getPublicUrl(profileImageUrl, "profile_image");
+  const publicAttachmentImageUrl = getPublicUrl(attachmentImageUrl, "attachment_image");
+
+  return `
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+  <meta charset="UTF-8">
+</head>
+<body style="margin:0;padding:0;font-family:Arial,sans-serif;background-color:#f5f5f5;">
+  <div style="max-width:600px;margin:0 auto;padding:20px;">
+    <div style="background-color:#ffffff;padding:0;">
+      <div style="background-color:#199f3a;padding:30px 20px;text-align:center;">
+        ${publicLogoUrl ? `<div style="margin-bottom:15px;"><img src="${publicLogoUrl}" alt="${businessName}" style="height:120px;"></div>` : ""}
+        <p style="color:white;font-size:28px;margin:0;font-weight:bold;">${businessName}</p>
+      </div>
+      <div style="padding:30px 20px;text-align:right;">
+        ${linkUrl ? `<div style="text-align:center;margin:20px 0;">
+          <a href="${linkUrl}" style="background-color:#16a34a;color:white;padding:12px 30px;text-decoration:none;display:inline-block;font-size:16px;border-radius:6px;">${linkText}</a>
+        </div>` : ""}
+        <div style="margin:20px 0;line-height:1.6;">
+          ${formattedBody}
+        </div>
+        ${publicAttachmentImageUrl ? `<div style="text-align:center;margin:20px 0;">
+          <img src="${publicAttachmentImageUrl}" alt="${businessName}" style="max-width:100%;border-radius:12px;">
+        </div>` : ""}
+        ${publicProfileImageUrl ? `<div style="text-align:center;margin:20px 0;">
+          <img src="${publicProfileImageUrl}" alt="Business profile" style="width:96px;height:96px;border-radius:50%;object-fit:cover;">
+        </div>` : ""}
+        ${contactSection}
+        <p style="text-align:center;margin-top:30px;color:#666;">בברכה,<br>${businessName || "iHoogi"}</p>
+      </div>
+      <div style="background-color:#f5f5f5;padding:20px;text-align:center;font-size:12px;color:#999;">
+        <p style="margin:5px 0;color:#666;">נשלח אוטומטית באמצעות iHoogi – מערכת שאלונים חכמה המחברת עסקים ללקוחותיהם, מבית <a href="https://www.ai-4-biz.com" style="color:#666;text-decoration:underline;">AI-4Biz</a>, בשם העסק שמולו פנית.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+  `.trim();
+}
+
+async function sendAutomationEmail(to: string, subject: string, htmlBody: string, textBody: string, replyTo?: string | null) {
+  try {
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    const { data, error } = await supabase.functions.invoke("send-automation-email", {
+      body: { to, subject, html: htmlBody, text: textBody, replyTo: replyTo ?? undefined },
+    });
+
+    if (error) throw error;
+    if (data?.error) throw new Error(data.error);
+  } catch (error) {
+    console.error("❌ [EMAIL] Error in sendAutomationEmail:", error);
+  }
+}
+
+async function sendAutomationSMS(recipient: string, message: string) {
+  try {
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    const { error } = await supabase.functions.invoke("send-sms", { body: { recipient, message } });
+    if (error) throw error;
+  } catch (error) {
+    console.error("❌ [SMS] Error in sendAutomationSMS:", error);
+  }
+}
+
+async function sendAutomationWhatsApp(recipient: string, message: string, mediaUrl: string | null = null) {
+  try {
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    const body: Record<string, any> = { recipient, message };
+    if (mediaUrl) {
+      const publicMediaUrl = getPublicUrl(mediaUrl, "whatsapp_media");
+      if (publicMediaUrl) body.mediaUrl = publicMediaUrl;
+    }
+    const { error } = await supabase.functions.invoke("send-whatsapp", { body });
+    if (error) throw error;
+  } catch (error) {
+    console.error("❌ [WHATSAPP] Error in sendAutomationWhatsApp:", error);
+  }
+}
+
+async function handleAutomation(lead: LeadRecord) {
+  console.log("🚀 [AUTOMATION] handleAutomation called for lead:", lead.id);
+
+  if (!lead.questionnaire_id || !lead.answer_json) {
+    console.log("❌ [AUTOMATION] Lead missing questionnaire_id or answer_json, skipping automation");
+    return;
+  }
+
+  try {
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
+    const { data: questionnaire, error: qError } = await supabase
+      .from("questionnaires")
+      .select("id, owner_id, title, link_label")
+      .eq("id", lead.questionnaire_id)
+      .maybeSingle();
+
+    if (qError || !questionnaire) {
+      console.log("❌ [AUTOMATION] Questionnaire not found:", qError);
+      return;
+    }
+
+    let distribution: DistributionRecord | null = null;
+    let distError: any = null;
+
+    if (lead.distribution_token) {
+      console.log("🔍 [AUTOMATION] Looking up distribution by token:", lead.distribution_token);
+      const { data, error } = await supabase
+        .from("distributions")
+        .select("id, automation_template_ids, token, link_text")
+        .eq("token", lead.distribution_token)
+        .eq("is_active", true)
+        .maybeSingle();
+      distribution = data as DistributionRecord | null;
+      distError = error;
+    } else {
+      console.log("🔍 [AUTOMATION] Looking up distribution by questionnaire_id:", lead.questionnaire_id);
+      const { data, error } = await supabase
+        .from("distributions")
+        .select("id, automation_template_ids, token, link_text")
+        .eq("questionnaire_id", lead.questionnaire_id)
+        .eq("is_active", true)
+        .maybeSingle();
+      distribution = data as DistributionRecord | null;
+      distError = error;
+    }
+
+    if (distError || !distribution || !distribution.automation_template_ids?.length) {
+      console.log("❌ [AUTOMATION] No active distribution found");
+      return;
+    }
+
+    const { data: questions, error: questionsError } = await supabase
+      .from("questions")
+      .select("*")
+      .eq("questionnaire_id", lead.questionnaire_id)
+      .order("order_index", { ascending: true });
+
+    if (questionsError || !questions) {
+      console.error("❌ [AUTOMATION] Questions not found:", questionsError);
+      return;
+    }
+
+    const contact = extractContactInfo(lead.answer_json, questions);
+    const contactName = contact.name || lead.name || lead.client_name || "לקוח יקר";
+
+    const { data: ownerProfile, error: profileError } = await supabase
+      .from("profiles")
+      .select("company, email, phone, whatsapp, website, image_url, logo_url, occupation, suboccupation, social_networks")
+      .eq("id", questionnaire.owner_id)
+      .maybeSingle();
+
+    if (profileError || !ownerProfile) {
+      console.error("❌ [AUTOMATION] Error loading owner profile:", profileError);
+      return;
+    }
+
+    const { data: businessContactSettings, error: contactSettingsError } = await supabase
+      .from("business_contact_settings")
+      .select("*")
+      .eq("business_id", questionnaire.owner_id)
+      .maybeSingle();
+
+    if (contactSettingsError && contactSettingsError.code !== "PGRST116") {
+      console.error("⚠️ [AUTOMATION] Error loading business contact settings:", contactSettingsError);
+    }
+
+    const resolvedContactSettings = resolveContactSettings(ownerProfile, businessContactSettings ?? null);
+    const contactCTA = buildContactCTAElements(resolvedContactSettings);
+    const replyToEmail = resolvedContactSettings.email || ownerProfile.email || null;
+
+    const sentChannels = new Set<string>();
+    const automationLogEntries: Json[] = [];
+
+    const channelInfo = parseChannel(lead.channel);
+    const channelLabel = resolveChannelLabel(channelInfo);
+
+    for (const templateMapping of distribution.automation_template_ids) {
+      const { template_id, channels } = templateMapping;
+      const { data: template, error: tError } = await supabase
+        .from("automation_templates")
+        .select("*")
+        .eq("id", template_id)
+        .maybeSingle();
+
+      if (tError || !template) {
+        console.error("❌ [AUTOMATION] Template not found:", template_id, tError);
+        continue;
+      }
+
+      const templateChannels = Array.isArray(channels) ? channels : [];
+      const effectiveChannels = templateChannels.filter((channel: string) =>
+        resolvedContactSettings.enabledChannels.includes(channel)
+      );
+
+      if (!effectiveChannels.length) {
+        console.log("⚠️ [AUTOMATION] No channels allowed by business contact settings for template:", template_id);
+        continue;
+      }
+
+      const automationLogEntry: Json = {
+        template_id,
+        template_name: template.name,
+        template_type: template.message_type,
+        channels: effectiveChannels,
+        executed_at: new Date().toISOString(),
+      };
+
+      const baseSubject =
+        template.subject ||
+        template.email_subject ||
+        `תודה על הפנייה – ${ownerProfile.company || "הצוות שלנו"}`;
+
+      const linkLabel = questionnaire.link_label || distribution.link_text || "לחץ כאן";
+      let linkUrl = template.link_url ? replaceVariables(template.link_url, { name: contactName, email: contact.email, phone: contact.phone }, ownerProfile) : null;
+      if (linkUrl && !/^https?:\/\//i.test(linkUrl)) {
+        linkUrl = `https://${linkUrl}`;
+      }
+
+      const messageBody = replaceVariables(template.body || "", { name: contactName, email: contact.email, phone: contact.phone }, ownerProfile);
+      const subject = replaceVariables(baseSubject, { name: contactName, email: contact.email, phone: contact.phone }, ownerProfile);
+
+      const htmlEmail = buildEmailHTML(
+        messageBody,
+        template.use_profile_logo ? ownerProfile.logo_url : null,
+        template.use_profile_image ? ownerProfile.image_url : null,
+        linkUrl,
+        template.image_url || null,
+        ownerProfile.company || "iHoogi",
+        linkLabel,
+        contactCTA.htmlSection,
+      );
+
+      const plainTextBody = appendContactFooter(messageBody, contactCTA.textFooter);
+      const whatsappBody = appendContactFooter(messageBody, contactCTA.whatsappFooter);
+
+      for (const channel of effectiveChannels) {
+        if (sentChannels.has(channel)) {
+          continue;
+        }
+
+        if (channel === "email" && contact.email) {
+          await sendAutomationEmail(contact.email, subject, htmlEmail, plainTextBody, replyToEmail);
+          sentChannels.add("email");
+        } else if (channel === "whatsapp" && contact.phone) {
+          await sendAutomationWhatsApp(contact.phone, whatsappBody, template.image_url || null);
+          sentChannels.add("whatsapp");
+        } else if (channel === "sms" && contact.phone) {
+          await sendAutomationSMS(contact.phone, whatsappBody);
+          sentChannels.add("sms");
+        }
+      }
+
+      automationLogEntries.push(automationLogEntry);
+    }
+
+    if (automationLogEntries.length) {
+      const existingLogs = Array.isArray(lead.automations) ? lead.automations : [];
+      const updatePayload: Record<string, unknown> = {
+        automations: [...existingLogs, ...automationLogEntries],
+      };
+
+      if (!lead.channel && channelLabel) {
+        updatePayload.channel = channelLabel;
+      }
+
+      if (!lead.distribution_token && distribution?.token) {
+        updatePayload.distribution_token = distribution.token;
+      }
+
+      await supabase.from("leads").update(updatePayload).eq("id", lead.id);
+    }
+  } catch (error) {
+    console.error("❌ [AUTOMATION] Error executing automation:", error);
+  }
+}
+
+serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
+  }
+
+  try {
+    if (req.method !== "POST") {
+      return new Response("Method Not Allowed", { status: 405, headers: corsHeaders });
+    }
+
+    if (!assertSignature(req)) {
+      return new Response("Forbidden", { status: 403, headers: corsHeaders });
+    }
+
+    const payload = await req.json() as TriggerPayload;
+
+    if (payload?.type !== "INSERT" || payload?.table !== "leads") {
+      return new Response("Ignored", { status: 200, headers: corsHeaders });
+    }
+
+    await handleAutomation(payload.record);
+    return new Response("OK", { status: 200, headers: corsHeaders });
+  } catch (err) {
+    console.error("❌ [WEBHOOK] Error:", err);
+    return new Response("Internal Error", { status: 500, headers: corsHeaders });
+  }
+});
+// supabase/functions/on-new-lead/index.ts
+// Deno Edge Function – triggered by DB on lead INSERT via webhook
 // Handles automation emails based on questionnaire automation_template_id
 
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";

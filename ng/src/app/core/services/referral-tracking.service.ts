@@ -13,9 +13,13 @@ export class ReferralTrackingService {
     const urlParams = new URLSearchParams(window.location.search);
 
     // First, check for 'src' parameter (e.g., ?src=facebook)
-    const srcParam = urlParams.get('src');
-    if (srcParam) {
-      return this.normalizeSource(srcParam);
+    const srcParamRaw = urlParams.get('src');
+    if (srcParamRaw) {
+      const cleanedSrc = srcParamRaw.replace(/['"’`´״׳]+$/g, '');
+      const normalizedSrc = this.normalizeSource(cleanedSrc);
+      if (!['form', 'chat', 'qr'].includes(normalizedSrc)) {
+        return normalizedSrc;
+      }
     }
 
     // Then check for utm_source parameter
