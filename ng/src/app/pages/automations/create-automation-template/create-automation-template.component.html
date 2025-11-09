@@ -419,6 +419,21 @@
                 </div>
               }
 
+              @if (showContactEmailButton || showContactPhoneButton) {
+                <div class="mt-4 flex flex-wrap justify-end gap-2">
+                  @if (showContactEmailButton) {
+                    <a [href]="contactEmailLink" target="_blank" rel="noopener" class="btn-outline px-3 py-1.5 text-xs">
+                      📧 שלח מייל
+                    </a>
+                  }
+                  @if (showContactPhoneButton) {
+                    <a [href]="contactPhoneLink" class="btn-outline px-3 py-1.5 text-xs">
+                      📞 חזור טלפונית
+                    </a>
+                  }
+                </div>
+              }
+
               @if (formData.linkUrl) {
                 <div class="mt-3 pt-3 border-t border-gray-200">
                   <a [href]="formData.linkUrl" class="text-primary text-sm hover:underline text-right block">
@@ -432,60 +447,49 @@
 
         <!-- WhatsApp Preview -->
         @if (previewChannel === 'whatsapp') {
-          <div class="space-y-3" dir="rtl">
-            <div class="text-center">
-              <div class="text-xs text-muted-foreground mb-2">תבנית: {{ formData.name || 'שם התבנית' }}</div>
-            </div>
-
-            <div class="bg-green-50 p-4 rounded-lg max-w-sm mx-auto">
-              <div class="flex items-start gap-3">
-                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
+          <div class="bg-green-50 p-4 rounded-lg max-w-sm mx-auto">
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                </svg>
+              </div>
+              <div class="bg-white p-3 rounded-lg shadow-sm flex-1">
+                <div class="mb-2 p-2 bg-blue-50 rounded text-xs text-right border-r-2 border-blue-300" *ngIf="formData.personalMessagePosition === 'above' && formData.aiResponse">
+                  {{ formData.aiResponse }}
                 </div>
-                <div class="bg-white p-3 rounded-lg shadow-sm flex-1">
-                  <!-- AI Response - if above personal message -->
-                  @if (formData.aiResponse && formData.personalMessagePosition === 'above') {
-                    <div class="mb-2 p-2 bg-blue-50 rounded text-xs text-right border-r-2 border-blue-300">
-                      <div class="flex items-center gap-1 mb-1">
-                        <svg class="h-3 w-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                        <span class="text-blue-800 font-medium">מענה AI</span>
-                      </div>
-                      <div class="text-gray-700 whitespace-pre-wrap">
-                        {{ formData.aiResponse }}
-                      </div>
-                    </div>
-                  }
+                <div class="text-sm text-gray-800 whitespace-pre-wrap text-right">
+                  {{ formData.body || 'תוכן ההודעה יופיע כאן...' }}
+                </div>
+                <div class="mt-2 p-2 bg-blue-50 rounded text-xs text-right border-r-2 border-blue-300" *ngIf="formData.personalMessagePosition === 'below' && formData.aiResponse">
+                  {{ formData.aiResponse }}
+                </div>
 
-                  <div class="text-sm text-gray-800 whitespace-pre-wrap text-right leading-relaxed">
-                    {{ formData.body || 'תוכן המענה האישי יופיע כאן...' }}
-                  </div>
-
-                  <!-- AI Response - after personal message -->
-                  @if (formData.aiResponse && formData.personalMessagePosition === 'below') {
-                    <div class="mt-2 p-2 bg-blue-50 rounded text-xs text-right border-r-2 border-blue-300">
-                      <div class="flex items-center gap-1 mb-1">
-                        <svg class="h-3 w-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                        <span class="text-blue-800 font-medium">מענה AI</span>
-                      </div>
-                      <div class="text-gray-700 whitespace-pre-wrap">
-                        {{ formData.aiResponse }}
-                      </div>
-                    </div>
-                  }
-
-                  @if (formData.linkUrl) {
-                    <div class="mt-2 pt-2 border-t border-gray-200">
-                      <a [href]="formData.linkUrl" class="text-primary text-xs hover:underline text-right block">
-                        🔗 {{ formData.linkUrl }}
+                @if (showContactEmailButton || showContactPhoneButton) {
+                  <div class="mt-3 flex flex-wrap justify-end gap-2">
+                    @if (showContactEmailButton) {
+                      <a [href]="contactEmailLink" target="_blank" rel="noopener" class="btn-outline px-3 py-1.5 text-xs">
+                        📧 שלח מייל
                       </a>
-                    </div>
-                  }
+                    }
+                    @if (showContactPhoneButton) {
+                      <a [href]="contactPhoneLink" class="btn-outline px-3 py-1.5 text-xs">
+                        📞 חזור טלפונית
+                      </a>
+                    }
+                  </div>
+                }
+
+                <div class="mt-2 pt-2 border-t border-gray-200" *ngIf="formData.linkUrl">
+                  <div class="flex items-center gap-1 mb-1">
+                    <svg class="h-3 w-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.414-1.414" />
+                    </svg>
+                    <span class="text-xs text-muted-foreground">קישור לדף</span>
+                  </div>
+                  <a [href]="formData.linkUrl" class="text-primary text-xs hover:underline text-right block" target="_blank" rel="noopener">
+                    {{ formData.linkUrl }}
+                  </a>
                 </div>
               </div>
             </div>

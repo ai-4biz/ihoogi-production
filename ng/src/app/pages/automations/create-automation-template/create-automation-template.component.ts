@@ -76,6 +76,24 @@ export class CreateAutomationTemplateComponent implements OnInit {
     phone: '',
     whatsapp: ''
   };
+  get contactEmailLink(): string {
+    const email = this.contactSettings.return_email?.trim() || this.profileContactDefaults.email;
+    return email ? `mailto:${email}` : '';
+  }
+
+  get contactPhoneLink(): string {
+    const phone = this.contactSettings.return_phone?.trim() || this.profileContactDefaults.phone;
+    const sanitizedPhone = phone.replace(/\s+/g, '');
+    return sanitizedPhone ? `tel:${sanitizedPhone}` : '';
+  }
+
+  get showContactEmailButton(): boolean {
+    return !!this.contactEmailLink;
+  }
+
+  get showContactPhoneButton(): boolean {
+    return !!this.contactPhoneLink;
+  }
   readonly contactChannels = [
     { id: 'email', label: 'מייל', icon: '📧' },
     { id: 'sms', label: 'SMS', icon: '📱' },
