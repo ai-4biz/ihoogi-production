@@ -26,6 +26,14 @@ export class BusinessContactSettingsService {
       .maybeSingle();
 
     if (error) {
+      if (error.code === '42P01' || error.code === 'PGRST116') {
+        console.warn('[BusinessContactSettingsService] table not available yet', error);
+        return null;
+      }
+      if (error.code === '42501') {
+        console.warn('[BusinessContactSettingsService] insufficient privileges to read table', error);
+        return null;
+      }
       console.error('[BusinessContactSettingsService] getByBusinessId error', error);
       throw error;
     }
@@ -49,6 +57,10 @@ export class BusinessContactSettingsService {
       .maybeSingle();
 
     if (error) {
+      if (error.code === '42P01' || error.code === 'PGRST116') {
+        console.warn('[BusinessContactSettingsService] table not available yet (upsert skipped)', error);
+        return null;
+      }
       console.error('[BusinessContactSettingsService] upsert error', error);
       throw error;
     }

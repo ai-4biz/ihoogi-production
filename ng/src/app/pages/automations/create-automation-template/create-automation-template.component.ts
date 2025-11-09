@@ -71,6 +71,11 @@ export class CreateAutomationTemplateComponent implements OnInit {
     return_whatsapp: '',
     enabled_channels: ['email'] as string[]
   };
+  private profileContactDefaults = {
+    email: '',
+    phone: '',
+    whatsapp: ''
+  };
   readonly contactChannels = [
     { id: 'email', label: 'מייל', icon: '📧' },
     { id: 'sms', label: 'SMS', icon: '📱' },
@@ -111,13 +116,15 @@ export class CreateAutomationTemplateComponent implements OnInit {
       const existing = await this.businessContactSettingsService.getByBusinessId(user.id);
 
       this.contactSettings = {
-        return_email: existing?.return_email ?? '',
-        return_phone: existing?.return_phone ?? '',
-        return_whatsapp: existing?.return_whatsapp ?? '',
+        return_email: existing?.return_email ?? this.profileContactDefaults.email,
+        return_phone: existing?.return_phone ?? this.profileContactDefaults.phone,
+        return_whatsapp: existing?.return_whatsapp ?? this.profileContactDefaults.whatsapp,
         enabled_channels: Array.isArray(existing?.enabled_channels) && existing.enabled_channels.length
-          ? existing.enabled_channels
-          : ['email']
+          ? [...existing.enabled_channels]
+          : this.getDefaultChannelsFromProfile()
       };
+
+      this.applyProfileDefaultsToContactSettings();
     } catch (error) {
       console.error('Error loading business contact settings:', error);
       this.toast.show('לא ניתן היה לטעון את הגדרות המענה ללקוח', 'error');
@@ -184,7 +191,7 @@ export class CreateAutomationTemplateComponent implements OnInit {
 
       const { data, error } = await this.supabase.client
         .from('profiles')
-        .select('logo_url, image_url')
+        .select('logo_url, image_url, email, phone, whatsapp')
         .eq('id', user.id)
         .single();
 
@@ -193,6 +200,12 @@ export class CreateAutomationTemplateComponent implements OnInit {
       if (data) {
         this.profileLogoUrl = data.logo_url || '';
         this.profileImageUrl = data.image_url || '';
+        this.profileContactDefaults = {
+          email: data.email || '',
+          phone: data.phone || '',
+          whatsapp: data.whatsapp || ''
+        };
+        this.applyProfileDefaultsToContactSettings();
       }
     } catch (e) {
       console.error('Error loading profile:', e);
@@ -478,6 +491,35 @@ export class CreateAutomationTemplateComponent implements OnInit {
     }
 
     return true;
+  }
+
+  private getDefaultChannelsFromProfile(): string[] {
+    const channels: string[] = [];
+    if (this.profileContactDefaults.email) {
+      channels.push('email');
+    }
+    if (this.profileContactDefaults.phone) {
+      channels.push('sms');
+    }
+    if (this.profileContactDefaults.whatsapp) {
+      channels.push('whatsapp');
+    }
+    return channels.length ? channels : ['email'];
+  }
+
+  private applyProfileDefaultsToContactSettings() {
+    if (!this.contactSettings.return_email && this.profileContactDefaults.email) {
+      this.contactSettings.return_email = this.profileContactDefaults.email;
+    }
+    if (!this.contactSettings.return_phone && this.profileContactDefaults.phone) {
+      this.contactSettings.return_phone = this.profileContactDefaults.phone;
+    }
+    if (!this.contactSettings.return_whatsapp && this.profileContactDefaults.whatsapp) {
+      this.contactSettings.return_whatsapp = this.profileContactDefaults.whatsapp;
+    }
+    if (!this.contactSettings.enabled_channels.length) {
+      this.contactSettings.enabled_channels = this.getDefaultChannelsFromProfile();
+    }
   }
 
   private async saveBusinessContactSettings(businessId: string) {
