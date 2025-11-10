@@ -260,12 +260,7 @@ export class LeadsComponent implements OnInit {
           }
         }
 
-        // Normalize channel - only allow valid channels, otherwise set to 'other'
-        const validChannels = ['email', 'whatsapp', 'sms', 'website', 'facebook', 'instagram'];
-        let normalizedChannel = lead.channel || 'other';
-        if (!validChannels.includes(normalizedChannel.toLowerCase())) {
-          normalizedChannel = 'other';
-        }
+        const normalizedChannel = this.resolveChannel(lead.channel);
 
         return {
           id: lead.id,
@@ -414,19 +409,36 @@ export class LeadsComponent implements OnInit {
 
   getChannelLabel(channel: string): string {
     if (!channel) return this.lang.t('leads.channelWebsite');
-    const channelLabels: { [key: string]: string } = {
-      'email': this.lang.t('leads.channelEmail'),
-      'whatsapp': this.lang.t('leads.channelWhatsApp'),
-      'sms': this.lang.t('leads.channelSMS'),
-      'website': this.lang.t('leads.channelWebsite'),
-      'facebook': this.lang.t('leads.channelFacebook'),
-      'instagram': this.lang.t('leads.channelInstagram'),
-      'other': this.lang.t('leads.channel_other')
-    };
-    // If channel is not in the valid list, return 'other'
-    const validChannels = ['email', 'whatsapp', 'sms', 'website', 'facebook', 'instagram', 'other'];
     const normalizedChannel = channel.toLowerCase();
-    return channelLabels[normalizedChannel] || this.lang.t('leads.channel_other');
+    const channelLabels: { [key: string]: string } = {
+      email: this.lang.t('leads.channelEmail'),
+      whatsapp: this.lang.t('leads.channelWhatsApp'),
+      sms: this.lang.t('leads.channelSMS'),
+      website: this.lang.t('leads.channelWebsite'),
+      facebook: this.lang.t('leads.channelFacebook'),
+      instagram: this.lang.t('leads.channelInstagram'),
+      other: this.lang.t('leads.channel_other')
+    };
+
+    if (channelLabels[normalizedChannel]) {
+      return channelLabels[normalizedChannel];
+    }
+
+    const fallbackMap: Record<string, string> = {
+      linkedin: 'LinkedIn',
+      telegram: 'Telegram',
+      tiktok: 'TikTok',
+      youtube: 'YouTube',
+      google: 'Google',
+      direct: this.lang.t('leads.channelWebsite'),
+      general: this.lang.t('leads.channelWebsite')
+    };
+
+    if (fallbackMap[normalizedChannel]) {
+      return fallbackMap[normalizedChannel];
+    }
+
+    return this.lang.t('leads.channel_other');
   }
 
   toggleCommentPopup(event: Event, leadId: string, currentComment?: string) {
@@ -525,6 +537,38 @@ export class LeadsComponent implements OnInit {
     // Remove all non-numeric characters
     const cleanPhone = phone.replace(/[^0-9]/g, '');
     return `https://wa.me/${cleanPhone}`;
+  }
+
+  private resolveChannel(channel?: string | null): string {
+    if (!channel) {
+      return 'website';
+    }
+
+    const lower = channel.toLowerCase();
+    const tokens = lower.split(/[\s:/\\|>_-]+/).filter(Boolean);
+    const preferredOrder = ['facebook', 'instagram', 'whatsapp', 'sms', 'email', 'website', 'linkedin', 'telegram', 'tiktok', 'youtube', 'google', 'direct'];
+
+    for (const token of tokens) {
+      if (preferredOrder.includes(token)) {
+        if (token === 'google' || token === 'direct' || token === 'general') {
+          return 'website';
+        }
+        return token;
+      }
+    }
+
+    if (lower.includes('facebook')) return 'facebook';
+    if (lower.includes('instagram')) return 'instagram';
+    if (lower.includes('whatsapp')) return 'whatsapp';
+    if (lower.includes('sms')) return 'sms';
+    if (lower.includes('email') || lower.includes('@')) return 'email';
+    if (lower.includes('linkedin')) return 'linkedin';
+    if (lower.includes('telegram')) return 'telegram';
+    if (lower.includes('tiktok')) return 'tiktok';
+    if (lower.includes('youtube')) return 'youtube';
+    if (lower.includes('google')) return 'website';
+
+    return 'other';
   }
 
   async deleteLead(leadId: string, clientName: string) {

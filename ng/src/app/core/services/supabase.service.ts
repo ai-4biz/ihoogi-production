@@ -80,6 +80,30 @@ export class SupabaseService implements OnDestroy {
     return this.currentUser$.value;
   }
 
+  async getCurrentUserOrFetch(): Promise<User | null> {
+    const existing = this.currentUser$.value;
+    if (existing) {
+      return existing;
+    }
+
+    try {
+      const { data, error } = await this.supabase.auth.getUser();
+      if (error) {
+        console.error('[SupabaseService] Error fetching current user:', error);
+        return null;
+      }
+      const user = data?.user ?? null;
+      if (user) {
+        this.currentUser$.next(user);
+        this.initialized = true;
+      }
+      return user;
+    } catch (fetchError) {
+      console.error('[SupabaseService] Unexpected error fetching current user:', fetchError);
+      return null;
+    }
+  }
+
   async signIn(email: string, password: string) {
     return await this.supabase.auth.signInWithPassword({ email, password });
   }

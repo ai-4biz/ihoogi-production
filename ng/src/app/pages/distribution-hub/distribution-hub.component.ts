@@ -114,6 +114,8 @@ export class DistributionHubComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+    await this.supabaseService.getCurrentUserOrFetch();
+
     await Promise.all([
       this.loadQuestionnaires(),
       this.loadAutomationTemplates()
@@ -160,13 +162,13 @@ export class DistributionHubComponent implements OnInit {
   async loadQuestionnaires() {
     try {
       this.loading = true;
-      const userId = this.supabaseService.currentUser?.id;
-      if (!userId) return;
+      const user = await this.supabaseService.getCurrentUserOrFetch();
+      if (!user) return;
 
       const { data, error } = await this.supabaseService.client
         .from('questionnaires')
         .select('id, title, token, is_active')
-        .eq('owner_id', userId)
+        .eq('owner_id', user.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -185,13 +187,13 @@ export class DistributionHubComponent implements OnInit {
 
   async loadAutomationTemplates() {
     try {
-      const userId = this.supabaseService.currentUser?.id;
-      if (!userId) return;
+      const user = await this.supabaseService.getCurrentUserOrFetch();
+      if (!user) return;
 
       const { data, error } = await this.supabaseService.client
         .from('automation_templates')
         .select('id, name, message_type, created_at')
-        .eq('user_id', userId)
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;

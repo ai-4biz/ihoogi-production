@@ -69,6 +69,98 @@ export class QuestionnaireLive implements OnInit {
     private referralTracking: ReferralTrackingService
   ) {}
 
+  private normalizeAnswerValue(value: any): string[] {
+    if (Array.isArray(value)) {
+      return value.flatMap((item) => this.normalizeAnswerValue(item));
+    }
+    if (value === undefined || value === null) {
+      return [];
+    }
+    if (typeof value === 'string') {
+      const trimmed = value.trim();
+      return trimmed ? [trimmed] : [];
+    }
+    if (typeof value === 'number' || typeof value === 'boolean') {
+      return [String(value)];
+    }
+    return [];
+  }
+
+  private looksLikeEmail(value: string): boolean {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  }
+
+  private looksLikePhone(value: string): boolean {
+    const digits = value.replace(/\D/g, '');
+    return digits.length >= 7;
+  }
+
+  private extractEmailFromResponses(responseData: Record<string, any>): string | null {
+    for (const question of this.questions) {
+      if (question.question_type === 'email') {
+        const answers = this.normalizeAnswerValue(responseData[question.id]);
+        const emailAnswer = answers.find((answer) => this.looksLikeEmail(answer));
+        if (emailAnswer) {
+          return emailAnswer;
+        }
+      }
+    }
+
+    for (const value of Object.values(responseData)) {
+      const answers = this.normalizeAnswerValue(value);
+      const emailAnswer = answers.find((answer) => this.looksLikeEmail(answer));
+      if (emailAnswer) {
+        return emailAnswer;
+      }
+    }
+
+    return null;
+  }
+
+  private extractPhoneFromResponses(responseData: Record<string, any>): string | null {
+    for (const question of this.questions) {
+      if (question.question_type === 'phone') {
+        const answers = this.normalizeAnswerValue(responseData[question.id]);
+        const phoneAnswer = answers.find((answer) => this.looksLikePhone(answer));
+        if (phoneAnswer) {
+          return phoneAnswer;
+        }
+      }
+    }
+
+    for (const value of Object.values(responseData)) {
+      const answers = this.normalizeAnswerValue(value);
+      const phoneAnswer = answers.find((answer) => this.looksLikePhone(answer));
+      if (phoneAnswer) {
+        return phoneAnswer;
+      }
+    }
+
+    return null;
+  }
+
+  private extractNameFromResponses(responseData: Record<string, any>): string {
+    for (const question of this.questions) {
+      if (['text', 'textarea', 'single', 'single_choice', 'select'].includes(question.question_type)) {
+        const answers = this.normalizeAnswerValue(responseData[question.id]);
+        const nameAnswer = answers.find((answer) => !this.looksLikeEmail(answer) && !this.looksLikePhone(answer));
+        if (nameAnswer) {
+          return nameAnswer;
+        }
+      }
+    }
+
+    for (const value of Object.values(responseData)) {
+      const answers = this.normalizeAnswerValue(value);
+      const nameAnswer = answers.find((answer) => !this.looksLikeEmail(answer) && !this.looksLikePhone(answer));
+      if (nameAnswer) {
+        return nameAnswer;
+      }
+    }
+
+    return 'Unknown';
+  }
+
   ngOnInit() {
     console.log('=== QuestionnaireLive ngOnInit called ===');
     console.log('Current URL:', this.router.url);
@@ -344,35 +436,10 @@ export class QuestionnaireLive implements OnInit {
     if (!this.questionnaire) return;
 
     try {
-      // Extract client name from the first question (which is always the full name)
-      let clientName = 'Unknown';
-      if (this.questions.length > 0) {
-        const firstQuestionId = this.questions[0].id;
-        const firstAnswer = responseData[firstQuestionId];
-
-        if (firstAnswer) {
-          // Handle both string and array values
-          if (Array.isArray(firstAnswer)) {
-            clientName = firstAnswer.join(', ');
-          } else if (typeof firstAnswer === 'string' && firstAnswer.trim()) {
-            clientName = firstAnswer.trim();
-          }
-        }
-      }
-
-      // Extract email, phone, name from responseData (usually first 3 questions)
-      let email = null;
-      let phone = null;
-      let name = clientName;
-
-      if (this.questions.length >= 2) {
-        const emailAnswer = responseData[this.questions[1]?.id];
-        if (emailAnswer && typeof emailAnswer === 'string') email = emailAnswer;
-      }
-      if (this.questions.length >= 3) {
-        const phoneAnswer = responseData[this.questions[2]?.id];
-        if (phoneAnswer && typeof phoneAnswer === 'string') phone = phoneAnswer;
-      }
+      const clientName = this.extractNameFromResponses(responseData);
+      const email = this.extractEmailFromResponses(responseData);
+      const phone = this.extractPhoneFromResponses(responseData);
+      const name = clientName;
 
       // Use RPC function to insert lead (bypasses RLS)
       const { data: leadId, error: leadError } = await this.supabaseService.client

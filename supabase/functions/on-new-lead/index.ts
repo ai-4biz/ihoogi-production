@@ -104,6 +104,99 @@ function resolveChannelLabel(channelInfo: { detected: string | null; entryMethod
   return parts.join(" / ");
 }
 
+function normalizeAnswerValue(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value.flatMap(normalizeAnswerValue).filter((item): item is string => typeof item === "string" && item.trim().length > 0);
+  }
+  if (value === null || value === undefined) {
+    return [];
+  }
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    return trimmed ? [trimmed] : [];
+  }
+  if (typeof value === "number" || typeof value === "boolean") {
+    return [String(value)];
+  }
+  return [];
+}
+
+function looksLikeEmail(value: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+function looksLikePhone(value: string): boolean {
+  return value.replace(/\D/g, "").length >= 7;
+}
+
+function extractContactDetails(answerJson: Record<string, any> | null | undefined, questions: any[]): { name: string; email: string | null; phone: string | null } {
+  const result = {
+    name: "",
+    email: null as string | null,
+    phone: null as string | null,
+  };
+
+  if (!answerJson || !questions?.length) {
+    return result;
+  }
+
+  const findAnswer = (matcher: (question: any, value: string) => boolean, fallbackMatcher?: (value: string) => boolean): string | null => {
+    for (const question of questions) {
+      const answers = normalizeAnswerValue(answerJson[question.id]);
+      for (const answer of answers) {
+        if (matcher(question, answer)) {
+          return answer;
+        }
+      }
+    }
+
+    if (fallbackMatcher) {
+      for (const value of Object.values(answerJson)) {
+        const answers = normalizeAnswerValue(value);
+        const matched = answers.find(fallbackMatcher);
+        if (matched) {
+          return matched;
+        }
+      }
+    }
+
+    return null;
+  };
+
+  const email = findAnswer(
+    (question, value) => question?.question_type === "email" && looksLikeEmail(value),
+    looksLikeEmail,
+  );
+  if (email) {
+    result.email = email;
+  }
+
+  const phone = findAnswer(
+    (question, value) => question?.question_type === "phone" && looksLikePhone(value),
+    looksLikePhone,
+  );
+  if (phone) {
+    result.phone = phone;
+  }
+
+  const name = findAnswer(
+    (question, value) =>
+      ["text", "textarea", "single", "single_choice", "select"].includes(question?.question_type) &&
+      !looksLikeEmail(value) &&
+      !looksLikePhone(value),
+    (value) => !looksLikeEmail(value) && !looksLikePhone(value),
+  );
+  if (name) {
+    result.name = name;
+  }
+
+  if (!result.name) {
+    result.name = result.email ?? result.phone ?? "לקוח יקר";
+  }
+
+  return result;
+}
+
 function resolveContactSettings(
   ownerProfile: any,
   row: BusinessContactSettingsRow | null,
@@ -181,31 +274,7 @@ function appendContactFooter(body: string, footer: string) {
 }
 
 function extractContactInfo(answerJson: Record<string, any>, questions: any[]): { name: string; email: string | null; phone: string | null } {
-  const contact = {
-    name: "",
-    email: null as string | null,
-    phone: null as string | null,
-  };
-
-  if (questions.length >= 1) {
-    const nameValue = answerJson?.[questions[0].id];
-    const name = Array.isArray(nameValue) ? nameValue.join(", ") : nameValue;
-    if (typeof name === "string") contact.name = name;
-  }
-
-  if (questions.length >= 2) {
-    const emailValue = answerJson?.[questions[1].id];
-    const email = Array.isArray(emailValue) ? emailValue[0] : emailValue;
-    if (typeof email === "string") contact.email = email;
-  }
-
-  if (questions.length >= 3) {
-    const phoneValue = answerJson?.[questions[2].id];
-    const phone = Array.isArray(phoneValue) ? phoneValue[0] : phoneValue;
-    if (typeof phone === "string") contact.phone = phone;
-  }
-
-  return contact;
+  return extractContactDetails(answerJson, questions);
 }
 
 function replaceVariables(template: string, contact: { name: string; email: string | null; phone: string | null }, ownerProfile: any) {
@@ -1049,28 +1118,12 @@ function extractContactInfo(answerJson: Record<string, any>, questions: any[]): 
   email: string;
   phone?: string;
 } {
-  const contact: { name: string; email: string; phone?: string } = {
-    name: '',
-    email: ''
+  const contact = extractContactDetails(answerJson, questions);
+  return {
+    name: contact.name || '',
+    email: contact.email ?? '',
+    phone: contact.phone ?? undefined,
   };
-
-  // Extract from first 3 questions (name, email, phone)
-  if (questions.length >= 1) {
-    const nameValue = answerJson[questions[0].id];
-    contact.name = Array.isArray(nameValue) ? nameValue.join(', ') : (nameValue || '');
-  }
-
-  if (questions.length >= 2) {
-    const emailValue = answerJson[questions[1].id];
-    contact.email = Array.isArray(emailValue) ? emailValue[0] : (emailValue || '');
-  }
-
-  if (questions.length >= 3) {
-    const phoneValue = answerJson[questions[2].id];
-    contact.phone = Array.isArray(phoneValue) ? phoneValue[0] : (phoneValue || '');
-  }
-
-  return contact;
 }
 
 function replaceVariables(
