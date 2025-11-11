@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SupabaseService } from './supabase.service';
 import { LanguageService } from './language.service';
+import { environment } from '../../../environments/environment';
 
 interface AutomationTemplate {
   id: string;
@@ -34,8 +35,6 @@ interface LeadContact {
   providedIn: 'root'
 })
 export class AutomationService {
-  private contactInfoTextCache: string | null = null;
-  private contactInfoHtmlCache: string | null = null;
   private readonly contactClosingRegex = /\n\n(?:בברכה|תודה(?: רבה)?|להתראות|Thanks|Thank you|Best regards|Regards|Sincerely)[^\n]*/i;
 
   constructor(
@@ -155,7 +154,7 @@ export class AutomationService {
     const message = this.lang.currentLanguage === 'he'
       ? `שלום ${firstName},\n\nתודה שמילאת את השאלון שלנו. פנייתך התקבלה ואנו נחזור אליך בהקדם.\n\nבברכה,\n${businessName}`
       : `Hello ${firstName},\n\nThank you for completing our questionnaire. Your submission has been received and we will get back to you soon.\n\nBest regards,\n${businessName}`;
-    return this.appendContactInfo(message, ownerProfile, channels);
+    return message;
   }
 
   /**
@@ -167,8 +166,7 @@ export class AutomationService {
     ownerProfile: any
   ): string {
     const messageBody = template.message_body || 'Thank you for your response!';
-    const message = this.replaceVariables(messageBody, contact, ownerProfile);
-    return this.appendContactInfo(message, ownerProfile, template.channels);
+    return this.replaceVariables(messageBody, contact, ownerProfile);
   }
 
   /**
@@ -204,7 +202,7 @@ export class AutomationService {
     const message = this.lang.currentLanguage === 'he'
       ? `שלום ${firstName},\n\nתודה על מילוי השאלון. בהתבסס על תשובותיך, אנו ממליצים...\n\n[הודעה מותאמת אישית על פי ${aiInstructions}]\n\nנשמח לעמוד לשירותך,\n${businessName}`
       : `Hello ${firstName},\n\nThank you for completing the questionnaire. Based on your responses, we recommend...\n\n[Personalized message based on ${aiInstructions}]\n\nBest regards,\n${businessName}`;
-    return this.appendContactInfo(message, ownerProfile, template.channels);
+    return message;
   }
 
   /**
@@ -226,20 +224,7 @@ export class AutomationService {
 
     // Combine based on AI position (if configured)
     // For now, AI first, then personal
-    const combined = `${aiPart}\n\n---\n\n${personalPart}`;
-    return this.appendContactInfo(combined, ownerProfile, template.channels);
-  }
-
-  private appendContactInfo(message: string, ownerProfile: any, channels?: string[] | null): string {
-    const block = this.buildContactInfoBlock(ownerProfile, channels);
-    if (!block) {
-      this.clearContactInfoCache();
-      return message;
-    }
-    const messageWithBlock = this.insertContactBlock(message, block.text);
-    this.contactInfoTextCache = block.text;
-    this.contactInfoHtmlCache = block.html;
-    return messageWithBlock;
+    return `${aiPart}\n\n---\n\n${personalPart}`;
   }
 
   /**
@@ -250,41 +235,27 @@ export class AutomationService {
     contact: LeadContact,
     subject: string,
     message: string,
-    ownerProfile: any
+    ownerProfile: any,
+    template?: AutomationTemplate | null
   ): Promise<void> {
-    const sendPromises: Promise<void>[] = [];
-
-    for (const channel of channels) {
-      switch (channel) {
-        case 'email':
-          sendPromises.push(this.sendEmail(contact.email, subject, message, ownerProfile));
-          break;
-
-        case 'whatsapp':
-          if (contact.phone) {
-            sendPromises.push(this.sendWhatsApp(contact.phone, message));
-          }
-          break;
-
-        case 'message':
-        case 'general':
-          // For SMS or other channels, implement as needed
-          console.log(`Channel ${channel} not yet implemented`);
-          break;
+    const payload = this.buildFinalMessage(
+      ownerProfile,
+      template ?? null,
+      {
+        processedText: message,
+        fallbackChannels: channels,
+        subject
       }
-    }
+    );
 
-    await Promise.allSettled(sendPromises);
-    this.clearContactInfoCache();
+    await this.sendPrebuiltMessage(payload.templateChannels, contact, ownerProfile, payload);
   }
 
-  /**
-   * Send email via Supabase Edge Function or external service
-   */
   private async sendEmail(
     to: string,
     subject: string,
-    body: string,
+    textBody: string,
+    htmlBody: string,
     ownerProfile: any
   ): Promise<void> {
     try {
@@ -293,26 +264,14 @@ export class AutomationService {
       console.log('  Subject:', subject);
       console.log('  ReplyTo:', ownerProfile.email);
 
-      let htmlBody = body.replace(/\n/g, '<br>');
-      if (this.contactInfoTextCache && this.contactInfoHtmlCache) {
-        const textAsHtml = this.convertTextBlockToSimpleHtml(this.contactInfoTextCache);
-        if (htmlBody.includes(textAsHtml)) {
-          htmlBody = htmlBody.replace(textAsHtml, this.contactInfoHtmlCache);
-        } else {
-          htmlBody += this.contactInfoHtmlCache;
-        }
-      } else if (this.contactInfoTextCache) {
-        htmlBody += `<br><br>${this.convertTextBlockToSimpleHtml(this.contactInfoTextCache)}`;
-      }
+      const finalHtml = htmlBody || this.convertTextToHtml(textBody);
 
-      // Call Supabase Edge Function
-      console.log('🔧 [EMAIL] Calling Edge Function: send-automation-email');
       const { data, error } = await this.supabaseService.client.functions.invoke('send-automation-email', {
         body: {
           to,
           subject,
-          html: htmlBody,
-          text: body,
+          html: finalHtml,
+          text: textBody,
           replyTo: ownerProfile.email
         }
       });
@@ -322,7 +281,7 @@ export class AutomationService {
         console.log('ℹ️ [EMAIL] Edge Function might not be deployed. Email details:');
         console.log('  To:', to);
         console.log('  Subject:', subject);
-        console.log('  Body:', body);
+        console.log('  Body:', textBody);
         console.log('📝 [EMAIL] To deploy: supabase functions deploy send-automation-email');
         throw error;
       }
@@ -336,20 +295,13 @@ export class AutomationService {
       console.log('Subject:', subject);
       console.log('ReplyTo:', ownerProfile.email);
       console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      console.log(body);
+      console.log(textBody);
       console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      // Don't throw - let automation continue even if email fails
-    } finally {
-      this.clearContactInfoCache();
     }
   }
 
-  /**
-   * Send WhatsApp message via external service
-   */
   private async sendWhatsApp(phone: string, message: string): Promise<void> {
     try {
-      // TODO: Implement WhatsApp sending via Twilio, WhatsApp Business API, etc.
       console.log('WhatsApp would be sent to:', phone);
       console.log('Message:', message);
     } catch (error) {
@@ -357,8 +309,209 @@ export class AutomationService {
     }
   }
 
-  private buildContactInfoBlock(ownerProfile: any, channels?: string[] | null): { text: string; html: string } | null {
-    const channelList = Array.isArray(channels) ? channels : ['email', 'whatsapp', 'sms'];
+  private async sendSms(phone: string, message: string): Promise<void> {
+    try {
+      console.log('SMS would be sent to:', phone);
+      console.log('Message:', message);
+    } catch (error) {
+      console.error('Error sending SMS:', error);
+    }
+  }
+
+  public buildFinalMessage(
+    ownerProfile: any,
+    template: AutomationTemplate | null,
+    options?: {
+      processedText?: string;
+      fallbackChannels?: string[];
+      subject?: string;
+    }
+  ): {
+    emailText: string;
+    emailHtml: string;
+    whatsappBody: string;
+    smsBody: string;
+    templateContent: string;
+    templateHtmlContent: string;
+    templateChannels: string[];
+    subject: string;
+  } {
+    const processedText = options?.processedText ?? '';
+    const templateContent = this.extractTemplateContent(template, processedText);
+    const templateHtmlContent = this.extractTemplateHtmlContent(template);
+    const templateChannels = this.extractTemplateChannels(template, options?.fallbackChannels ?? []);
+    const subject = this.extractTemplateSubject(template, options?.subject);
+
+    const contactBlock = templateChannels.length
+      ? this.buildContactBlock(ownerProfile, templateChannels)
+      : null;
+    const contactBlockText = contactBlock?.text ?? '';
+    const contactBlockHtml = contactBlock?.html ?? '';
+
+    const baseText = templateContent || processedText;
+    const emailText = this.buildEmailText(baseText, contactBlockText);
+    const emailHtml = this.buildEmailHtml(templateHtmlContent, contactBlockHtml, contactBlockText, emailText);
+    const whatsappBody = this.buildWhatsappBody(baseText, contactBlockText, templateChannels);
+    const smsBody = this.buildSmsBody(baseText, contactBlockText, templateChannels);
+
+    return {
+      emailText,
+      emailHtml,
+      whatsappBody,
+      smsBody,
+      templateContent,
+      templateHtmlContent,
+      templateChannels,
+      subject
+    };
+  }
+
+  public async sendPrebuiltMessage(
+    channels: string[],
+    contact: LeadContact,
+    ownerProfile: any,
+    payload: {
+      emailText: string;
+      emailHtml: string;
+      whatsappBody: string;
+      smsBody: string;
+      templateContent: string;
+      templateHtmlContent: string;
+      templateChannels: string[];
+      subject: string;
+    }
+  ): Promise<void> {
+    this.debugLog('template.content', payload.templateContent);
+    this.debugLog('template.htmlContent', payload.templateHtmlContent);
+    this.debugLog('template.contactChannels', payload.templateChannels);
+    this.debugLog('profile', ownerProfile);
+    this.debugLog('finalEmailHtml', payload.emailHtml);
+    this.debugLog('finalEmailText', payload.emailText);
+    this.debugLog('finalWhatsappBody', payload.whatsappBody);
+    this.debugLog('finalSmsBody', payload.smsBody);
+
+    if (!environment.production) {
+      console.log('[DEBUG FINAL MESSAGE]', payload);
+    }
+
+    const subject = payload.subject || this.lang.t('automations.defaultEmailSubject');
+    const activeChannels = channels.length ? channels : payload.templateChannels;
+    const sendPromises: Promise<void>[] = [];
+
+    for (const channel of activeChannels) {
+      switch (channel) {
+        case 'email':
+          if (contact.email) {
+            sendPromises.push(this.sendEmail(contact.email, subject, payload.emailText, payload.emailHtml, ownerProfile));
+          }
+          break;
+        case 'whatsapp':
+          if (contact.phone && payload.whatsappBody) {
+            sendPromises.push(this.sendWhatsApp(contact.phone, payload.whatsappBody));
+          }
+          break;
+        case 'sms':
+        case 'message':
+        case 'general':
+          if (contact.phone && payload.smsBody) {
+            sendPromises.push(this.sendSms(contact.phone, payload.smsBody));
+          }
+          break;
+      }
+    }
+
+    if (sendPromises.length) {
+      await Promise.allSettled(sendPromises);
+    }
+  }
+
+  private extractTemplateContent(template: AutomationTemplate | null, fallback: string): string {
+    const raw = (template as any)?.content
+      ?? (template as any)?.message_body
+      ?? (template as any)?.body
+      ?? fallback;
+    return typeof raw === 'string' && raw.trim() ? raw.trim() : (fallback || '');
+  }
+
+  private extractTemplateHtmlContent(template: AutomationTemplate | null): string {
+    const raw = (template as any)?.htmlContent ?? (template as any)?.html_content;
+    return typeof raw === 'string' && raw.trim() ? raw.trim() : '';
+  }
+
+  private extractTemplateSubject(template: AutomationTemplate | null, fallback?: string): string {
+    const raw = (template as any)?.subject ?? (template as any)?.email_subject;
+    const fromTemplate = typeof raw === 'string' ? raw.trim() : '';
+    if (fromTemplate) {
+      return fromTemplate;
+    }
+    const fallbackSubject = typeof fallback === 'string' ? fallback.trim() : '';
+    if (fallbackSubject) {
+      return fallbackSubject;
+    }
+    return this.lang.t('automations.defaultEmailSubject');
+  }
+
+  private extractTemplateChannels(template: AutomationTemplate | null, selectedChannels: string[]): string[] {
+    const source = (template as any)?.contactChannels ?? (template as any)?.channels;
+    if (Array.isArray(source)) {
+      return source
+        .filter((ch: any) => typeof ch === 'string')
+        .map((ch: string) => ch.toLowerCase());
+    }
+    return (Array.isArray(selectedChannels) ? selectedChannels : []).map(ch => ch.toLowerCase());
+  }
+
+  private buildEmailHtml(
+    baseHtml: string,
+    contactBlockHtml: string,
+    contactBlockText: string,
+    fallbackText: string
+  ): string {
+    if (!baseHtml && !fallbackText) {
+      return contactBlockHtml || '';
+    }
+
+    let html = baseHtml || this.convertTextToHtml(fallbackText);
+
+    if (!contactBlockHtml && contactBlockText) {
+      contactBlockHtml = this.convertTextToHtml(contactBlockText);
+    }
+
+    if (!contactBlockHtml) {
+      return html;
+    }
+
+    if (html.includes(contactBlockHtml) || (contactBlockText && html.includes(contactBlockText))) {
+      return html;
+    }
+
+    return this.insertContactBlockHtml(html, contactBlockHtml);
+  }
+
+  private buildEmailText(baseText: string, contactBlockText: string): string {
+    const text = baseText || '';
+    if (!contactBlockText || text.includes(contactBlockText.trim())) {
+      return text;
+    }
+    return this.insertContactBlock(text, contactBlockText);
+  }
+
+  private buildWhatsappBody(baseText: string, contactBlockText: string, channels: string[]): string {
+    if (!channels.includes('whatsapp')) {
+      return baseText;
+    }
+    return this.buildEmailText(baseText, contactBlockText);
+  }
+
+  private buildSmsBody(baseText: string, contactBlockText: string, channels: string[]): string {
+    if (!channels.includes('sms') && !channels.includes('message') && !channels.includes('general')) {
+      return baseText;
+    }
+    return this.buildEmailText(baseText, contactBlockText);
+  }
+
+  private buildContactBlock(ownerProfile: any, channels?: string[] | null): { text: string; html: string } | null {
+    const channelList = Array.isArray(channels) ? channels : [];
     const activeChannels = new Set(
       channelList.map(ch => ch as 'email' | 'whatsapp' | 'sms')
     );
@@ -392,7 +545,7 @@ export class AutomationService {
       }
     }
 
-    const whatsappDigits = this.sanitizePhoneNumber(whatsappRaw || phoneValue);
+    const whatsappDigits = this.sanitizePhoneNumber(whatsappRaw);
     if (activeChannels.has('whatsapp') && whatsappDigits) {
       const label = this.lang.t('automations.contactWhatsappLabel') || 'WhatsApp';
       items.push({
@@ -459,12 +612,24 @@ export class AutomationService {
     return `${trimmedMessage}\n\n${blockText}`;
   }
 
-  private convertTextBlockToSimpleHtml(text: string): string {
-    return text.replace(/\n/g, '<br>');
-  }
+  private insertContactBlockHtml(html: string, blockHtml: string): string {
+    const paragraphRegex = /<p[^>]*>[\s\S]*?(בברכה|תודה(?: רבה)?|Thanks|Thank you|Best regards|Regards|Sincerely)[\s\S]*?<\/p>/i;
+    const paragraphMatch = paragraphRegex.exec(html);
+    if (paragraphMatch && paragraphMatch.index !== undefined) {
+      return `${html.slice(0, paragraphMatch.index)}${blockHtml}${html.slice(paragraphMatch.index)}`;
+    }
 
-  private sanitizePhoneNumber(value: string): string {
-    return value.replace(/\D/g, '');
+    const closingRegex = /(בברכה|תודה(?: רבה)?|Thanks|Thank you|Best regards|Regards|Sincerely)/i;
+    const match = closingRegex.exec(html);
+
+    if (match && match.index !== undefined) {
+      const insertionIndex = match.index;
+      const before = html.slice(0, insertionIndex);
+      const after = html.slice(insertionIndex);
+      return `${before}${blockHtml}\n${after}`;
+    }
+
+    return html + blockHtml;
   }
 
   private escapeHtml(value: string): string {
@@ -476,8 +641,18 @@ export class AutomationService {
       .replace(/'/g, '&#39;');
   }
 
-  private clearContactInfoCache() {
-    this.contactInfoTextCache = null;
-    this.contactInfoHtmlCache = null;
+  private convertTextToHtml(text: string): string {
+    return text.replace(/\n/g, '<br>');
+  }
+
+  private sanitizePhoneNumber(value: string): string {
+    return value ? value.replace(/\D/g, '') : '';
+  }
+
+  private debugLog(label: string, value: any) {
+    if (environment.production) {
+      return;
+    }
+    console.log(`>>> DEBUG: ${label} =`, value);
   }
 }
