@@ -1,9 +1,0 @@
-{
-  "channels": [],
-  "contactBlockInjected": {
-    "emailHtml": false,
-    "emailText": false,
-    "whatsapp": false,
-    "sms": false
-  }
-}
