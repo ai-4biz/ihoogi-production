@@ -63,6 +63,15 @@ export class CreateAutomationTemplateComponent implements OnInit {
   profileImageUrl = '';
   cachedAIResponse: string = '';
   cachedMessageLength: 'short' | 'medium' | 'long' = 'medium';
+  contactEmail = '';
+  contactPhone = '';
+  contactWhatsapp = '';
+  contactChannels: Record<'email' | 'whatsapp' | 'sms', boolean> = {
+    email: true,
+    whatsapp: true,
+    sms: true
+  };
+  private supportsTemplateChannels = true;
 
   constructor(
     public lang: LanguageService,
@@ -79,6 +88,16 @@ export class CreateAutomationTemplateComponent implements OnInit {
         this.editMode = true;
         this.templateId = params['id'];
         this.loadTemplate(params['id']);
+      } else {
+        const loaded = this.loadContactChannelsFromStorage();
+        if (!loaded) {
+          this.applyTemplateChannels();
+          this.saveContactChannelsToStorage();
+        }
+        if (!this.formData.subject) {
+          this.formData.subject = this.lang.t('automations.defaultEmailSubject');
+        }
+        this.detectTemplateChannelsSupport();
       }
     });
 
@@ -97,11 +116,12 @@ export class CreateAutomationTemplateComponent implements OnInit {
 
       if (data) {
         console.log('Loading template data:', data);
+        this.supportsTemplateChannels = Array.isArray(data.channels);
 
         // Map database fields to form fields
         this.formData = {
           name: data.name || '',
-          subject: data.subject || '',
+          subject: data.subject || this.lang.t('automations.defaultEmailSubject'),
           body: data.body || '',
           aiResponse: '',
           personalMessagePosition: 'below',
@@ -127,6 +147,15 @@ export class CreateAutomationTemplateComponent implements OnInit {
 
         // Set response type based on message_type field
         this.selectedResponseType = data.message_type || 'personal';
+        const loaded = this.loadContactChannelsFromStorage(id);
+        if (!loaded) {
+          this.applyTemplateChannels(Array.isArray(data.channels) ? data.channels : null);
+        } else {
+          this.saveContactChannelsToStorage(id);
+        }
+        if (!this.supportsTemplateChannels) {
+          this.detectTemplateChannelsSupport();
+        }
 
         this.toast.show(this.lang.t('automations.templateLoadedForEditing'), 'success');
       }
@@ -143,7 +172,7 @@ export class CreateAutomationTemplateComponent implements OnInit {
 
       const { data, error } = await this.supabase.client
         .from('profiles')
-        .select('logo_url, image_url')
+        .select('logo_url, image_url, email, phone, whatsapp')
         .eq('id', user.id)
         .single();
 
@@ -152,10 +181,144 @@ export class CreateAutomationTemplateComponent implements OnInit {
       if (data) {
         this.profileLogoUrl = data.logo_url || '';
         this.profileImageUrl = data.image_url || '';
+        this.contactEmail = data.email || '';
+        this.contactPhone = data.phone || '';
+        this.contactWhatsapp = data.whatsapp || data.phone || '';
       }
     } catch (e) {
       console.error('Error loading profile:', e);
     }
+  }
+
+  get hasContactInfo(): boolean {
+    return (
+      (this.isContactChannelActive('email') && !!this.contactEmail) ||
+      (this.isContactChannelActive('sms') && !!this.sanitizedContactPhone) ||
+      (this.isContactChannelActive('whatsapp') && !!this.sanitizedContactWhatsapp)
+    );
+  }
+
+  get whatsappShareLink(): string {
+    if (!this.sanitizedContactWhatsapp) {
+      return '';
+    }
+    return `https://wa.me/${this.sanitizedContactWhatsapp}`;
+  }
+
+  get sanitizedContactPhone(): string {
+    return this.sanitizeNumber(this.contactPhone);
+  }
+
+  get sanitizedContactWhatsapp(): string {
+    const raw = this.contactWhatsapp || this.contactPhone;
+    return this.sanitizeNumber(raw);
+  }
+
+  isContactChannelActive(channel: 'email' | 'whatsapp' | 'sms'): boolean {
+    return !!this.contactChannels[channel];
+  }
+
+  toggleContactChannel(channel: 'email' | 'whatsapp' | 'sms'): void {
+    this.contactChannels[channel] = !this.contactChannels[channel];
+    this.saveContactChannelsToStorage(this.templateId);
+  }
+
+  getActiveContactChannels(): Array<'email' | 'whatsapp' | 'sms'> {
+    return (['email', 'whatsapp', 'sms'] as const).filter(ch => this.contactChannels[ch]);
+  }
+
+  private applyTemplateChannels(channels?: string[] | null) {
+    const activeSet = new Set((channels && channels.length ? channels : ['email', 'whatsapp', 'sms']).map(ch => ch as 'email' | 'whatsapp' | 'sms'));
+    (['email', 'whatsapp', 'sms'] as const).forEach(ch => {
+      this.contactChannels[ch] = activeSet.has(ch);
+    });
+    this.saveContactChannelsToStorage(this.templateId);
+  }
+
+  private getContactChannelsStorageKey(templateId?: string): string {
+    return `hoogi-contact-channels-${templateId || 'draft'}`;
+  }
+
+  private loadContactChannelsFromStorage(templateId?: string): boolean {
+    try {
+      const key = this.getContactChannelsStorageKey(templateId);
+      const stored = localStorage.getItem(key);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed && typeof parsed === 'object') {
+          (['email', 'whatsapp', 'sms'] as const).forEach(ch => {
+            if (typeof parsed[ch] === 'boolean') {
+              this.contactChannels[ch] = parsed[ch];
+            }
+          });
+          return true;
+        }
+      }
+    } catch (error) {
+      console.warn('Failed loading contact channels from storage', error);
+    }
+    return false;
+  }
+
+  private saveContactChannelsToStorage(templateId?: string) {
+    try {
+      const key = this.getContactChannelsStorageKey(templateId);
+      localStorage.setItem(key, JSON.stringify(this.contactChannels));
+    } catch (error) {
+      console.warn('Failed saving contact channels to storage', error);
+    }
+  }
+
+  private clearDraftContactChannels() {
+    try {
+      localStorage.removeItem(this.getContactChannelsStorageKey());
+    } catch (error) {
+      console.warn('Failed clearing draft contact channels', error);
+    }
+  }
+
+  private sanitizeNumber(value: string): string {
+    return value ? value.replace(/\D/g, '') : '';
+  }
+
+  private async detectTemplateChannelsSupport() {
+    try {
+      const { data, error } = await this.supabase.client
+        .from('automation_templates')
+        .select('channels')
+        .limit(1);
+      if (error) throw error;
+      this.supportsTemplateChannels = Array.isArray(data?.[0]?.channels);
+    } catch (error) {
+      if (this.isMissingChannelsColumn(error)) {
+        this.supportsTemplateChannels = false;
+      } else {
+        console.warn('Failed detecting channels column support', error);
+      }
+    }
+  }
+
+  private async trySaveTemplate(
+    operation: () => PromiseLike<{ data: any; error: any }>,
+    onMissingColumn?: () => void
+  ): Promise<{ data: any; error: any }> {
+    const result = await Promise.resolve(operation());
+    if (this.supportsTemplateChannels && this.isMissingChannelsColumn(result.error)) {
+      this.supportsTemplateChannels = false;
+      if (onMissingColumn) {
+        onMissingColumn();
+      }
+      await this.detectTemplateChannelsSupport();
+      const retryResult = await Promise.resolve(operation());
+      return retryResult;
+    }
+    return result;
+  }
+
+  private isMissingChannelsColumn(error: any): boolean {
+    if (!error || typeof error !== 'object') return false;
+    const message = error.message || error?.error_description || '';
+    return typeof message === 'string' && message.includes("'channels' column");
   }
 
   getMessageLengthDescription(length: string): string {
@@ -330,6 +493,12 @@ export class CreateAutomationTemplateComponent implements OnInit {
       return;
     }
 
+    const activeChannels = this.getActiveContactChannels();
+    if (activeChannels.length === 0) {
+      this.toast.show(this.lang.currentLanguage === 'he' ? 'יש לבחור לפחות ערוץ יצירת קשר אחד' : 'Select at least one contact channel', 'error');
+      return;
+    }
+
     try {
       this.saving = true;
       const user = this.supabase.currentUser;
@@ -339,12 +508,14 @@ export class CreateAutomationTemplateComponent implements OnInit {
         return;
       }
 
-      const templateData = {
+      const templateData: any = {
         name: this.formData.name,
         message_type: this.selectedResponseType || 'personal',
         body: this.formData.body,
         ai_message_length: this.formData.messageLength,
-        subject: this.formData.subject,
+        subject: (this.formData.subject && this.formData.subject.trim())
+          ? this.formData.subject.trim()
+          : this.lang.t('automations.defaultEmailSubject'),
         include_reminder: this.formData.includeReminder,
         reminder_days: this.formData.reminderDays,
         reminder_time: this.formData.reminderTime,
@@ -355,27 +526,52 @@ export class CreateAutomationTemplateComponent implements OnInit {
         use_profile_logo: this.formData.useProfileLogo,
         use_profile_image: this.formData.useProfileImage
       };
+      if (this.supportsTemplateChannels) {
+        templateData.channels = activeChannels;
+      }
 
       if (this.editMode && this.templateId) {
         // Update existing template
-        const { error } = await this.supabase.client
-          .from('automation_templates')
-          .update(templateData)
-          .eq('id', this.templateId);
+        const updateResult = await this.trySaveTemplate(
+          () =>
+          this.supabase.client
+            .from('automation_templates')
+            .update(templateData)
+            .eq('id', this.templateId),
+          () => {
+            delete templateData.channels;
+          }
+        );
 
-        if (error) throw error;
+        if (updateResult.error) throw updateResult.error;
 
         this.toast.show(this.lang.t('automations.templateUpdatedSuccessfully'), 'success');
+        this.saveContactChannelsToStorage(this.templateId);
       } else {
         // Create new template
-        const { error } = await this.supabase.client
-          .from('automation_templates')
-          .insert({
-            ...templateData,
-            user_id: user.id
-          });
+        const insertResult = await this.trySaveTemplate(
+          () =>
+          this.supabase.client
+            .from('automation_templates')
+            .insert({
+              ...templateData,
+              user_id: user.id
+            })
+            .select()
+            .single(),
+          () => {
+            delete templateData.channels;
+          }
+        );
 
-        if (error) throw error;
+        if (insertResult.error) throw insertResult.error;
+        const created: any = insertResult.data;
+
+        if (created?.id) {
+          this.templateId = created.id;
+          this.saveContactChannelsToStorage(created.id);
+          this.clearDraftContactChannels();
+        }
 
         this.toast.show(this.lang.t('automations.templateSavedSuccessfully'), 'success');
       }

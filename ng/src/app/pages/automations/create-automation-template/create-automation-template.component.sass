@@ -326,6 +326,61 @@
 .hover\:underline:hover
   text-decoration: underline
 
+.contact-channels-grid
+  display: grid
+  gap: 0.75rem
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr))
+
+.contact-channel-option
+  display: flex
+  align-items: center
+  gap: 0.5rem
+  padding: 0.75rem 1rem
+  background-color: rgba(255, 255, 255, 0.85)
+  border: 1px solid rgba(38, 186, 186, 0.2)
+  border-radius: 0.5rem
+  cursor: pointer
+  transition: box-shadow 0.2s ease
+
+  &:hover
+    box-shadow: 0 4px 12px rgba(38, 186, 186, 0.15)
+
+.contact-channel-option input
+  width: 1rem
+  height: 1rem
+
+.contact-channel-label
+  font-size: 0.875rem
+  font-weight: 500
+
+.contact-info-card
+  margin-top: 1rem
+  padding: 0.75rem
+  border: 1px solid #e5e7eb
+  border-radius: 0.5rem
+
+.contact-info-title
+  font-size: 0.875rem
+  font-weight: 600
+
+.contact-info-list
+  list-style: none
+  padding: 0
+  margin: 0
+  li
+    display: flex
+    align-items: center
+    gap: 0.5rem
+    font-size: 0.875rem
+    margin-bottom: 0.25rem
+
+.contact-info-link
+  color: var(--primary, #26BABA)
+  text-decoration: none
+
+  &:hover
+    text-decoration: underline
+
 // Utilities
 .cursor-pointer
   cursor: pointer
