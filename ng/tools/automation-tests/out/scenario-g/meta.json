@@ -1,0 +1,12 @@
+{
+  "channels": [
+    "whatsapp",
+    "sms"
+  ],
+  "contactBlockInjected": {
+    "emailHtml": true,
+    "emailText": true,
+    "whatsapp": true,
+    "sms": true
+  }
+}

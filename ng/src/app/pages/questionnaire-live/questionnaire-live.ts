@@ -7,7 +7,6 @@ import { ToastService } from '../../core/services/toast.service';
 import { SupabaseService } from '../../core/services/supabase.service';
 import { LanguageService } from '../../core/services/language.service';
 import { ReferralTrackingService } from '../../core/services/referral-tracking.service';
-import { AutomationService } from '../../core/services/automation.service';
 import { Questionnaire, Question, QuestionOption } from '../../core/models/questionnaire.model';
 
 @Component({
@@ -58,10 +57,6 @@ export class QuestionnaireLive implements OnInit {
   // Referral tracking
   private detectedChannel: string = 'direct';
   private distributionToken: string | null = null;
-  private activeDistribution: any = null;
-  private automationTemplate: any = null;
-  private automationFallbackChannels: string[] = [];
-  private ownerProfileContact: { email?: string; phone?: string; whatsapp?: string; company?: string } = {};
 
   constructor(
     private questionnaireService: QuestionnaireService,
@@ -70,8 +65,7 @@ export class QuestionnaireLive implements OnInit {
     public lang: LanguageService,
     private router: Router,
     private route: ActivatedRoute,
-    private referralTracking: ReferralTrackingService,
-    private automationService: AutomationService
+    private referralTracking: ReferralTrackingService
   ) {}
 
   ngOnInit() {
@@ -208,7 +202,6 @@ export class QuestionnaireLive implements OnInit {
       console.log('Loading questionnaire:', { tokenOrId, isUUID, isDistributionToken });
 
       let data;
-      let distributionRecord: any = null;
 
       if (isDistributionToken) {
         // Load distribution first to get questionnaire_id using RPC (bypasses RLS)
@@ -231,14 +224,10 @@ export class QuestionnaireLive implements OnInit {
           }
 
           console.log('Distribution found (via fallback):', distribution);
-          distributionRecord = distribution;
-          this.activeDistribution = distribution;
           data = await this.questionnaireService.fetchQuestionnaireForReview(distribution.questionnaire_id);
         } else {
           const distribution = distributions[0];
           console.log('Distribution found (via RPC):', distribution);
-          distributionRecord = distribution;
-          this.activeDistribution = distribution;
           // Load questionnaire by ID from distribution
           data = await this.questionnaireService.fetchQuestionnaireForReview(distribution.questionnaire_id);
         }
@@ -266,7 +255,6 @@ export class QuestionnaireLive implements OnInit {
 
         // Load owner's profile theme colors
         await this.loadOwnerTheme(this.questionnaire.owner_id);
-        await this.syncAutomationConfig(this.questionnaire.id, distributionRecord);
 
         // Initialize multi-choice responses
         this.questions.forEach(q => {
@@ -290,7 +278,7 @@ export class QuestionnaireLive implements OnInit {
     try {
       const { data, error } = await this.supabaseService.client
         .from('profiles')
-        .select('brand_primary, brand_secondary, background_color, logo_url, image_url, business_name, email, phone, whatsapp, company')
+        .select('brand_primary, brand_secondary, background_color, logo_url, image_url, business_name')
         .eq('id', ownerId)
         .single();
 
@@ -301,68 +289,10 @@ export class QuestionnaireLive implements OnInit {
         this.logoUrl = data.logo_url || '';
         this.imageUrl = data.image_url || '';
         this.businessName = data.business_name || '';
-        this.ownerProfileContact = {
-          email: data.email || '',
-          phone: data.phone || '',
-          whatsapp: data.whatsapp || '',
-          company: data.company || data.business_name || ''
-        };
       }
     } catch (error) {
       // Silently fail and use default colors
       console.error('Error loading owner theme:', error);
-    }
-  }
-
-  private async syncAutomationConfig(questionnaireId: string, distributionRecord?: any) {
-    try {
-      let distribution = distributionRecord ?? this.activeDistribution;
-      if (!distribution && this.distributionToken) {
-        const { data } = await this.supabaseService.client
-          .from('distributions')
-          .select('automation_template_ids, token, questionnaire_id')
-          .eq('token', this.distributionToken)
-          .eq('is_active', true)
-          .maybeSingle();
-        if (data) {
-          distribution = data;
-        }
-      }
-
-      if (!distribution) {
-        const { data } = await this.supabaseService.client
-          .from('distributions')
-          .select('automation_template_ids, token, questionnaire_id')
-          .eq('questionnaire_id', questionnaireId)
-          .eq('is_active', true)
-          .maybeSingle();
-        if (data) {
-          distribution = data;
-        }
-      }
-
-      this.activeDistribution = distribution || null;
-
-      const mapping = distribution?.automation_template_ids?.[0];
-      if (!mapping?.template_id) {
-        this.automationTemplate = null;
-        this.automationFallbackChannels = [];
-        return;
-      }
-
-      this.automationFallbackChannels = Array.isArray(mapping.channels) ? mapping.channels : [];
-
-      const { data: templateData } = await this.supabaseService.client
-        .from('automation_templates')
-        .select('*')
-        .eq('id', mapping.template_id)
-        .maybeSingle();
-
-      this.automationTemplate = templateData || null;
-    } catch (error) {
-      console.error('Error syncing automation config:', error);
-      this.automationTemplate = null;
-      this.automationFallbackChannels = [];
     }
   }
 
@@ -473,61 +403,6 @@ export class QuestionnaireLive implements OnInit {
     } catch (error) {
       console.error('Error in saveLeadData:', error);
       // Don't throw error - lead saving is optional
-    }
-  }
-
-  private async triggerAutomationResponse(responseData: Record<string, any>): Promise<void> {
-    if (!this.automationTemplate) {
-      return;
-    }
-
-    const templateChannels = Array.isArray(this.automationTemplate.contactChannels)
-      ? this.automationTemplate.contactChannels
-      : Array.isArray(this.automationTemplate.channels)
-        ? this.automationTemplate.channels
-        : [];
-
-    const contactName = this.extractField(responseData, ['name', 'full', 'שם', 'first']);
-    const contactEmail = this.extractField(responseData, ['email', 'מייל']);
-    const contactPhone = this.extractField(responseData, ['phone', 'טלפון', 'mobile']);
-
-    const contact = {
-      name: (contactName || '').trim() || 'לקוח',
-      email: (contactEmail || '').trim(),
-      phone: contactPhone ? String(contactPhone).trim() : undefined
-    };
-
-    if (!contact.email && !contact.phone) {
-      return;
-    }
-
-    const ownerProfile = {
-      email: this.ownerProfileContact.email || '',
-      phone: this.ownerProfileContact.phone || '',
-      whatsapp: this.ownerProfileContact.whatsapp || '',
-      company: this.ownerProfileContact.company || this.businessName || ''
-    };
-
-    try {
-      const final = this.automationService.buildFinalMessage(ownerProfile, this.automationTemplate, {
-        processedText: this.automationTemplate.message_body || '',
-        fallbackChannels: this.automationFallbackChannels,
-        subject: this.automationTemplate.subject || this.automationTemplate.email_subject || ''
-      });
-
-      const channelsToSend = final.templateChannels.length ? final.templateChannels : this.automationFallbackChannels;
-      if (!channelsToSend.length) {
-        return;
-      }
-
-      await this.automationService.sendPrebuiltMessage(
-        channelsToSend,
-        contact,
-        ownerProfile,
-        final
-      );
-    } catch (error) {
-      console.error('Error triggering automation response:', error);
     }
   }
 
@@ -1048,7 +923,6 @@ export class QuestionnaireLive implements OnInit {
       // Extract lead data and save to leads table
       // Automation will be triggered automatically by the database trigger when the lead is created
       await this.saveLeadData(responseData, responseInsert?.id);
-      await this.triggerAutomationResponse(responseData);
 
       // Show success message for guest view
       this.toastService.show(
