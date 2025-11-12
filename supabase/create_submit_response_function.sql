@@ -5,16 +5,12 @@
 -- First, ensure the columns exist
 ALTER TABLE public.responses ADD COLUMN IF NOT EXISTS response_data JSONB;
 ALTER TABLE public.responses ADD COLUMN IF NOT EXISTS submitted_at TIMESTAMP WITH TIME ZONE;
-ALTER TABLE public.responses ADD COLUMN IF NOT EXISTS distribution_token TEXT;
-ALTER TABLE public.responses ADD COLUMN IF NOT EXISTS channel TEXT;
 
 -- Create the function with SECURITY DEFINER to bypass RLS
 CREATE OR REPLACE FUNCTION public.submit_questionnaire_response(
   p_questionnaire_id UUID,
   p_response_data JSONB,
-  p_submitted_at TIMESTAMPTZ DEFAULT NOW(),
-  p_distribution_token TEXT DEFAULT NULL,
-  p_channel TEXT DEFAULT NULL
+  p_submitted_at TIMESTAMPTZ DEFAULT NOW()
 )
 RETURNS UUID
 LANGUAGE plpgsql
@@ -30,18 +26,14 @@ BEGIN
     response_data,
     submitted_at,
     status,
-    created_at,
-    distribution_token,
-    channel
+    created_at
   )
   VALUES (
     p_questionnaire_id,
     p_response_data,
     p_submitted_at,
     'submitted',
-    NOW(),
-    p_distribution_token,
-    p_channel
+    NOW()
   )
   RETURNING id INTO v_response_id;
 
@@ -50,8 +42,8 @@ END;
 $$;
 
 -- Grant execute permission to anonymous users
-GRANT EXECUTE ON FUNCTION public.submit_questionnaire_response(UUID, JSONB, TIMESTAMPTZ, TEXT, TEXT) TO anon;
-GRANT EXECUTE ON FUNCTION public.submit_questionnaire_response(UUID, JSONB, TIMESTAMPTZ, TEXT, TEXT) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.submit_questionnaire_response(UUID, JSONB, TIMESTAMPTZ) TO anon;
+GRANT EXECUTE ON FUNCTION public.submit_questionnaire_response(UUID, JSONB, TIMESTAMPTZ) TO authenticated;
 
 -- Also create a function for inserting leads
 CREATE OR REPLACE FUNCTION public.submit_lead(

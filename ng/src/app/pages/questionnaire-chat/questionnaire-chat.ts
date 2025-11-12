@@ -918,9 +918,7 @@ export class QuestionnaireChat implements OnInit, OnDestroy, AfterViewChecked {
         .insert({
           questionnaire_id: this.questionnaire.id,
           response_data: responseData,
-          submitted_at: new Date().toISOString(),
-          distribution_token: this.distributionToken,
-          channel: this.detectedChannel ? this.detectedChannel.toLowerCase() : null
+          submitted_at: new Date().toISOString()
         })
         .select()
         .single();
