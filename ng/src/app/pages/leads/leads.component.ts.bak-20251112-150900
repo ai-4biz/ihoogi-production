@@ -260,16 +260,10 @@ export class LeadsComponent implements OnInit {
           }
         }
 
-        // Normalize channel to business-friendly buckets
-        const rawChannel = typeof lead.channel === 'string' ? lead.channel.trim().toLowerCase() : '';
-        let normalizedChannel: string;
-        if (!rawChannel || rawChannel === 'direct' || rawChannel === 'website' || rawChannel === 'form' || rawChannel === 'chat' || rawChannel === 'qr') {
-          normalizedChannel = 'website';
-        } else if (rawChannel.startsWith('referral-')) {
-          normalizedChannel = 'website';
-        } else if (['facebook', 'instagram', 'whatsapp', 'email', 'sms'].includes(rawChannel)) {
-          normalizedChannel = rawChannel;
-        } else {
+        // Normalize channel - only allow known channels, otherwise fallback to 'other'
+        const validChannels = ['email', 'whatsapp', 'sms', 'website', 'facebook', 'instagram', 'direct', 'other'];
+        let normalizedChannel = typeof lead.channel === 'string' ? lead.channel.trim().toLowerCase() : 'other';
+        if (!validChannels.includes(normalizedChannel)) {
           normalizedChannel = 'other';
         }
 
@@ -431,6 +425,10 @@ export class LeadsComponent implements OnInit {
       'other': this.lang.t('leads.channel_other')
     };
     const normalizedChannel = channel.toLowerCase();
+    if (normalizedChannel.startsWith('referral-')) {
+      const domain = channel.substring('referral-'.length);
+      return domain || this.lang.t('leads.channel_other');
+    }
     return channelLabels[normalizedChannel] || this.lang.t('leads.channel_other');
   }
 
