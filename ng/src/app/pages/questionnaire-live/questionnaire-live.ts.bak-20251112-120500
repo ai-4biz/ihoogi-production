@@ -912,9 +912,7 @@ export class QuestionnaireLive implements OnInit {
         .rpc('submit_questionnaire_response', {
           p_questionnaire_id: this.questionnaire.id,
           p_response_data: responseData,
-          p_submitted_at: new Date().toISOString(),
-          p_distribution_token: this.distributionToken,
-          p_channel: this.detectedChannel ? this.detectedChannel.toLowerCase() : null
+          p_submitted_at: new Date().toISOString()
         });
 
       if (responseError) throw responseError;
