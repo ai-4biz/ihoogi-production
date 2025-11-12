@@ -2,6 +2,17 @@
 -- This is a GUARANTEED fix for the mobile RLS issue
 -- Run this in the Supabase SQL Editor
 
+-- Clean up any previous function overloads that include UTM parameters
+DROP FUNCTION IF EXISTS public.submit_questionnaire_response(
+  UUID, JSONB, TIMESTAMPTZ, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT
+);
+DROP FUNCTION IF EXISTS public.submit_questionnaire_response(
+  UUID, JSONB, TIMESTAMPTZ, TEXT, TEXT
+);
+DROP FUNCTION IF EXISTS public.submit_lead(
+  UUID, TEXT, JSONB, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT
+);
+
 -- First, ensure the columns exist
 ALTER TABLE public.responses ADD COLUMN IF NOT EXISTS response_data JSONB;
 ALTER TABLE public.responses ADD COLUMN IF NOT EXISTS submitted_at TIMESTAMP WITH TIME ZONE;
