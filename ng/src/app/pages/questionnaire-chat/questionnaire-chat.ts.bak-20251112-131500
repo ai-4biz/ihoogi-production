@@ -70,13 +70,6 @@ export class QuestionnaireChat implements OnInit, OnDestroy, AfterViewChecked {
   // Referral tracking
   private detectedChannel: string = 'direct';
   private distributionToken: string | null = null;
-  private trackingParams: {
-    utm_source?: string;
-    utm_medium?: string;
-    utm_campaign?: string;
-    utm_content?: string;
-    utm_term?: string;
-  } = {};
 
   constructor(
     private questionnaireService: QuestionnaireService,
@@ -94,8 +87,6 @@ export class QuestionnaireChat implements OnInit, OnDestroy, AfterViewChecked {
     // Detect referral source/channel
     this.detectedChannel = this.referralTracking.detectChannel();
     console.log('Detected channel:', this.detectedChannel);
-    this.trackingParams = this.referralTracking.getTrackingParams();
-    console.log('Tracking params:', this.trackingParams);
 
     // Prevent body scroll
     document.body.style.overflow = 'hidden';
@@ -927,14 +918,7 @@ export class QuestionnaireChat implements OnInit, OnDestroy, AfterViewChecked {
         .insert({
           questionnaire_id: this.questionnaire.id,
           response_data: responseData,
-          submitted_at: new Date().toISOString(),
-          distribution_token: this.distributionToken,
-          channel: this.detectedChannel ? this.detectedChannel.toLowerCase() : null,
-          utm_source: this.trackingParams.utm_source || null,
-          utm_medium: this.trackingParams.utm_medium || null,
-          utm_campaign: this.trackingParams.utm_campaign || null,
-          utm_content: this.trackingParams.utm_content || null,
-          utm_term: this.trackingParams.utm_term || null
+          submitted_at: new Date().toISOString()
         })
         .select()
         .single();
@@ -1052,12 +1036,7 @@ export class QuestionnaireChat implements OnInit, OnDestroy, AfterViewChecked {
           p_phone: phone,
           p_name: name,
           p_distribution_token: this.distributionToken,
-          p_channel: this.detectedChannel ? this.detectedChannel.toLowerCase() : null,
-          p_utm_source: this.trackingParams.utm_source || null,
-          p_utm_medium: this.trackingParams.utm_medium || null,
-          p_utm_campaign: this.trackingParams.utm_campaign || null,
-          p_utm_content: this.trackingParams.utm_content || null,
-          p_utm_term: this.trackingParams.utm_term || null
+          p_channel: this.detectedChannel
         });
 
       if (leadError) {
@@ -1076,12 +1055,7 @@ export class QuestionnaireChat implements OnInit, OnDestroy, AfterViewChecked {
         phone,
         name,
         distribution_token: this.distributionToken,
-        channel: this.detectedChannel ? this.detectedChannel.toLowerCase() : null,
-        utm_source: this.trackingParams.utm_source || null,
-        utm_medium: this.trackingParams.utm_medium || null,
-        utm_campaign: this.trackingParams.utm_campaign || null,
-        utm_content: this.trackingParams.utm_content || null,
-        utm_term: this.trackingParams.utm_term || null
+        channel: this.detectedChannel
       };
 
       // Automation will be triggered automatically by the database trigger when the lead is created
