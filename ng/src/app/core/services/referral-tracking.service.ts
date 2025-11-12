@@ -134,7 +134,6 @@ export class ReferralTrackingService {
    * Returns an object with utm_medium, utm_campaign, etc.
    */
   getTrackingParams(): {
-    utm_source?: string;
     utm_medium?: string;
     utm_campaign?: string;
     utm_content?: string;
@@ -143,7 +142,6 @@ export class ReferralTrackingService {
     const urlParams = new URLSearchParams(window.location.search);
 
     return {
-      utm_source: urlParams.get('utm_source') || undefined,
       utm_medium: urlParams.get('utm_medium') || undefined,
       utm_campaign: urlParams.get('utm_campaign') || undefined,
       utm_content: urlParams.get('utm_content') || undefined,

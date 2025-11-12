@@ -13,8 +13,7 @@ interface Lead {
   questionnaire_title?: string; // Questionnaire name
   client_name: string;
   partner_id?: string;
-  channel?: string; // Raw channel source as stored in DB (e.g., facebook, youtube, form)
-  channel_category?: string; // Normalized category used for filtering (email/whatsapp/sms/website/facebook/instagram/other)
+  channel?: string; // Channel source: email, whatsapp, sms, website, etc.
   status: string;
   sub_status?: string;
   automations: string[]; // Array of automation types
@@ -134,7 +133,7 @@ export class LeadsComponent implements OnInit {
       const matchesDateTo = !this.filterDateTo || leadDate <= new Date(this.filterDateTo);
 
       // Channel filtering
-      const matchesChannel = !this.filterChannel || (lead.channel_category || 'other') === this.filterChannel;
+      const matchesChannel = !this.filterChannel || lead.channel === this.filterChannel;
 
       // Status filtering - handle comma-separated values (e.g., "new,in-progress")
       const matchesStatus = !this.filterStatus ||
@@ -212,19 +211,6 @@ export class LeadsComponent implements OnInit {
     return Array.from(new Set(partners));
   }
 
-  private normalizeChannelCategory(channel: string): string {
-    if (!channel || channel === 'direct' || channel === 'website' || channel === 'form' || channel === 'chat' || channel === 'qr') {
-      return 'website';
-    }
-    if (channel.startsWith('referral-')) {
-      return 'website';
-    }
-    if (['facebook', 'instagram', 'whatsapp', 'email', 'sms'].includes(channel)) {
-      return channel;
-    }
-    return 'other';
-  }
-
   async loadLeads() {
     this.loading = true;
     try {
@@ -274,8 +260,12 @@ export class LeadsComponent implements OnInit {
           }
         }
 
-        const rawChannel = typeof lead.channel === 'string' ? lead.channel.trim().toLowerCase() : '';
-        const channelCategory = this.normalizeChannelCategory(rawChannel);
+        // Normalize channel - only allow valid channels, otherwise set to 'other'
+        const validChannels = ['email', 'whatsapp', 'sms', 'website', 'facebook', 'instagram'];
+        let normalizedChannel = lead.channel || 'other';
+        if (!validChannels.includes(normalizedChannel.toLowerCase())) {
+          normalizedChannel = 'other';
+        }
 
         return {
           id: lead.id,
@@ -283,8 +273,7 @@ export class LeadsComponent implements OnInit {
           questionnaire_title: lead.questionnaires?.title || 'Untitled',
           client_name: lead.client_name || 'Unknown',
           partner_id: lead.partner_id,
-          channel: rawChannel,
-          channel_category: channelCategory,
+          channel: normalizedChannel,
           status: lead.status || 'new',
           sub_status: lead.sub_status || '',
           automations: Array.isArray(lead.automations) ? lead.automations : [],
@@ -424,55 +413,20 @@ export class LeadsComponent implements OnInit {
 
 
   getChannelLabel(channel: string): string {
-    const normalizedChannel = (channel || '').trim().toLowerCase();
-    if (!normalizedChannel || normalizedChannel === 'direct' || normalizedChannel === 'form' || normalizedChannel === 'chat' || normalizedChannel === 'qr' || normalizedChannel === 'website') {
-      return this.lang.t('leads.channelWebsite');
-    }
-
-    if (normalizedChannel.startsWith('referral-')) {
-      const domain = normalizedChannel.substring('referral-'.length);
-      return domain || this.lang.t('leads.channelWebsite');
-    }
-
-    const channelLabels: Record<string, string> = {
-      email: this.lang.t('leads.channelEmail'),
-      whatsapp: this.lang.t('leads.channelWhatsApp'),
-      sms: this.lang.t('leads.channelSMS'),
-      website: this.lang.t('leads.channelWebsite'),
-      facebook: this.lang.t('leads.channelFacebook'),
-      instagram: this.lang.t('leads.channelInstagram'),
-      google: 'Google',
-      youtube: 'YouTube',
-      linkedin: 'LinkedIn',
-      tiktok: 'TikTok',
-      twitter: 'Twitter',
-      x: 'X',
-      telegram: 'Telegram',
-      pinterest: 'Pinterest',
-      reddit: 'Reddit',
-      yahoo: 'Yahoo',
-      bing: 'Bing',
-      other: this.lang.t('leads.channel_other')
+    if (!channel) return this.lang.t('leads.channelWebsite');
+    const channelLabels: { [key: string]: string } = {
+      'email': this.lang.t('leads.channelEmail'),
+      'whatsapp': this.lang.t('leads.channelWhatsApp'),
+      'sms': this.lang.t('leads.channelSMS'),
+      'website': this.lang.t('leads.channelWebsite'),
+      'facebook': this.lang.t('leads.channelFacebook'),
+      'instagram': this.lang.t('leads.channelInstagram'),
+      'other': this.lang.t('leads.channel_other')
     };
-
-    if (channelLabels[normalizedChannel]) {
-      return channelLabels[normalizedChannel];
-    }
-
-    return this.formatChannelName(channel);
-  }
-
-  private formatChannelName(channel: string): string {
-    if (!channel) {
-      return this.lang.t('leads.channel_other');
-    }
-    return channel
-      .trim()
-      .replace(/[_-]+/g, ' ')
-      .split(' ')
-      .filter(Boolean)
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
+    // If channel is not in the valid list, return 'other'
+    const validChannels = ['email', 'whatsapp', 'sms', 'website', 'facebook', 'instagram', 'other'];
+    const normalizedChannel = channel.toLowerCase();
+    return channelLabels[normalizedChannel] || this.lang.t('leads.channel_other');
   }
 
   toggleCommentPopup(event: Event, leadId: string, currentComment?: string) {

@@ -57,13 +57,6 @@ export class QuestionnaireLive implements OnInit {
   // Referral tracking
   private detectedChannel: string = 'direct';
   private distributionToken: string | null = null;
-  private trackingParams: {
-    utm_source?: string;
-    utm_medium?: string;
-    utm_campaign?: string;
-    utm_content?: string;
-    utm_term?: string;
-  } = {};
 
   constructor(
     private questionnaireService: QuestionnaireService,
@@ -82,8 +75,6 @@ export class QuestionnaireLive implements OnInit {
     // Detect referral source/channel
     this.detectedChannel = this.referralTracking.detectChannel();
     console.log('Detected channel:', this.detectedChannel);
-    this.trackingParams = this.referralTracking.getTrackingParams();
-    console.log('Tracking params:', this.trackingParams);
 
     const token = this.route.snapshot.paramMap.get('token');
     const id = this.route.snapshot.paramMap.get('id');
@@ -385,12 +376,7 @@ export class QuestionnaireLive implements OnInit {
           p_phone: phone,
           p_name: name,
           p_distribution_token: this.distributionToken,
-          p_channel: this.detectedChannel ? this.detectedChannel.toLowerCase() : null,
-          p_utm_source: this.trackingParams.utm_source || null,
-          p_utm_medium: this.trackingParams.utm_medium || null,
-          p_utm_campaign: this.trackingParams.utm_campaign || null,
-          p_utm_content: this.trackingParams.utm_content || null,
-          p_utm_term: this.trackingParams.utm_term || null
+          p_channel: this.detectedChannel
         });
 
       if (leadError) {
@@ -409,12 +395,7 @@ export class QuestionnaireLive implements OnInit {
         phone,
         name,
         distribution_token: this.distributionToken,
-        channel: this.detectedChannel ? this.detectedChannel.toLowerCase() : null,
-        utm_source: this.trackingParams.utm_source || null,
-        utm_medium: this.trackingParams.utm_medium || null,
-        utm_campaign: this.trackingParams.utm_campaign || null,
-        utm_content: this.trackingParams.utm_content || null,
-        utm_term: this.trackingParams.utm_term || null
+        channel: this.detectedChannel
       };
 
       // Automation will be triggered automatically by the database trigger when the lead is created
@@ -931,14 +912,7 @@ export class QuestionnaireLive implements OnInit {
         .rpc('submit_questionnaire_response', {
           p_questionnaire_id: this.questionnaire.id,
           p_response_data: responseData,
-          p_submitted_at: new Date().toISOString(),
-          p_distribution_token: this.distributionToken,
-          p_channel: this.detectedChannel ? this.detectedChannel.toLowerCase() : null,
-          p_utm_source: this.trackingParams.utm_source || null,
-          p_utm_medium: this.trackingParams.utm_medium || null,
-          p_utm_campaign: this.trackingParams.utm_campaign || null,
-          p_utm_content: this.trackingParams.utm_content || null,
-          p_utm_term: this.trackingParams.utm_term || null
+          p_submitted_at: new Date().toISOString()
         });
 
       if (responseError) throw responseError;
