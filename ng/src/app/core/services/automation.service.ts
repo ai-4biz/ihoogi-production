@@ -34,10 +34,6 @@ interface LeadContact {
   providedIn: 'root'
 })
 export class AutomationService {
-  private contactInfoTextCache: string | null = null;
-  private contactInfoHtmlCache: string | null = null;
-  private readonly contactClosingRegex = /\n\n(?:בברכה|תודה(?: רבה)?|להתראות|Thanks|Thank you|Best regards|Regards|Sincerely)[^\n]*/i;
-
   constructor(
     private supabaseService: SupabaseService,
     private lang: LanguageService
@@ -84,7 +80,7 @@ export class AutomationService {
     try {
       const { data, error } = await this.supabaseService.client
         .from('profiles')
-        .select('company, email, phone, whatsapp, website, image_url, logo_url')
+        .select('company, email, phone, website, image_url, logo_url')
         .eq('id', ownerId)
         .single();
 
@@ -146,16 +142,14 @@ export class AutomationService {
   private async generateStandardMessage(
     contact: LeadContact,
     ownerProfile: any,
-    questionnaire: QuestionnaireData,
-    channels?: string[] | null
+    questionnaire: QuestionnaireData
   ): Promise<string> {
     const businessName = ownerProfile.company || ownerProfile.email?.split('@')[0] || 'Our Team';
     const firstName = contact.name.split(' ')[0] || contact.name;
 
-    const message = this.lang.currentLanguage === 'he'
+    return this.lang.currentLanguage === 'he'
       ? `שלום ${firstName},\n\nתודה שמילאת את השאלון שלנו. פנייתך התקבלה ואנו נחזור אליך בהקדם.\n\nבברכה,\n${businessName}`
       : `Hello ${firstName},\n\nThank you for completing our questionnaire. Your submission has been received and we will get back to you soon.\n\nBest regards,\n${businessName}`;
-    return this.appendContactInfo(message, ownerProfile, channels);
   }
 
   /**
@@ -167,8 +161,7 @@ export class AutomationService {
     ownerProfile: any
   ): string {
     const messageBody = template.message_body || 'Thank you for your response!';
-    const message = this.replaceVariables(messageBody, contact, ownerProfile);
-    return this.appendContactInfo(message, ownerProfile, template.channels);
+    return this.replaceVariables(messageBody, contact, ownerProfile);
   }
 
   /**
@@ -201,10 +194,9 @@ export class AutomationService {
     // In production, this would call an AI API with the custom_ai_message as instructions
     const aiInstructions = template.custom_ai_message || 'Generate a personalized response';
 
-    const message = this.lang.currentLanguage === 'he'
+    return this.lang.currentLanguage === 'he'
       ? `שלום ${firstName},\n\nתודה על מילוי השאלון. בהתבסס על תשובותיך, אנו ממליצים...\n\n[הודעה מותאמת אישית על פי ${aiInstructions}]\n\nנשמח לעמוד לשירותך,\n${businessName}`
       : `Hello ${firstName},\n\nThank you for completing the questionnaire. Based on your responses, we recommend...\n\n[Personalized message based on ${aiInstructions}]\n\nBest regards,\n${businessName}`;
-    return this.appendContactInfo(message, ownerProfile, template.channels);
   }
 
   /**
@@ -226,20 +218,7 @@ export class AutomationService {
 
     // Combine based on AI position (if configured)
     // For now, AI first, then personal
-    const combined = `${aiPart}\n\n---\n\n${personalPart}`;
-    return this.appendContactInfo(combined, ownerProfile, template.channels);
-  }
-
-  private appendContactInfo(message: string, ownerProfile: any, channels?: string[] | null): string {
-    const block = this.buildContactInfoBlock(ownerProfile, channels);
-    if (!block) {
-      this.clearContactInfoCache();
-      return message;
-    }
-    const messageWithBlock = this.insertContactBlock(message, block.text);
-    this.contactInfoTextCache = block.text;
-    this.contactInfoHtmlCache = block.html;
-    return messageWithBlock;
+    return `${aiPart}\n\n---\n\n${personalPart}`;
   }
 
   /**
@@ -275,7 +254,6 @@ export class AutomationService {
     }
 
     await Promise.allSettled(sendPromises);
-    this.clearContactInfoCache();
   }
 
   /**
@@ -293,17 +271,8 @@ export class AutomationService {
       console.log('  Subject:', subject);
       console.log('  ReplyTo:', ownerProfile.email);
 
-      let htmlBody = body.replace(/\n/g, '<br>');
-      if (this.contactInfoTextCache && this.contactInfoHtmlCache) {
-        const textAsHtml = this.convertTextBlockToSimpleHtml(this.contactInfoTextCache);
-        if (htmlBody.includes(textAsHtml)) {
-          htmlBody = htmlBody.replace(textAsHtml, this.contactInfoHtmlCache);
-        } else {
-          htmlBody += this.contactInfoHtmlCache;
-        }
-      } else if (this.contactInfoTextCache) {
-        htmlBody += `<br><br>${this.convertTextBlockToSimpleHtml(this.contactInfoTextCache)}`;
-      }
+      // Convert plain text to HTML
+      const htmlBody = body.replace(/\n/g, '<br>');
 
       // Call Supabase Edge Function
       console.log('🔧 [EMAIL] Calling Edge Function: send-automation-email');
@@ -339,8 +308,6 @@ export class AutomationService {
       console.log(body);
       console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
       // Don't throw - let automation continue even if email fails
-    } finally {
-      this.clearContactInfoCache();
     }
   }
 
@@ -355,129 +322,5 @@ export class AutomationService {
     } catch (error) {
       console.error('Error sending WhatsApp:', error);
     }
-  }
-
-  private buildContactInfoBlock(ownerProfile: any, channels?: string[] | null): { text: string; html: string } | null {
-    const channelList = Array.isArray(channels) ? channels : ['email', 'whatsapp', 'sms'];
-    const activeChannels = new Set(
-      channelList.map(ch => ch as 'email' | 'whatsapp' | 'sms')
-    );
-
-    const items: Array<{ icon: string; label: string; href?: string; display: string }> = [];
-    const header = this.lang.t('automations.contactBlockTitle') || 'Contact the Business Owner';
-    const emailValue = typeof ownerProfile?.email === 'string' ? ownerProfile.email.trim() : '';
-    const phoneValue = typeof ownerProfile?.phone === 'string' ? ownerProfile.phone.trim() : '';
-    const whatsappRaw = typeof ownerProfile?.whatsapp === 'string' ? ownerProfile.whatsapp.trim() : '';
-
-    if (activeChannels.has('email') && emailValue) {
-      const label = this.lang.t('automations.contactEmailLabel') || 'Email';
-      items.push({
-        icon: '📧',
-        label,
-        href: `mailto:${emailValue}`,
-        display: emailValue
-      });
-    }
-
-    if (activeChannels.has('sms') && phoneValue) {
-      const label = this.lang.t('automations.contactPhoneLabel') || 'Phone';
-      const sanitizedPhone = this.sanitizePhoneNumber(phoneValue);
-      if (sanitizedPhone) {
-        items.push({
-          icon: '📞',
-          label,
-          href: `tel:${sanitizedPhone}`,
-          display: sanitizedPhone
-        });
-      }
-    }
-
-    const whatsappDigits = this.sanitizePhoneNumber(whatsappRaw || phoneValue);
-    if (activeChannels.has('whatsapp') && whatsappDigits) {
-      const label = this.lang.t('automations.contactWhatsappLabel') || 'WhatsApp';
-      items.push({
-        icon: '💬',
-        label,
-        href: `https://wa.me/${whatsappDigits}`,
-        display: whatsappDigits
-      });
-    }
-
-    if (!items.length) {
-      return null;
-    }
-
-    const textLines = items.map(item => `${item.icon} ${item.label}: ${item.display}`);
-    const textBlock = `${header}\n${textLines.join('\n')}`;
-
-    const isRTL = this.lang.currentLanguage === 'he';
-    const align = isRTL ? 'right' : 'left';
-    const direction = isRTL ? 'rtl' : 'ltr';
-    const justifyContent = isRTL ? 'flex-end' : 'flex-start';
-
-    const itemsHtml = items.map(item => {
-      const content = item.href
-        ? `<a href="${item.href}" style="color:#047857;text-decoration:none;font-weight:500;">${this.escapeHtml(item.display)}</a>`
-        : `<span style="color:#047857;font-weight:500;">${this.escapeHtml(item.display)}</span>`;
-      return `
-        <div style="display:flex;align-items:center;gap:8px;justify-content:${justifyContent};font-size:14px;margin-bottom:8px;">
-          <span style="font-size:16px;">${item.icon}</span>
-          <span style="color:#047857;">${this.escapeHtml(item.label)}:&nbsp;${content}</span>
-        </div>`;
-    }).join('');
-
-    const htmlBlock = `
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:16px;">
-        <tr>
-          <td style="background:linear-gradient(135deg,#ECFDF5,#D1FAE5);border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:20px;">
-            <div style="font-family:'Segoe UI',Arial,sans-serif;direction:${direction};text-align:${align};">
-              <div style="font-size:16px;font-weight:600;color:#047857;margin-bottom:12px;">${this.escapeHtml(header)}</div>
-              ${itemsHtml}
-            </div>
-          </td>
-        </tr>
-      </table>`;
-
-    return {
-      text: textBlock,
-      html: htmlBlock
-    };
-  }
-
-  private insertContactBlock(message: string, blockText: string): string {
-    const trimmedMessage = message.trimEnd();
-    const match = this.contactClosingRegex.exec(trimmedMessage);
-
-    if (match && match.index !== undefined) {
-      const insertionIndex = match.index;
-      const before = trimmedMessage.slice(0, insertionIndex).trimEnd();
-      const closing = trimmedMessage.slice(insertionIndex).replace(/^\s+/, '\n\n');
-      const separator = closing.startsWith('\n\n') ? '' : '\n\n';
-      return `${before}\n\n${blockText}${separator}${closing}`;
-    }
-
-    return `${trimmedMessage}\n\n${blockText}`;
-  }
-
-  private convertTextBlockToSimpleHtml(text: string): string {
-    return text.replace(/\n/g, '<br>');
-  }
-
-  private sanitizePhoneNumber(value: string): string {
-    return value.replace(/\D/g, '');
-  }
-
-  private escapeHtml(value: string): string {
-    return value
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
-  }
-
-  private clearContactInfoCache() {
-    this.contactInfoTextCache = null;
-    this.contactInfoHtmlCache = null;
   }
 }

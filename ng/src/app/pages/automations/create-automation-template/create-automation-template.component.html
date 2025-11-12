@@ -272,39 +272,6 @@
       </div>
     </div>
 
-  <!-- Contact Channels Section -->
-  <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl p-4 md:p-6 shadow-sm border border-emerald-200/50 hover:shadow-md transition-shadow mt-6">
-    <h3 class="text-base md:text-lg font-semibold text-foreground mb-3 md:mb-4 text-right">
-      {{ lang.t('automations.contactBlockTitle') }}
-    </h3>
-    <p class="text-sm text-muted-foreground text-right mb-4">
-      {{ lang.t('automations.contactChannelsDescription') }}
-    </p>
-    <div class="contact-channels-grid" dir="rtl">
-      <label class="contact-channel-option">
-        <input
-          type="checkbox"
-          [checked]="isContactChannelActive('email')"
-          (change)="toggleContactChannel('email')">
-        <span class="contact-channel-label">📧 {{ lang.t('automations.contactEmailLabel') }}</span>
-      </label>
-      <label class="contact-channel-option">
-        <input
-          type="checkbox"
-          [checked]="isContactChannelActive('whatsapp')"
-          (change)="toggleContactChannel('whatsapp')">
-        <span class="contact-channel-label">💬 {{ lang.t('automations.contactWhatsappLabel') }}</span>
-      </label>
-      <label class="contact-channel-option">
-        <input
-          type="checkbox"
-          [checked]="isContactChannelActive('sms')"
-          (change)="toggleContactChannel('sms')">
-        <span class="contact-channel-label">📞 {{ lang.t('automations.contactPhoneLabel') }}</span>
-      </label>
-    </div>
-  </div>
-
     <!-- Preview Section -->
     <div class="mt-6">
       <h3 class="text-lg font-semibold text-right mb-4">תצוגה מקדימה</h3>
@@ -428,9 +395,6 @@
                   </a>
                 </div>
               }
-              @if (hasContactInfo) {
-                <ng-container [ngTemplateOutlet]="contactInfo"></ng-container>
-              }
             </div>
           </div>
         }
@@ -491,9 +455,6 @@
                       </a>
                     </div>
                   }
-                  @if (hasContactInfo) {
-                    <ng-container [ngTemplateOutlet]="contactInfo"></ng-container>
-                  }
                 </div>
               </div>
             </div>
@@ -516,32 +477,4 @@
       </button>
     </div>
   </div>
-
-  <ng-template #contactInfo>
-    <div class="contact-info-card" [dir]="lang.currentLanguage === 'he' ? 'rtl' : 'ltr'">
-      <p class="contact-info-title">{{ lang.t('automations.contactBlockTitle') }}</p>
-      <ul class="contact-info-list">
-        @if (isContactChannelActive('email') && contactEmail) {
-          <li>
-            <span>📧</span>
-            <a class="contact-info-link" [href]="'mailto:' + contactEmail">{{ contactEmail }}</a>
-          </li>
-        }
-        @if (isContactChannelActive('sms') && sanitizedContactPhone) {
-          <li>
-            <span>📞</span>
-            <a class="contact-info-link" [href]="'tel:' + sanitizedContactPhone">{{ sanitizedContactPhone }}</a>
-          </li>
-        }
-        @if (isContactChannelActive('whatsapp') && sanitizedContactWhatsapp) {
-          <li>
-            <span>💬</span>
-            <a class="contact-info-link" [href]="whatsappShareLink || '#'" target="_blank" rel="noopener">
-              {{ sanitizedContactWhatsapp }}
-            </a>
-          </li>
-        }
-      </ul>
-    </div>
-  </ng-template>
 </div>
