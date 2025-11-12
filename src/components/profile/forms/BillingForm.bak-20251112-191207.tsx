@@ -5,24 +5,26 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import HoogiTip from "@/components/HoogiTip";
-import {
-  CheckIcon,
-  CreditCard,
-  Download,
-  AlertCircle,
-  Mail,
-  MessageSquare,
-  Clock,
-  Users,
+import { 
+  CheckIcon, 
+  Calendar, 
+  CreditCard, 
+  Download, 
+  AlertCircle, 
+  Zap, 
+  Mail, 
+  MessageSquare, 
+  Clock, 
+  Users, 
   Star,
   Handshake,
   Settings,
   Eye,
   EyeOff
 } from "lucide-react";
-import { renderSubscriptionStatsSection, subscriptionStats } from "@/pages/Subscriptions";
 
 const BillingForm = () => {
   const [billingInfo, setBillingInfo] = useState({
@@ -40,90 +42,12 @@ const BillingForm = () => {
     nextBilling: "15 ביוני 2025",
     leadsUsed: 87,
     leadsTotal: 300,
-    whatsappRemaining: 265,
+    whatsappRemaining: 245,
     emailRemaining: 198,
     remindersSent: 12,
     aiResponseType: "מענה אישי מעוצב + AI",
-    questionnaires: 3,
-    questionnairesAllowed: 3,
-    questionnairesActive: 3
+    questionnaires: 3
   };
-
-  const emailTotal = 900;
-  const emailUsed = emailTotal - currentPlan.emailRemaining;
-  const totalMessagesLimit = 600;
-  const whatsappMessagesUsed = 35;
-  const smsMessagesUsed = 250;
-  const totalMessagesUsed = whatsappMessagesUsed + smsMessagesUsed;
-  const leadsRemaining = Math.max(currentPlan.leadsTotal - currentPlan.leadsUsed, 0);
-  const questionnairesRemaining = Math.max(
-    (currentPlan.questionnairesAllowed ?? currentPlan.questionnaires) -
-      (currentPlan.questionnairesActive ?? currentPlan.questionnaires),
-    0
-  );
-  const responsesBreakdown = { email: 420, whatsapp: 20, sms: 180 };
-  const remindersBreakdown = { email: 282, whatsapp: 15, sms: 70 };
-
-  const summaryCards = [
-    {
-      id: "leads",
-      label: "לידים",
-      icon: "🧲",
-      used: currentPlan.leadsUsed,
-      total: currentPlan.leadsTotal,
-      remaining: leadsRemaining,
-      detail:
-        leadsRemaining > 0
-          ? `נשארו ${leadsRemaining} לידים זמינים`
-          : "ניצלת את כל מכסת הלידים",
-      bgClass: "bg-gradient-to-br from-orange-50 via-orange-100 to-white border border-orange-100 shadow-lg",
-      iconClass: "bg-orange-500/20 text-orange-600",
-      progressClass: "bg-orange-500"
-    },
-    {
-      id: "emails",
-      label: "מיילים",
-      icon: "📧",
-      used: emailUsed,
-      total: emailTotal,
-      remaining: Math.max(emailTotal - emailUsed, 0),
-      detail: `מענה: ${responsesBreakdown.email} · תזכורות: ${remindersBreakdown.email}`,
-      bgClass: "bg-gradient-to-br from-blue-50 via-blue-100 to-white border border-blue-100 shadow-lg",
-      iconClass: "bg-blue-500/20 text-blue-600",
-      progressClass: "bg-blue-500"
-    },
-    {
-      id: "messages",
-      label: "הודעות",
-      icon: "💬",
-      used: totalMessagesUsed,
-      total: totalMessagesLimit,
-      remaining: Math.max(totalMessagesLimit - totalMessagesUsed, 0),
-      detail: [
-        `סה"כ: WhatsApp ${whatsappMessagesUsed} · SMS ${smsMessagesUsed}`,
-        `מענה ללקוח: WhatsApp ${responsesBreakdown.whatsapp} · SMS ${responsesBreakdown.sms}`,
-        `תזכורות: WhatsApp ${remindersBreakdown.whatsapp} · SMS ${remindersBreakdown.sms}`
-      ].join("\n"),
-      bgClass: "bg-gradient-to-br from-emerald-50 via-emerald-100 to-white border border-emerald-100 shadow-lg",
-      iconClass: "bg-emerald-500/20 text-emerald-600",
-      progressClass: "bg-emerald-500"
-    },
-    {
-      id: "questionnaires",
-      label: "שאלונים פעילים",
-      icon: "📝",
-      used: currentPlan.questionnairesActive ?? currentPlan.questionnaires,
-      total: currentPlan.questionnairesAllowed ?? currentPlan.questionnaires,
-      remaining: questionnairesRemaining,
-      detail:
-        questionnairesRemaining > 0
-          ? `נותרו ${questionnairesRemaining} מקומות לשאלונים פעילים`
-          : "כל המקומות לשאלונים בשימוש",
-      bgClass: "bg-gradient-to-br from-purple-50 via-purple-100 to-white border border-purple-100 shadow-lg",
-      iconClass: "bg-purple-500/20 text-purple-600",
-      progressClass: "bg-purple-500"
-    }
-  ] as const;
 
   // Mock data - תשלומים אחרונים
   const recentPayments = [
@@ -342,6 +266,26 @@ const BillingForm = () => {
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto" dir="rtl">
+      {/* כותרת עליונה */}
+      <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl p-6 border border-primary/20">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h1 className="text-2xl font-bold text-right">ניהול המנוי שלך</h1>
+            <p className="text-muted-foreground text-right mt-2">
+              כאן תוכל לראות את מצב המנוי שלך, לשדרג חבילה, לרכוש לידים או תוספות ולנהל תשלומים.
+            </p>
+          </div>
+          <Button 
+            variant="outline" 
+            className="flex items-center gap-2"
+            onClick={() => toast.success("הצטרפות לתוכנית שותפים!")}
+          >
+            <Handshake className="h-4 w-4" />
+            הצטרפות לתוכנית שותפים
+          </Button>
+        </div>
+      </div>
+
       {/* פרטי המנוי הנוכחי */}
       <Card className="border-2 border-primary/30 bg-gradient-to-r from-primary/5 to-transparent">
         <CardHeader>
@@ -363,113 +307,98 @@ const BillingForm = () => {
           </div>
         </CardHeader>
         <CardContent>
-          {/* סיכום שימוש מהיר */}
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* תאריכים */}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm font-medium">תאריך התחלה</span>
+              </div>
+              <p className="text-sm text-muted-foreground">{currentPlan.startDate}</p>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <AlertCircle className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm font-medium">חידוש הבא</span>
+              </div>
+              <p className="text-sm text-muted-foreground">{currentPlan.nextBilling}</p>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Zap className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm font-medium">סוג המענה</span>
+              </div>
+              <p className="text-sm text-muted-foreground">{currentPlan.aiResponseType}</p>
+            </div>
+          </div>
+
+          {/* סטטיסטיקות שימוש */}
+          <div className="mt-6 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {summaryCards.map((card) => {
-                const usagePercent = card.total ? Math.min((card.used / card.total) * 100, 100) : 0;
-                return (
-                  <div
-                    key={card.id}
-                    className={`rounded-2xl p-5 transition-all hover:shadow-xl ${card.bgClass}`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="text-right">
-                        <div className="text-sm font-semibold text-black/70">{card.label}</div>
-                        <div className="text-3xl font-bold text-black/80 mt-1">
-                          {card.used}/{card.total}
-                        </div>
-                      </div>
-                      <span className={`flex h-10 w-10 items-center justify-center rounded-xl text-xl ${card.iconClass}`}>
-                        {card.icon}
-                      </span>
-                    </div>
-                    <div className="mt-4 h-2 w-full rounded-full bg-white/50">
-                      <div
-                        className={`h-full rounded-full ${card.progressClass}`}
-                        style={{ width: `${usagePercent}%` }}
-                      />
-                    </div>
-                    <div className="mt-3 flex items-center justify-between text-xs font-medium text-black/60">
-                      <span>נוצל: {card.used}</span>
-                      <span>נותר: {card.remaining}</span>
-                    </div>
-                    <div className="mt-3 text-xs font-medium text-black/70 whitespace-pre-line">
-                      {card.detail}
-                    </div>
-                  </div>
-                );
-              })}
+              {/* לידים */}
+              <div className="bg-white rounded-lg p-4 border">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium flex items-center gap-2">
+                    🧲 לידים
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {currentPlan.leadsUsed}/{currentPlan.leadsTotal}
+                  </span>
+                </div>
+                <Progress 
+                  value={(currentPlan.leadsUsed / currentPlan.leadsTotal) * 100} 
+                  className="h-2"
+                />
+              </div>
+
+              {/* WhatsApp */}
+              <div className="bg-white rounded-lg p-4 border">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium flex items-center gap-2">
+                    💬 WhatsApp
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {currentPlan.whatsappRemaining}
+                  </span>
+                </div>
+                <div className="h-2 bg-green-100 rounded-full">
+                  <div className="h-2 bg-green-500 rounded-full" style={{width: '80%'}}></div>
+                </div>
+              </div>
+
+              {/* מייל */}
+              <div className="bg-white rounded-lg p-4 border">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium flex items-center gap-2">
+                    📧 מייל
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {currentPlan.emailRemaining}
+                  </span>
+                </div>
+                <div className="h-2 bg-blue-100 rounded-full">
+                  <div className="h-2 bg-blue-500 rounded-full" style={{width: '60%'}}></div>
+                </div>
+              </div>
+
+              {/* תזכורות */}
+              <div className="bg-white rounded-lg p-4 border">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium flex items-center gap-2">
+                    ⏰ תזכורות
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {currentPlan.remindersSent}
+                  </span>
+                </div>
+                <div className="h-2 bg-orange-100 rounded-full">
+                  <div className="h-2 bg-orange-500 rounded-full" style={{width: '40%'}}></div>
+                </div>
+              </div>
             </div>
           </div>
         </CardContent>
       </Card>
-  
-      {/* תוספות מהירות */}
-      <div className="space-y-6">
-        <h2 className="text-xl font-bold">תוספות מהירות</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {addOns.map((addon) => (
-            <Card key={addon.id} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-2xl">{addon.icon}</span>
-                      <h3 className="font-semibold">{addon.name}</h3>
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-2">{addon.description}</p>
-                    {addon.note && (
-                      <p className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
-                        {addon.note}
-                      </p>
-                    )}
-                  </div>
-                  <div className="text-right">
-                    <div className="text-xl font-bold text-primary">{addon.price}</div>
-                  </div>
-                </div>
-                <Button 
-                  className="w-full" 
-                  variant="outline"
-                  onClick={() => {
-                    if (addon.id === 'ai-tokens') {
-                      toast.success("טוקנים AI נוספו בהצלחה! 🤖");
-                    } else {
-                      toast.success(`${addon.name} נוסף בהצלחה!`);
-                    }
-                  }}
-                >
-                  {addon.id === 'ai-tokens' ? 'רכוש טוקנים' : 'הוסף'}
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-
-      {/* סטטיסטיקות שותפים */}
-      <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl p-6 border border-primary/20">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h2 className="text-2xl font-bold text-right">מדדי שותפים</h2>
-            <p className="text-muted-foreground text-right mt-2">
-              מעקב אחר פעילות שותפים, הכנסות ועמלות בתוכנית האפיליאציה.
-            </p>
-          </div>
-          <Button 
-            variant="outline" 
-            className="flex items-center gap-2"
-            onClick={() => toast.success("הצטרפות לתוכנית שותפים!")}
-          >
-            <Handshake className="h-4 w-4" />
-            הצטרפות לתוכנית שותפים
-          </Button>
-        </div>
-        <div className="mt-6">
-          {renderSubscriptionStatsSection(subscriptionStats)}
-        </div>
-      </div>
 
       {/* חבילות נוספות */}
       <div className="space-y-6">
@@ -479,9 +408,7 @@ const BillingForm = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {plans
-            .filter((plan) => plan.id !== "basic")
-            .map((plan) => (
+          {plans.map((plan) => (
             <Card 
               key={plan.id} 
               className={`relative transition-all hover:shadow-lg ${
@@ -519,6 +446,49 @@ const BillingForm = () => {
                   onClick={() => !plan.isCurrent && handleUpgrade()}
                 >
                   {plan.isCurrent ? "תוכנית נוכחית" : "שדרג לחבילה זו"}
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* תוספות */}
+      <div className="space-y-6">
+        <h2 className="text-xl font-bold">תוספות מהירות</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {addOns.map((addon) => (
+            <Card key={addon.id} className="hover:shadow-md transition-shadow">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-2xl">{addon.icon}</span>
+                      <h3 className="font-semibold">{addon.name}</h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-2">{addon.description}</p>
+                    {addon.note && (
+                      <p className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                        {addon.note}
+                      </p>
+                    )}
+                  </div>
+                  <div className="text-right">
+                    <div className="text-xl font-bold text-primary">{addon.price}</div>
+                  </div>
+                </div>
+                <Button 
+                  className="w-full" 
+                  variant="outline"
+                  onClick={() => {
+                    if (addon.id === 'ai-tokens') {
+                      toast.success("טוקנים AI נוספו בהצלחה! 🤖");
+                    } else {
+                      toast.success(`${addon.name} נוסף בהצלחה!`);
+                    }
+                  }}
+                >
+                  {addon.id === 'ai-tokens' ? 'רכוש טוקנים' : 'הוסף'}
                 </Button>
               </CardContent>
             </Card>

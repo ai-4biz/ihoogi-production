@@ -5,26 +5,6 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
-export const subscriptionStats = {
-  totalUsers: 284,
-  newUsers: 24,
-  revenueFromPartners: 35800,
-  totalCommissions: 5890,
-  activePartners: 8
-};
-
-export const renderSubscriptionStatsSection = (stats = subscriptionStats) => {
-  const today = new Date();
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto w-full">
-      <Card className="border-0 shadow-md bg-gradient-to-br from-blue-500/10 to-blue-500/5 hover:shadow-lg transition-shadow"><CardContent className="p-6 !pt-6"><div className="flex items-center justify-between mb-2"><Users className="h-6 w-6 text-blue-600 dark:text-blue-400" /><div className="text-right"><div className="text-3xl font-bold text-foreground">{stats.totalUsers}</div><div className="text-sm text-muted-foreground">סה"כ משתמשים</div></div></div><div className="mt-3 pt-3 border-t border-border"><div className="flex items-center justify-between"><span className="text-xs text-muted-foreground">משתמשים חדשים</span><div className="flex items-center gap-1"><span className="text-lg font-bold text-green-600 dark:text-green-400">+{stats.newUsers}</span></div></div></div></CardContent></Card>
-      <Card className="border-0 shadow-md bg-gradient-to-br from-green-500/10 to-green-500/5 hover:shadow-lg transition-shadow"><CardContent className="p-6 !pt-6"><div className="flex items-center justify-between mb-2"><TrendingUp className="h-6 w-6 text-green-600 dark:text-green-400" /><div className="text-right"><div className="text-3xl font-bold text-foreground">₪{stats.revenueFromPartners.toLocaleString()}</div><div className="text-sm text-muted-foreground">הכנסות ממשתמשים דרך שותפים</div></div></div></CardContent></Card>
-      <Card className="border-0 shadow-md bg-gradient-to-br from-purple-500/10 to-purple-500/5 hover:shadow-lg transition-shadow"><CardContent className="p-6 !pt-6"><div className="flex items-center justify-between mb-2"><DollarSign className="h-6 w-6 text-purple-600 dark:text-purple-400" /><div className="text-right flex-1"><div className="text-3xl font-bold text-foreground">₪{stats.totalCommissions.toLocaleString()}</div><div className="text-sm text-muted-foreground">סה"כ עמלות</div></div></div><div className="mt-4 pt-4 border-t border-border flex items-center justify-between"><div className="text-left"><div className="text-2xl font-bold text-purple-600 dark:text-purple-400">{String(today.getDate()).padStart(2, "0")}</div></div><div className="text-right"><div className="text-2xl font-bold text-purple-600 dark:text-purple-400">{today.toLocaleDateString("he-IL", { month: "long" })}</div></div></div></CardContent></Card>
-      <Card className="border-0 shadow-md bg-gradient-to-br from-orange-500/10 to-orange-500/5 hover:shadow-lg transition-shadow relative"><CardContent className="p-6 !pt-6"><div className="flex items-center justify-between mb-2"><Handshake className="h-6 w-6 text-orange-600 dark:text-orange-400" /><div className="text-right"><div className="text-sm text-muted-foreground mb-2">שותפים פעילים</div><div className="flex items-center gap-2"><span className="text-3xl font-bold text-foreground">{stats.activePartners}</span><div className="w-3 h-3 bg-orange-500 rounded-full animate-pulse"></div></div></div></div></CardContent><div className="absolute -top-2 -right-2 w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center shadow-lg"><span className="text-xs font-bold text-white">{stats.activePartners}</span></div></Card>
-    </div>
-  );
-};
-
 const Subscriptions = () => {
   const plans = [
     {
@@ -146,8 +126,14 @@ const Subscriptions = () => {
     toast.success(`${addonName} נוסף בהצלחה!`);
   };
 
-  const stats = subscriptionStats;
-  const showStatsOnPage = false;
+  // Mock data - נתונים לדוגמה (בעתיד יגיעו מה-API)
+  const stats = {
+    totalUsers: 284, // סהכ משתמשים
+    newUsers: 24, // משתמשים חדשים
+    revenueFromPartners: 35800, // הכנסות ממשתמשים דרך שותפים
+    totalCommissions: 5890, // סהכ עמלות
+    activePartners: 8 // מספר שותפים פעילים
+  };
 
   return (
     <MainLayout initialState="root">
@@ -163,7 +149,91 @@ const Subscriptions = () => {
         </div>
 
         {/* Statistics Cards */}
-        {showStatsOnPage && renderSubscriptionStatsSection(stats)}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto w-full">
+          {/* סהכ משתמשים / משתמשים חדשים */}
+          <Card className="border-0 shadow-md bg-gradient-to-br from-blue-500/10 to-blue-500/5 hover:shadow-lg transition-shadow">
+            <CardContent className="p-6 !pt-6">
+              <div className="flex items-center justify-between mb-2">
+                <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                <div className="text-right">
+                  <div className="text-3xl font-bold text-foreground">{stats.totalUsers}</div>
+                  <div className="text-sm text-muted-foreground">סה"כ משתמשים</div>
+                </div>
+              </div>
+              <div className="mt-3 pt-3 border-t border-border">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-muted-foreground">משתמשים חדשים</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-lg font-bold text-green-600 dark:text-green-400">+{stats.newUsers}</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* הכנסות ממשתמשים דרך שותפים */}
+          <Card className="border-0 shadow-md bg-gradient-to-br from-green-500/10 to-green-500/5 hover:shadow-lg transition-shadow">
+            <CardContent className="p-6 !pt-6">
+              <div className="flex items-center justify-between mb-2">
+                <TrendingUp className="h-6 w-6 text-green-600 dark:text-green-400" />
+                <div className="text-right">
+                  <div className="text-3xl font-bold text-foreground">
+                    ₪{stats.revenueFromPartners.toLocaleString()}
+                  </div>
+                  <div className="text-sm text-muted-foreground">הכנסות ממשתמשים דרך שותפים</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* סהכ עמלות */}
+          <Card className="border-0 shadow-md bg-gradient-to-br from-purple-500/10 to-purple-500/5 hover:shadow-lg transition-shadow">
+            <CardContent className="p-6 !pt-6">
+              <div className="flex items-center justify-between mb-2">
+                <DollarSign className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                <div className="text-right flex-1">
+                  <div className="text-3xl font-bold text-foreground">
+                    ₪{stats.totalCommissions.toLocaleString()}
+                  </div>
+                  <div className="text-sm text-muted-foreground">סה"כ עמלות</div>
+                </div>
+              </div>
+              {/* תאריך - חודש מימין, יום משמאל */}
+              <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
+                <div className="text-left">
+                  <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                    {new Date().getDate().toString().padStart(2, '0')}
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                    {new Date().toLocaleDateString('he-IL', { month: 'long' })}
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* מספר שותפים פעילים - בעיגול קטן */}
+          <Card className="border-0 shadow-md bg-gradient-to-br from-orange-500/10 to-orange-500/5 hover:shadow-lg transition-shadow relative">
+            <CardContent className="p-6 !pt-6">
+              <div className="flex items-center justify-between mb-2">
+                <Handshake className="h-6 w-6 text-orange-600 dark:text-orange-400" />
+                <div className="text-right">
+                  <div className="text-sm text-muted-foreground mb-2">שותפים פעילים</div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-3xl font-bold text-foreground">{stats.activePartners}</span>
+                    <div className="w-3 h-3 bg-orange-500 rounded-full animate-pulse"></div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+            {/* עיגול קטן בפינה */}
+            <div className="absolute -top-2 -right-2 w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center shadow-lg">
+              <span className="text-xs font-bold text-white">{stats.activePartners}</span>
+            </div>
+          </Card>
+        </div>
 
         {/* Additional Info - Moved to Top */}
         <div className="max-w-4xl mx-auto w-full bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950/20 dark:to-blue-950/20 rounded-2xl p-8 border-2 border-green-500/30 shadow-lg">
