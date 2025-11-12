@@ -260,9 +260,12 @@ export class LeadsComponent implements OnInit {
           }
         }
 
-        // Preserve original channel value (lowercase for consistency), fallback to 'direct'
-        const rawChannel = typeof lead.channel === 'string' ? lead.channel.trim() : '';
-        const normalizedChannel = rawChannel ? rawChannel.toLowerCase() : 'direct';
+        // Normalize channel - only allow valid channels, otherwise set to 'other'
+        const validChannels = ['email', 'whatsapp', 'sms', 'website', 'facebook', 'instagram'];
+        let normalizedChannel = lead.channel || 'other';
+        if (!validChannels.includes(normalizedChannel.toLowerCase())) {
+          normalizedChannel = 'other';
+        }
 
         return {
           id: lead.id,
@@ -270,7 +273,7 @@ export class LeadsComponent implements OnInit {
           questionnaire_title: lead.questionnaires?.title || 'Untitled',
           client_name: lead.client_name || 'Unknown',
           partner_id: lead.partner_id,
-          channel: rawChannel || normalizedChannel,
+          channel: normalizedChannel,
           status: lead.status || 'new',
           sub_status: lead.sub_status || '',
           automations: Array.isArray(lead.automations) ? lead.automations : [],
@@ -418,15 +421,12 @@ export class LeadsComponent implements OnInit {
       'website': this.lang.t('leads.channelWebsite'),
       'facebook': this.lang.t('leads.channelFacebook'),
       'instagram': this.lang.t('leads.channelInstagram'),
-      'other': this.lang.t('leads.channel_other'),
-      'direct': this.lang.t('leads.channelWebsite')
+      'other': this.lang.t('leads.channel_other')
     };
+    // If channel is not in the valid list, return 'other'
+    const validChannels = ['email', 'whatsapp', 'sms', 'website', 'facebook', 'instagram', 'other'];
     const normalizedChannel = channel.toLowerCase();
-    if (normalizedChannel.startsWith('referral-')) {
-      const domain = channel.substring('referral-'.length);
-      return domain || this.lang.t('leads.channel_other');
-    }
-    return channelLabels[normalizedChannel] || channel;
+    return channelLabels[normalizedChannel] || this.lang.t('leads.channel_other');
   }
 
   toggleCommentPopup(event: Event, leadId: string, currentComment?: string) {
