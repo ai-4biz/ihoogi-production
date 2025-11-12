@@ -15,7 +15,11 @@ export class ReferralTrackingService {
     // First, check for 'src' parameter (e.g., ?src=facebook)
     const srcParam = urlParams.get('src');
     if (srcParam) {
-      return this.normalizeSource(srcParam);
+      const normalizedSrc = this.normalizeSource(srcParam);
+      const fallbackSources = ['form', 'chat', 'qr', 'direct', 'website'];
+      if (!fallbackSources.includes(normalizedSrc)) {
+        return normalizedSrc;
+      }
     }
 
     // Then check for utm_source parameter
@@ -28,6 +32,10 @@ export class ReferralTrackingService {
     const referer = document.referrer;
 
     if (!referer) {
+      const uaChannel = this.detectFromUserAgent();
+      if (uaChannel) {
+        return uaChannel;
+      }
       // No referer means direct traffic
       return 'direct';
     }
@@ -94,6 +102,10 @@ export class ReferralTrackingService {
 
     } catch (error) {
       console.error('Error parsing referer URL:', error);
+      const uaChannel = this.detectFromUserAgent();
+      if (uaChannel) {
+        return uaChannel;
+      }
       return 'unknown';
     }
   }
@@ -127,6 +139,50 @@ export class ReferralTrackingService {
     };
 
     return sourceMap[normalized] || normalized;
+  }
+
+  private detectFromUserAgent(): string | null {
+    if (typeof navigator === 'undefined') {
+      return null;
+    }
+
+    const ua = navigator.userAgent.toLowerCase();
+
+    if (ua.includes('fban') || ua.includes('fbav') || ua.includes('facebook')) {
+      return 'facebook';
+    }
+    if (ua.includes('instagram')) {
+      return 'instagram';
+    }
+    if (ua.includes('whatsapp')) {
+      return 'whatsapp';
+    }
+    if (ua.includes('linkedin')) {
+      return 'linkedin';
+    }
+    if (ua.includes('twitter') || ua.includes('x/')) {
+      return 'twitter';
+    }
+    if (ua.includes('tiktok')) {
+      return 'tiktok';
+    }
+    if (ua.includes('pinterest')) {
+      return 'pinterest';
+    }
+    if (ua.includes('telegram')) {
+      return 'telegram';
+    }
+    if (ua.includes('reddit')) {
+      return 'reddit';
+    }
+    if (ua.includes('youtube')) {
+      return 'youtube';
+    }
+    if (ua.includes('google') || ua.includes('androidwebview')) {
+      return 'google';
+    }
+
+    return null;
   }
 
   /**
