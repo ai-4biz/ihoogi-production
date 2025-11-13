@@ -24,6 +24,16 @@ interface TemplateForm {
   useProfileLogo?: boolean;
   useProfileImage?: boolean;
   reminderFrequency?: 'every-few-days' | 'custom-days';
+  includeBusinessDetails?: boolean;
+  businessDetails?: {
+    showBusinessName?: boolean;
+    showEmail?: boolean;
+    showPhone?: boolean;
+    showWebsite?: boolean;
+    showWhatsapp?: boolean;
+    showAddress?: boolean;
+    showSocialNetworks?: boolean;
+  };
 }
 
 @Component({
@@ -50,7 +60,17 @@ export class CreateAutomationTemplateComponent implements OnInit {
     linkUrl: '',
     useProfileLogo: true,
     useProfileImage: true,
-    reminderFrequency: 'custom-days'
+    reminderFrequency: 'custom-days',
+    includeBusinessDetails: false,
+    businessDetails: {
+      showBusinessName: true,
+      showEmail: true,
+      showPhone: true,
+      showWebsite: false,
+      showWhatsapp: false,
+      showAddress: false,
+      showSocialNetworks: false
+    }
   };
 
   isTextareaEnabled = false;
@@ -63,6 +83,15 @@ export class CreateAutomationTemplateComponent implements OnInit {
   profileImageUrl = '';
   cachedAIResponse: string = '';
   cachedMessageLength: 'short' | 'medium' | 'long' = 'medium';
+  businessProfileData: any = {
+    company: '',
+    email: '',
+    phone: '',
+    website: '',
+    whatsapp: '',
+    address: '',
+    social_networks: {}
+  };
 
   constructor(
     public lang: LanguageService,
@@ -143,7 +172,7 @@ export class CreateAutomationTemplateComponent implements OnInit {
 
       const { data, error } = await this.supabase.client
         .from('profiles')
-        .select('logo_url, image_url')
+        .select('logo_url, image_url, company, email, phone, website, whatsapp, address, social_networks')
         .eq('id', user.id)
         .single();
 
@@ -152,6 +181,15 @@ export class CreateAutomationTemplateComponent implements OnInit {
       if (data) {
         this.profileLogoUrl = data.logo_url || '';
         this.profileImageUrl = data.image_url || '';
+        this.businessProfileData = {
+          company: data.company || '',
+          email: data.email || '',
+          phone: data.phone || '',
+          website: data.website || '',
+          whatsapp: data.whatsapp || '',
+          address: data.address || '',
+          social_networks: data.social_networks || {}
+        };
       }
     } catch (e) {
       console.error('Error loading profile:', e);
@@ -302,6 +340,65 @@ export class CreateAutomationTemplateComponent implements OnInit {
   onReminderStatusChange() {
     // Reset sub-status when main status changes
     this.formData.reminderSubStatus = '';
+  }
+
+  getSelectedBusinessDetails(): Array<{label: string, value: string, icon: string, link?: string, type: string}> {
+    const details: Array<{label: string, value: string, icon: string, link?: string, type: string}> = [];
+    
+    if (!this.formData.includeBusinessDetails || !this.formData.businessDetails) {
+      return details;
+    }
+
+    const bd = this.formData.businessDetails;
+    const data = this.businessProfileData || {};
+
+    if (bd.showBusinessName && data.company) {
+      details.push({ label: 'שם העסק', value: data.company, icon: '🏢', type: 'text' });
+    }
+    if (bd.showEmail && data.email) {
+      details.push({ label: 'אימייל', value: data.email, icon: '📧', link: `mailto:${data.email}`, type: 'email' });
+    }
+    if (bd.showPhone && data.phone) {
+      const phoneClean = data.phone.replace(/[^\d+]/g, '');
+      details.push({ label: 'טלפון', value: data.phone, icon: '📞', link: `tel:${phoneClean}`, type: 'phone' });
+    }
+    if (bd.showWebsite && data.website) {
+      const websiteUrl = data.website.startsWith('http') ? data.website : `https://${data.website}`;
+      details.push({ label: 'אתר', value: data.website, icon: '🌐', link: websiteUrl, type: 'website' });
+    }
+    if (bd.showWhatsapp && data.whatsapp) {
+      const whatsappClean = data.whatsapp.replace(/[^\d+]/g, '');
+      details.push({ label: 'וואטסאפ', value: data.whatsapp, icon: '💬', link: `https://wa.me/${whatsappClean}`, type: 'whatsapp' });
+    }
+    if (bd.showAddress && data.address) {
+      const addressEncoded = encodeURIComponent(data.address);
+      details.push({ label: 'כתובת', value: data.address, icon: '📍', link: `https://maps.google.com/?q=${addressEncoded}`, type: 'address' });
+    }
+    if (bd.showSocialNetworks && data.social_networks) {
+      const sn = data.social_networks;
+      if (sn.facebook) {
+        const fbUrl = sn.facebook.startsWith('http') ? sn.facebook : `https://facebook.com/${sn.facebook}`;
+        details.push({ label: 'Facebook', value: sn.facebook, icon: '📘', link: fbUrl, type: 'social' });
+      }
+      if (sn.instagram) {
+        const igUrl = sn.instagram.startsWith('http') ? sn.instagram : `https://instagram.com/${sn.instagram}`;
+        details.push({ label: 'Instagram', value: sn.instagram, icon: '📷', link: igUrl, type: 'social' });
+      }
+      if (sn.linkedin) {
+        const liUrl = sn.linkedin.startsWith('http') ? sn.linkedin : `https://linkedin.com/in/${sn.linkedin}`;
+        details.push({ label: 'LinkedIn', value: sn.linkedin, icon: '💼', link: liUrl, type: 'social' });
+      }
+      if (sn.tiktok) {
+        const ttUrl = sn.tiktok.startsWith('http') ? sn.tiktok : `https://tiktok.com/@${sn.tiktok}`;
+        details.push({ label: 'TikTok', value: sn.tiktok, icon: '🎵', link: ttUrl, type: 'social' });
+      }
+      if (sn.youtube) {
+        const ytUrl = sn.youtube.startsWith('http') ? sn.youtube : `https://youtube.com/${sn.youtube}`;
+        details.push({ label: 'YouTube', value: sn.youtube, icon: '📺', link: ytUrl, type: 'social' });
+      }
+    }
+
+    return details;
   }
 
   onImageUpload(event: Event) {

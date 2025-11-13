@@ -13,6 +13,12 @@
 .space-y-2 > * + *
   margin-top: 0.5rem
 
+.space-y-1\.5 > * + *
+  margin-top: 0.375rem
+
+.space-y-1 > * + *
+  margin-top: 0.25rem
+
 .mb-8
   margin-bottom: 2rem
 
@@ -83,11 +89,23 @@
 .justify-center
   justify-content: center
 
+.justify-end
+  justify-content: flex-end
+
 .flex-1
   flex: 1
 
 .flex-shrink-0
   flex-shrink: 0
+
+.flex-wrap
+  flex-wrap: wrap
+
+.grid
+  display: grid
+
+.grid-cols-1
+  grid-template-columns: repeat(1, minmax(0, 1fr))
 
 // Text alignment
 .text-center
@@ -371,6 +389,31 @@
 .to-indigo-100
   --tw-gradient-to: #e0e7ff
 
+.from-purple-50
+  --tw-gradient-from: #faf5ff
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(250, 245, 255, 0))
+
+.to-purple-100
+  --tw-gradient-to: #f3e8ff
+
+.border-purple-200\/50
+  border-color: rgba(233, 213, 255, 0.5)
+
+.border-purple-200\/30
+  border-color: rgba(233, 213, 255, 0.3)
+
+.bg-purple-50\/50
+  background-color: rgba(250, 245, 255, 0.5)
+
+.text-purple-700
+  color: #7c3aed
+
+.text-purple-800
+  color: #6b21a8
+
+.border-purple-200
+  border-color: #e9d5ff
+
 .bg-orange-50\/50
   background-color: rgba(255, 247, 237, 0.5)
 
@@ -504,6 +547,11 @@
     &.to-indigo-100
       --tw-gradient-to: rgba(79, 70, 229, 0.2)
 
+    &.from-purple-50
+      --tw-gradient-from: rgba(88, 28, 135, 0.2)
+    &.to-purple-100
+      --tw-gradient-to: rgba(107, 33, 168, 0.2)
+
 // Responsive
 @media (min-width: 768px)
   .md\:text-3xl
@@ -519,3 +567,128 @@
 
   .md\:mb-4
     margin-bottom: 1rem
+
+  .md\:grid-cols-2
+    grid-template-columns: repeat(2, minmax(0, 1fr))
+
+// Business Details Buttons
+.business-detail-btn
+  display: inline-flex
+  align-items: center
+  gap: 0.375rem
+  padding: 0.5rem 0.75rem
+  border-radius: 0.375rem
+  font-size: 0.875rem
+  font-weight: 500
+  text-decoration: none
+  transition: all 0.2s
+  border: 1px solid transparent
+  cursor: pointer
+
+  &:hover
+    transform: translateY(-1px)
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
+
+  &.business-detail-btn-text
+    background-color: #f3f4f6
+    color: #374151
+    border-color: #e5e7eb
+
+  &.business-detail-btn-email
+    background-color: #dbeafe
+    color: #1e40af
+    border-color: #93c5fd
+
+    &:hover
+      background-color: #bfdbfe
+
+  &.business-detail-btn-phone
+    background-color: #dcfce7
+    color: #166534
+    border-color: #86efac
+
+    &:hover
+      background-color: #bbf7d0
+
+  &.business-detail-btn-website
+    background-color: #e0e7ff
+    color: #3730a3
+    border-color: #a5b4fc
+
+    &:hover
+      background-color: #c7d2fe
+
+  &.business-detail-btn-whatsapp
+    background-color: #d1fae5
+    color: #065f46
+    border-color: #6ee7b7
+
+    &:hover
+      background-color: #a7f3d0
+
+  &.business-detail-btn-address
+    background-color: #fef3c7
+    color: #92400e
+    border-color: #fde68a
+
+    &:hover
+      background-color: #fde68a
+
+  &.business-detail-btn-social
+    background-color: #fce7f3
+    color: #9f1239
+    border-color: #f9a8d4
+
+    &:hover
+      background-color: #fbcfe8
+
+.business-detail-btn-small
+  display: inline-flex
+  align-items: center
+  gap: 0.25rem
+  padding: 0.375rem 0.5rem
+  border-radius: 0.25rem
+  font-size: 0.75rem
+  font-weight: 500
+  text-decoration: none
+  transition: all 0.2s
+  border: 1px solid transparent
+  cursor: pointer
+
+  &:hover
+    transform: translateY(-1px)
+
+  &.business-detail-btn-text
+    background-color: #f3f4f6
+    color: #374151
+    border-color: #e5e7eb
+
+  &.business-detail-btn-email
+    background-color: #dbeafe
+    color: #1e40af
+    border-color: #93c5fd
+
+  &.business-detail-btn-phone
+    background-color: #dcfce7
+    color: #166534
+    border-color: #86efac
+
+  &.business-detail-btn-website
+    background-color: #e0e7ff
+    color: #3730a3
+    border-color: #a5b4fc
+
+  &.business-detail-btn-whatsapp
+    background-color: #d1fae5
+    color: #065f46
+    border-color: #6ee7b7
+
+  &.business-detail-btn-address
+    background-color: #fef3c7
+    color: #92400e
+    border-color: #fde68a
+
+  &.business-detail-btn-social
+    background-color: #fce7f3
+    color: #9f1239
+    border-color: #f9a8d4
