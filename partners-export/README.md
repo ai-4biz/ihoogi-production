@@ -20,6 +20,9 @@
 1. **`START-HERE.md`** ⭐ - התחל כאן! מדריך מהיר
 2. **`INTEGRATION-GUIDE.md`** 📘 - מדריך מפורט מאוד
 3. **`REPORTS-SYSTEM-GUIDE.md`** 📊 - מדריך מערכת הדוחות
+4. **`BUSINESS-DETAILS-GUIDE.md`** 📧 - מדריך רכיב פרטי עסק לערוצי הפצה
+5. **`DESIGN-GUIDE.md`** 🎨 - מדריך עיצוב בלבד (colors, spacing, layout)
+6. **`MODULAR-COMPONENTS-GUIDE.md`** 🧩 - מדריך רכיבים מודולריים
 
 ### קבצי קוד (ייווצרו בהמשך)
 
@@ -46,6 +49,14 @@
 ### שלב 3: הבן את מערכת הדוחות
 
 **אם אתה רוצה להבין את מערכת הדוחות:** `REPORTS-SYSTEM-GUIDE.md`
+
+### שלב 4: הבן את העיצוב
+
+**אם אתה רוצה להבין את העיצוב:** `DESIGN-GUIDE.md`
+
+### שלב 5: בנה בצורה מודולרית
+
+**אם אתה רוצה גישה בטוחה ומודולרית:** `MODULAR-COMPONENTS-GUIDE.md`
 
 ---
 
