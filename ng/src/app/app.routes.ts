@@ -43,7 +43,10 @@ export const routes: Routes = [
       { path: 'profile', loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent), canDeactivate: [ProfileCompletionGuard] },
       { path: 'partners', loadComponent: () => import('./pages/partners/partners.component').then(m => m.PartnersComponent) },
       { path: 'distribution-hub', loadComponent: () => import('./pages/distribution-hub/distribution-hub.component').then(m => m.DistributionHubComponent) },
-      { path: 'contact', loadComponent: () => import('./pages/contact/contact.component').then(m => m.ContactComponent) }
+      { path: 'contact', loadComponent: () => import('./pages/contact/contact.component').then(m => m.ContactComponent) },
+      { path: 'billings', loadComponent: () => import('./pages/billing/billing-form.component').then(m => m.BillingFormComponent) },
+      { path: 'billings/subscriptions', loadComponent: () => import('./pages/billing/subscriptions.component').then(m => m.SubscriptionsComponent) },
+      { path: 'billings/plans', loadComponent: () => import('./pages/billing/subscription-plans.component').then(m => m.SubscriptionPlansComponent) }
     ]
   },
   { path: '**', loadComponent: () => import('./pages/not-found/not-found.component').then(m => m.NotFoundComponent) }

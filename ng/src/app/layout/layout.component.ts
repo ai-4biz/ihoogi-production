@@ -59,6 +59,9 @@ export class LayoutComponent {
     if (href === '/distribution-hub') {
       return this.router.url.startsWith('/distribution-hub');
     }
+    if (href === '/billings') {
+      return this.router.url.startsWith('/billings');
+    }
     return this.router.url === href;
   }
 
