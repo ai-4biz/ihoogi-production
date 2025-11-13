@@ -1,29 +1,938 @@
-$border-color: hsl(186, 30%, 88%)
+// Subscription Management Header
+.subscription-header-section
+  margin-bottom: 2rem
 
-.billing-container
-  &.rtl
-    direction: rtl
-    text-align: right
+.subscription-header-content
+  display: flex
+  align-items: flex-start
+  justify-content: space-between
+  gap: 2rem
 
-  &.ltr
-    direction: ltr
-    text-align: left
+  @media (max-width: 768px)
+    flex-direction: column
 
-.billing-content
+.subscription-header-text
+  flex: 1
+
+.subscription-main-title
+  font-size: 2rem
+  font-weight: 700
+  margin: 0 0 0.75rem 0
+  color: #1e293b
+  text-align: right
+
+.subscription-main-description
+  font-size: 1rem
+  color: #64748b
+  margin: 0
+  text-align: right
+  line-height: 1.6
+
+.partner-program-btn
+  display: inline-flex
+  align-items: center
+  gap: 0.5rem
+  padding: 0.75rem 1.5rem
+  background: white
+  border: 1.5px solid #14b8a6
+  border-radius: 0.5rem
+  color: #14b8a6
+  font-weight: 600
+  font-size: 0.875rem
+  cursor: pointer
+  transition: all 0.2s
+  white-space: nowrap
+  flex-shrink: 0
+
+  &:hover
+    background: #14b8a6
+    color: white
+
+.partner-icon
+  font-size: 1rem
+
+// Current Subscription Main Card
+.current-subscription-main-card
+  background: white
+  border: 2px solid #e0f2fe
+  border-radius: 1rem
+  padding: 2rem
+  margin-bottom: 2rem
+  position: relative
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)
+
+.manage-subscription-top-btn
+  position: absolute
+  top: 1.5rem
+  left: 1.5rem
+  display: inline-flex
+  align-items: center
+  gap: 0.5rem
+  padding: 0.625rem 1.25rem
+  background: white
+  border: 1px solid #e2e8f0
+  border-radius: 0.5rem
+  color: #475569
+  font-weight: 600
+  font-size: 0.875rem
+  cursor: pointer
+  transition: all 0.2s
+
+  &:hover
+    background: #f1f5f9
+    border-color: #cbd5e1
+
+.gear-icon
+  font-size: 1rem
+
+.subscription-plan-header
+  display: flex
+  justify-content: flex-end
+  margin-bottom: 2rem
+  margin-top: 0.5rem
+
+.plan-info-top
+  display: flex
+  align-items: center
+  gap: 1rem
+
+.plan-star-icon
+  font-size: 2.5rem
+
+.plan-name-price
   display: flex
   flex-direction: column
+  gap: 0.5rem
+
+.plan-name-large
+  font-size: 1.75rem
+  font-weight: 700
+  margin: 0
+  color: #1e293b
+
+.current-badge
+  display: inline-block
+  background: #f97316
+  color: white
+  padding: 0.25rem 0.75rem
+  border-radius: 9999px
+  font-size: 0.75rem
+  font-weight: 600
+  width: fit-content
+
+.plan-price-large
+  font-size: 1.5rem
+  font-weight: 700
+  margin: 0
+  color: #1e293b
+
+// Detailed Usage Cards
+.detailed-usage-grid
+  display: grid
+  grid-template-columns: repeat(2, 1fr)
+  gap: 1.5rem
+  margin-top: 2rem
+
+  @media (max-width: 768px)
+    grid-template-columns: 1fr
+
+.usage-detail-card
+  background: white
+  border: 1px solid #e2e8f0
+  border-radius: 0.75rem
+  padding: 1.5rem
+  display: flex
+  flex-direction: column
+  gap: 1rem
+  transition: all 0.2s
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)
+
+  &:hover
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1)
+    transform: translateY(-2px)
+
+.usage-card-purple
+  background: linear-gradient(to bottom, #faf5ff, #f3e8ff)
+  border-color: #c084fc
+
+.usage-card-green
+  background: linear-gradient(to bottom, #f0fdf4, #dcfce7)
+  border-color: #86efac
+
+.usage-card-blue
+  background: linear-gradient(to bottom, #eff6ff, #dbeafe)
+  border-color: #93c5fd
+
+.usage-card-orange
+  background: linear-gradient(to bottom, #fff7ed, #ffedd5)
+  border-color: #fdba74
+
+.usage-card-header
+  display: flex
+  align-items: center
+  gap: 0.75rem
+
+.usage-card-icon
+  font-size: 1.5rem
+
+.usage-card-title
+  font-size: 1rem
+  font-weight: 600
+  margin: 0
+  color: #1e293b
+
+.usage-main-metric
+  font-size: 2rem
+  font-weight: 700
+  color: #1e293b
+
+.usage-progress-bar-wrapper
+  height: 0.75rem
+  background: rgba(255, 255, 255, 0.6)
+  border-radius: 9999px
+  overflow: hidden
+
+.usage-progress-bar
+  height: 100%
+  border-radius: 9999px
+
+.usage-progress-purple
+  background: #a855f7
+
+.usage-progress-green
+  background: #22c55e
+
+.usage-progress-blue
+  background: #3b82f6
+
+.usage-progress-orange
+  background: #f97316
+
+.usage-details
+  display: flex
+  flex-direction: column
+  gap: 0.5rem
+
+.usage-detail-row
+  display: flex
+  justify-content: space-between
+  font-size: 0.875rem
+  color: #475569
+  font-weight: 500
+
+.usage-breakdown
+  display: flex
+  flex-direction: column
+  gap: 0.25rem
+  margin-top: 0.5rem
+
+.usage-breakdown-line
+  font-size: 0.75rem
+  color: #64748b
+  margin: 0
+  line-height: 1.4
+
+.usage-note
+  font-size: 0.75rem
+  color: #64748b
+  margin: 0.5rem 0 0 0
+  font-style: italic
+
+// Partner Metrics Section
+.partner-metrics-section
+  max-width: 1200px
+  margin: 3rem auto 0
+  padding: 0 1rem
+
+.partner-metrics-header
+  display: flex
+  align-items: flex-start
+  justify-content: space-between
+  gap: 2rem
+  margin-bottom: 2rem
+
+  @media (max-width: 768px)
+    flex-direction: column-reverse
+
+.join-partners-top-btn
+  display: inline-flex
+  align-items: center
+  gap: 0.5rem
+  padding: 0.75rem 1.5rem
+  background: white
+  border: 1.5px solid #14b8a6
+  border-radius: 0.5rem
+  color: #1e293b
+  font-weight: 600
+  font-size: 0.875rem
+  cursor: pointer
+  transition: all 0.2s
+  white-space: nowrap
+  flex-shrink: 0
+
+  &:hover
+    background: #14b8a6
+    color: white
+
+.handshake-icon
+  font-size: 1rem
+
+.partner-metrics-title-section
+  flex: 1
+  text-align: right
+
+.partner-metrics-title
+  font-size: 1.875rem
+  font-weight: 700
+  margin: 0 0 0.5rem 0
+  color: #1e293b
+
+.partner-metrics-subtitle
+  font-size: 1rem
+  color: #64748b
+  margin: 0
+  line-height: 1.6
+
+.partner-metrics-grid
+  display: grid
+  grid-template-columns: repeat(4, 1fr)
   gap: 1.5rem
 
-.billing-placeholder
-  text-align: center
-  padding: 3rem 1rem
+  @media (max-width: 968px)
+    grid-template-columns: repeat(2, 1fr)
 
-.placeholder-title
+  @media (max-width: 640px)
+    grid-template-columns: 1fr
+
+.partner-metric-card
+  background: white
+  border: 1px solid #e2e8f0
+  border-radius: 0.75rem
+  padding: 1.5rem
+  position: relative
+  display: flex
+  flex-direction: column
+  transition: all 0.2s
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)
+
+  &:hover
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1)
+    transform: translateY(-2px)
+
+.metric-card-orange
+  background: linear-gradient(to bottom, #fff7ed, #ffedd5)
+  border-color: #fdba74
+
+.metric-card-purple
+  background: linear-gradient(to bottom, #faf5ff, #f3e8ff)
+  border-color: #c084fc
+
+.metric-card-green
+  background: linear-gradient(to bottom, #f0fdf4, #dcfce7)
+  border-color: #86efac
+
+.metric-card-white
+  background: white
+  border-color: #e2e8f0
+
+.metric-badge-orange
+  position: absolute
+  top: -0.75rem
+  right: -0.75rem
+  width: 2.5rem
+  height: 2.5rem
+  background: #f97316
+  color: white
+  border-radius: 50%
+  display: flex
+  align-items: center
+  justify-content: center
+  font-weight: 700
+  font-size: 1rem
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2)
+  z-index: 1
+
+.metric-content
+  display: flex
+  flex-direction: column
+  gap: 0.75rem
+
+.metric-header-row
+  display: flex
+  align-items: center
+  gap: 0.5rem
+
+.metric-icon-orange
+  font-size: 1.25rem
+
+.metric-label
+  font-size: 0.875rem
+  font-weight: 500
+  color: #475569
+
+.metric-label-secondary
+  font-size: 0.875rem
+  font-weight: 500
+  color: #475569
+  margin: 0
+
+.metric-value-large
+  font-size: 2rem
+  font-weight: 700
+  color: #1e293b
+  display: flex
+  align-items: center
+  gap: 0.5rem
+
+.metric-dot-orange
+  color: #f97316
+  font-size: 0.75rem
+
+.metric-value-with-icon
+  display: flex
+  align-items: center
+  gap: 0.5rem
+
+.metric-arrow-icon
+  font-size: 1.25rem
+  color: #22c55e
+  font-weight: 700
+
+.metric-users-icon
+  font-size: 1.5rem
+  color: #3b82f6
+
+.metric-date
+  display: flex
+  align-items: center
+  gap: 0.5rem
+  margin-top: 0.5rem
+
+.metric-date-text
+  font-size: 0.875rem
+  color: #8b5cf6
+  font-weight: 500
+
+.metric-date-number
+  font-size: 0.875rem
+  color: #8b5cf6
+  font-weight: 700
+
+.metric-new-users
+  display: flex
+  align-items: center
+  gap: 0.5rem
+  margin-top: 0.5rem
+
+.metric-new-users-label
+  font-size: 0.75rem
+  color: #475569
+
+.metric-new-users-value
+  font-size: 0.875rem
+  color: #22c55e
+  font-weight: 700
+
+// CSS fallback אם Tailwind לא עובד
+// Gradient backgrounds
+.bg-gradient-green-blue
+  background: linear-gradient(to right, rgb(240 253 244), rgb(239 246 255))
+
+.bg-gradient-orange-yellow
+  background: linear-gradient(to right, rgb(255 247 237), rgb(254 252 232), rgb(254 243 199))
+
+// Gradient text
+.bg-gradient-green-text
+  background: linear-gradient(to right, rgb(22 163 74), rgb(37 99 235))
+  -webkit-background-clip: text
+  background-clip: text
+  -webkit-text-fill-color: transparent
+
+.bg-gradient-orange-text
+  background: linear-gradient(to right, rgb(234 88 12), rgb(217 119 6))
+  -webkit-background-clip: text
+  background-clip: text
+  -webkit-text-fill-color: transparent
+
+.bg-gradient-orange-badge
+  background: linear-gradient(to right, rgb(249 115 22), rgb(245 158 11))
+
+// Animations
+@keyframes pulse
+  0%, 100%
+    opacity: 1
+  50%
+    opacity: .5
+
+@keyframes bounce
+  0%, 100%
+    transform: translateY(-25%)
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1)
+  50%
+    transform: none
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1)
+
+.animate-pulse
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite
+
+.animate-bounce
+  animation: bounce 1s infinite
+
+// Responsive
+@media (max-width: 768px)
+  .text-3xl
+    font-size: 1.875rem
+  .text-2xl
+    font-size: 1.5rem
+
+// Pricing Plans Section
+.pricing-plans-section
+  max-width: 1200px
+  margin: 3rem auto 0
+  padding: 0 1rem
+
+.pricing-plans-grid
+  display: grid
+  grid-template-columns: repeat(3, 1fr)
+  gap: 1.5rem
+  align-items: start
+
+  @media (max-width: 968px)
+    grid-template-columns: 1fr
+
+.pricing-card
+  background: white
+  border: 2px solid #e2e8f0
+  border-radius: 1rem
+  padding: 2rem
+  position: relative
+  display: flex
+  flex-direction: column
+  transition: all 0.3s ease
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)
+
+  &:hover
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1)
+    transform: translateY(-2px)
+
+.pricing-card-premium
+  background: linear-gradient(to bottom, #faf5ff, #f3e8ff)
+  border-color: #a78bfa
+
+.pricing-card-pro
+  background: linear-gradient(to bottom, #eff6ff, #dbeafe)
+  border-color: #60a5fa
+
+.pricing-card-basic
+  background: linear-gradient(to bottom, #f0fdfa, #ccfbf1)
+  border-color: #2dd4bf
+  border-width: 3px
+
+.most-popular-badge
+  position: absolute
+  top: 0
+  right: 0
+  left: 0
+  background: #14b8a6
+  color: white
+  padding: 0.75rem 1rem
+  border-radius: 1rem 1rem 0 0
+  font-weight: 700
+  font-size: 0.875rem
+  text-align: center
+  margin: -2rem -2rem 1rem -2rem
+
+.plan-icon
+  font-size: 3rem
+  text-align: center
+  margin: 0 auto 1rem
+  color: #475569
+
+.plan-name
+  font-size: 1.75rem
+  font-weight: 700
+  margin: 0 0 0.5rem 0
+  text-align: center
+  color: #1e293b
+
+.plan-description
+  font-size: 0.875rem
+  color: #64748b
+  margin: 0 0 1.5rem 0
+  text-align: center
+  line-height: 1.5
+
+.plan-price
+  text-align: center
+  margin-bottom: 2rem
+
+.price-amount
+  font-size: 2.5rem
+  font-weight: 700
+  color: #1e293b
+  display: block
+
+.price-period
+  font-size: 1rem
+  color: #64748b
+  font-weight: 400
+
+.plan-features-list
+  list-style: none
+  padding: 0
+  margin: 0 0 2rem 0
+  flex: 1
+  display: flex
+  flex-direction: column
+  gap: 0.75rem
+
+.plan-feature-item
+  display: flex
+  align-items: flex-start
+  gap: 0.75rem
+  font-size: 0.875rem
+  color: #475569
+  line-height: 1.5
+
+.check-icon
+  color: #10b981
+  font-weight: 700
+  font-size: 1rem
+  flex-shrink: 0
+  margin-top: 0.125rem
+
+.plan-select-btn
+  width: 100%
+  padding: 0.875rem 1.5rem
+  border-radius: 0.5rem
+  font-weight: 700
+  font-size: 1rem
+  border: none
+  cursor: pointer
+  transition: all 0.2s
+  color: white
+  margin-top: auto
+
+  &:hover
+    transform: translateY(-1px)
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2)
+
+.plan-select-btn-premium
+  background: #8b5cf6
+
+  &:hover
+    background: #7c3aed
+
+.plan-select-btn-pro
+  background: #3b82f6
+
+  &:hover
+    background: #2563eb
+
+.plan-select-btn-basic
+  background: #14b8a6
+
+  &:hover
+    background: #0d9488
+
+// Quick Add-ons Section
+.addons-quick-section
+  max-width: 1200px
+  margin: 3rem auto 0
+  padding: 0 1rem
+
+.addons-quick-title
+  font-size: 1.875rem
+  font-weight: 700
+  margin: 0 0 0.5rem 0
+  color: #1e293b
+  text-align: right
+
+.addons-quick-subtitle
+  font-size: 1rem
+  color: #64748b
+  margin: 0 0 2rem 0
+  text-align: right
+
+.addons-quick-grid
+  display: grid
+  grid-template-columns: repeat(3, 1fr)
+  gap: 1.5rem
+
+  @media (max-width: 968px)
+    grid-template-columns: repeat(2, 1fr)
+
+  @media (max-width: 640px)
+    grid-template-columns: 1fr
+
+.addon-quick-card
+  background: white
+  border: 1px solid #e2e8f0
+  border-radius: 0.75rem
+  padding: 1.5rem
+  position: relative
+  display: flex
+  flex-direction: column
+  transition: all 0.2s
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)
+  min-height: 220px
+
+  &:hover
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15)
+    transform: translateY(-2px)
+
+.addon-price-badge
+  position: absolute
+  top: 1rem
+  right: 1rem
+  background: #1e293b
+  color: white
+  padding: 0.5rem 0.875rem
+  border-radius: 0.5rem
+  font-size: 1.25rem
+  font-weight: 700
+  z-index: 1
+
+.addon-icon
+  width: 3rem
+  height: 3rem
+  border-radius: 0.5rem
+  display: flex
+  align-items: center
+  justify-content: center
+  font-size: 1.5rem
+  margin-bottom: 1rem
+  margin-top: 0.5rem
+
+.addon-icon-red
+  background: #fee2e2
+  color: #dc2626
+
+.addon-icon-purple
+  background: #f3e8ff
+  color: #8b5cf6
+
+.addon-icon-blue
+  background: #dbeafe
+  color: #3b82f6
+
+.addon-quick-name
+  font-size: 1.125rem
+  font-weight: 700
+  margin: 0.5rem 0 0.75rem 0
+  color: #1e293b
+
+.addon-quick-description
+  font-size: 0.875rem
+  color: #64748b
+  margin: 0 0 0.75rem 0
+  line-height: 1.5
+  flex: 1
+
+.addon-quick-note
+  font-size: 0.75rem
+  color: #3b82f6
+  background: #eff6ff
+  padding: 0.375rem 0.75rem
+  border-radius: 0.375rem
+  margin-bottom: 1rem
+  font-weight: 500
+  display: inline-block
+  width: fit-content
+
+.addon-quick-btn
+  width: 100%
+  padding: 0.75rem 1.5rem
+  background: #14b8a6
+  color: white
+  border: none
+  border-radius: 0.5rem
+  font-weight: 600
+  font-size: 0.875rem
+  cursor: pointer
+  transition: all 0.2s
+  margin-top: auto
+
+  &:hover
+    background: #0d9488
+    transform: translateY(-1px)
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2)
+
+// Payments and Invoices Section
+.payments-invoices-section
+  max-width: 1200px
+  margin: 3rem auto 0
+  padding: 0 1rem
+
+.payments-invoices-title
+  font-size: 1.875rem
+  font-weight: 700
+  margin: 0 0 2rem 0
+  color: #1e293b
+  text-align: right
+
+.payment-history-section
+  margin-bottom: 2rem
+
+.payment-history-title
   font-size: 1.25rem
   font-weight: 600
-  color: #374151
-  margin-bottom: 0.5rem
+  margin: 0 0 1rem 0
+  color: #1e293b
+  text-align: right
 
-.placeholder-text
+.payment-history-list
+  display: flex
+  flex-direction: column
+  gap: 1rem
+
+.payment-history-item
+  background: #f8fafc
+  border: 1px solid #e2e8f0
+  border-radius: 0.75rem
+  padding: 1.25rem 1.5rem
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 1.5rem
+  transition: all 0.2s
+
+  &:hover
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
+    border-color: #cbd5e1
+
+.payment-info-left
+  display: flex
+  align-items: center
+  gap: 1rem
+  flex: 1
+
+.payment-icon-small
+  font-size: 1.5rem
+  color: #3b82f6
+
+.payment-details
+  display: flex
+  flex-direction: column
+  gap: 0.25rem
+
+.payment-name-text
   font-size: 1rem
-  color: #6b7280
+  font-weight: 600
+  margin: 0
+  color: #1e293b
+
+.payment-date-text
+  font-size: 0.875rem
+  color: #64748b
+  margin: 0
+
+.payment-actions-right
+  display: flex
+  align-items: center
+  gap: 1rem
+
+.invoice-btn
+  display: inline-flex
+  align-items: center
+  gap: 0.5rem
+  padding: 0.5rem 1rem
+  background: white
+  border: 1px solid #3b82f6
+  border-radius: 0.5rem
+  color: #3b82f6
+  font-weight: 600
+  font-size: 0.875rem
+  cursor: pointer
+  transition: all 0.2s
+
+  &:hover
+    background: #3b82f6
+    color: white
+
+.download-icon
+  font-size: 0.875rem
+
+.payment-amount-section
+  display: flex
+  flex-direction: column
+  align-items: flex-end
+  gap: 0.5rem
+
+.payment-amount-text
+  font-size: 1.5rem
+  font-weight: 700
+  color: #1e293b
+
+.paid-badge
+  display: inline-block
+  background: #3b82f6
+  color: white
+  padding: 0.25rem 0.75rem
+  border-radius: 9999px
+  font-size: 0.75rem
+  font-weight: 600
+
+// Payment Methods Section
+.payment-methods-section
+  margin-top: 2rem
+
+.payment-methods-title
+  font-size: 1.25rem
+  font-weight: 600
+  margin: 0 0 1rem 0
+  color: #1e293b
+  text-align: right
+
+.payment-method-item
+  background: #f8fafc
+  border: 1px solid #e2e8f0
+  border-radius: 0.75rem
+  padding: 1.25rem 1.5rem
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 1.5rem
+  transition: all 0.2s
+
+  &:hover
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
+    border-color: #cbd5e1
+
+.payment-method-info
+  display: flex
+  align-items: center
+  gap: 1rem
+  flex: 1
+
+.payment-method-details
+  display: flex
+  flex-direction: column
+  gap: 0.25rem
+
+.payment-method-type
+  font-size: 1rem
+  font-weight: 600
+  margin: 0
+  color: #1e293b
+
+.payment-method-card
+  font-size: 0.875rem
+  color: #64748b
+  margin: 0
+
+.update-payment-btn
+  padding: 0.625rem 1.25rem
+  background: #14b8a6
+  color: white
+  border: none
+  border-radius: 0.5rem
+  font-weight: 600
+  font-size: 0.875rem
+  cursor: pointer
+  transition: all 0.2s
+
+  &:hover
+    background: #0d9488
+    transform: translateY(-1px)
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2)

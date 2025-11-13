@@ -1,12 +1,462 @@
-<div class="billing-container" [class.rtl]="lang.currentLanguage === 'he'" [class.ltr]="lang.currentLanguage === 'en'">
-  <div class="billing-content">
-    <div class="billing-placeholder">
-      <h3 class="placeholder-title">
-        {{ lang.t('profile.billing') }}
-      </h3>
-      <p class="placeholder-text">
-        {{ lang.t('profile.billingDetailsWillAppear') }}
-      </p>
+<div class="space-y-8 max-w-6xl mx-auto p-4 md:p-8" dir="rtl">
+  <!-- Current Subscription Card with Detailed Usage -->
+  <div class="current-subscription-main-card">
+    <button class="manage-subscription-top-btn">
+      <span class="gear-icon">⚙️</span>
+      נהל את המנוי שלי
+    </button>
+    
+    <div class="subscription-plan-header">
+      <div class="plan-info-top">
+        <span class="plan-star-icon">⭐</span>
+        <div class="plan-name-price">
+          <h2 class="plan-name-large">Pro</h2>
+          <span class="current-badge">נוכחית</span>
+          <p class="plan-price-large">₪290/חודשי</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detailed Usage Cards -->
+    <div class="detailed-usage-grid">
+      <!-- Active Questionnaires Card -->
+      <div class="usage-detail-card usage-card-purple">
+        <div class="usage-card-header">
+          <span class="usage-card-icon">📝</span>
+          <h3 class="usage-card-title">שאלונים פעילים</h3>
+        </div>
+        <div class="usage-main-metric">3/3</div>
+        <div class="usage-progress-bar-wrapper">
+          <div class="usage-progress-bar usage-progress-purple" style="width: 100%"></div>
+        </div>
+        <div class="usage-details">
+          <div class="usage-detail-row">
+            <span>נוצל: 3</span>
+            <span>נותר: 0</span>
+          </div>
+          <p class="usage-note">כל המקומות לשאלונים בשימוש</p>
+        </div>
+      </div>
+
+      <!-- Messages Card -->
+      <div class="usage-detail-card usage-card-green">
+        <div class="usage-card-header">
+          <span class="usage-card-icon">💬</span>
+          <h3 class="usage-card-title">הודעות</h3>
+        </div>
+        <div class="usage-main-metric">285/600</div>
+        <div class="usage-progress-bar-wrapper">
+          <div class="usage-progress-bar usage-progress-green" style="width: 47.5%"></div>
+        </div>
+        <div class="usage-details">
+          <div class="usage-detail-row">
+            <span>נוצל: 285</span>
+            <span>נותר: 315</span>
+          </div>
+          <div class="usage-breakdown">
+            <p class="usage-breakdown-line">סה"כ: WhatsApp 35 · SMS 250</p>
+            <p class="usage-breakdown-line">מענה ללקוח: WhatsApp 20 · SMS 180</p>
+            <p class="usage-breakdown-line">תזכורות: WhatsApp 15 · SMS 70</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Emails Card -->
+      <div class="usage-detail-card usage-card-blue">
+        <div class="usage-card-header">
+          <span class="usage-card-icon">📧</span>
+          <h3 class="usage-card-title">מיילים</h3>
+        </div>
+        <div class="usage-main-metric">702/900</div>
+        <div class="usage-progress-bar-wrapper">
+          <div class="usage-progress-bar usage-progress-blue" style="width: 78%"></div>
+        </div>
+        <div class="usage-details">
+          <div class="usage-detail-row">
+            <span>נוצל: 702</span>
+            <span>נותר: 198</span>
+          </div>
+          <div class="usage-breakdown">
+            <p class="usage-breakdown-line">מענה: 420 · תזכורות: 282</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Leads Card -->
+      <div class="usage-detail-card usage-card-orange">
+        <div class="usage-card-header">
+          <span class="usage-card-icon">🧲</span>
+          <h3 class="usage-card-title">לידים</h3>
+        </div>
+        <div class="usage-main-metric">87/300</div>
+        <div class="usage-progress-bar-wrapper">
+          <div class="usage-progress-bar usage-progress-orange" style="width: 29%"></div>
+        </div>
+        <div class="usage-details">
+          <div class="usage-detail-row">
+            <span>נוצל: 87</span>
+            <span>נותר: 213</span>
+          </div>
+          <p class="usage-note">נשארו 213 לידים זמינים</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Partner Metrics Section -->
+  <div class="partner-metrics-section">
+    <div class="partner-metrics-header">
+      <button class="join-partners-top-btn">
+        הצטרפות לתוכנית שותפים
+        <span class="handshake-icon">🤝</span>
+      </button>
+      <div class="partner-metrics-title-section">
+        <h2 class="partner-metrics-title">מדדי שותפים</h2>
+        <p class="partner-metrics-subtitle">מעקב אחר פעילות שותפים, הכנסות ועמלות בתוכנית האפיליאציה.</p>
+      </div>
+    </div>
+
+    <div class="partner-metrics-grid">
+      <!-- Active Partners Card -->
+      <div class="partner-metric-card metric-card-orange">
+        <div class="metric-badge-orange">8</div>
+        <div class="metric-content">
+          <div class="metric-header-row">
+            <span class="metric-icon-orange">🤝</span>
+            <span class="metric-label">שותפים פעילים</span>
+          </div>
+          <div class="metric-value-large">
+            <span class="metric-dot-orange">●</span>
+            8
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Commissions Card -->
+      <div class="partner-metric-card metric-card-purple">
+        <div class="metric-content">
+          <div class="metric-value-large">₪5,890</div>
+          <p class="metric-label">סה"כ עמלות</p>
+          <div class="metric-date">
+            <span class="metric-date-text">נובמבר</span>
+            <span class="metric-date-number">13</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Revenue from Partners Card -->
+      <div class="partner-metric-card metric-card-green">
+        <div class="metric-content">
+          <div class="metric-value-with-icon">
+            <span class="metric-value-large">₪35,800</span>
+            <span class="metric-arrow-icon">↑</span>
+          </div>
+          <p class="metric-label">הכנסות ממשתמשים</p>
+          <p class="metric-label-secondary">דרך שותפים</p>
+        </div>
+      </div>
+
+      <!-- Total Users Card -->
+      <div class="partner-metric-card metric-card-white">
+        <div class="metric-content">
+          <div class="metric-value-with-icon">
+            <span class="metric-value-large">284</span>
+            <span class="metric-users-icon">👥</span>
+          </div>
+          <p class="metric-label">סה"כ משתמשים</p>
+          <div class="metric-new-users">
+            <span class="metric-new-users-label">משתמשים חדשים</span>
+            <span class="metric-new-users-value">24+</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pricing Plans Comparison -->
+  <div class="pricing-plans-section">
+    <div class="pricing-plans-grid">
+      <!-- Premium Plan (Left) -->
+      <div class="pricing-card pricing-card-premium">
+        <div class="plan-icon">⚡</div>
+        <h3 class="plan-name">Premium</h3>
+        <p class="plan-description">משרדים וקהילות עם נפח לקוחות גבוה</p>
+        <div class="plan-price">
+          <span class="price-amount">₪480</span>
+          <span class="price-period">/ חודשי</span>
+        </div>
+        <ul class="plan-features-list">
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>600 לידים בחודש</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>6 שאלונים פעילים</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>מענה חכם + AI משולב (כולל למידת סגנון)</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>1800 מייל</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>600 וואטסאפ</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>תזכורות חכם (עד 3 תזכורות)</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>עיצוב ממותג</span>
+          </li>
+        </ul>
+        <button class="plan-select-btn plan-select-btn-premium">בחר תוכנית Premium</button>
+      </div>
+
+      <!-- Pro Plan (Middle) -->
+      <div class="pricing-card pricing-card-pro">
+        <div class="plan-icon">⭐</div>
+        <h3 class="plan-name">Pro</h3>
+        <p class="plan-description">בעלי עסקים פעילים שרוצים אוטומציה מלאה</p>
+        <div class="plan-price">
+          <span class="price-amount">₪290</span>
+          <span class="price-period">/ חודשי</span>
+        </div>
+        <ul class="plan-features-list">
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>300 לידים בחודש</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>3 שאלונים פעילים</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>מענה אישי מעוצב + AI</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>900 מייל</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>300 וואטסאפ</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>תזכורות מייל + וואטסאפ</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>עיצוב ממותג</span>
+          </li>
+        </ul>
+        <button class="plan-select-btn plan-select-btn-pro">בחר תוכנית Pro</button>
+      </div>
+
+      <!-- Basic Plan (Right, Most Popular) -->
+      <div class="pricing-card pricing-card-basic">
+        <div class="most-popular-badge">הכי פופולרי</div>
+        <div class="plan-icon">▢</div>
+        <h3 class="plan-name">Basic</h3>
+        <p class="plan-description">עצמאים קטנים שרוצים לנהל לידים פשוט</p>
+        <div class="plan-price">
+          <span class="price-amount">₪179</span>
+          <span class="price-period">/ חודשי</span>
+        </div>
+        <ul class="plan-features-list">
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>100 לידים בחודש</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>1 שאלון פעיל</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>מענה סטנדרטי / אישי (ללא AI)</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>300 מייל (כולל 2 תזכורות)</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>תזכורות מייל בלבד</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>עיצוב ממותג</span>
+          </li>
+        </ul>
+        <button class="plan-select-btn plan-select-btn-basic">בחר תוכנית Basic</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Add-ons Section -->
+  <div class="addons-quick-section">
+    <h2 class="addons-quick-title">תוספות מהירות</h2>
+    <p class="addons-quick-subtitle">הרחב את המנוי שלך עם תוספות לפי הצורך</p>
+    
+    <div class="addons-quick-grid">
+      <!-- Card 1: +600 לידים -->
+      <div class="addon-quick-card">
+        <div class="addon-price-badge">₪149</div>
+        <div class="addon-icon addon-icon-red">🧲</div>
+        <h3 class="addon-quick-name">+600 לידים</h3>
+        <p class="addon-quick-description">הרחבה גדולה (כולל 1800 הודעות מייל)</p>
+        <div class="addon-quick-note">למשרדים</div>
+        <button class="addon-quick-btn">הוסף</button>
+      </div>
+
+      <!-- Card 2: +300 לידים -->
+      <div class="addon-quick-card">
+        <div class="addon-price-badge">₪99</div>
+        <div class="addon-icon addon-icon-red">🧲</div>
+        <h3 class="addon-quick-name">+300 לידים</h3>
+        <p class="addon-quick-description">הרחבה לעסקים פעילים (כולל 900 הודעות מייל)</p>
+        <div class="addon-quick-note">משתלם למנויי Basic/Pro</div>
+        <button class="addon-quick-btn">הוסף</button>
+      </div>
+
+      <!-- Card 3: +100 לידים -->
+      <div class="addon-quick-card">
+        <div class="addon-price-badge">₪49</div>
+        <div class="addon-icon addon-icon-red">🧲</div>
+        <h3 class="addon-quick-name">+100 לידים</h3>
+        <p class="addon-quick-description">הרחבת מכסת לידים (כולל 300 הודעות מייל)</p>
+        <div class="addon-quick-note">חד־פעמית; לא משנה את המנוי - הרווח גדל</div>
+        <button class="addon-quick-btn">הוסף</button>
+      </div>
+
+      <!-- Card 4: +1000 הודעות וואטסאפ -->
+      <div class="addon-quick-card">
+        <div class="addon-price-badge">₪99</div>
+        <div class="addon-icon addon-icon-purple">💬</div>
+        <h3 class="addon-quick-name">+1000 הודעות וואטסאפ</h3>
+        <p class="addon-quick-description">מיועד לקמפיינים ומשרדים גדולים</p>
+        <div class="addon-quick-note">נרכש לפי הצורך בלבד</div>
+        <button class="addon-quick-btn">הוסף</button>
+      </div>
+
+      <!-- Card 5: +500 הודעות וואטסאפ -->
+      <div class="addon-quick-card">
+        <div class="addon-price-badge">₪59</div>
+        <div class="addon-icon addon-icon-purple">💬</div>
+        <h3 class="addon-quick-name">+500 הודעות וואטסאפ</h3>
+        <p class="addon-quick-description">תוספת הודעות וואטסאפ</p>
+        <div class="addon-quick-note">מענה/תזכורות נוספות</div>
+        <button class="addon-quick-btn">הוסף</button>
+      </div>
+
+      <!-- Card 6: +500 הודעות מייל -->
+      <div class="addon-quick-card">
+        <div class="addon-price-badge">₪29</div>
+        <div class="addon-icon addon-icon-blue">📧</div>
+        <h3 class="addon-quick-name">+500 הודעות מייל</h3>
+        <p class="addon-quick-description">הודעות נוספות למענה או תזכורות</p>
+        <div class="addon-quick-note">למי שעובר את המכסה</div>
+        <button class="addon-quick-btn">הוסף</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payments and Invoices Section -->
+  <div class="payments-invoices-section">
+    <h2 class="payments-invoices-title">תשלומים וחשבוניות</h2>
+    
+    <!-- Payment History -->
+    <div class="payment-history-section">
+      <h3 class="payment-history-title">היסטוריית תשלומים</h3>
+      
+      <div class="payment-history-list">
+        <!-- Payment 1 -->
+        <div class="payment-history-item">
+          <div class="payment-info-left">
+            <div class="payment-icon-small">💳</div>
+            <div class="payment-details">
+              <p class="payment-name-text">מנוי חודשי Pro</p>
+              <p class="payment-date-text">15 במאי 2025</p>
+            </div>
+          </div>
+          <div class="payment-actions-right">
+            <button class="invoice-btn">
+              <span class="download-icon">⬇️</span>
+              חשבונית
+            </button>
+            <div class="payment-amount-section">
+              <div class="payment-amount-text">₪290</div>
+              <span class="paid-badge">שולם</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment 2 -->
+        <div class="payment-history-item">
+          <div class="payment-info-left">
+            <div class="payment-icon-small">💳</div>
+            <div class="payment-details">
+              <p class="payment-name-text">+100 לידים</p>
+              <p class="payment-date-text">20 במאי 2025</p>
+            </div>
+          </div>
+          <div class="payment-actions-right">
+            <button class="invoice-btn">
+              <span class="download-icon">⬇️</span>
+              חשבונית
+            </button>
+            <div class="payment-amount-section">
+              <div class="payment-amount-text">₪49</div>
+              <span class="paid-badge">שולם</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment 3 -->
+        <div class="payment-history-item">
+          <div class="payment-info-left">
+            <div class="payment-icon-small">💳</div>
+            <div class="payment-details">
+              <p class="payment-name-text">מנוי חודשי Pro</p>
+              <p class="payment-date-text">15 באפריל 2025</p>
+            </div>
+          </div>
+          <div class="payment-actions-right">
+            <button class="invoice-btn">
+              <span class="download-icon">⬇️</span>
+              חשבונית
+            </button>
+            <div class="payment-amount-section">
+              <div class="payment-amount-text">₪290</div>
+              <span class="paid-badge">שולם</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Methods -->
+    <div class="payment-methods-section">
+      <h3 class="payment-methods-title">אמצעי תשלום</h3>
+      
+      <div class="payment-method-item">
+        <div class="payment-method-info">
+          <div class="payment-icon-small">💳</div>
+          <div class="payment-method-details">
+            <p class="payment-method-type">כרטיס אשראי</p>
+            <p class="payment-method-card">Visa **** 4242</p>
+          </div>
+        </div>
+        <button class="update-payment-btn">עדכון</button>
+      </div>
     </div>
   </div>
 </div>
