@@ -17,12 +17,14 @@
 
 ### מדריכים
 
-1. **`START-HERE.md`** ⭐ - התחל כאן! מדריך מהיר
-2. **`INTEGRATION-GUIDE.md`** 📘 - מדריך מפורט מאוד
-3. **`REPORTS-SYSTEM-GUIDE.md`** 📊 - מדריך מערכת הדוחות
-4. **`BUSINESS-DETAILS-GUIDE.md`** 📧 - מדריך רכיב פרטי עסק לערוצי הפצה
-5. **`DESIGN-GUIDE.md`** 🎨 - מדריך עיצוב בלבד (colors, spacing, layout)
-6. **`MODULAR-COMPONENTS-GUIDE.md`** 🧩 - מדריך רכיבים מודולריים
+1. **`CURSOR-AI-GUIDE.md`** 🤖 - **התחל כאן אם אתה משתמש ב-Cursor!** מדריך לשימוש עם Cursor AI
+2. **`IMPLEMENTATION-STEPS.md`** 🚀 - מדריך שלב אחר שלב מפורט
+3. **`START-HERE.md`** ⭐ - התחל כאן! מדריך מהיר
+4. **`INTEGRATION-GUIDE.md`** 📘 - מדריך מפורט מאוד
+5. **`REPORTS-SYSTEM-GUIDE.md`** 📊 - מדריך מערכת הדוחות
+6. **`BUSINESS-DETAILS-GUIDE.md`** 📧 - מדריך רכיב פרטי עסק לערוצי הפצה
+7. **`DESIGN-GUIDE.md`** 🎨 - מדריך עיצוב בלבד (colors, spacing, layout)
+8. **`MODULAR-COMPONENTS-GUIDE.md`** 🧩 - מדריך רכיבים מודולריים
 
 ### קבצי קוד (ייווצרו בהמשך)
 
