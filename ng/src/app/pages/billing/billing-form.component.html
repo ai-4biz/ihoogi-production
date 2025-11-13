@@ -1,0 +1,316 @@
+<section class="billing-container" [class.rtl]="lang.currentLanguage === 'he'" [class.ltr]="lang.currentLanguage === 'en'">
+  <!-- Top Bar -->
+  <header class="billing-header">
+    <div class="billing-header-content">
+      <h1 class="billing-title">{{ lang.t('profile.billing') }}</h1>
+      <button class="billing-download-btn">{{ lang.t('billing.downloadInvoice') }}</button>
+    </div>
+  </header>
+
+  <!-- Two New Components -->
+  <div class="space-y-8 max-w-6xl mx-auto p-4 md:p-8" dir="rtl">
+    <!-- רכיב 1: "התחל בחינם עוד היום!" -->
+    <div class="max-w-4xl mx-auto w-full bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-8 border-2 border-green-500/30 shadow-lg">
+      <div class="text-center">
+        <h3 class="text-3xl font-bold mb-4 bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+          🎁 התחל בחינם עוד היום!
+        </h3>
+        <p class="text-lg text-gray-900 mb-6 font-medium">
+          התנסה בכל יכולות המערכת עם <span class="text-green-600 font-bold">10 לידים חינם</span> - ללא צורך בכרטיס אשראי
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- כרטיס 1: 10 לידים חינם -->
+          <div class="flex items-center justify-center gap-3 bg-white/60 rounded-lg p-3">
+            <div class="w-4 h-4 bg-green-500 rounded-full flex-shrink-0"></div>
+            <span class="text-sm font-medium">10 לידים חינם</span>
+          </div>
+          <!-- כרטיס 2: ללא כרטיס אשראי -->
+          <div class="flex items-center justify-center gap-3 bg-white/60 rounded-lg p-3">
+            <div class="w-4 h-4 bg-blue-500 rounded-full flex-shrink-0"></div>
+            <span class="text-sm font-medium">ללא כרטיס אשראי</span>
+          </div>
+          <!-- כרטיס 3: שדרוג בכל עת -->
+          <div class="flex items-center justify-center gap-3 bg-white/60 rounded-lg p-3">
+            <div class="w-4 h-4 bg-purple-500 rounded-full flex-shrink-0"></div>
+            <span class="text-sm font-medium">שדרוג בכל עת</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- רכיב 2: "תוכנית שותפים - שתי דרכים להצלחה!" -->
+    <div class="max-w-4xl mx-auto w-full bg-gradient-to-r from-orange-50 via-yellow-50 to-amber-50 rounded-2xl p-8 border-2 border-orange-400/40 shadow-lg relative overflow-hidden mt-8">
+      <!-- רקע אנימציה -->
+      <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
+      
+      <div class="text-center relative z-10">
+        <!-- Badge "חדש בקרוב" -->
+        <div class="inline-block mb-4">
+          <span class="inline-flex items-center rounded-md bg-gradient-to-r from-orange-500 to-amber-500 text-white px-6 py-2 text-lg font-bold shadow-lg animate-bounce">
+            🚀 חדש בקרוב
+          </span>
+        </div>
+        
+        <!-- כותרת -->
+        <h3 class="text-2xl md:text-3xl font-bold mb-6 bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">
+          🤝 תוכנית שותפים - שתי דרכים להצלחה!
+        </h3>
+        
+        <!-- שני כרטיסים -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+          <!-- כרטיס 1: בנה את רשת השותפים שלך (מימין - RTL) -->
+          <div class="bg-white/80 rounded-xl p-6 border-2 border-orange-300/50 hover:border-orange-400 transition-all hover:shadow-xl">
+            <div class="text-4xl mb-3">🏗️</div>
+            <h4 class="text-xl font-bold mb-3 text-orange-600">
+              בנה את רשת השותפים שלך
+            </h4>
+            <p class="text-sm text-gray-900 font-medium mb-2">
+              רוצה לבנות מערך של שותפים שיעזרו לך בבניית העסק?
+            </p>
+            <p class="text-xs text-gray-600">
+              פתח <span class="text-orange-600 font-bold">תוכנית שותפים משלך</span> והרחב את הפעילות בקלות
+            </p>
+          </div>
+          <!-- כרטיס 2: הצטרף לשותפים של iHoogi (משמאל - RTL) -->
+          <div class="bg-white/80 rounded-xl p-6 border-2 border-green-300/50 hover:border-green-400 transition-all hover:shadow-xl">
+            <div class="text-4xl mb-3">💰</div>
+            <h4 class="text-xl font-bold mb-3 text-green-600">
+              הצטרף לשותפים של iHoogi
+            </h4>
+            <p class="text-sm text-gray-900 font-medium mb-2">
+              הפוך כל המלצה להכנסה פסיבית!
+            </p>
+            <p class="text-xs text-gray-600">
+              קבל <span class="text-green-600 font-bold">עמלה חודשית</span> עבור כל משתמש שהצטרף דרכך - <span class="font-bold">כל עוד המנוי פעיל</span>
+            </p>
+          </div>
+        </div>
+        <!-- טקסט תחתון -->
+        <p class="text-sm text-gray-600 italic">
+          💡 שתי האפשרויות יהיו זמינות בקרוב - הירשם עכשיו ותהיה הראשון לדעת!
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pricing Plans Comparison -->
+  <div class="pricing-plans-section">
+    <div class="pricing-plans-grid">
+      <!-- Premium Plan (Left) -->
+      <div class="pricing-card pricing-card-premium">
+        <div class="plan-icon">⚡</div>
+        <h3 class="plan-name">Premium</h3>
+        <p class="plan-description">משרדים וקהילות עם נפח לקוחות גבוה</p>
+        <div class="plan-price">
+          <span class="price-amount">₪480</span>
+          <span class="price-period">/ חודשי</span>
+        </div>
+        <ul class="plan-features-list">
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>600 לידים בחודש</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>6 שאלונים פעילים</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>מענה חכם + AI משולב (כולל למידת סגנון)</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>1800 מייל</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>600 וואטסאפ</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>תזכורות חכם (עד 3 תזכורות)</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>עיצוב ממותג</span>
+          </li>
+        </ul>
+        <button class="plan-select-btn plan-select-btn-premium">בחר תוכנית Premium</button>
+      </div>
+
+      <!-- Pro Plan (Middle) -->
+      <div class="pricing-card pricing-card-pro">
+        <div class="plan-icon">⭐</div>
+        <h3 class="plan-name">Pro</h3>
+        <p class="plan-description">בעלי עסקים פעילים שרוצים אוטומציה מלאה</p>
+        <div class="plan-price">
+          <span class="price-amount">₪290</span>
+          <span class="price-period">/ חודשי</span>
+        </div>
+        <ul class="plan-features-list">
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>300 לידים בחודש</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>3 שאלונים פעילים</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>מענה אישי מעוצב + AI</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>900 מייל</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>300 וואטסאפ</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>תזכורות מייל + וואטסאפ</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>עיצוב ממותג</span>
+          </li>
+        </ul>
+        <button class="plan-select-btn plan-select-btn-pro">בחר תוכנית Pro</button>
+      </div>
+
+      <!-- Basic Plan (Right, Most Popular) -->
+      <div class="pricing-card pricing-card-basic">
+        <div class="most-popular-badge">הכי פופולרי</div>
+        <div class="plan-icon">▢</div>
+        <h3 class="plan-name">Basic</h3>
+        <p class="plan-description">עצמאים קטנים שרוצים לנהל לידים פשוט</p>
+        <div class="plan-price">
+          <span class="price-amount">₪179</span>
+          <span class="price-period">/ חודשי</span>
+        </div>
+        <ul class="plan-features-list">
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>100 לידים בחודש</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>1 שאלון פעיל</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>מענה סטנדרטי / אישי (ללא AI)</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>300 מייל (כולל 2 תזכורות)</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>תזכורות מייל בלבד</span>
+          </li>
+          <li class="plan-feature-item">
+            <span class="check-icon">✓</span>
+            <span>עיצוב ממותג</span>
+          </li>
+        </ul>
+        <button class="plan-select-btn plan-select-btn-basic">בחר תוכנית Basic</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Add-ons Section -->
+  <div class="addons-quick-section">
+    <h2 class="addons-quick-title">תוספות מהירות</h2>
+    <p class="addons-quick-subtitle">הרחב את המנוי שלך עם תוספות לפי הצורך</p>
+    
+    <div class="addons-quick-grid">
+      <!-- Card 1: +600 לידים -->
+      <div class="addon-quick-card">
+        <div class="addon-price-badge">₪149</div>
+        <div class="addon-icon addon-icon-red">🧲</div>
+        <h3 class="addon-quick-name">+600 לידים</h3>
+        <p class="addon-quick-description">הרחבה גדולה (כולל 1800 הודעות מייל)</p>
+        <div class="addon-quick-note">למשרדים</div>
+        <button class="addon-quick-btn">הוסף</button>
+      </div>
+
+      <!-- Card 2: +300 לידים -->
+      <div class="addon-quick-card">
+        <div class="addon-price-badge">₪99</div>
+        <div class="addon-icon addon-icon-red">🧲</div>
+        <h3 class="addon-quick-name">+300 לידים</h3>
+        <p class="addon-quick-description">הרחבה לעסקים פעילים (כולל 900 הודעות מייל)</p>
+        <div class="addon-quick-note">משתלם למנויי Basic/Pro</div>
+        <button class="addon-quick-btn">הוסף</button>
+      </div>
+
+      <!-- Card 3: +100 לידים -->
+      <div class="addon-quick-card">
+        <div class="addon-price-badge">₪49</div>
+        <div class="addon-icon addon-icon-red">🧲</div>
+        <h3 class="addon-quick-name">+100 לידים</h3>
+        <p class="addon-quick-description">הרחבת מכסת לידים (כולל 300 הודעות מייל)</p>
+        <div class="addon-quick-note">חד־פעמית; לא משנה את המנוי - הרווח גדל</div>
+        <button class="addon-quick-btn">הוסף</button>
+      </div>
+
+      <!-- Card 4: +1000 הודעות וואטסאפ -->
+      <div class="addon-quick-card">
+        <div class="addon-price-badge">₪99</div>
+        <div class="addon-icon addon-icon-purple">💬</div>
+        <h3 class="addon-quick-name">+1000 הודעות וואטסאפ</h3>
+        <p class="addon-quick-description">מיועד לקמפיינים ומשרדים גדולים</p>
+        <div class="addon-quick-note">נרכש לפי הצורך בלבד</div>
+        <button class="addon-quick-btn">הוסף</button>
+      </div>
+
+      <!-- Card 5: +500 הודעות וואטסאפ -->
+      <div class="addon-quick-card">
+        <div class="addon-price-badge">₪59</div>
+        <div class="addon-icon addon-icon-purple">💬</div>
+        <h3 class="addon-quick-name">+500 הודעות וואטסאפ</h3>
+        <p class="addon-quick-description">תוספת הודעות וואטסאפ</p>
+        <div class="addon-quick-note">מענה/תזכורות נוספות</div>
+        <button class="addon-quick-btn">הוסף</button>
+      </div>
+
+      <!-- Card 6: +500 הודעות מייל -->
+      <div class="addon-quick-card">
+        <div class="addon-price-badge">₪29</div>
+        <div class="addon-icon addon-icon-blue">📧</div>
+        <h3 class="addon-quick-name">+500 הודעות מייל</h3>
+        <p class="addon-quick-description">הודעות נוספות למענה או תזכורות</p>
+        <div class="addon-quick-note">למי שעובר את המכסה</div>
+        <button class="addon-quick-btn">הוסף</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ Section -->
+  <div class="faq-section">
+    <h2 class="faq-title">שאלות נפוצות</h2>
+    
+    <div class="faq-list">
+      <!-- FAQ Item 1 -->
+      <div class="faq-item">
+        <h3 class="faq-question">האם אפשר לשנות תוכנית בכל זמן?</h3>
+        <p class="faq-answer">כן, ניתן לשדרג או להוריד דרגה בכל עת. השינויים ייכנסו לתוקף מיד.</p>
+      </div>
+
+      <!-- FAQ Item 2 -->
+      <div class="faq-item">
+        <h3 class="faq-question">מה קורה אם אני עובר את מכסת התגובות?</h3>
+        <p class="faq-answer">נודיע לך כשאתה מתקרב למכסה. ניתן לשדרג בכל זמן או לחכות לחודש הבא.</p>
+      </div>
+
+      <!-- FAQ Item 3 -->
+      <div class="faq-item">
+        <h3 class="faq-question">האם יש תקופת ניסיון?</h3>
+        <p class="faq-answer">כן, כל התוכניות מגיעות עם 14 יום ניסיון חינם ללא צורך בכרטיס אשראי.</p>
+      </div>
+    </div>
+  </div>
+</section>
