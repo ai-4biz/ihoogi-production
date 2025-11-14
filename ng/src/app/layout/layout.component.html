@@ -69,10 +69,21 @@
     </aside>
 
     <!-- Main content -->
-    <main class="flex-1 layout-bg">
-	    <div class="white-bg p-0 md:p-5">
+    <main class="flex-1 layout-bg flex flex-col">
+	    <div class="white-bg p-0 md:p-5 flex-1">
 		    <router-outlet></router-outlet>
 	    </div>
+	    
+	    <!-- Footer with Legal Text -->
+	    <footer class="legal-footer" [attr.dir]="lang.currentLanguage === 'he' ? 'rtl' : 'ltr'">
+		    <p>
+			    {{ lang.t('auth.footerText') }}
+			    <a routerLink="/terms" class="legal-link">{{ lang.t('auth.termsOfUse') }}</a>
+			    {{ lang.t('auth.and') }}
+			    <a routerLink="/terms" class="legal-link">{{ lang.t('auth.privacyPolicy') }}</a>
+			    {{ lang.t('auth.ofCompany') }}
+		    </p>
+	    </footer>
     </main>
   </div>
 </div>

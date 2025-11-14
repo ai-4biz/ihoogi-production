@@ -14,7 +14,7 @@ import { ToastService } from '../../core/services/toast.service';
   styleUrls: ['./login.component.sass']
 })
 export class LoginComponent {
-  activeTab: 'login' | 'forgot' = 'login';
+  activeTab: 'login' | 'forgot' | 'reset' = 'login';
   email = '';
   password = '';
   isLoading = false;

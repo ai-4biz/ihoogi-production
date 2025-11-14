@@ -1,5 +1,5 @@
-<div class="min-h-screen bg-gray-50 flex items-center justify-center p-4" [class.text-right]="lang.currentLanguage === 'he'" [class.text-left]="lang.currentLanguage === 'en'">
-  <div class="w-full max-w-md">
+<div class="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4" [class.text-right]="lang.currentLanguage === 'he'" [class.text-left]="lang.currentLanguage === 'en'" [attr.dir]="lang.currentLanguage === 'he' ? 'rtl' : 'ltr'">
+  <div class="w-full max-w-md flex-1 flex flex-col justify-center">
     <!-- iHoogi Logo -->
     <div class="text-center mb-6">
       <img src="/img/logo.png" alt="iHoogi" class="h-24 mx-auto mb-2">
@@ -9,8 +9,35 @@
       </h1>
     </div>
 
+    <!-- Tabs Navigation -->
+    <div class="tabs-container mb-4">
+      <div class="tabs-list">
+        <button
+          type="button"
+          [class.active]="activeTab === 'login'"
+          (click)="activeTab = 'login'"
+          class="tab-button">
+          {{ lang.t('auth.loginTab') }}
+        </button>
+        <button
+          type="button"
+          [class.active]="activeTab === 'forgot'"
+          (click)="activeTab = 'forgot'"
+          class="tab-button">
+          {{ lang.t('auth.forgotPasswordTab') }}
+        </button>
+        <button
+          type="button"
+          [class.active]="activeTab === 'reset'"
+          (click)="activeTab = 'reset'"
+          class="tab-button">
+          {{ lang.t('auth.resetPasswordTab') }}
+        </button>
+      </div>
+    </div>
+
     <!-- Forms Container -->
-    <div class="bg-white rounded-lg shadow-md p-8">
+    <div class="bg-white rounded-lg shadow-md p-8 border-t-4 border-teal-500">
       <!-- Login Form -->
       @if (activeTab === 'login') {
         <form (submit)="handleLogin(); $event.preventDefault()" class="space-y-6">
@@ -56,11 +83,6 @@
             </div>
           </div>
 
-          <div>
-            <button type="button" (click)="activeTab = 'forgot'" class="text-teal-500 hover:underline text-sm">
-              {{ lang.t('auth.forgotPassword') }}
-            </button>
-          </div>
 
           <button
             type="submit"
@@ -70,7 +92,7 @@
           </button>
 
           <div class="text-center text-gray-600 text-sm">
-            {{ lang.t('auth.notRegistered') }} <a routerLink="/register" class="text-teal-500 hover:underline">{{ lang.t('auth.registerNow') }}</a>
+            {{ lang.t('auth.notRegistered') }} <a routerLink="/register" class="text-orange-500 hover:underline font-semibold">{{ lang.t('auth.registerNow') }}</a>
           </div>
         </form>
       }
@@ -102,6 +124,32 @@
         </form>
       }
 
+      <!-- Reset Password Form (Coming Soon - Design Only) -->
+      @if (activeTab === 'reset') {
+        <div class="space-y-6">
+          <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+            <p class="text-blue-800 text-sm">
+              {{ lang.t('auth.resetPasswordTab') }} - {{ lang.currentLanguage === 'he' ? 'ניתן בהמשך' : 'Coming Soon' }}
+            </p>
+          </div>
+          
+          <div class="text-center text-gray-600 text-sm">
+            <button type="button" (click)="activeTab = 'login'" class="text-teal-500 hover:underline">{{ lang.t('auth.loginNow') }}</button>
+          </div>
+        </div>
+      }
+
     </div>
   </div>
+
+  <!-- Footer with Legal Text -->
+  <footer class="legal-footer">
+    <p>
+      {{ lang.t('auth.footerText') }}
+      <a routerLink="/terms" class="legal-link">{{ lang.t('auth.termsOfUse') }}</a>
+      {{ lang.t('auth.and') }}
+      <a routerLink="/terms" class="legal-link">{{ lang.t('auth.privacyPolicy') }}</a>
+      {{ lang.t('auth.ofCompany') }}
+    </p>
+  </footer>
 </div>

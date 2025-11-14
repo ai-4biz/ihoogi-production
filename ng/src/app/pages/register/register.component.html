@@ -1,4 +1,4 @@
-<div class="register-page">
+<div class="register-page" [attr.dir]="lang.currentLanguage === 'he' ? 'rtl' : 'ltr'">
   <!-- Landing Hero Section -->
   <app-landing-hero variant="signup"></app-landing-hero>
 
@@ -218,4 +218,15 @@
       </button>
     </form>
   </div>
+
+  <!-- Footer with Legal Text -->
+  <footer class="legal-footer" [attr.dir]="lang.currentLanguage === 'he' ? 'rtl' : 'ltr'">
+    <p>
+      {{ lang.t('auth.footerText') }}
+      <a routerLink="/terms" class="legal-link">{{ lang.t('auth.termsOfUse') }}</a>
+      {{ lang.t('auth.and') }}
+      <a routerLink="/terms" class="legal-link">{{ lang.t('auth.privacyPolicy') }}</a>
+      {{ lang.t('auth.ofCompany') }}
+    </p>
+  </footer>
 </div>

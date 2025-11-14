@@ -104,53 +104,205 @@
   font-size: 1.25rem
   font-weight: bold
 
-// Compact Summary Stats
-.summary-stats-row
+// Subscription Usage Cards (Like Billing Page) - Compact, in one row
+.usage-cards-row
   display: grid
   grid-template-columns: repeat(1, 1fr)
   gap: 0.75rem
   margin-bottom: 2rem
 
   @media (min-width: 640px)
-    grid-template-columns: repeat(3, 1fr)
+    grid-template-columns: repeat(2, 1fr)
     gap: 1rem
 
-.summary-stat-card
+  @media (min-width: 1024px)
+    grid-template-columns: repeat(4, 1fr)
+    gap: 0.875rem
+
+.usage-card
   background: white
-  padding: 0.75rem
-  border-radius: 1rem
-  text-align: center
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06)
+  border-radius: 0.75rem
+  padding: 1rem
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08)
   transition: all 0.2s
-  border: none
+  border: 1px solid #e5e7eb
+  display: flex
+  flex-direction: column
+  gap: 0.75rem
 
   &:hover
     transform: translateY(-2px)
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1)
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12)
 
-.stat-primary
-  background: linear-gradient(to bottom right, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%)
-  border: none
+.usage-card-green
+  background: #f0fdf4
+  border-right: 4px solid #10b981
 
-.stat-success
-  background: linear-gradient(to bottom right, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%)
-  border: none
+  [dir="ltr"] &
+    border-right: none
+    border-left: 4px solid #10b981
 
-.stat-purple
-  background: linear-gradient(to bottom right, rgba(168, 85, 247, 0.1) 0%, rgba(168, 85, 247, 0.05) 100%)
-  border: none
+.usage-card-purple
+  background: #faf5ff
+  border-right: 4px solid #a855f7
 
-.stat-number
-  font-size: 2rem
-  font-weight: bold
-  color: #1F2937
-  margin-bottom: 0.25rem
+  [dir="ltr"] &
+    border-right: none
+    border-left: 4px solid #a855f7
 
-.stat-label
+.usage-card-orange
+  background: #fff7ed
+  border-right: 4px solid #f97316
+
+  [dir="ltr"] &
+    border-right: none
+    border-left: 4px solid #f97316
+
+.usage-card-blue
+  background: #eff6ff
+  border-right: 4px solid #3b82f6
+
+  [dir="ltr"] &
+    border-right: none
+    border-left: 4px solid #3b82f6
+
+.usage-card-header
+  display: flex
+  align-items: center
+  gap: 0.75rem
+
+.usage-card-icon-wrapper
+  width: 32px
+  height: 32px
+  border-radius: 0.5rem
+  display: flex
+  align-items: center
+  justify-content: center
+  flex-shrink: 0
+
+.usage-icon-purple
+  background: #a855f7
+
+.usage-icon-green
+  background: #10b981
+
+.usage-icon-orange
+  background: #f97316
+
+.usage-icon-blue
+  background: #3b82f6
+
+.usage-card-icon
+  font-size: 1.25rem
+  flex-shrink: 0
+
+.usage-card-title
+  font-size: 0.875rem
+  font-weight: 600
+  color: #374151
+  margin: 0
+  text-align: right
+
+  [dir="ltr"] &
+    text-align: left
+
+.usage-card-main
+  display: flex
+  flex-direction: column
+  gap: 0.5rem
+
+.usage-card-ratio
+  font-size: 1.5rem
+  font-weight: 700
+  color: #111827
+  text-align: right
+  line-height: 1.2
+
+  [dir="ltr"] &
+    text-align: left
+
+.usage-progress-bar
+  width: 100%
+  height: 8px
+  background: #e5e7eb
+  border-radius: 4px
+  overflow: hidden
+
+.usage-progress-fill
+  height: 100%
+  border-radius: 4px
+  transition: width 0.3s ease
+
+.usage-progress-green
+  background: #10b981
+
+.usage-progress-purple
+  background: #a855f7
+
+.usage-progress-orange
+  background: #f97316
+
+.usage-progress-blue
+  background: #3b82f6
+
+.usage-card-details
+  display: flex
+  flex-direction: column
+  gap: 0.5rem
   font-size: 0.75rem
-  color: #6B7280
+
+.usage-detail-row
+  display: flex
+  justify-content: space-between
+  align-items: center
+  text-align: right
+
+  [dir="ltr"] &
+    text-align: left
+
+.usage-detail-label
+  color: #6b7280
   font-weight: 500
-  margin-bottom: 0.5rem
+
+.usage-detail-value
+  color: #1f2937
+  font-weight: 600
+
+.usage-breakdown
+  display: flex
+  flex-direction: column
+  gap: 0.25rem
+  margin-top: 0.25rem
+  padding-top: 0.5rem
+  border-top: 1px solid #e5e7eb
+
+.usage-breakdown-item
+  font-size: 0.75rem
+  color: #4b5563
+  line-height: 1.5
+  text-align: right
+
+  [dir="ltr"] &
+    text-align: left
+
+.usage-breakdown-label
+  font-weight: 600
+  color: #6b7280
+  margin-left: 0.25rem
+
+  [dir="ltr"] &
+    margin-left: 0
+    margin-right: 0.25rem
+
+.usage-message
+  font-size: 0.7rem
+  color: #6b7280
+  font-style: italic
+  margin-top: 0.25rem
+  text-align: right
+
+  [dir="ltr"] &
+    text-align: left
 
 .upgrade-btn
   background: transparent
@@ -168,77 +320,316 @@
     background: #8B5CF6
     color: white
 
-// Leads Summary Cards
-.leads-summary-row
+// Thin Summary Bars
+.summary-bars-container
   display: grid
-  grid-template-columns: repeat(2, 1fr)
-  gap: 1rem
+  grid-template-columns: repeat(1, 1fr)
+  gap: 0.75rem
   margin-bottom: 1.5rem
 
-.leads-card
+  @media (min-width: 768px)
+    grid-template-columns: repeat(3, 1fr)
+    gap: 1rem
+
+// Subscription Bars Container (Messages and Emails - Full Width)
+.subscription-bars-container
+  display: flex
+  flex-direction: column
+  gap: 0.75rem
+  margin-bottom: 1.5rem
+
+.summary-bar
   background: white
-  padding: 1rem
-  border-radius: 1rem
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06)
+  border-radius: 0.75rem
+  padding: 1rem 1.25rem
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08)
+  border: 1px solid #e5e7eb
+
+.summary-bar-leads
+  background: #fff7ed
+  border-right: 4px solid #f97316
+  padding: 0.875rem 1rem
+
+  [dir="ltr"] &
+    border-right: none
+    border-left: 4px solid #f97316
+
+.summary-bar-new-leads
+  background: #f0fdf4
+  border-right: 4px solid #10b981
   cursor: pointer
   transition: all 0.2s
 
+  [dir="ltr"] &
+    border-right: none
+    border-left: 4px solid #10b981
+
   &:hover
     transform: translateY(-2px)
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12)
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12)
 
-.leads-card-primary
-  background: linear-gradient(to left, rgba(139, 92, 246, 0.05) 0%, transparent 100%)
-  border: 1px solid rgba(139, 92, 246, 0.3)
+.summary-bar-reminder-leads
+  background: #fef3c7
+  border-right: 4px solid #f59e0b
+  cursor: pointer
+  transition: all 0.2s
 
-.leads-card-warning
-  background: linear-gradient(to left, rgba(249, 115, 22, 0.05) 0%, transparent 100%)
-  border: 1px solid rgba(249, 115, 22, 0.3)
+  [dir="ltr"] &
+    border-right: none
+    border-left: 4px solid #f59e0b
 
-.leads-card-content
+  &:hover
+    transform: translateY(-2px)
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12)
+
+.summary-bar-clickable
+  justify-content: space-between
+
+.summary-bar-action
+  display: flex
+  align-items: center
+  color: #6b7280
+  transition: all 0.2s
+
+  .summary-bar-clickable:hover &
+    color: #111827
+    transform: translateX(-4px)
+
+    [dir="ltr"] &
+      transform: translateX(4px)
+
+.summary-bar-reminder-leads
+  background: #fef3c7
+  border-right: 4px solid #f59e0b
+  cursor: pointer
+  transition: all 0.2s
+
+  [dir="ltr"] &
+    border-right: none
+    border-left: 4px solid #f59e0b
+
+  &:hover
+    transform: translateY(-2px)
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12)
+    background: #fde68a
+
+.summary-bar-clickable
+  justify-content: space-between
+
+.summary-bar-action
+  display: flex
+  align-items: center
+  justify-content: center
+  color: #6b7280
+  transition: all 0.2s
+
+  [dir="rtl"] &
+    transform: scaleX(-1)
+
+  .summary-bar-new-leads:hover &,
+  .summary-bar-reminder-leads:hover &
+    color: #111827
+    transform: translateX(-4px)
+
+    [dir="rtl"] &
+      transform: scaleX(-1) translateX(4px)
+
+.summary-bar-messages
+  background: #f0fdf4
+  border-right: 4px solid #10b981
+  padding: 0.875rem 1rem
+
+  [dir="ltr"] &
+    border-right: none
+    border-left: 4px solid #10b981
+
+.summary-bar-emails
+  background: #eff6ff
+  border-right: 4px solid #3b82f6
+  padding: 0.875rem 1rem
+
+  [dir="ltr"] &
+    border-right: none
+    border-left: 4px solid #3b82f6
+
+.summary-bar-content
   display: flex
   align-items: center
   justify-content: space-between
-  gap: 1rem
+  flex-wrap: wrap
+  gap: 0.75rem
+  text-align: right
 
-.leads-card-icon
-  width: 48px
-  height: 48px
-  border-radius: 50%
+  [dir="ltr"] &
+    text-align: left
+
+.summary-bar-item
+  display: flex
+  align-items: center
+  gap: 0.5rem
+  flex-wrap: nowrap
+
+.summary-bar-label
+  font-size: 0.875rem
+  color: #6b7280
+  font-weight: 500
+
+.summary-bar-value
+  font-size: 0.875rem
+  color: #111827
+  font-weight: 700
+
+.summary-bar-divider
+  width: 1px
+  height: 20px
+  background: #d1d5db
+  flex-shrink: 0
+
+.subscription-section
+  display: flex
+  flex-direction: row
+  align-items: center
+  justify-content: space-between
+  gap: 1.5rem
+  flex-wrap: wrap
+
+  @media (min-width: 1024px)
+    flex-wrap: nowrap
+
+.subscription-section-header
+  display: flex
+  align-items: center
+  gap: 0.625rem
+  flex-shrink: 0
+
+.subscription-icon-wrapper
+  width: 28px
+  height: 28px
+  border-radius: 0.5rem
   display: flex
   align-items: center
   justify-content: center
   flex-shrink: 0
 
-.primary-icon
-  background: rgba(139, 92, 246, 0.2)
-  color: #8B5CF6
+  svg
+    width: 16px
+    height: 16px
 
-.warning-icon
-  background: rgba(249, 115, 22, 0.2)
-  color: #F97316
+.subscription-icon-green
+  background: #10b981
 
-.leads-card-text
-  flex: 1
-  text-align: right
+.subscription-icon-blue
+  background: #3b82f6
 
-.leads-card-header
-  display: flex
-  align-items: baseline
-  justify-content: flex-end
-  gap: 0.5rem
-  margin-bottom: 0.25rem
+.subscription-icon-orange
+  background: #f97316
 
-.leads-card-number
-  font-size: 2.5rem
-  font-weight: bold
-  color: #1F2937
-  margin: 0
-
-.leads-card-title
-  font-size: 1.125rem
+.subscription-section-title
+  font-size: 0.875rem
   font-weight: 600
-  color: #1F2937
+  color: #374151
+  margin: 0
+  white-space: nowrap
+
+.subscription-section-main
+  display: flex
+  flex-direction: column
+  gap: 0.375rem
+  flex: 1
+  min-width: 120px
+
+.subscription-ratio
+  font-size: 1.25rem
+  font-weight: 700
+  color: #111827
+  text-align: right
+  line-height: 1.2
+
+  [dir="ltr"] &
+    text-align: left
+
+.subscription-progress-bar
+  width: 100%
+  height: 6px
+  background: #e5e7eb
+  border-radius: 3px
+  overflow: hidden
+
+.subscription-progress-fill
+  height: 100%
+  border-radius: 3px
+  transition: width 0.3s ease
+
+.subscription-progress-green
+  background: #10b981
+
+.subscription-progress-blue
+  background: #3b82f6
+
+.subscription-progress-orange
+  background: #f97316
+
+.subscription-section-details
+  display: flex
+  flex-direction: row
+  align-items: center
+  gap: 1rem
+  font-size: 0.75rem
+  flex-wrap: wrap
+
+  @media (min-width: 1024px)
+    flex-wrap: nowrap
+    gap: 1.5rem
+
+.subscription-detail-row
+  display: flex
+  align-items: center
+  gap: 0.375rem
+  text-align: right
+  white-space: nowrap
+
+  [dir="ltr"] &
+    text-align: left
+
+.subscription-detail-label
+  color: #6b7280
+  font-weight: 500
+  font-size: 0.75rem
+
+.subscription-detail-value
+  color: #1f2937
+  font-weight: 600
+  font-size: 0.75rem
+
+.subscription-breakdown
+  display: flex
+  flex-direction: row
+  align-items: center
+  gap: 0.75rem
+  flex-wrap: wrap
+  font-size: 0.7rem
+
+  @media (min-width: 1024px)
+    flex-wrap: nowrap
+    gap: 1rem
+
+.subscription-breakdown-item
+  color: #4b5563
+  line-height: 1.4
+  text-align: right
+  white-space: nowrap
+
+  [dir="ltr"] &
+    text-align: left
+
+.subscription-breakdown-label
+  font-weight: 600
+  color: #6b7280
+  margin-left: 0.25rem
+
+  [dir="ltr"] &
+    margin-left: 0
+    margin-right: 0.25rem
 
 .leads-card-desc
   font-size: 0.75rem

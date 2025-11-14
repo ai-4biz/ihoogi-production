@@ -24,18 +24,29 @@
 		<app-landing-hero></app-landing-hero>
 		
 		<!-- CTA Buttons -->
-		<div class="flex gap-3 sm:gap-4 max-w-2xl mx-auto flex-wrap justify-center">
+		<div class="flex gap-4 sm:gap-6 max-w-2xl mx-auto flex-wrap justify-center mt-8 sm:mt-10">
 			<a
 							routerLink="/register"
-							class="flex-1 min-w-[140px] py-3 sm:py-4 text-white text-center rounded-lg font-medium text-base sm:text-lg transition"
-							style="background-color: #17a2b8;">
-				{{ lang.t('landing.register') }}
+							class="px-8 sm:px-12 py-4 sm:py-5 text-white text-center rounded-xl font-semibold text-lg sm:text-xl transition-all duration-300 transform hover:scale-105 hover:shadow-xl shadow-lg"
+							style="background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);">
+				{{ lang.t('landing.register') }} 🚀
 			</a>
 			<a
 							routerLink="/auth"
-							class="flex-1 min-w-[140px] py-3 sm:py-4 bg-white text-gray-700 text-center rounded-lg font-medium text-base sm:text-lg border border-gray-300 transition hover:bg-gray-50">
-				{{ lang.t('landing.login') }}
+							class="px-8 sm:px-12 py-4 sm:py-5 bg-white text-gray-700 text-center rounded-xl font-semibold text-lg sm:text-xl border-2 border-gray-300 transition-all duration-300 transform hover:scale-105 hover:border-primary hover:shadow-lg">
+				{{ lang.t('landing.login') }} ✨
 			</a>
 		</div>
 	</div>
+
+	<!-- Footer with Legal Text -->
+	<footer class="legal-footer" [attr.dir]="lang.currentLanguage === 'he' ? 'rtl' : 'ltr'">
+		<p>
+			{{ lang.t('auth.footerText') }}
+			<a routerLink="/terms" class="legal-link">{{ lang.t('auth.termsOfUse') }}</a>
+			{{ lang.t('auth.and') }}
+			<a routerLink="/terms" class="legal-link">{{ lang.t('auth.privacyPolicy') }}</a>
+			{{ lang.t('auth.ofCompany') }}
+		</p>
+	</footer>
 </div>

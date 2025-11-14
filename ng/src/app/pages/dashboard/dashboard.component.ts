@@ -46,15 +46,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
   logoUrl = '';
 
   // Stats
-  totalLeadQuota = 180; // Total lead quota
-  utilizedLeads = 0;    // Actual leads used
-  activeQuestionnairesCount = 0;
+  totalLeadQuota = 300; // Total lead quota
+  utilizedLeads = 87;    // Actual leads used
+  activeQuestionnairesCount = 3;
   newLeadsCount = 0;
   reminderLeadsCount = 0;
 
-  // Computed property for remaining leads
+  // Computed properties
   get remainingLeads(): number {
     return Math.max(0, this.totalLeadQuota - this.utilizedLeads);
+  }
+
+  get leadsProgress(): number {
+    return (this.utilizedLeads / this.totalLeadQuota) * 100;
   }
 
   // Channel leads data
