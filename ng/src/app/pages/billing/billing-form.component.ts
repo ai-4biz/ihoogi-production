@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { LanguageService } from '../../core/services/language.service';
 
 type PlanStatus = 'active' | 'trialing' | 'canceled';
@@ -46,6 +47,8 @@ interface Payment {
   styleUrl: './billing-form.component.sass'
 })
 export class BillingFormComponent {
+  showBetaMessage = signal(true);
+
   readonly currentPlan = signal<CurrentPlan>({
     name: 'Growth',
     description: 'Ideal for scaling teams that need real-time analytics.',
@@ -87,7 +90,12 @@ export class BillingFormComponent {
     { date: '2024-08-01', invoice: 'INV-2874', amount: 199 },
   ]);
 
-  constructor(public lang: LanguageService) {}
+  constructor(public lang: LanguageService, private router: Router) {}
+
+  closeBetaMessage() {
+    // זמנית - מחזיר ל-dashboard עד הודעה אחרת
+    this.router.navigate(['/dashboard']);
+  }
 
   handleSavePaymentMethod(payload: unknown) {
     console.log('TODO integrate payment method save', payload);

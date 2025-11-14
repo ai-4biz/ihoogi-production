@@ -23,16 +23,14 @@ export class LayoutComponent {
 
   navigation: NavItem[] = [
     { name: 'nav.myHoogi', href: '/dashboard', icon: '📝' },
-    { name: 'nav.myQuestionnaires', href: '/questionnaires', icon: '📚' },
-    { name: 'nav.distribution', href: '/distribution-hub', icon: '📤' },
     { name: 'nav.responsesAndLeads', href: '/leads', icon: '💬' },
+    { name: 'nav.distribution', href: '/distribution-hub', icon: '📤' },
+    { name: 'nav.myQuestionnaires', href: '/questionnaires', icon: '📚' },
     { name: 'nav.automations', href: '/automations', icon: '🎧' },
     { name: 'nav.createQuestionnaire', href: '/questionnaires/new', icon: '📝' },
     { name: 'nav.myProfile', href: '/profile', icon: '👤' },
-    { name: 'nav.customerService', href: '/customerService', icon: '🎧' },
     { name: 'nav.contact', href: '/contact', icon: '✉️' },
     { name: 'nav.myPartners', href: '/partners', icon: '🤝' },
-    { name: 'nav.myOrganization', href: '/organization', icon: '🏢' },
     { name: 'nav.billings', href: '/billings', icon: '💳' },
   ];
 

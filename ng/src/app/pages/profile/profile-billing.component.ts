@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { LanguageService } from '../../core/services/language.service';
 
 @Component({
@@ -10,9 +11,16 @@ import { LanguageService } from '../../core/services/language.service';
   styleUrl: './profile-billing.component.sass'
 })
 export class ProfileBillingComponent implements OnInit {
-  constructor(public lang: LanguageService) {}
+  showBetaMessage = signal(true);
+
+  constructor(public lang: LanguageService, private router: Router) {}
 
   ngOnInit() {
     // Component initialized
+  }
+
+  closeBetaMessage() {
+    // זמנית - מחזיר ל-dashboard עד הודעה אחרת
+    this.router.navigate(['/dashboard']);
   }
 }
