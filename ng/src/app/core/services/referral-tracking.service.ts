@@ -136,6 +136,7 @@ export class ReferralTrackingService {
     // PHASE 2: Log final result (before return, non-destructive)
     console.log("%c[DIAG] detectChannel() final result:", "color: #2196F3", finalChannel);
     return finalChannel;
+  }
 
   /**
    * Check if a hostname matches any of the given sources
