@@ -781,23 +781,25 @@ export class DistributionHubComponent implements OnInit {
     try {
       const url = new URL(this.currentUrl, environment.siteUrl);
       
-      // WHATSAPP-SPECIFIC FIX: Delete existing 'src' parameter first for WhatsApp only
-      // This prevents ?src=form from remaining when we set ?src=whatsapp
-      // Other channels work correctly without this, so we only apply it to WhatsApp
-      if (network === 'whatsapp') {
+      // CRITICAL FIX: Delete existing 'src' parameter first for channels without referrer
+      // This prevents ?src=form from remaining when we set ?src=whatsapp/email/sms
+      // WhatsApp, Email, and SMS don't send referrer like Facebook does, so they need explicit ?src= parameter
+      // Social networks (Facebook, Instagram, LinkedIn) work with referrer, so they don't need this fix
+      const channelsWithoutReferrer: Array<'whatsapp' | 'email' | 'sms'> = ['whatsapp', 'email', 'sms'];
+      if (channelsWithoutReferrer.includes(network as 'whatsapp' | 'email' | 'sms')) {
         url.searchParams.delete('src');
-        console.log('🔍 [WHATSAPP] Deleted existing src parameter from URL');
+        console.log(`🔍 [${network.toUpperCase()}] Deleted existing src parameter from URL`);
       }
       
       url.searchParams.set('src', network);
       urlWithTracking = url.toString();
       
-      // Debug: Log the final URL for WhatsApp to verify it contains ?src=whatsapp
-      if (network === 'whatsapp') {
-        console.log('🔍 [WHATSAPP] Original URL:', this.currentUrl);
-        console.log('🔍 [WHATSAPP] Final URL with tracking:', urlWithTracking);
-        console.log('🔍 [WHATSAPP] URL contains ?src=whatsapp:', urlWithTracking.includes('src=whatsapp'));
-        console.log('🔍 [WHATSAPP] URL still contains ?src=form:', urlWithTracking.includes('src=form'));
+      // Debug: Log the final URL for channels without referrer to verify correct ?src= parameter
+      if (channelsWithoutReferrer.includes(network as 'whatsapp' | 'email' | 'sms')) {
+        console.log(`🔍 [${network.toUpperCase()}] Original URL:`, this.currentUrl);
+        console.log(`🔍 [${network.toUpperCase()}] Final URL with tracking:`, urlWithTracking);
+        console.log(`🔍 [${network.toUpperCase()}] URL contains ?src=${network}:`, urlWithTracking.includes(`src=${network}`));
+        console.log(`🔍 [${network.toUpperCase()}] URL still contains ?src=form:`, urlWithTracking.includes('src=form'));
       }
     } catch (error) {
       console.error('Error creating URL:', error);
