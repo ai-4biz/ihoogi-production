@@ -69,8 +69,12 @@ export class QuestionnaireLive implements OnInit {
   ) {}
 
   ngOnInit() {
+    console.log('=== QuestionnaireLive ngOnInit called ===');
+    console.log('Current URL:', this.router.url);
+
     // Detect referral source/channel
     this.detectedChannel = this.referralTracking.detectChannel();
+    console.log('Detected channel:', this.detectedChannel);
 
     const token = this.route.snapshot.paramMap.get('token');
     const id = this.route.snapshot.paramMap.get('id');

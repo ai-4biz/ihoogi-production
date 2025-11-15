@@ -86,6 +86,7 @@ export class QuestionnaireChat implements OnInit, OnDestroy, AfterViewChecked {
   ngOnInit() {
     // Detect referral source/channel
     this.detectedChannel = this.referralTracking.detectChannel();
+    console.log('Detected channel:', this.detectedChannel);
 
     // Prevent body scroll
     document.body.style.overflow = 'hidden';

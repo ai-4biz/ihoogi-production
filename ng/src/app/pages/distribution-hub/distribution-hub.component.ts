@@ -69,7 +69,6 @@ export class DistributionHubComponent implements OnInit {
   currentDistribution: Distribution | null = null;
   selectedSocialNetwork: 'whatsapp' | 'facebook' | 'instagram' | 'linkedin' | 'youtube' | 'telegram' | 'email' | 'sms' | 'website' | null = null;
   showLinksSection = false;
-  showWhatsAppMessage = false;
 
   // Template management - Updated: Single template selection
   selectedTemplateId: string = ''; // "" = לא נבחר, "none" = ללא מענה, או ID תבנית
