@@ -451,6 +451,15 @@ export class LanguageService {
     'common.moveDown': { en: 'Move down', he: 'הזז למטה' },
     'common.close': { en: 'Close', he: 'סגור' },
     'common.noAnswer': { en: 'No answer', he: 'אין תשובה' },
+    
+    // WhatsApp
+    'whatsapp.notAvailableTitle': { en: 'WhatsApp — Not Available in This Version', he: 'WhatsApp — אינו זמין בגרסה זו' },
+    'whatsapp.notAvailableMessage': { en: 'The WhatsApp feature is not yet available in this version. We are working on it and it will be available soon.', he: 'פיצ\'ר ה-WhatsApp עדיין לא זמין בגרסה זו. אנו עובדים עליו והוא יהיה זמין בקרוב.' },
+    
+    // Business Details
+    'businessDetails.notAvailableTitle': { en: 'Business Details — Not Available in This Version', he: 'פרטי עסק — אינו זמין בגרסה זו' },
+    'businessDetails.notAvailableMessage': { en: 'The Business Details feature is not yet available in this version. We are working on it and it will be available soon.', he: 'פיצ\'ר פרטי העסק עדיין לא זמין בגרסה זו. אנו עובדים עליו והוא יהיה זמין בקרוב.' },
+    
     'common.download': { en: 'Download', he: 'הורד' },
 
     // Terms of Service
@@ -751,6 +760,22 @@ export class LanguageService {
     'leads.channelWebsite': { en: 'Website', he: 'אתר' },
     'leads.channelFacebook': { en: 'Facebook', he: 'פייסבוק' },
     'leads.channelInstagram': { en: 'Instagram', he: 'אינסטגרם' },
+    'leads.channelLinkedIn': { en: 'LinkedIn', he: 'לינקדאין' },
+    'leads.channelTwitter': { en: 'Twitter', he: 'טוויטר' },
+    'leads.channelYouTube': { en: 'YouTube', he: 'יוטיוב' },
+    'leads.channelTikTok': { en: 'TikTok', he: 'טיקטוק' },
+    'leads.channelPinterest': { en: 'Pinterest', he: 'פינטרסט' },
+    'leads.channelTelegram': { en: 'Telegram', he: 'טלגרם' },
+    'leads.channelReddit': { en: 'Reddit', he: 'רדיט' },
+    'leads.channelGoogle': { en: 'Google', he: 'גוגל' },
+    'leads.channelBing': { en: 'Bing', he: 'בינג' },
+    'leads.channelYahoo': { en: 'Yahoo', he: 'יאהו' },
+    'leads.channelDirect': { en: 'Direct', he: 'ישיר' },
+    'leads.channelForm': { en: 'Form', he: 'טופס' },
+    'leads.channelChat': { en: 'Chat', he: 'צ\'אט' },
+    'leads.channelQr': { en: 'QR Code', he: 'קוד QR' },
+    'leads.channelReferral': { en: 'Referral', he: 'הפנייה' },
+    'leads.channelUnknown': { en: 'Unknown', he: 'לא ידוע' },
     'leads.channel_email': { en: 'Email', he: 'מייל' },
     'leads.channel_whatsapp': { en: 'WhatsApp', he: 'וואטסאפ' },
     'leads.channel_sms': { en: 'SMS', he: 'SMS' },

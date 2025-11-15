@@ -260,12 +260,8 @@ export class LeadsComponent implements OnInit {
           }
         }
 
-        // Normalize channel - only allow valid channels, otherwise set to 'other'
-        const validChannels = ['email', 'whatsapp', 'sms', 'website', 'facebook', 'instagram'];
-        let normalizedChannel = lead.channel || 'other';
-        if (!validChannels.includes(normalizedChannel.toLowerCase())) {
-          normalizedChannel = 'other';
-        }
+        // Preserve channel value as-is (no normalization needed - all channels are valid)
+        const normalizedChannel = lead.channel || 'unknown';
 
         return {
           id: lead.id,
@@ -421,12 +417,32 @@ export class LeadsComponent implements OnInit {
       'website': this.lang.t('leads.channelWebsite'),
       'facebook': this.lang.t('leads.channelFacebook'),
       'instagram': this.lang.t('leads.channelInstagram'),
-      'other': this.lang.t('leads.channel_other')
+      'linkedin': this.lang.t('leads.channelLinkedIn'),
+      'twitter': this.lang.t('leads.channelTwitter'),
+      'youtube': this.lang.t('leads.channelYouTube'),
+      'tiktok': this.lang.t('leads.channelTikTok'),
+      'pinterest': this.lang.t('leads.channelPinterest'),
+      'telegram': this.lang.t('leads.channelTelegram'),
+      'reddit': this.lang.t('leads.channelReddit'),
+      'google': this.lang.t('leads.channelGoogle'),
+      'bing': this.lang.t('leads.channelBing'),
+      'yahoo': this.lang.t('leads.channelYahoo'),
+      'direct': this.lang.t('leads.channelDirect'),
+      'form': this.lang.t('leads.channelForm'),
+      'chat': this.lang.t('leads.channelChat'),
+      'qr': this.lang.t('leads.channelQr'),
+      'other': this.lang.t('leads.channel_other'),
+      'unknown': this.lang.t('leads.channelUnknown')
     };
-    // If channel is not in the valid list, return 'other'
-    const validChannels = ['email', 'whatsapp', 'sms', 'website', 'facebook', 'instagram', 'other'];
     const normalizedChannel = channel.toLowerCase();
-    return channelLabels[normalizedChannel] || this.lang.t('leads.channel_other');
+    
+    // Handle referral-* channels (e.g., referral-example.com)
+    if (normalizedChannel.startsWith('referral-')) {
+      const domain = channel.substring('referral-'.length);
+      return `${this.lang.t('leads.channelReferral')} - ${domain}`;
+    }
+    
+    return channelLabels[normalizedChannel] || this.lang.t('leads.channelUnknown');
   }
 
   toggleCommentPopup(event: Event, leadId: string, currentComment?: string) {
