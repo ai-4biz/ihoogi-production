@@ -150,6 +150,41 @@
           <span>הלינק יזהה אוטומטית את המיקום (WhatsApp, אתר, דף נחיתה) כשמישהו לוחץ עליו</span>
         </div>
 
+        <!-- Custom Text Section (One for all links) -->
+        <div class="custom-text-section-simple">
+          <label class="custom-text-label-simple">
+            טקסט מותאם אישית (אופציונלי) - בעת העתקה יועתק המלל והלינק יחד
+          </label>
+          <div class="custom-text-box-simple">
+            <input
+              [(ngModel)]="linkTexts['form']"
+              (ngModelChange)="onTextChange()"
+              placeholder="הכנס כאן את המלל שבו תרצה שהלינק יופיע..."
+              class="custom-text-input-simple"
+              dir="rtl"
+              type="text"
+            />
+            <button
+              class="btn-save-text-simple"
+              (click)="saveCustomText('form')"
+              [class.saved]="savedTexts['form'] && savedTexts['form'].trim()">
+              <span class="save-icon">💾</span>
+              שמור
+            </button>
+          </div>
+          @if (linkTexts['form']?.trim()) {
+            <p class="preview-text-simple">
+              <span class="preview-label-simple">תצוגה מקדימה:</span> {{ linkTexts['form'] }}
+            </p>
+          }
+          @if (savedTexts['form'] && savedTexts['form'].trim()) {
+            <p class="saved-indicator-simple">
+              <span class="check-icon">✓</span>
+              המלל נשמר - יועתק עם כל הקישורים
+            </p>
+          }
+        </div>
+
         <!-- Link Rows: Form, Chat, QR - Simplified -->
         <div class="links-container-simple">
           <!-- Row 1: Form Link -->

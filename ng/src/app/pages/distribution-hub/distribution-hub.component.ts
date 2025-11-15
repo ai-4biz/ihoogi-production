@@ -329,12 +329,21 @@ export class DistributionHubComponent implements OnInit {
       return;
     }
 
-    const success = await this.copyToClipboard(link);
+    // Check if there's saved text - if yes, copy text + link together
+    const savedText = this.savedTexts['form'] || this.savedTexts[type];
+    let textToCopy = link;
+    
+    if (savedText && savedText.trim()) {
+      // Copy text + link together
+      textToCopy = `${savedText}\n${link}`;
+    }
+
+    const success = await this.copyToClipboard(textToCopy);
     if (success) {
-      this.toast.show(
-        this.lang.currentLanguage === 'he' ? 'הקישור הועתק ללוח' : 'Link copied to clipboard',
-        'success'
-      );
+      const message = savedText && savedText.trim()
+        ? (this.lang.currentLanguage === 'he' ? 'המלל והקישור הועתקו ללוח' : 'Text and link copied to clipboard')
+        : (this.lang.currentLanguage === 'he' ? 'הקישור הועתק ללוח' : 'Link copied to clipboard');
+      this.toast.show(message, 'success');
     } else {
       this.toast.show(
         this.lang.currentLanguage === 'he' ? 'שגיאה בהעתקה' : 'Copy failed',
