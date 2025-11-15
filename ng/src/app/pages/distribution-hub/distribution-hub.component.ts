@@ -780,11 +780,18 @@ export class DistributionHubComponent implements OnInit {
     let urlWithTracking: string;
     try {
       const url = new URL(this.currentUrl, environment.siteUrl);
-      // CRITICAL FIX: Delete existing 'src' parameter first to ensure clean replacement
+      
+      // WHATSAPP-SPECIFIC FIX: Delete existing 'src' parameter first for WhatsApp only
       // This prevents ?src=form from remaining when we set ?src=whatsapp
-      url.searchParams.delete('src');
+      // Other channels work correctly without this, so we only apply it to WhatsApp
+      if (network === 'whatsapp') {
+        url.searchParams.delete('src');
+        console.log('🔍 [WHATSAPP] Deleted existing src parameter from URL');
+      }
+      
       url.searchParams.set('src', network);
       urlWithTracking = url.toString();
+      
       // Debug: Log the final URL for WhatsApp to verify it contains ?src=whatsapp
       if (network === 'whatsapp') {
         console.log('🔍 [WHATSAPP] Original URL:', this.currentUrl);

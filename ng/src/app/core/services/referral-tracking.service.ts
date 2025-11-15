@@ -17,15 +17,24 @@ export class ReferralTrackingService {
     const srcParam = urlParams.get('src');
     const referer = document.referrer;
     
-    if (fullUrl.includes('whatsapp') || srcParam === 'whatsapp' || referer.includes('whatsapp')) {
+    if (fullUrl.includes('whatsapp') || srcParam === 'whatsapp' || (referer && referer.includes('whatsapp'))) {
       console.log('🔍 [WHATSAPP DETECTION] Full URL:', fullUrl);
       console.log('🔍 [WHATSAPP DETECTION] ?src= parameter:', srcParam);
       console.log('🔍 [WHATSAPP DETECTION] Referrer:', referer);
       console.log('🔍 [WHATSAPP DETECTION] All URL params:', Array.from(urlParams.entries()));
     }
 
+    // WHATSAPP-SPECIFIC: Check ?src= parameter FIRST for WhatsApp (skip referrer check)
+    // WhatsApp doesn't always send referrer like Facebook does, so we prioritize ?src=whatsapp parameter
+    // This is the same logic that worked for Facebook showing history - WhatsApp needs it too
+    if (srcParam === 'whatsapp') {
+      console.log('🔍 [WHATSAPP DETECTION] PRIORITY 1 (WhatsApp-specific): Found ?src=whatsapp, returning whatsapp immediately');
+      return 'whatsapp';
+    }
+
     // PRIORITY 1: Check HTTP referer FIRST (real source where the response came from)
     // This catches cases where link was shared on Facebook/Instagram/etc. even if ?src=form is present
+    // NOTE: For WhatsApp, if ?src=whatsapp is present, we already returned above
 
     if (referer) {
       try {
