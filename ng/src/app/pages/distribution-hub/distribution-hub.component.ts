@@ -67,9 +67,8 @@ export class DistributionHubComponent implements OnInit {
   currentMode: LinkMode = null;
   currentUrl = '';
   currentDistribution: Distribution | null = null;
-  selectedSocialNetwork: 'whatsapp' | 'facebook' | 'instagram' | 'linkedin' | 'youtube' | 'telegram' | 'email' | 'sms' | 'website' | 'qr' | 'tiktok' | 'pinterest' | 'reddit' | 'twitter' | 'google' | 'bing' | 'yahoo' | 'linktree' | 'signature' | null = null;
+  selectedSocialNetwork: 'whatsapp' | 'facebook' | 'instagram' | 'linkedin' | 'youtube' | 'telegram' | 'email' | 'sms' | 'website' | null = null;
   showLinksSection = false;
-  showMoreChannels: boolean = false;
 
   // Template management - Updated: Single template selection
   selectedTemplateId: string = ''; // "" = לא נבחר, "none" = ללא מענה, או ID תבנית
@@ -749,7 +748,7 @@ export class DistributionHubComponent implements OnInit {
   }
 
   // Social network selection and sharing
-  async selectSocialNetwork(network: 'whatsapp' | 'facebook' | 'instagram' | 'linkedin' | 'youtube' | 'telegram' | 'email' | 'sms' | 'website' | 'qr' | 'tiktok' | 'pinterest' | 'reddit' | 'twitter' | 'google' | 'bing' | 'yahoo' | 'linktree' | 'signature') {
+  async selectSocialNetwork(network: 'whatsapp' | 'facebook' | 'instagram' | 'linkedin' | 'youtube' | 'telegram' | 'email' | 'sms' | 'website') {
     // Generate form link if not already generated
     const wasGenerated = !this.currentUrl;
     if (wasGenerated) {
@@ -773,17 +772,7 @@ export class DistributionHubComponent implements OnInit {
       'telegram': 'Telegram',
       'email': 'Email',
       'sms': 'SMS',
-      'website': 'Website',
-      'qr': 'QR',
-      'tiktok': 'TikTok',
-      'pinterest': 'Pinterest',
-      'reddit': 'Reddit',
-      'twitter': 'Twitter',
-      'google': 'Google',
-      'bing': 'Bing',
-      'yahoo': 'Yahoo',
-      'linktree': 'Linktree',
-      'signature': 'Signature'
+      'website': 'Website'
     };
     const networkName = networkNames[network] || network;
 
@@ -866,39 +855,6 @@ export class DistributionHubComponent implements OnInit {
         break;
       case 'website':
         // Generic share - only copy to clipboard
-        return;
-      case 'qr':
-        // QR code - only copy to clipboard (no share dialog)
-        return;
-      case 'tiktok':
-        // TikTok doesn't have a web share endpoint
-        return;
-      case 'pinterest':
-        // Pinterest share dialog
-        shareUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(urlWithTracking)}`;
-        break;
-      case 'reddit':
-        // Reddit share dialog
-        shareUrl = `https://reddit.com/submit?url=${encodeURIComponent(urlWithTracking)}&title=${encodeURIComponent(shareTitle)}`;
-        break;
-      case 'twitter':
-        // Twitter/X share dialog
-        shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(urlWithTracking)}&text=${encodeURIComponent(shareTitle)}`;
-        break;
-      case 'google':
-        // Google+ is deprecated, but keep for compatibility - only copy
-        return;
-      case 'bing':
-        // Bing doesn't have a share endpoint - only copy
-        return;
-      case 'yahoo':
-        // Yahoo doesn't have a share endpoint - only copy
-        return;
-      case 'linktree':
-        // Linktree - only copy to clipboard
-        return;
-      case 'signature':
-        // Signature - only copy to clipboard
         return;
     }
 
