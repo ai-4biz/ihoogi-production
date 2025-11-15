@@ -988,7 +988,16 @@ export class DistributionHubComponent implements OnInit {
   // Save custom text for a specific link type
   saveCustomText(type: string): void {
     const text = this.linkTexts[type]?.trim() || '';
-    this.savedTexts[type] = text;
+    
+    // Save text for all link types (form, chat, qr) since it's shared
+    this.savedTexts['form'] = text;
+    this.savedTexts['chat'] = text;
+    this.savedTexts['qr'] = text;
+    
+    // Also update linkTexts for all types to keep them in sync
+    this.linkTexts['form'] = text;
+    this.linkTexts['chat'] = text;
+    this.linkTexts['qr'] = text;
     
     // Save to localStorage
     this.saveTextsToStorage();
@@ -999,7 +1008,7 @@ export class DistributionHubComponent implements OnInit {
     }
     
     const message = text
-      ? (this.lang.currentLanguage === 'he' ? 'המלל נשמר בהצלחה' : 'Text saved successfully')
+      ? (this.lang.currentLanguage === 'he' ? 'המלל נשמר בהצלחה לכל הקישורים' : 'Text saved successfully for all links')
       : (this.lang.currentLanguage === 'he' ? 'המלל נמחק' : 'Text cleared');
     this.toast.show(message, 'success');
   }
