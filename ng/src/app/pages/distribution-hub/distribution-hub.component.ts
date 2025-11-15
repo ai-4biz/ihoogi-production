@@ -781,12 +781,24 @@ export class DistributionHubComponent implements OnInit {
     let urlWithTracking: string;
     try {
       const url = new URL(this.currentUrl, environment.siteUrl);
+      // Force replace src parameter to ensure correct channel tracking
+      url.searchParams.delete('src');
       url.searchParams.set('src', network);
       urlWithTracking = url.toString();
     } catch (error) {
       console.error('Error creating URL:', error);
-      // Fallback: append parameter manually
-      urlWithTracking = this.currentUrl + (this.currentUrl.includes('?') ? '&' : '?') + `src=${network}`;
+      // Fallback: append parameter manually, ensuring src=network is set
+      let fallbackUrl = this.currentUrl;
+      // Remove existing src parameter if present
+      fallbackUrl = fallbackUrl.replace(/[?&]src=[^&]*/g, '');
+      // Add src parameter
+      urlWithTracking = fallbackUrl + (fallbackUrl.includes('?') ? '&' : '?') + `src=${network}`;
+    }
+    
+    // Debug: Log the URL for WhatsApp to ensure tracking is correct
+    if (network === 'whatsapp') {
+      console.log('WhatsApp tracking URL:', urlWithTracking);
+      console.log('WhatsApp URL contains src=whatsapp:', urlWithTracking.includes('src=whatsapp'));
     }
 
     // Copy URL to clipboard first for all networks

@@ -67,6 +67,7 @@ export class ReferralTrackingService {
         }
 
         if (this.isFromSource(refererHost, ['whatsapp.com', 'api.whatsapp.com', 'wa.me', 'chat.whatsapp.com'])) {
+          console.log('WhatsApp detected via referrer:', { refererHost, referer });
           return 'whatsapp';
         }
 
@@ -87,7 +88,12 @@ export class ReferralTrackingService {
     // Only used if no external referrer was detected
     const srcParam = urlParams.get('src');
     if (srcParam) {
-      return this.normalizeSource(srcParam);
+      const normalizedChannel = this.normalizeSource(srcParam);
+      // Debug: Log WhatsApp detection
+      if (normalizedChannel === 'whatsapp' || srcParam.toLowerCase().includes('whatsapp') || srcParam.toLowerCase() === 'wa') {
+        console.log('WhatsApp detected via src parameter:', { srcParam, normalizedChannel, referer });
+      }
+      return normalizedChannel;
     }
 
     // PRIORITY 3: Check for utm_source parameter
