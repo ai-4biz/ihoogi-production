@@ -66,7 +66,7 @@ export class ReferralTrackingService {
           return 'yahoo';
         }
 
-        if (this.isFromSource(refererHost, ['whatsapp.com', 'wa.me', 'chat.whatsapp.com'])) {
+        if (this.isFromSource(refererHost, ['whatsapp.com', 'api.whatsapp.com', 'wa.me', 'chat.whatsapp.com'])) {
           return 'whatsapp';
         }
 

@@ -92,6 +92,7 @@ export class CreateAutomationTemplateComponent implements OnInit {
     address: '',
     social_networks: {}
   };
+  showBusinessDetailsMessage = false;
 
   constructor(
     public lang: LanguageService,

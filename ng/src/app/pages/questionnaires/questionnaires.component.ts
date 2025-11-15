@@ -36,6 +36,7 @@ export class QuestionnairesComponent implements OnInit {
   openDistributionId: string | null = null;
   showQRCodeId: string | null = null;
   qrCodeDataUrl: string = '';
+  showPartnersMessage = false;
 
   constructor(
     private supabaseService: SupabaseService,

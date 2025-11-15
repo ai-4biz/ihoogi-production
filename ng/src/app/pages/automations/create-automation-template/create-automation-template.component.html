@@ -218,13 +218,15 @@
       <h3 class="text-base md:text-lg font-semibold text-foreground mb-3 md:mb-4 text-right">פרטי עסק במייל</h3>
 
       <div class="space-y-4" dir="rtl">
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-3 business-details-checkbox-disabled" (click)="showBusinessDetailsMessage = true; $event.preventDefault(); $event.stopPropagation()">
           <input
             type="checkbox"
             id="include-business-details"
-            [(ngModel)]="formData.includeBusinessDetails"
-            class="checkbox">
-          <label for="include-business-details" class="text-sm font-medium text-right cursor-pointer">כלול פרטי עסק במייל</label>
+            [ngModel]="formData.includeBusinessDetails"
+            [disabled]="true"
+            class="checkbox business-details-checkbox-disabled-input"
+            (click)="$event.preventDefault(); $event.stopPropagation()">
+          <label for="include-business-details" class="text-sm font-medium text-right cursor-not-allowed">כלול פרטי עסק במייל</label>
         </div>
 
         @if (formData.includeBusinessDetails) {
@@ -650,3 +652,32 @@
     </div>
   </div>
 </div>
+
+<!-- Business Details Not Available Message Overlay -->
+@if (showBusinessDetailsMessage) {
+  <div class="coming-soon-overlay">
+    <div class="coming-soon-card">
+      <button class="coming-soon-close" (click)="showBusinessDetailsMessage = false" [attr.aria-label]="lang.t('common.close')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <div class="coming-soon-header">
+        <img src="/img/logo.png" alt="iHoogi Logo" class="coming-soon-logo">
+        <h1 class="coming-soon-title">{{ lang.t('businessDetails.notAvailableTitle') }}</h1>
+      </div>
+      
+      <div class="coming-soon-footer">
+        <p class="coming-soon-message">{{ lang.t('businessDetails.notAvailableMessage') }}</p>
+      </div>
+
+      <button class="coming-soon-back-btn" (click)="showBusinessDetailsMessage = false">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        {{ lang.t('common.back') || 'חזרה למערכת' }}
+      </button>
+    </div>
+  </div>
+}
