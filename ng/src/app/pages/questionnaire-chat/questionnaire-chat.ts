@@ -84,22 +84,9 @@ export class QuestionnaireChat implements OnInit, OnDestroy, AfterViewChecked {
   ) {}
 
   ngOnInit() {
-    // PHASE 1: Inspect incoming production URL
-    console.log("%c[DIAG] Full URL:", "color: #4CAF50", window.location.href);
-    const queryParams = Object.fromEntries(new URLSearchParams(window.location.search));
-    console.log("%c[DIAG] Query params:", "color: #4CAF50", queryParams);
-    if (!queryParams['src']) {
-      console.warn("%c[DIAG] ⚠️ WARNING: 'src' parameter is MISSING from URL!", "color: #FF5722; font-weight: bold");
-    } else {
-      console.log("%c[DIAG] ✅ 'src' parameter found:", "color: #4CAF50", queryParams['src']);
-    }
-
     // Detect referral source/channel
     this.detectedChannel = this.referralTracking.detectChannel();
     console.log('Detected channel:', this.detectedChannel);
-    
-    // PHASE 2: Inspect detectChannel() result
-    console.log("%c[DIAG] detectChannel() result:", "color: #2196F3", this.detectedChannel);
 
     // Prevent body scroll
     document.body.style.overflow = 'hidden';
@@ -1040,41 +1027,17 @@ export class QuestionnaireChat implements OnInit, OnDestroy, AfterViewChecked {
       }
 
       // Use RPC function to insert lead (bypasses RLS)
-      // Debug: Log channel detection for troubleshooting
-      console.log('🔍 [LEAD SAVE] Detected channel:', this.detectedChannel);
-      console.log('🔍 [LEAD SAVE] Full URL:', window.location.href);
-      console.log('🔍 [LEAD SAVE] URL params:', new URLSearchParams(window.location.search).get('src'));
-      
-      // PHASE 3: Inspect saveLeadData() flow before RPC call
-      const p_channel = this.detectedChannel;
-      console.log("%c[DIAG] saveLeadData → p_channel:", "color: #FF9800", p_channel);
-      if (!p_channel || p_channel === 'form' || p_channel === 'chat') {
-        console.warn("%c[DIAG] ⚠️ WARNING: p_channel is missing or incorrect:", "color: #FF5722; font-weight: bold", p_channel);
-      }
-      
-      // PHASE 4: Inspect submit_lead RPC call parameters
-      const rpcParams = {
-        p_questionnaire_id: this.questionnaire.id,
-        p_client_name: clientName,
-        p_answer_json: responseData,
-        p_email: email,
-        p_phone: phone,
-        p_name: name,
-        p_distribution_token: this.distributionToken,
-        p_channel: p_channel
-      };
-      console.log("%c[DIAG] submit_lead called with:", "color: #E91E63", rpcParams);
-      
       const { data: leadId, error: leadError } = await this.supabaseService.client
-        .rpc('submit_lead', rpcParams);
-      
-      // Debug: Log the result
-      if (leadError) {
-        console.error('❌ [LEAD SAVE] Error saving lead:', leadError);
-      } else {
-        console.log('✅ [LEAD SAVE] Lead saved successfully with ID:', leadId);
-        console.log('✅ [LEAD SAVE] Channel saved:', this.detectedChannel);
-      }
+        .rpc('submit_lead', {
+          p_questionnaire_id: this.questionnaire.id,
+          p_client_name: clientName,
+          p_answer_json: responseData,
+          p_email: email,
+          p_phone: phone,
+          p_name: name,
+          p_distribution_token: this.distributionToken,
+          p_channel: this.detectedChannel
+        });
 
       if (leadError) {
         console.error('Error saving lead data:', leadError);

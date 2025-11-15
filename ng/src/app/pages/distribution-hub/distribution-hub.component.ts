@@ -67,9 +67,8 @@ export class DistributionHubComponent implements OnInit {
   currentMode: LinkMode = null;
   currentUrl = '';
   currentDistribution: Distribution | null = null;
-  selectedSocialNetwork: 'whatsapp' | 'facebook' | 'instagram' | 'linkedin' | 'youtube' | 'telegram' | 'email' | 'sms' | 'website' | 'qr' | 'tiktok' | 'pinterest' | 'reddit' | 'twitter' | 'google' | 'bing' | 'yahoo' | 'linktree' | 'signature' | null = null;
+  selectedSocialNetwork: 'whatsapp' | 'facebook' | 'instagram' | 'linkedin' | 'youtube' | 'telegram' | 'email' | 'sms' | 'website' | null = null;
   showLinksSection = false;
-  showMoreChannels: boolean = false;
 
   // Template management - Updated: Single template selection
   selectedTemplateId: string = ''; // "" = לא נבחר, "none" = ללא מענה, או ID תבנית
@@ -748,69 +747,17 @@ export class DistributionHubComponent implements OnInit {
     return this.selectedTemplates.some(t => t.id === templateId);
   }
 
-  // Build channel link - smart redirect for non-referrer channels
-  buildChannelLink(channelId: string, token: string): string {
-    const baseUrl = environment.siteUrl;
-
-    // Non-referrer channels use smart redirect route: /r/<channel>/<token>
-    // This ensures the channel is preserved even if link is copied/shared
-    // GROUP 1: whatsapp, email, sms, qr
-    // GROUP 3: telegram, website, linktree, signature, google, bing, yahoo
-    const nonReferrerChannels = ['whatsapp', 'email', 'sms', 'qr', 'telegram', 'website', 'linktree', 'signature', 'google', 'bing', 'yahoo', 'direct'];
-
-    if (nonReferrerChannels.includes(channelId)) {
-      // Use redirect route so the channel is preserved regardless
-      const redirectUrl = `${baseUrl}/r/${channelId}/${token}`;
-      console.log(`🔗 [${channelId.toUpperCase()}] Using redirect route:`, redirectUrl);
-      return redirectUrl;
-    }
-
-    // This should never be called for social networks (they use regular link instead)
-    // Fallback: return regular link
-    const directUrl = `${baseUrl}/q/${token}`;
-    console.warn(`⚠️ [${channelId.toUpperCase()}] buildChannelLink called for referrer-based channel, using regular link`);
-    return directUrl;
-  }
-
   // Social network selection and sharing
-  async selectSocialNetwork(network: 'whatsapp' | 'facebook' | 'instagram' | 'linkedin' | 'youtube' | 'telegram' | 'email' | 'sms' | 'website' | 'qr' | 'tiktok' | 'pinterest' | 'reddit' | 'twitter' | 'google' | 'bing' | 'yahoo' | 'linktree' | 'signature') {
-    // Check if questionnaire is selected
-    if (!this.selectedQuestionnaire) {
-      this.toast.show(
-        this.lang.t('distribution.chooseQuestionnaireFirst'),
-        'error'
-      );
-      return;
+  async selectSocialNetwork(network: 'whatsapp' | 'facebook' | 'instagram' | 'linkedin' | 'youtube' | 'telegram' | 'email' | 'sms' | 'website') {
+    // Generate form link if not already generated
+    const wasGenerated = !this.currentUrl;
+    if (wasGenerated) {
+      await this.handleBuildLink('form');
     }
 
-    // Check if distribution exists and has a token
-    if (!this.currentDistribution || !this.currentDistribution.token) {
-      this.toast.show(
-        this.lang.t('distribution.chooseQuestionnaireFirst'),
-        'error'
-      );
+    // If still no URL (error occurred), return
+    if (!this.currentUrl) {
       return;
-    }
-
-    // All networks need tracking parameter - use ?src= for social networks (referrer + backup)
-    // Use smart redirect for non-referrer channels (whatsapp, email, sms, etc.)
-    const baseUrl = environment.siteUrl;
-    const distributionToken = this.currentDistribution.token;
-    
-    // Social networks that work via referrer (GROUP 2)
-    // They should also have ?src= as backup if link is copied/shared without referrer
-    const socialNetworks = ['facebook', 'instagram', 'linkedin', 'youtube', 'tiktok', 'twitter', 'pinterest', 'reddit'];
-    
-    let urlWithTracking: string;
-    if (socialNetworks.includes(network)) {
-      // Social networks: Use ?src= parameter (works with referrer, or as fallback if copied)
-      // ReferralTrackingService checks referrer first, then falls back to ?src=
-      urlWithTracking = `${baseUrl}/q/${distributionToken}?src=${network}`;
-      console.log(`📤 [${network.toUpperCase()}] Social network - Using link with ?src= (referrer + backup):`, urlWithTracking);
-    } else {
-      // GROUP 1 & GROUP 3: Non-referrer channels need smart redirect
-      urlWithTracking = this.buildChannelLink(network, distributionToken);
-      console.log(`📤 [${network.toUpperCase()}] Non-referrer channel - Using smart redirect:`, urlWithTracking);
     }
 
     this.selectedSocialNetwork = network;
@@ -825,19 +772,21 @@ export class DistributionHubComponent implements OnInit {
       'telegram': 'Telegram',
       'email': 'Email',
       'sms': 'SMS',
-      'website': 'Website',
-      'qr': 'QR',
-      'tiktok': 'TikTok',
-      'pinterest': 'Pinterest',
-      'reddit': 'Reddit',
-      'twitter': 'Twitter',
-      'google': 'Google',
-      'bing': 'Bing',
-      'yahoo': 'Yahoo',
-      'linktree': 'Linktree',
-      'signature': 'Signature'
+      'website': 'Website'
     };
     const networkName = networkNames[network] || network;
+
+    // Create URL with tracking parameter
+    let urlWithTracking: string;
+    try {
+      const url = new URL(this.currentUrl, environment.siteUrl);
+      url.searchParams.set('src', network);
+      urlWithTracking = url.toString();
+    } catch (error) {
+      console.error('Error creating URL:', error);
+      // Fallback: append parameter manually
+      urlWithTracking = this.currentUrl + (this.currentUrl.includes('?') ? '&' : '?') + `src=${network}`;
+    }
 
     // Copy URL to clipboard first for all networks
     const copySuccess = await this.copyToClipboard(urlWithTracking);
@@ -906,39 +855,6 @@ export class DistributionHubComponent implements OnInit {
         break;
       case 'website':
         // Generic share - only copy to clipboard
-        return;
-      case 'qr':
-        // QR code - only copy to clipboard (no share dialog)
-        return;
-      case 'tiktok':
-        // TikTok doesn't have a web share endpoint
-        return;
-      case 'pinterest':
-        // Pinterest share dialog
-        shareUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(urlWithTracking)}`;
-        break;
-      case 'reddit':
-        // Reddit share dialog
-        shareUrl = `https://reddit.com/submit?url=${encodeURIComponent(urlWithTracking)}&title=${encodeURIComponent(shareTitle)}`;
-        break;
-      case 'twitter':
-        // Twitter/X share dialog
-        shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(urlWithTracking)}&text=${encodeURIComponent(shareTitle)}`;
-        break;
-      case 'google':
-        // Google+ is deprecated, but keep for compatibility - only copy
-        return;
-      case 'bing':
-        // Bing doesn't have a share endpoint - only copy
-        return;
-      case 'yahoo':
-        // Yahoo doesn't have a share endpoint - only copy
-        return;
-      case 'linktree':
-        // Linktree - only copy to clipboard
-        return;
-      case 'signature':
-        // Signature - only copy to clipboard
         return;
     }
 

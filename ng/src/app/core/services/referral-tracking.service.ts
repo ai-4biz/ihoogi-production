@@ -12,35 +12,9 @@ export class ReferralTrackingService {
   detectChannel(): string {
     const urlParams = new URLSearchParams(window.location.search);
 
-    // Debug: Log all detection info for channels without referrer
-    const fullUrl = window.location.href;
-    const srcParam = urlParams.get('src');
-    const referer = document.referrer;
-    
-    const channelsWithoutReferrer = ['whatsapp', 'email', 'sms'];
-    if (srcParam && channelsWithoutReferrer.includes(srcParam)) {
-      const channelName = srcParam.toUpperCase();
-      console.log(`🔍 [${channelName} DETECTION] Full URL:`, fullUrl);
-      console.log(`🔍 [${channelName} DETECTION] ?src= parameter:`, srcParam);
-      console.log(`🔍 [${channelName} DETECTION] Referrer:`, referer);
-      console.log(`🔍 [${channelName} DETECTION] All URL params:`, Array.from(urlParams.entries()));
-    }
-
-    // PRIORITY 0 (SPECIAL): Check ?src= parameter FIRST for channels without referrer
-    // WhatsApp, Email, and SMS don't send referrer like Facebook does, so we prioritize their ?src= parameters
-    // This is the same logic that worked for Facebook showing history - these channels need it too
-    // Social networks (Facebook, Instagram, LinkedIn) have referrer, so they're handled in PRIORITY 1 below
-    // Using channelsWithoutReferrer declared above (line 20)
-    if (srcParam && channelsWithoutReferrer.includes(srcParam)) {
-      console.log(`🔍 [${srcParam.toUpperCase()} DETECTION] PRIORITY 0 (Channel-specific): Found ?src=${srcParam}, returning ${srcParam} immediately`);
-      // PHASE 2: Log result before return (non-destructive)
-      console.log("%c[DIAG] detectChannel() result (PRIORITY 0):", "color: #2196F3", srcParam);
-      return srcParam;
-    }
-
     // PRIORITY 1: Check HTTP referer FIRST (real source where the response came from)
     // This catches cases where link was shared on Facebook/Instagram/etc. even if ?src=form is present
-    // NOTE: For WhatsApp, if ?src=whatsapp is present, we already returned above
+    const referer = document.referrer;
 
     if (referer) {
       try {
@@ -92,7 +66,7 @@ export class ReferralTrackingService {
           return 'yahoo';
         }
 
-        if (this.isFromSource(refererHost, ['whatsapp.com', 'api.whatsapp.com', 'wa.me', 'chat.whatsapp.com'])) {
+        if (this.isFromSource(refererHost, ['whatsapp.com', 'wa.me', 'chat.whatsapp.com'])) {
           return 'whatsapp';
         }
 
@@ -111,12 +85,9 @@ export class ReferralTrackingService {
 
     // PRIORITY 2: Check for 'src' parameter (e.g., ?src=facebook, ?src=form)
     // Only used if no external referrer was detected
+    const srcParam = urlParams.get('src');
     if (srcParam) {
-      const normalized = this.normalizeSource(srcParam);
-      if (fullUrl.includes('whatsapp') || srcParam === 'whatsapp' || referer.includes('whatsapp')) {
-        console.log('🔍 [WHATSAPP DETECTION] PRIORITY 2: srcParam =', srcParam, 'normalized =', normalized);
-      }
-      return normalized;
+      return this.normalizeSource(srcParam);
     }
 
     // PRIORITY 3: Check for utm_source parameter
@@ -132,10 +103,7 @@ export class ReferralTrackingService {
     }
 
     // PRIORITY 5: No referer means direct traffic
-    const finalChannel = 'direct';
-    // PHASE 2: Log final result (before return, non-destructive)
-    console.log("%c[DIAG] detectChannel() final result:", "color: #2196F3", finalChannel);
-    return finalChannel;
+    return 'direct';
   }
 
   /**
