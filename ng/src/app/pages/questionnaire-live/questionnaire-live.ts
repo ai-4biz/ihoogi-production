@@ -367,6 +367,11 @@ export class QuestionnaireLive implements OnInit {
       }
 
       // Use RPC function to insert lead (bypasses RLS)
+      // Debug: Log channel detection for troubleshooting
+      console.log('🔍 [LEAD SAVE] Detected channel:', this.detectedChannel);
+      console.log('🔍 [LEAD SAVE] Full URL:', window.location.href);
+      console.log('🔍 [LEAD SAVE] URL params:', new URLSearchParams(window.location.search).get('src'));
+      
       const { data: leadId, error: leadError } = await this.supabaseService.client
         .rpc('submit_lead', {
           p_questionnaire_id: this.questionnaire.id,
@@ -378,6 +383,14 @@ export class QuestionnaireLive implements OnInit {
           p_distribution_token: this.distributionToken,
           p_channel: this.detectedChannel
         });
+      
+      // Debug: Log the result
+      if (leadError) {
+        console.error('❌ [LEAD SAVE] Error saving lead:', leadError);
+      } else {
+        console.log('✅ [LEAD SAVE] Lead saved successfully with ID:', leadId);
+        console.log('✅ [LEAD SAVE] Channel saved:', this.detectedChannel);
+      }
 
       if (leadError) {
         console.error('Error saving lead data:', leadError);
