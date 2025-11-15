@@ -498,6 +498,37 @@
           </div>
         </div>
 
+        <!-- DIRECT DISTRIBUTION CHANNELS (WhatsApp, Email, SMS) -->
+        <div class="social-networks-section">
+          <h3 class="networks-section-title">ערוצי הפצה ישירה</h3>
+          <div class="direct-distribution-channels">
+            <button 
+              class="network-btn whatsapp"
+              (click)="selectSocialNetwork('whatsapp')"
+              [disabled]="!selectedQuestionnaire"
+              title="WhatsApp">
+              <span class="network-icon">💬</span>
+              <span class="network-name">WhatsApp</span>
+            </button>
+            <button 
+              class="network-btn email"
+              (click)="selectSocialNetwork('email')"
+              [disabled]="!selectedQuestionnaire"
+              title="Email">
+              <span class="network-icon">📧</span>
+              <span class="network-name">Email</span>
+            </button>
+            <button 
+              class="network-btn sms"
+              (click)="selectSocialNetwork('sms')"
+              [disabled]="!selectedQuestionnaire"
+              title="SMS">
+              <span class="network-icon">📱</span>
+              <span class="network-name">SMS</span>
+            </button>
+          </div>
+        </div>
+
         <!-- GROUP 3: MORE CHANNELS (dropdown) -->
         <div class="social-networks-section">
           <div class="more-channels-wrapper">
