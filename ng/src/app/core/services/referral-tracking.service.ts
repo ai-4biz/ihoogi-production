@@ -12,98 +12,98 @@ export class ReferralTrackingService {
   detectChannel(): string {
     const urlParams = new URLSearchParams(window.location.search);
 
-    // First, check for 'src' parameter (e.g., ?src=facebook)
+    // PRIORITY 1: Check HTTP referer FIRST (real source where the response came from)
+    // This catches cases where link was shared on Facebook/Instagram/etc. even if ?src=form is present
+    const referer = document.referrer;
+
+    if (referer) {
+      try {
+        const refererUrl = new URL(referer);
+        const refererHost = refererUrl.hostname.toLowerCase();
+
+        // Check for known social media and traffic sources
+        if (this.isFromSource(refererHost, ['facebook.com', 'fb.com', 'm.facebook.com'])) {
+          return 'facebook';
+        }
+
+        if (this.isFromSource(refererHost, ['instagram.com', 'm.instagram.com'])) {
+          return 'instagram';
+        }
+
+        if (this.isFromSource(refererHost, ['linkedin.com', 'lnkd.in'])) {
+          return 'linkedin';
+        }
+
+        if (this.isFromSource(refererHost, ['twitter.com', 't.co', 'x.com'])) {
+          return 'twitter';
+        }
+
+        if (this.isFromSource(refererHost, ['youtube.com', 'youtu.be', 'm.youtube.com'])) {
+          return 'youtube';
+        }
+
+        if (this.isFromSource(refererHost, ['tiktok.com'])) {
+          return 'tiktok';
+        }
+
+        if (this.isFromSource(refererHost, ['pinterest.com', 'pin.it'])) {
+          return 'pinterest';
+        }
+
+        if (this.isFromSource(refererHost, ['reddit.com'])) {
+          return 'reddit';
+        }
+
+        if (this.isFromSource(refererHost, ['google.com', 'google.co.il'])) {
+          return 'google';
+        }
+
+        if (this.isFromSource(refererHost, ['bing.com'])) {
+          return 'bing';
+        }
+
+        if (this.isFromSource(refererHost, ['yahoo.com'])) {
+          return 'yahoo';
+        }
+
+        if (this.isFromSource(refererHost, ['whatsapp.com', 'wa.me', 'chat.whatsapp.com'])) {
+          return 'whatsapp';
+        }
+
+        if (this.isFromSource(refererHost, ['telegram.org', 't.me'])) {
+          return 'telegram';
+        }
+
+        // If it's from another website, return 'referral' with the domain
+        return `referral-${refererHost}`;
+
+      } catch (error) {
+        console.error('Error parsing referer URL:', error);
+        // Continue to next check if referer parsing fails
+      }
+    }
+
+    // PRIORITY 2: Check for 'src' parameter (e.g., ?src=facebook, ?src=form)
+    // Only used if no external referrer was detected
     const srcParam = urlParams.get('src');
     if (srcParam) {
       return this.normalizeSource(srcParam);
     }
 
-    // Then check for utm_source parameter
+    // PRIORITY 3: Check for utm_source parameter
     const utmSource = urlParams.get('utm_source');
     if (utmSource) {
       return this.normalizeSource(utmSource);
     }
 
-    // If no UTM parameter, check the HTTP referer
-    const referer = document.referrer;
-
-    if (!referer) {
-      const uaChannel = this.detectFromUserAgent();
-      if (uaChannel) {
-        return uaChannel;
-      }
-      // No referer means direct traffic
-      return 'direct';
+    // PRIORITY 4: If no referer, check User Agent
+    const uaChannel = this.detectFromUserAgent();
+    if (uaChannel) {
+      return uaChannel;
     }
 
-    try {
-      const refererUrl = new URL(referer);
-      const refererHost = refererUrl.hostname.toLowerCase();
-
-      // Check for known social media and traffic sources
-      if (this.isFromSource(refererHost, ['facebook.com', 'fb.com', 'm.facebook.com'])) {
-        return 'facebook';
-      }
-
-      if (this.isFromSource(refererHost, ['instagram.com', 'm.instagram.com'])) {
-        return 'instagram';
-      }
-
-      if (this.isFromSource(refererHost, ['linkedin.com', 'lnkd.in'])) {
-        return 'linkedin';
-      }
-
-      if (this.isFromSource(refererHost, ['twitter.com', 't.co', 'x.com'])) {
-        return 'twitter';
-      }
-
-      if (this.isFromSource(refererHost, ['youtube.com', 'youtu.be', 'm.youtube.com'])) {
-        return 'youtube';
-      }
-
-      if (this.isFromSource(refererHost, ['tiktok.com'])) {
-        return 'tiktok';
-      }
-
-      if (this.isFromSource(refererHost, ['pinterest.com', 'pin.it'])) {
-        return 'pinterest';
-      }
-
-      if (this.isFromSource(refererHost, ['reddit.com'])) {
-        return 'reddit';
-      }
-
-      if (this.isFromSource(refererHost, ['google.com', 'google.co.il'])) {
-        return 'google';
-      }
-
-      if (this.isFromSource(refererHost, ['bing.com'])) {
-        return 'bing';
-      }
-
-      if (this.isFromSource(refererHost, ['yahoo.com'])) {
-        return 'yahoo';
-      }
-
-      if (this.isFromSource(refererHost, ['whatsapp.com', 'wa.me', 'chat.whatsapp.com'])) {
-        return 'whatsapp';
-      }
-
-      if (this.isFromSource(refererHost, ['telegram.org', 't.me'])) {
-        return 'telegram';
-      }
-
-      // If it's from another website, return 'referral' with the domain
-      return `referral-${refererHost}`;
-
-    } catch (error) {
-      console.error('Error parsing referer URL:', error);
-      const uaChannel = this.detectFromUserAgent();
-      if (uaChannel) {
-        return uaChannel;
-      }
-      return 'unknown';
-    }
+    // PRIORITY 5: No referer means direct traffic
+    return 'direct';
   }
 
   /**
