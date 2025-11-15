@@ -30,7 +30,7 @@ export class ReferralTrackingService {
     // WhatsApp, Email, and SMS don't send referrer like Facebook does, so we prioritize their ?src= parameters
     // This is the same logic that worked for Facebook showing history - these channels need it too
     // Social networks (Facebook, Instagram, LinkedIn) have referrer, so they're handled in PRIORITY 1 below
-    const channelsWithoutReferrer = ['whatsapp', 'email', 'sms'];
+    // Using channelsWithoutReferrer declared above (line 20)
     if (srcParam && channelsWithoutReferrer.includes(srcParam)) {
       console.log(`🔍 [${srcParam.toUpperCase()} DETECTION] PRIORITY 0 (Channel-specific): Found ?src=${srcParam}, returning ${srcParam} immediately`);
       return srcParam;
