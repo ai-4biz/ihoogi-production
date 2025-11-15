@@ -67,7 +67,7 @@ export class DistributionHubComponent implements OnInit {
   currentMode: LinkMode = null;
   currentUrl = '';
   currentDistribution: Distribution | null = null;
-  selectedSocialNetwork: 'whatsapp' | 'facebook' | 'instagram' | 'linkedin' | 'youtube' | 'telegram' | 'email' | 'sms' | 'website' | null = null;
+  selectedSocialNetwork: 'whatsapp' | 'facebook' | 'instagram' | 'linkedin' | 'youtube' | 'telegram' | 'email' | 'sms' | 'website' | 'qr' | 'tiktok' | 'pinterest' | 'reddit' | 'twitter' | 'google' | 'bing' | 'yahoo' | 'linktree' | 'signature' | null = null;
   showLinksSection = false;
 
   // Template management - Updated: Single template selection
