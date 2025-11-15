@@ -84,28 +84,33 @@ export class ReferralTrackingService {
       }
     }
 
-    // PRIORITY 2: Check for 'src' parameter (e.g., ?src=facebook, ?src=form)
-    // Only used if no external referrer was detected
+    // PRIORITY 2: If no referer, check User Agent FIRST (before src parameter)
+    // This catches cases where link is opened in WhatsApp app (no referrer, but User Agent has WhatsApp)
+    const uaChannel = this.detectFromUserAgent();
+    if (uaChannel) {
+      // Debug: Log WhatsApp detection via User Agent
+      if (uaChannel === 'whatsapp') {
+        console.log('WhatsApp detected via User Agent:', { uaChannel, referer: document.referrer || 'none' });
+      }
+      return uaChannel;
+    }
+
+    // PRIORITY 3: Check for 'src' parameter (e.g., ?src=facebook, ?src=form)
+    // Only used if no external referrer and no User Agent channel was detected
     const srcParam = urlParams.get('src');
     if (srcParam) {
       const normalizedChannel = this.normalizeSource(srcParam);
       // Debug: Log WhatsApp detection
       if (normalizedChannel === 'whatsapp' || srcParam.toLowerCase().includes('whatsapp') || srcParam.toLowerCase() === 'wa') {
-        console.log('WhatsApp detected via src parameter:', { srcParam, normalizedChannel, referer });
+        console.log('WhatsApp detected via src parameter:', { srcParam, normalizedChannel, referer: document.referrer || 'none' });
       }
       return normalizedChannel;
     }
 
-    // PRIORITY 3: Check for utm_source parameter
+    // PRIORITY 4: Check for utm_source parameter
     const utmSource = urlParams.get('utm_source');
     if (utmSource) {
       return this.normalizeSource(utmSource);
-    }
-
-    // PRIORITY 4: If no referer, check User Agent
-    const uaChannel = this.detectFromUserAgent();
-    if (uaChannel) {
-      return uaChannel;
     }
 
     // PRIORITY 5: No referer means direct traffic
