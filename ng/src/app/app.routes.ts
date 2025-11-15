@@ -12,6 +12,8 @@ export const routes: Routes = [
   { path: 'terms', loadComponent: () => import('./pages/terms/terms.component').then(m => m.TermsComponent) },
   { path: 'onboarding', loadComponent: () => import('./pages/onboarding/onboarding.component').then(m => m.OnboardingComponent) },
   { path: 'auth/update-password', loadComponent: () => import('./pages/update-password/update-password.component').then(m => m.UpdatePasswordComponent) },
+  // Smart redirect route for non-referrer channels: /r/:channel/:token -> /q/:token?src=channel
+  { path: 'r/:channel/:token', loadComponent: () => import('./pages/redirect-channel/redirect-channel.component').then(m => m.RedirectChannelComponent) },
   { path: 'q/:token', loadComponent: () => import('./pages/questionnaire-live/questionnaire-live').then(m => m.QuestionnaireLive) },
   { path: 'q/:token/chat', loadComponent: () => import('./pages/questionnaire-chat/questionnaire-chat').then(m => m.QuestionnaireChat) },
   { path: 'q/:token/qr', loadComponent: () => import('./pages/questionnaire-qr/questionnaire-qr.component').then(m => m.QuestionnaireQrComponent) },

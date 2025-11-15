@@ -67,8 +67,9 @@ export class DistributionHubComponent implements OnInit {
   currentMode: LinkMode = null;
   currentUrl = '';
   currentDistribution: Distribution | null = null;
-  selectedSocialNetwork: 'whatsapp' | 'facebook' | 'instagram' | 'linkedin' | 'youtube' | 'telegram' | 'email' | 'sms' | 'website' | null = null;
+  selectedSocialNetwork: 'whatsapp' | 'facebook' | 'instagram' | 'linkedin' | 'youtube' | 'telegram' | 'email' | 'sms' | 'website' | 'qr' | null = null;
   showLinksSection = false;
+  showMoreChannels: boolean = false;
 
   // Template management - Updated: Single template selection
   selectedTemplateId: string = ''; // "" = לא נבחר, "none" = ללא מענה, או ID תבנית
@@ -747,18 +748,56 @@ export class DistributionHubComponent implements OnInit {
     return this.selectedTemplates.some(t => t.id === templateId);
   }
 
-  // Social network selection and sharing
-  async selectSocialNetwork(network: 'whatsapp' | 'facebook' | 'instagram' | 'linkedin' | 'youtube' | 'telegram' | 'email' | 'sms' | 'website') {
-    // Generate form link if not already generated
-    const wasGenerated = !this.currentUrl;
-    if (wasGenerated) {
-      await this.handleBuildLink('form');
+  // Build channel link - smart redirect for non-referrer channels
+  buildChannelLink(channelId: string, token: string): string {
+    const baseUrl = environment.siteUrl;
+
+    // Non-referrer channels use smart redirect route: /r/<channel>/<token>
+    // This ensures the channel is preserved even if link is copied/shared
+    const nonReferrerChannels = ['whatsapp', 'email', 'sms', 'telegram', 'website', 'qr', 'direct', 'signature', 'linktree'];
+
+    if (nonReferrerChannels.includes(channelId)) {
+      // Use redirect route so the channel is preserved regardless
+      const redirectUrl = `${baseUrl}/r/${channelId}/${token}`;
+      console.log(`🔗 [${channelId.toUpperCase()}] Using redirect route:`, redirectUrl);
+      return redirectUrl;
     }
 
-    // If still no URL (error occurred), return
-    if (!this.currentUrl) {
+    // For social networks that may have referrer and already work:
+    // Keep existing ?src= behavior
+    const directUrl = `${baseUrl}/q/${token}?src=${channelId}`;
+    console.log(`🔗 [${channelId.toUpperCase()}] Using direct route with ?src=:`, directUrl);
+    return directUrl;
+  }
+
+  // Social network selection and sharing
+  async selectSocialNetwork(network: 'whatsapp' | 'facebook' | 'instagram' | 'linkedin' | 'youtube' | 'telegram' | 'email' | 'sms' | 'website' | 'qr') {
+    // Check if questionnaire is selected
+    if (!this.selectedQuestionnaire) {
+      this.toast.show(
+        this.lang.t('distribution.chooseQuestionnaireFirst'),
+        'error'
+      );
       return;
     }
+
+    // Check if distribution exists and has a token
+    if (!this.currentDistribution || !this.currentDistribution.token) {
+      this.toast.show(
+        this.lang.t('distribution.chooseQuestionnaireFirst'),
+        'error'
+      );
+      return;
+    }
+
+    // Use smart buildChannelLink function
+    const baseUrl = environment.siteUrl;
+    const distributionToken = this.currentDistribution.token;
+    const urlWithTracking = this.buildChannelLink(network, distributionToken);
+
+    // Diagnostic log
+    console.log(`📤 [${network.toUpperCase()}] Generated link:`, urlWithTracking);
+    console.log(`📤 [${network.toUpperCase()}] Full URL:`, urlWithTracking);
 
     this.selectedSocialNetwork = network;
 
@@ -775,37 +814,6 @@ export class DistributionHubComponent implements OnInit {
       'website': 'Website'
     };
     const networkName = networkNames[network] || network;
-
-    // Create URL with tracking parameter
-    let urlWithTracking: string;
-    try {
-      const url = new URL(this.currentUrl, environment.siteUrl);
-      
-      // CRITICAL FIX: Delete existing 'src' parameter first for channels without referrer
-      // This prevents ?src=form from remaining when we set ?src=whatsapp/email/sms
-      // WhatsApp, Email, and SMS don't send referrer like Facebook does, so they need explicit ?src= parameter
-      // Social networks (Facebook, Instagram, LinkedIn) work with referrer, so they don't need this fix
-      const channelsWithoutReferrer: Array<'whatsapp' | 'email' | 'sms'> = ['whatsapp', 'email', 'sms'];
-      if (channelsWithoutReferrer.includes(network as 'whatsapp' | 'email' | 'sms')) {
-        url.searchParams.delete('src');
-        console.log(`🔍 [${network.toUpperCase()}] Deleted existing src parameter from URL`);
-      }
-      
-      url.searchParams.set('src', network);
-      urlWithTracking = url.toString();
-      
-      // Debug: Log the final URL for channels without referrer to verify correct ?src= parameter
-      if (channelsWithoutReferrer.includes(network as 'whatsapp' | 'email' | 'sms')) {
-        console.log(`🔍 [${network.toUpperCase()}] Original URL:`, this.currentUrl);
-        console.log(`🔍 [${network.toUpperCase()}] Final URL with tracking:`, urlWithTracking);
-        console.log(`🔍 [${network.toUpperCase()}] URL contains ?src=${network}:`, urlWithTracking.includes(`src=${network}`));
-        console.log(`🔍 [${network.toUpperCase()}] URL still contains ?src=form:`, urlWithTracking.includes('src=form'));
-      }
-    } catch (error) {
-      console.error('Error creating URL:', error);
-      // Fallback: append parameter manually
-      urlWithTracking = this.currentUrl + (this.currentUrl.includes('?') ? '&' : '?') + `src=${network}`;
-    }
 
     // Copy URL to clipboard first for all networks
     const copySuccess = await this.copyToClipboard(urlWithTracking);
@@ -874,6 +882,9 @@ export class DistributionHubComponent implements OnInit {
         break;
       case 'website':
         // Generic share - only copy to clipboard
+        return;
+      case 'qr':
+        // QR code - only copy to clipboard (no share dialog)
         return;
     }
 

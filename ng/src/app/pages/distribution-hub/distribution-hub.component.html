@@ -377,6 +377,141 @@
       </div>
     }
 
+    <!-- Step 4: Social Network Distribution (Only after template selection) -->
+    @if (canShowStep3()) {
+      <div class="step-card gradient-blue">
+        <label class="step-label">שלב 4: הפצה ברשתות חברתיות</label>
+
+        <!-- Info box -->
+        <div class="info-box">
+          <span class="bot-icon">📱</span>
+          <span>לחץ על הכפתור הרלוונטי - כל קישור כולל מעקב לפי רשת</span>
+        </div>
+
+        <!-- Main Channels (Non-referrer: WhatsApp, Email, SMS, QR) -->
+        <div class="social-networks-section">
+          <h3 class="networks-section-title">ערוצים עיקריים (הכי ממירים)</h3>
+          <div class="networks-grid main-channels">
+            <button 
+              class="network-btn whatsapp main"
+              (click)="selectSocialNetwork('whatsapp')"
+              [disabled]="!selectedQuestionnaire"
+              title="WhatsApp">
+              <span class="network-icon">💬</span>
+              <span class="network-name">WhatsApp</span>
+              <span class="network-badge">45-60%</span>
+            </button>
+            <button 
+              class="network-btn email main"
+              (click)="selectSocialNetwork('email')"
+              [disabled]="!selectedQuestionnaire"
+              title="Email">
+              <span class="network-icon">📧</span>
+              <span class="network-name">Email</span>
+              <span class="network-badge">8-12%</span>
+            </button>
+            <button 
+              class="network-btn sms main"
+              (click)="selectSocialNetwork('sms')"
+              [disabled]="!selectedQuestionnaire"
+              title="SMS">
+              <span class="network-icon">📱</span>
+              <span class="network-name">SMS</span>
+              <span class="network-badge">8-12%</span>
+            </button>
+            <button 
+              class="network-btn qr main"
+              (click)="selectSocialNetwork('qr')"
+              [disabled]="!selectedQuestionnaire"
+              title="QR Code">
+              <span class="network-icon">📲</span>
+              <span class="network-name">QR</span>
+              <span class="network-badge">5-10%</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Social Networks (With referrer) -->
+        <div class="social-networks-section">
+          <h3 class="networks-section-title">רשתות חברתיות</h3>
+          <div class="networks-grid primary">
+            <button 
+              class="network-btn facebook"
+              (click)="selectSocialNetwork('facebook')"
+              [disabled]="!selectedQuestionnaire"
+              title="Facebook">
+              <span class="network-icon">📘</span>
+              <span class="network-name">Facebook</span>
+              <span class="network-badge">25-35%</span>
+            </button>
+            <button 
+              class="network-btn instagram"
+              (click)="selectSocialNetwork('instagram')"
+              [disabled]="!selectedQuestionnaire"
+              title="Instagram">
+              <span class="network-icon">📷</span>
+              <span class="network-name">Instagram</span>
+              <span class="network-badge">15-25%</span>
+            </button>
+            <button 
+              class="network-btn linkedin"
+              (click)="selectSocialNetwork('linkedin')"
+              [disabled]="!selectedQuestionnaire"
+              title="LinkedIn">
+              <span class="network-icon">💼</span>
+              <span class="network-name">LinkedIn</span>
+              <span class="network-badge">10-18%</span>
+            </button>
+            <button 
+              class="network-btn youtube"
+              (click)="selectSocialNetwork('youtube')"
+              [disabled]="!selectedQuestionnaire"
+              title="YouTube">
+              <span class="network-icon">▶️</span>
+              <span class="network-name">YouTube</span>
+              <span class="network-badge">8-12%</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Additional Channels (Dropdown) -->
+        <div class="social-networks-section">
+          <div class="more-channels-wrapper">
+            <button 
+              class="more-channels-toggle"
+              (click)="showMoreChannels = !showMoreChannels"
+              [disabled]="!selectedQuestionnaire"
+              type="button">
+              <span>עוד ערוצים</span>
+              <span class="toggle-icon" [class.open]="showMoreChannels">▼</span>
+            </button>
+            @if (showMoreChannels) {
+              <div class="networks-grid secondary more-channels-grid">
+                <button 
+                  class="network-btn telegram"
+                  (click)="selectSocialNetwork('telegram')"
+                  [disabled]="!selectedQuestionnaire"
+                  title="Telegram">
+                  <span class="network-icon">✈️</span>
+                  <span class="network-name">Telegram</span>
+                  <span class="network-badge">8-12%</span>
+                </button>
+                <button 
+                  class="network-btn website"
+                  (click)="selectSocialNetwork('website')"
+                  [disabled]="!selectedQuestionnaire"
+                  title="Website">
+                  <span class="network-icon">🌐</span>
+                  <span class="network-name">Website</span>
+                  <span class="network-badge">5-10%</span>
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
   </div>
 </div>
 

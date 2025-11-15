@@ -1928,14 +1928,220 @@
     border-color: #6366f1
     background: rgba(99, 102, 241, 0.05)
 
-    &:hover
+// Social Networks Section Styles
+.social-networks-section
+  margin-top: 1.5rem
+  margin-bottom: 1.5rem
+
+  &:first-child
+    margin-top: 0
+
+.networks-section-title
+  font-size: 1.125rem
+  font-weight: 600
+  color: #1f2937
+  margin-bottom: 1rem
+  text-align: right
+
+.networks-grid
+  display: grid
+  gap: 1rem
+  margin-bottom: 1rem
+
+  &.primary
+    grid-template-columns: repeat(2, 1fr)
+    
+    @media (min-width: 640px)
+      grid-template-columns: repeat(3, 1fr)
+    
+    @media (min-width: 1024px)
+      grid-template-columns: repeat(5, 1fr)
+
+  &.secondary
+    grid-template-columns: repeat(2, 1fr)
+    
+    @media (min-width: 640px)
+      grid-template-columns: repeat(4, 1fr)
+
+.network-btn
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  gap: 0.5rem
+  padding: 1rem 0.75rem
+  border: 2px solid #e5e7eb
+  border-radius: 0.75rem
+  background: white
+  cursor: pointer
+  transition: all 0.2s ease
+  text-align: center
+  min-height: 100px
+  position: relative
+
+  &:hover:not(:disabled)
+    transform: translateY(-2px)
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)
+
+  &:disabled
+    opacity: 0.5
+    cursor: not-allowed
+
+  .network-icon
+    font-size: 2rem
+    margin-bottom: 0.25rem
+
+  .network-name
+    font-size: 0.875rem
+    font-weight: 600
+    color: #1f2937
+
+  .network-badge
+    font-size: 0.75rem
+    padding: 0.25rem 0.5rem
+    background: rgba(59, 130, 246, 0.1)
+    border: 1px solid rgba(59, 130, 246, 0.3)
+    border-radius: 0.375rem
+    color: #1e40af
+    font-weight: 500
+
+  // Network-specific colors
+  &.whatsapp
+    border-color: #25d366
+    background: rgba(37, 211, 102, 0.05)
+
+    &:hover:not(:disabled)
+      background: rgba(37, 211, 102, 0.1)
+      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2)
+
+  &.facebook
+    border-color: #1877f2
+    background: rgba(24, 119, 242, 0.05)
+
+    &:hover:not(:disabled)
+      background: rgba(24, 119, 242, 0.1)
+      box-shadow: 0 4px 12px rgba(24, 119, 242, 0.2)
+
+  &.instagram
+    border-color: #e1306c
+    background: rgba(225, 48, 108, 0.05)
+
+    &:hover:not(:disabled)
+      background: rgba(225, 48, 108, 0.1)
+      box-shadow: 0 4px 12px rgba(225, 48, 108, 0.2)
+
+  &.linkedin
+    border-color: #0077b5
+    background: rgba(0, 119, 181, 0.05)
+
+    &:hover:not(:disabled)
+      background: rgba(0, 119, 181, 0.1)
+      box-shadow: 0 4px 12px rgba(0, 119, 181, 0.2)
+
+  &.youtube
+    border-color: #ff0000
+    background: rgba(255, 0, 0, 0.05)
+
+    &:hover:not(:disabled)
+      background: rgba(255, 0, 0, 0.1)
+      box-shadow: 0 4px 12px rgba(255, 0, 0, 0.2)
+
+  &.telegram
+    border-color: #0088cc
+    background: rgba(0, 136, 204, 0.05)
+
+    &:hover:not(:disabled)
+      background: rgba(0, 136, 204, 0.1)
+      box-shadow: 0 4px 12px rgba(0, 136, 204, 0.2)
+
+  &.email
+    border-color: #4b5563
+    background: rgba(75, 85, 99, 0.05)
+
+    &:hover:not(:disabled)
+      background: rgba(75, 85, 99, 0.1)
+      box-shadow: 0 4px 12px rgba(75, 85, 99, 0.2)
+
+  &.sms
+    border-color: #6366f1
+    background: rgba(99, 102, 241, 0.05)
+
+    &:hover:not(:disabled)
       background: rgba(99, 102, 241, 0.1)
       box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2)
 
-    &.selected
-      background: rgba(99, 102, 241, 0.2)
-      border-color: #6366f1
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3)
+  &.website
+    border-color: #6b7280
+    background: rgba(107, 114, 128, 0.05)
+
+    &:hover:not(:disabled)
+      background: rgba(107, 114, 128, 0.1)
+      box-shadow: 0 4px 12px rgba(107, 114, 128, 0.2)
+
+  &.qr
+    border-color: #9333ea
+    background: rgba(147, 51, 234, 0.05)
+
+    &:hover:not(:disabled)
+      background: rgba(147, 51, 234, 0.1)
+      box-shadow: 0 4px 12px rgba(147, 51, 234, 0.2)
+
+  // Main channels (WhatsApp, Email, SMS, QR) - more prominent
+  &.main
+    min-height: 120px
+    padding: 1.25rem 1rem
+    border-width: 3px
+    font-size: 1rem
+
+    .network-icon
+      font-size: 2.5rem
+
+    .network-name
+      font-size: 1rem
+      font-weight: 700
+
+.networks-grid.main-channels
+  grid-template-columns: repeat(2, 1fr)
+  
+  @media (min-width: 640px)
+    grid-template-columns: repeat(4, 1fr)
+
+// More channels dropdown
+.more-channels-wrapper
+  width: 100%
+
+.more-channels-toggle
+  display: flex
+  align-items: center
+  justify-content: space-between
+  width: 100%
+  padding: 0.75rem 1rem
+  background: rgba(59, 130, 246, 0.1)
+  border: 2px solid rgba(59, 130, 246, 0.3)
+  border-radius: 0.5rem
+  color: #1e40af
+  font-weight: 600
+  cursor: pointer
+  transition: all 0.2s ease
+  margin-bottom: 1rem
+
+  &:hover:not(:disabled)
+    background: rgba(59, 130, 246, 0.15)
+    border-color: rgba(59, 130, 246, 0.5)
+
+  &:disabled
+    opacity: 0.5
+    cursor: not-allowed
+
+  .toggle-icon
+    transition: transform 0.2s ease
+    font-size: 0.875rem
+
+    &.open
+      transform: rotate(180deg)
+
+.more-channels-grid
+  margin-top: 1rem
 
   &.website-card
     border-color: #6b7280
@@ -2283,6 +2489,10 @@
 // Purple gradient for Step 3
 .gradient-purple
   background: linear-gradient(to bottom right, rgba(168, 85, 247, 0.1), rgba(168, 85, 247, 0.05))
+
+// Blue gradient for Step 4 (Social Networks)
+.gradient-blue
+  background: linear-gradient(to bottom right, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05))
 
 .step-label
   display: block
