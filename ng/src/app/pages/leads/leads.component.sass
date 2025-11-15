@@ -157,24 +157,25 @@
 // Filter bar
 .filter-bar
   display: flex
-  flex-direction: column
+  flex-direction: row
   gap: 0.5rem
   padding: 0.75rem
   background: white
   border: 1px solid hsl(186, 30%, 88%)
   border-radius: 0.5rem
   margin-bottom: 0.75rem
+  align-items: center
+  flex-wrap: wrap
 
   @media (min-width: 768px)
-    flex-direction: row
-    align-items: center
-    flex-wrap: wrap
     padding: 0.5rem
+    gap: 0.75rem
 
 .filter-search
   position: relative
   flex: 1
-  min-width: 100%
+  min-width: 150px
+  max-width: 250px
 
   @media (min-width: 768px)
     min-width: 180px
@@ -218,9 +219,9 @@
   padding: 0.5rem 2.25rem 0.5rem 0.75rem
 
 .filter-date
-  flex: 1
-  width: 100%
-  min-width: 100%
+  flex: 0 0 auto
+  width: auto
+  min-width: 110px
   min-height: 44px
   padding: 0.625rem 0.75rem
   font-size: 0.875rem
@@ -232,8 +233,6 @@
   transition: all 0.2s
 
   @media (min-width: 768px)
-    width: auto
-    min-width: 110px
     height: 36px
     padding: 0.5rem 0.75rem
 
@@ -243,8 +242,9 @@
     box-shadow: 0 0 0 2px hsla(186, 74%, 35%, 0.1)
 
 .filter-select
-  width: 100%
-  min-width: 100%
+  flex: 0 0 auto
+  width: auto
+  min-width: 130px
   min-height: 44px
   padding: 0.625rem 0.75rem
   font-size: 0.875rem
@@ -276,7 +276,9 @@
       min-width: 140px
 
 .filter-reset-btn
-  width: 100%
+  flex: 0 0 auto
+  width: auto
+  min-width: auto
   min-height: 44px
   padding: 0.625rem 1rem
   font-size: 0.875rem
@@ -303,7 +305,9 @@
   align-items: center
   justify-content: center
   gap: 0.5rem
-  width: 100%
+  flex: 0 0 auto
+  width: auto
+  min-width: auto
   min-height: 44px
   padding: 0.625rem 0.75rem
   font-size: 0.875rem
@@ -314,8 +318,8 @@
   color: white
   font-family: inherit
   cursor: pointer
-  transition: all 0.2s
   white-space: nowrap
+  transition: all 0.2s
 
   @media (min-width: 768px)
     width: auto
@@ -384,6 +388,9 @@
   color: hsl(0, 0%, 50%)
 
 .cell-questionnaire
+  overflow: hidden
+  max-width: 200px
+
   .questionnaire-title-btn
     background: none
     border: none
@@ -396,6 +403,12 @@
     text-align: start
     font-family: inherit
     transition: color 0.2s
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+    max-width: 100%
+    display: block
+    width: 100%
 
     &:hover
       color: hsl(186, 74%, 25%)
@@ -443,6 +456,9 @@
     color: #7c3aed
 
 .cell-automations
+  overflow: hidden
+  max-width: 200px
+
   .automation-badge
     display: inline-flex
     align-items: center
@@ -478,6 +494,19 @@
     color: #c2410c
 
   .automations-list
+    font-size: 0.75rem
+    color: hsl(0, 0%, 50%)
+
+  .automation-template-name
+    display: block
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+    max-width: 100%
+    font-size: 0.875rem
+    color: hsl(0, 0%, 20%)
+
+  .no-automation
     font-size: 0.75rem
     color: hsl(0, 0%, 50%)
 

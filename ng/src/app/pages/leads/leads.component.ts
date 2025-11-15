@@ -14,13 +14,16 @@ interface Lead {
   client_name: string;
   partner_id?: string;
   channel?: string; // Channel source: email, whatsapp, sms, website, etc.
+  form_type?: string; // Form type: form, chat, qr
   status: string;
   sub_status?: string;
   automations: string[]; // Array of automation types
+  automation_template_name?: string; // Name of automation template
   comments?: string;
   answer_json: any;
   email?: string;
   phone?: string;
+  distribution_token?: string; // Distribution token for fetching template name
   created_at: string;
   updated_at: string;
 }
@@ -52,7 +55,8 @@ export class LeadsComponent implements OnInit {
   filterStatus = '';
   filterQuestionnaire = '';
   filterQuestionnaireId = ''; // Filter by questionnaire ID from query params
-  filterPartner = '';
+  filterFormType = '';
+  filterAutomationTemplate = '';
 
   constructor(
     public lang: LanguageService,
@@ -121,10 +125,9 @@ export class LeadsComponent implements OnInit {
 
   applyFilters() {
     this.filteredLeads = this.leads.filter(lead => {
-      // Text search across client name, partner name, and questionnaire name
+      // Text search across client name and questionnaire name
       const matchesText = !this.filterText ||
         lead.client_name.toLowerCase().includes(this.filterText.toLowerCase()) ||
-        (lead.partner_id && lead.partner_id.toLowerCase().includes(this.filterText.toLowerCase())) ||
         (lead.questionnaire_title && lead.questionnaire_title.toLowerCase().includes(this.filterText.toLowerCase()));
 
       // Date range filtering
@@ -143,10 +146,14 @@ export class LeadsComponent implements OnInit {
       const matchesQuestionnaire = !this.filterQuestionnaire || lead.questionnaire_title === this.filterQuestionnaire;
       const matchesQuestionnaireId = !this.filterQuestionnaireId || lead.questionnaire_id === this.filterQuestionnaireId;
 
-      // Partner filtering
-      const matchesPartner = !this.filterPartner || lead.partner_id === this.filterPartner;
+      // Form type filtering
+      const matchesFormType = !this.filterFormType || lead.form_type === this.filterFormType;
 
-      return matchesText && matchesDateFrom && matchesDateTo && matchesChannel && matchesStatus && matchesQuestionnaire && matchesQuestionnaireId && matchesPartner;
+      // Automation template filtering
+      const matchesAutomationTemplate = !this.filterAutomationTemplate || 
+        (lead.automation_template_name && lead.automation_template_name === this.filterAutomationTemplate);
+
+      return matchesText && matchesDateFrom && matchesDateTo && matchesChannel && matchesStatus && matchesQuestionnaire && matchesQuestionnaireId && matchesFormType && matchesAutomationTemplate;
     });
   }
 
@@ -158,7 +165,8 @@ export class LeadsComponent implements OnInit {
     this.filterStatus = '';
     this.filterQuestionnaire = '';
     this.filterQuestionnaireId = '';
-    this.filterPartner = '';
+    this.filterFormType = '';
+    this.filterAutomationTemplate = '';
     this.applyFilters();
   }
 
@@ -176,7 +184,7 @@ export class LeadsComponent implements OnInit {
     const selectedLeads = this.filteredLeads.filter(lead => this.selectedLeadIds.has(lead.id));
 
     const csvContent = [
-      ['שם', 'אימייל', 'טלפון', 'תאריך', 'סטטוס', 'ערוץ', 'שאלון', 'שותף'],
+      ['שם', 'אימייל', 'טלפון', 'תאריך', 'סטטוס', 'ערוץ', 'סוג טופס', 'מענה אוטומטי', 'שאלון'],
       ...selectedLeads.map(lead => [
         lead.client_name,
         lead.email || '',
@@ -184,8 +192,9 @@ export class LeadsComponent implements OnInit {
         this.getFormattedDateDDMMYYYY(lead.created_at),
         this.getStatusTranslation(lead.status),
         this.getChannelLabel(lead.channel || ''),
-        lead.questionnaire_title || '',
-        lead.partner_id ? lead.partner_id.substring(0, 8) + '...' : ''
+        this.getFormTypeLabel(lead.form_type || ''),
+        lead.automation_template_name || '',
+        lead.questionnaire_title || ''
       ])
     ].map(row => row.join(',')).join('\n');
 
@@ -206,9 +215,9 @@ export class LeadsComponent implements OnInit {
     return Array.from(new Set(titles));
   }
 
-  getUniquePartners(): string[] {
-    const partners = this.leads.map(l => l.partner_id).filter((id): id is string => !!id);
-    return Array.from(new Set(partners));
+  getUniqueAutomationTemplates(): string[] {
+    const templates = this.leads.map(l => l.automation_template_name).filter((name): name is string => !!name);
+    return Array.from(new Set(templates)).sort();
   }
 
   async loadLeads() {
@@ -230,7 +239,7 @@ export class LeadsComponent implements OnInit {
       if (error) throw error;
 
       // Transform leads data to match our Lead interface
-      this.leads = (data || []).map((lead: any) => {
+      this.leads = await Promise.all((data || []).map(async (lead: any) => {
         const answerJson = lead.answer_json || {};
 
         // Extract email and phone by searching through all answers
@@ -263,6 +272,61 @@ export class LeadsComponent implements OnInit {
         // Preserve channel value as-is (no normalization needed - all channels are valid)
         const normalizedChannel = lead.channel || 'unknown';
 
+        // Determine form type from channel (form, chat, qr)
+        // Priority: exact match > contains check
+        let formType = '';
+        const channelLower = normalizedChannel.toLowerCase();
+        
+        // Check for exact matches first
+        if (normalizedChannel === 'form' || channelLower === 'form') {
+          formType = 'form';
+        } else if (normalizedChannel === 'chat' || channelLower === 'chat') {
+          formType = 'chat';
+        } else if (normalizedChannel === 'qr' || channelLower === 'qr') {
+          formType = 'qr';
+        } else {
+          // Try to infer from channel if it contains form/chat/qr
+          if (channelLower.includes('qr')) {
+            formType = 'qr';
+          } else if (channelLower.includes('form')) {
+            formType = 'form';
+          } else if (channelLower.includes('chat')) {
+            formType = 'chat';
+          }
+        }
+
+        // Load automation template name from distribution if distribution_token exists
+        let automationTemplateName = '';
+        if (lead.distribution_token) {
+          try {
+            const { data: distribution } = await this.supabase.client
+              .from('distributions')
+              .select('automation_template_ids')
+              .eq('token', lead.distribution_token)
+              .single();
+
+            if (distribution && distribution.automation_template_ids && Array.isArray(distribution.automation_template_ids) && distribution.automation_template_ids.length > 0) {
+              // Get first template ID
+              const firstTemplate = distribution.automation_template_ids[0];
+              const templateId = typeof firstTemplate === 'object' ? firstTemplate.template_id : firstTemplate;
+              
+              if (templateId) {
+                const { data: template } = await this.supabase.client
+                  .from('automation_templates')
+                  .select('name')
+                  .eq('id', templateId)
+                  .single();
+
+                if (template && template.name) {
+                  automationTemplateName = template.name;
+                }
+              }
+            }
+          } catch (err) {
+            console.warn('Error loading automation template name:', err);
+          }
+        }
+
         return {
           id: lead.id,
           questionnaire_id: lead.questionnaire_id,
@@ -270,17 +334,20 @@ export class LeadsComponent implements OnInit {
           client_name: lead.client_name || 'Unknown',
           partner_id: lead.partner_id,
           channel: normalizedChannel,
+          form_type: formType || undefined,
           status: lead.status || 'new',
           sub_status: lead.sub_status || '',
           automations: Array.isArray(lead.automations) ? lead.automations : [],
+          automation_template_name: automationTemplateName || undefined,
           comments: lead.comments,
           answer_json: answerJson,
           email,
           phone,
+          distribution_token: lead.distribution_token,
           created_at: lead.created_at,
           updated_at: lead.updated_at
         };
-      });
+      }));
 
       // Initialize filtered leads
       this.applyFilters();
@@ -407,6 +474,16 @@ export class LeadsComponent implements OnInit {
     }
   }
 
+
+  getFormTypeLabel(formType: string): string {
+    if (!formType) return this.lang.t('leads.formTypeUnknown');
+    const formTypeLabels: { [key: string]: string } = {
+      'form': this.lang.t('leads.formTypeForm'),
+      'chat': this.lang.t('leads.formTypeChat'),
+      'qr': this.lang.t('leads.formTypeQr')
+    };
+    return formTypeLabels[formType.toLowerCase()] || this.lang.t('leads.formTypeUnknown');
+  }
 
   getChannelLabel(channel: string): string {
     if (!channel) return this.lang.t('leads.channelWebsite');

@@ -45,6 +45,13 @@
           } @else {
             <!-- Filter Bar -->
             <div class="filter-bar">
+              <!-- Reset button -->
+              <button
+                (click)="resetFilters()"
+                class="filter-reset-btn">
+                {{ lang.t('leads.resetFilters') }}
+              </button>
+
               <!-- Search input -->
               <div class="filter-search">
                 <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -81,13 +88,30 @@
                 (ngModelChange)="applyFilters()"
                 class="filter-select">
                 <option value="">{{ lang.t('leads.allChannels') }}</option>
-                <option value="email">{{ lang.t('leads.channelEmail') }}</option>
-                <option value="whatsapp">{{ lang.t('leads.channelWhatsApp') }}</option>
-                <option value="sms">{{ lang.t('leads.channelSMS') }}</option>
-                <option value="website">{{ lang.t('leads.channelWebsite') }}</option>
-                <option value="facebook">{{ lang.t('leads.channelFacebook') }}</option>
-                <option value="instagram">{{ lang.t('leads.channelInstagram') }}</option>
-                <option value="other">{{ lang.t('leads.channel_other') }}</option>
+                
+                <!-- Social Networks -->
+                <optgroup [label]="lang.t('leads.socialNetworks')">
+                  <option value="facebook">{{ lang.t('leads.channelFacebook') }}</option>
+                  <option value="instagram">{{ lang.t('leads.channelInstagram') }}</option>
+                  <option value="linkedin">{{ lang.t('leads.channelLinkedIn') }}</option>
+                  <option value="youtube">{{ lang.t('leads.channelYouTube') }}</option>
+                  <option value="tiktok">{{ lang.t('leads.channelTikTok') }}</option>
+                  <option value="twitter">{{ lang.t('leads.channelTwitter') }}</option>
+                  <option value="pinterest">{{ lang.t('leads.channelPinterest') }}</option>
+                  <option value="reddit">{{ lang.t('leads.channelReddit') }}</option>
+                </optgroup>
+                
+                <!-- Other Channels -->
+                <optgroup [label]="lang.t('leads.otherChannels')">
+                  <option value="email">{{ lang.t('leads.channelEmail') }}</option>
+                  <option value="whatsapp">{{ lang.t('leads.channelWhatsApp') }}</option>
+                  <option value="sms">{{ lang.t('leads.channelSMS') }}</option>
+                  <option value="website">{{ lang.t('leads.channelWebsite') }}</option>
+                  <option value="telegram">{{ lang.t('leads.channelTelegram') }}</option>
+                  <option value="google">{{ lang.t('leads.channelGoogle') }}</option>
+                  <option value="bing">{{ lang.t('leads.channelBing') }}</option>
+                  <option value="yahoo">{{ lang.t('leads.channelYahoo') }}</option>
+                </optgroup>
               </select>
 
               <!-- Status filter -->
@@ -117,23 +141,27 @@
                 }
               </select>
 
-              <!-- Partner filter -->
+              <!-- Form type filter -->
               <select
-                [(ngModel)]="filterPartner"
+                [(ngModel)]="filterFormType"
                 (ngModelChange)="applyFilters()"
                 class="filter-select">
-                <option value="">{{ lang.t('leads.allPartners') }}</option>
-                @for (p of getUniquePartners(); track p) {
-                  <option [value]="p">{{ p.substring(0, 8) }}...</option>
-                }
+                <option value="">{{ lang.t('leads.allFormTypes') }}</option>
+                <option value="form">{{ lang.t('leads.formTypeForm') }}</option>
+                <option value="chat">{{ lang.t('leads.formTypeChat') }}</option>
+                <option value="qr">{{ lang.t('leads.formTypeQr') }}</option>
               </select>
 
-              <!-- Reset button -->
-              <button
-                (click)="resetFilters()"
-                class="filter-reset-btn">
-                {{ lang.t('leads.resetFilters') }}
-              </button>
+              <!-- Automation template filter -->
+              <select
+                [(ngModel)]="filterAutomationTemplate"
+                (ngModelChange)="applyFilters()"
+                class="filter-select">
+                <option value="">{{ lang.t('leads.allAutomationTemplates') }}</option>
+                @for (template of getUniqueAutomationTemplates(); track template) {
+                  <option [value]="template">{{ template }}</option>
+                }
+              </select>
 
               <!-- Export button -->
               <button
@@ -165,11 +193,11 @@
               </div>
               <div class="header-cell header-client-name">{{ lang.t('leads.clientName') }}</div>
               <div class="header-cell header-questionnaire">{{ lang.t('leads.questionnaire') }}</div>
-              <div class="header-cell header-partner">{{ lang.t('leads.partner') }}</div>
               <div class="header-cell header-channel">{{ lang.t('leads.channel') }}</div>
+              <div class="header-cell header-form-type">{{ lang.t('leads.formType') }}</div>
               <div class="header-cell header-status">{{ lang.t('leads.status') }}</div>
               <div class="header-cell header-sub-status">{{ lang.t('leads.subStatus') }}</div>
-              <div class="header-cell header-automations">{{ lang.t('leads.automations') }}</div>
+              <div class="header-cell header-automations">{{ lang.t('leads.automationResponse') }}</div>
               <div class="header-cell header-quick-actions">{{ lang.t('leads.quickActions') }}</div>
               <div class="header-cell header-comments">{{ lang.t('leads.comments') }}</div>
               <div class="header-cell header-actions">{{ lang.t('common.delete') }}</div>
@@ -209,24 +237,25 @@
 
                   <!-- Questionnaire Title -->
                   <div class="cell cell-questionnaire">
-                    <button class="questionnaire-title-btn" (click)="openLeadDetails(lead)">
+                    <button 
+                      class="questionnaire-title-btn" 
+                      (click)="openLeadDetails(lead)"
+                      [title]="lead.questionnaire_title">
                       {{ lead.questionnaire_title }}
                     </button>
-                  </div>
-
-                  <!-- Partner -->
-                  <div class="cell cell-partner">
-                    @if (lead.partner_id) {
-                      <span>{{ lead.partner_id.substring(0, 8) }}...</span>
-                    } @else {
-                      <span class="no-data">{{ lang.t('leads.notAssigned') }}</span>
-                    }
                   </div>
 
                   <!-- Channel -->
                   <div class="cell cell-channel">
                     <span class="channel-chip">
                       {{ getChannelLabel(lead.channel || '') }}
+                    </span>
+                  </div>
+
+                  <!-- Form Type -->
+                  <div class="cell cell-form-type">
+                    <span class="form-type-chip">
+                      {{ getFormTypeLabel(lead.form_type || '') }}
                     </span>
                   </div>
 
@@ -261,14 +290,16 @@
                     </select>
                   </div>
 
-                  <!-- Automations -->
+                  <!-- Automation Response (Template Name) -->
                   <div class="cell cell-automations">
-                    @if (lead.automations && lead.automations.length > 0) {
-                      <span class="automation-badge" [ngClass]="getAutomationClass(lead.automations[0])">
-                        {{ lead.automations[0] }}
+                    @if (lead.automation_template_name) {
+                      <span 
+                        class="automation-template-name"
+                        [title]="lead.automation_template_name">
+                        {{ lead.automation_template_name }}
                       </span>
                     } @else {
-                      <span class="automations-list">{{ lang.t('leads.noAutomation') }}</span>
+                      <span class="no-automation">{{ lang.t('leads.noAutomation') }}</span>
                     }
                   </div>
 
