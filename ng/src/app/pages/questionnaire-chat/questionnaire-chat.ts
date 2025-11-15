@@ -1045,17 +1045,28 @@ export class QuestionnaireChat implements OnInit, OnDestroy, AfterViewChecked {
       console.log('🔍 [LEAD SAVE] Full URL:', window.location.href);
       console.log('🔍 [LEAD SAVE] URL params:', new URLSearchParams(window.location.search).get('src'));
       
+      // PHASE 3: Inspect saveLeadData() flow before RPC call
+      const p_channel = this.detectedChannel;
+      console.log("%c[DIAG] saveLeadData → p_channel:", "color: #FF9800", p_channel);
+      if (!p_channel || p_channel === 'form' || p_channel === 'chat') {
+        console.warn("%c[DIAG] ⚠️ WARNING: p_channel is missing or incorrect:", "color: #FF5722; font-weight: bold", p_channel);
+      }
+      
+      // PHASE 4: Inspect submit_lead RPC call parameters
+      const rpcParams = {
+        p_questionnaire_id: this.questionnaire.id,
+        p_client_name: clientName,
+        p_answer_json: responseData,
+        p_email: email,
+        p_phone: phone,
+        p_name: name,
+        p_distribution_token: this.distributionToken,
+        p_channel: p_channel
+      };
+      console.log("%c[DIAG] submit_lead called with:", "color: #E91E63", rpcParams);
+      
       const { data: leadId, error: leadError } = await this.supabaseService.client
-        .rpc('submit_lead', {
-          p_questionnaire_id: this.questionnaire.id,
-          p_client_name: clientName,
-          p_answer_json: responseData,
-          p_email: email,
-          p_phone: phone,
-          p_name: name,
-          p_distribution_token: this.distributionToken,
-          p_channel: this.detectedChannel
-        });
+        .rpc('submit_lead', rpcParams);
       
       // Debug: Log the result
       if (leadError) {
