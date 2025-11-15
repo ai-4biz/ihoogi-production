@@ -2783,3 +2783,265 @@
     background: #ef4444
     color: white
     box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3)
+
+// Copy buttons group for links
+.copy-buttons-group
+  display: flex
+  gap: 0.4rem
+  flex-shrink: 0
+
+  .copy-btn-simple
+    min-width: 60px
+    font-size: 0.7rem
+
+  .copy-with-text
+    background: #22c55e
+
+    &:hover:not(:disabled)
+      background: #16a34a
+
+// Distribution Channels Section
+.distribution-channels-section
+  margin-top: 2rem
+  padding-top: 1.5rem
+  border-top: 2px solid rgba(147, 51, 234, 0.2)
+
+  @media (max-width: 640px)
+    margin-top: 1.5rem
+    padding-top: 1rem
+
+.channels-section-title
+  font-size: 1rem
+  font-weight: 600
+  color: #1f2937
+  margin-bottom: 1.25rem
+  text-align: right
+  direction: rtl
+
+  @media (min-width: 640px)
+    font-size: 1.125rem
+    margin-bottom: 1.5rem
+
+  @media (min-width: 1024px)
+    font-size: 1.25rem
+
+  [dir="ltr"] &
+    text-align: left
+
+.channels-group
+  margin-bottom: 1.5rem
+
+  @media (max-width: 640px)
+    margin-bottom: 1.25rem
+
+  &:last-child
+    margin-bottom: 0
+
+.group-title
+  font-size: 0.9375rem
+  font-weight: 600
+  color: #4b5563
+  margin-bottom: 0.75rem
+  text-align: right
+  display: flex
+  align-items: center
+  gap: 0.5rem
+  direction: rtl
+
+  @media (min-width: 640px)
+    font-size: 1rem
+    margin-bottom: 0.875rem
+
+  @media (min-width: 1024px)
+    font-size: 1.125rem
+
+  [dir="ltr"] &
+    text-align: left
+    flex-direction: row-reverse
+
+.summary-title
+  cursor: pointer
+  user-select: none
+  padding: 0.5rem
+  border-radius: 0.375rem
+  transition: background 0.2s
+  direction: rtl
+
+  &:hover
+    background: rgba(147, 51, 234, 0.05)
+
+  .expand-icon
+    font-size: 0.75rem
+    transition: transform 0.2s
+    margin-right: 0.25rem
+
+  &[open] .expand-icon
+    transform: rotate(180deg)
+
+  [dir="ltr"] &
+    flex-direction: row-reverse
+
+    .expand-icon
+      margin-right: 0
+      margin-left: 0.25rem
+
+.channels-grid
+  display: grid
+  gap: 0.625rem
+
+  @media (min-width: 640px)
+    gap: 0.875rem
+
+  @media (min-width: 1024px)
+    gap: 1rem
+
+// Social Networks Grid (8 buttons)
+.social-grid
+  grid-template-columns: repeat(2, 1fr)
+
+  @media (min-width: 480px)
+    grid-template-columns: repeat(3, 1fr)
+
+  @media (min-width: 640px)
+    grid-template-columns: repeat(4, 1fr)
+
+  @media (min-width: 1024px)
+    grid-template-columns: repeat(4, 1fr)
+
+// Main Channels Grid (3 buttons)
+.main-grid
+  grid-template-columns: repeat(3, 1fr)
+  gap: 0.5rem
+
+  @media (min-width: 480px)
+    gap: 0.625rem
+
+  @media (min-width: 640px)
+    gap: 0.875rem
+    grid-template-columns: repeat(3, 1fr)
+
+  @media (min-width: 1024px)
+    gap: 1rem
+
+// Additional Networks Grid (7 buttons)
+.additional-grid
+  grid-template-columns: repeat(2, 1fr)
+
+  @media (min-width: 480px)
+    grid-template-columns: repeat(3, 1fr)
+
+  @media (min-width: 640px)
+    grid-template-columns: repeat(3, 1fr)
+
+  @media (min-width: 1024px)
+    grid-template-columns: repeat(4, 1fr)
+
+.channel-btn
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  gap: 0.35rem
+  padding: 0.875rem 0.5rem
+  background: white
+  border: 2px solid #e5e7eb
+  border-radius: 0.5rem
+  cursor: pointer
+  transition: all 0.2s
+  font-size: 0.8125rem
+  font-weight: 500
+  color: #374151
+  min-height: 75px
+  text-align: center
+
+  @media (min-width: 480px)
+    padding: 1rem 0.75rem
+    min-height: 80px
+    gap: 0.4rem
+
+  @media (min-width: 640px)
+    padding: 1.25rem 1rem
+    min-height: 90px
+    font-size: 0.875rem
+
+  &:hover
+    transform: translateY(-2px)
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)
+    border-color: #9333ea
+
+  &:active
+    transform: translateY(0)
+
+  @media (max-width: 480px)
+    padding: 0.75rem 0.375rem
+    min-height: 70px
+
+.channel-icon
+  font-size: 1.375rem
+  line-height: 1
+  flex-shrink: 0
+
+  @media (min-width: 480px)
+    font-size: 1.5rem
+
+  @media (min-width: 640px)
+    font-size: 1.75rem
+
+.channel-name
+  font-size: 0.6875rem
+  text-align: center
+  line-height: 1.2
+  word-break: break-word
+
+  @media (min-width: 480px)
+    font-size: 0.75rem
+
+  @media (min-width: 640px)
+    font-size: 0.875rem
+
+// Main channels (larger buttons)
+.main-btn
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.05), rgba(168, 85, 247, 0.05))
+  border-color: #9333ea
+
+  &:hover
+    background: linear-gradient(135deg, rgba(147, 51, 234, 0.1), rgba(168, 85, 247, 0.1))
+    border-color: #7e22ce
+
+// Social buttons (medium size)
+.social-btn
+  background: white
+  border-color: #d1d5db
+
+  &:hover
+    border-color: #9333ea
+
+// Additional buttons (smaller)
+.additional-btn
+  background: rgba(243, 244, 246, 0.5)
+  border-color: #e5e7eb
+  min-height: 70px
+
+  @media (min-width: 480px)
+    min-height: 75px
+
+  @media (min-width: 640px)
+    min-height: 80px
+
+  &:hover
+    background: rgba(243, 244, 246, 0.8)
+    border-color: #9333ea
+
+  @media (max-width: 480px)
+    min-height: 65px
+
+// Details/Summary styling
+.additional-networks-details
+  &[open] .summary-title .expand-icon
+    transform: rotate(180deg)
+
+  summary
+    list-style: none
+
+    &::-webkit-details-marker
+      display: none

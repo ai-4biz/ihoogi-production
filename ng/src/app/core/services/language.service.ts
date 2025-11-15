@@ -351,6 +351,23 @@ export class LanguageService {
     'distribution.linkCopiedAddToVideo': { en: 'link copied to clipboard - add to video description', he: 'הועתק ללוח - הוסף לתיאור הסרטון' },
     'distribution.linkCopiedPasteInPost': { en: 'link copied - paste it in your post!', he: 'הקישור הועתק - הדבק בפוסט!' },
     'distribution.linkCreatedSuccessfully': { en: 'link created successfully!', he: 'נוצר בהצלחה!' },
+    
+    // Distribution Channels
+    'distribution.distributeVia': { en: 'Distribute the questionnaire via:', he: 'הפץ את השאלון דרך:' },
+    'distribution.socialNetworks': { en: 'Social Networks', he: 'רשתות חברתיות' },
+    'distribution.mainChannels': { en: 'Main Channels', he: 'ערוצים עיקריים' },
+    'distribution.shareVia': { en: 'Share via {{network}}', he: 'הפץ דרך {{network}}' },
+    
+    // Network names
+    'distribution.network.tiktok': { en: 'TikTok', he: 'TikTok' },
+    'distribution.network.twitter': { en: 'Twitter', he: 'Twitter' },
+    'distribution.network.pinterest': { en: 'Pinterest', he: 'Pinterest' },
+    'distribution.network.reddit': { en: 'Reddit', he: 'Reddit' },
+    'distribution.network.linktree': { en: 'Linktree', he: 'Linktree' },
+    'distribution.network.signature': { en: 'Signature', he: 'חתימה' },
+    'distribution.network.google': { en: 'Google', he: 'Google' },
+    'distribution.network.bing': { en: 'Bing', he: 'Bing' },
+    'distribution.network.yahoo': { en: 'Yahoo', he: 'Yahoo' },
     'distribution.chooseQuestionnaireFirst': { en: 'Please select a questionnaire first', he: 'בחר שאלון תחילה' },
     'distribution.questionnaireNotActive': { en: 'Questionnaire is not active or missing token', he: 'השאלון אינו פעיל או חסר token' },
 

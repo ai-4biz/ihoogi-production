@@ -144,12 +144,6 @@
       <div class="step-card gradient-purple">
         <label class="step-label">שלב 3: קישורי הפצה</label>
 
-        <!-- Info box about automatic detection -->
-        <div class="info-box">
-          <span class="bot-icon">🤖</span>
-          <span>הלינק יזהה אוטומטית את המיקום (WhatsApp, אתר, דף נחיתה) כשמישהו לוחץ עליו</span>
-        </div>
-
         <!-- Custom Text Section (One for all links) -->
         <div class="custom-text-section-simple">
           <label class="custom-text-label-simple">
@@ -195,9 +189,14 @@
             </div>
             <div class="link-content-simple">
               <code class="link-url-simple">{{ formLink || 'לא זמין' }}</code>
-              <button class="copy-btn-simple" (click)="copyLink(formLink, 'form')" [disabled]="!formLink" title="העתק לינק">
-                📋
-              </button>
+              <div class="copy-buttons-group">
+                <button class="copy-btn-simple" (click)="copyLinkOnly(formLink, 'form')" [disabled]="!formLink" title="העתק לינק רגיל">
+                  📋 לינק
+                </button>
+                <button class="copy-btn-simple copy-with-text" (click)="copyLinkWithText(formLink, 'form')" [disabled]="!formLink || !savedTexts['form'] || !savedTexts['form'].trim()" title="העתק לינק עם מלל">
+                  📝 עם מלל
+                </button>
+              </div>
             </div>
           </div>
 
@@ -209,9 +208,14 @@
             </div>
             <div class="link-content-simple">
               <code class="link-url-simple">{{ chatLink || 'לא זמין' }}</code>
-              <button class="copy-btn-simple" (click)="copyLink(chatLink, 'chat')" [disabled]="!chatLink" title="העתק לינק">
-                📋
-              </button>
+              <div class="copy-buttons-group">
+                <button class="copy-btn-simple" (click)="copyLinkOnly(chatLink, 'chat')" [disabled]="!chatLink" title="העתק לינק רגיל">
+                  📋 לינק
+                </button>
+                <button class="copy-btn-simple copy-with-text" (click)="copyLinkWithText(chatLink, 'chat')" [disabled]="!chatLink || !savedTexts['form'] || !savedTexts['form'].trim()" title="העתק לינק עם מלל">
+                  📝 עם מלל
+                </button>
+              </div>
             </div>
           </div>
 
@@ -223,10 +227,172 @@
             </div>
             <div class="link-content-simple">
               <code class="link-url-simple">{{ qrLink || 'לא זמין' }}</code>
-              <button class="copy-btn-simple" (click)="copyLink(qrLink, 'qr')" [disabled]="!qrLink" title="העתק לינק">
-                📋
+              <div class="copy-buttons-group">
+                <button class="copy-btn-simple" (click)="copyLinkOnly(qrLink, 'qr')" [disabled]="!qrLink" title="העתק לינק רגיל">
+                  📋 לינק
+                </button>
+                <button class="copy-btn-simple copy-with-text" (click)="copyLinkWithText(qrLink, 'qr')" [disabled]="!qrLink || !savedTexts['form'] || !savedTexts['form'].trim()" title="העתק לינק עם מלל">
+                  📝 עם מלל
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Distribution Channels Section -->
+        <div class="distribution-channels-section">
+          <h3 class="channels-section-title">{{ lang.t('distribution.distributeVia') }}</h3>
+
+          <!-- Group 1: Social Networks (with referrer) -->
+          <div class="channels-group social-networks-group">
+            <h4 class="group-title">{{ lang.t('distribution.socialNetworks') }}</h4>
+            <div class="channels-grid social-grid">
+              <button 
+                class="channel-btn social-btn facebook"
+                (click)="selectSocialNetwork('facebook')"
+                [title]="lang.t('distribution.shareVia', { network: lang.t('distribution.network.facebook') })">
+                <span class="channel-icon">📘</span>
+                <span class="channel-name">{{ lang.t('distribution.network.facebook') }}</span>
+              </button>
+              <button 
+                class="channel-btn social-btn instagram"
+                (click)="selectSocialNetwork('instagram')"
+                [title]="lang.t('distribution.shareVia', { network: lang.t('distribution.network.instagram') })">
+                <span class="channel-icon">📷</span>
+                <span class="channel-name">{{ lang.t('distribution.network.instagram') }}</span>
+              </button>
+              <button 
+                class="channel-btn social-btn linkedin"
+                (click)="selectSocialNetwork('linkedin')"
+                [title]="lang.t('distribution.shareVia', { network: lang.t('distribution.network.linkedin') })">
+                <span class="channel-icon">💼</span>
+                <span class="channel-name">{{ lang.t('distribution.network.linkedin') }}</span>
+              </button>
+              <button 
+                class="channel-btn social-btn youtube"
+                (click)="selectSocialNetwork('youtube')"
+                [title]="lang.t('distribution.shareVia', { network: lang.t('distribution.network.youtube') })">
+                <span class="channel-icon">📺</span>
+                <span class="channel-name">{{ lang.t('distribution.network.youtube') }}</span>
+              </button>
+              <button 
+                class="channel-btn social-btn tiktok"
+                (click)="selectSocialNetwork('tiktok')"
+                [title]="lang.t('distribution.shareVia', { network: lang.t('distribution.network.tiktok') })">
+                <span class="channel-icon">🎵</span>
+                <span class="channel-name">{{ lang.t('distribution.network.tiktok') }}</span>
+              </button>
+              <button 
+                class="channel-btn social-btn twitter"
+                (click)="selectSocialNetwork('twitter')"
+                [title]="lang.t('distribution.shareVia', { network: lang.t('distribution.network.twitter') })">
+                <span class="channel-icon">🐦</span>
+                <span class="channel-name">{{ lang.t('distribution.network.twitter') }}</span>
+              </button>
+              <button 
+                class="channel-btn social-btn pinterest"
+                (click)="selectSocialNetwork('pinterest')"
+                [title]="lang.t('distribution.shareVia', { network: lang.t('distribution.network.pinterest') })">
+                <span class="channel-icon">📌</span>
+                <span class="channel-name">{{ lang.t('distribution.network.pinterest') }}</span>
+              </button>
+              <button 
+                class="channel-btn social-btn reddit"
+                (click)="selectSocialNetwork('reddit')"
+                [title]="lang.t('distribution.shareVia', { network: lang.t('distribution.network.reddit') })">
+                <span class="channel-icon">🔴</span>
+                <span class="channel-name">{{ lang.t('distribution.network.reddit') }}</span>
               </button>
             </div>
+          </div>
+
+          <!-- Group 2: Email, SMS, WhatsApp (no referrer) -->
+          <div class="channels-group main-channels-group">
+            <h4 class="group-title">{{ lang.t('distribution.mainChannels') }}</h4>
+            <div class="channels-grid main-grid">
+              <button 
+                class="channel-btn main-btn email"
+                (click)="selectSocialNetwork('email')"
+                [title]="lang.t('distribution.shareVia', { network: lang.t('distribution.network.email') })">
+                <span class="channel-icon">📧</span>
+                <span class="channel-name">{{ lang.t('distribution.network.email') }}</span>
+              </button>
+              <button 
+                class="channel-btn main-btn sms"
+                (click)="selectSocialNetwork('sms')"
+                [title]="lang.t('distribution.shareVia', { network: lang.t('distribution.network.sms') })">
+                <span class="channel-icon">📱</span>
+                <span class="channel-name">{{ lang.t('distribution.network.sms') }}</span>
+              </button>
+              <button 
+                class="channel-btn main-btn whatsapp"
+                (click)="selectSocialNetwork('whatsapp')"
+                [title]="lang.t('distribution.shareVia', { network: lang.t('distribution.network.whatsapp') })">
+                <span class="channel-icon">💬</span>
+                <span class="channel-name">{{ lang.t('distribution.network.whatsapp') }}</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Group 3: Additional Networks (dropdown/collapsible) -->
+          <div class="channels-group additional-networks-group">
+            <details class="additional-networks-details">
+              <summary class="group-title summary-title">
+                <span>{{ lang.t('distribution.additionalNetworks') }}</span>
+                <span class="expand-icon">▼</span>
+              </summary>
+              <div class="channels-grid additional-grid">
+                <button 
+                  class="channel-btn additional-btn telegram"
+                  (click)="selectSocialNetwork('telegram')"
+                  [title]="lang.t('distribution.shareVia', { network: lang.t('distribution.network.telegram') })">
+                  <span class="channel-icon">✈️</span>
+                  <span class="channel-name">{{ lang.t('distribution.network.telegram') }}</span>
+                </button>
+                <button 
+                  class="channel-btn additional-btn website"
+                  (click)="selectSocialNetwork('website')"
+                  [title]="lang.t('distribution.shareVia', { network: lang.t('distribution.network.website') })">
+                  <span class="channel-icon">🌐</span>
+                  <span class="channel-name">{{ lang.t('distribution.network.website') }}</span>
+                </button>
+                <button 
+                  class="channel-btn additional-btn linktree"
+                  (click)="selectSocialNetwork('linktree')"
+                  [title]="lang.t('distribution.shareVia', { network: lang.t('distribution.network.linktree') })">
+                  <span class="channel-icon">🔗</span>
+                  <span class="channel-name">{{ lang.t('distribution.network.linktree') }}</span>
+                </button>
+                <button 
+                  class="channel-btn additional-btn signature"
+                  (click)="selectSocialNetwork('signature')"
+                  [title]="lang.t('distribution.shareVia', { network: lang.t('distribution.network.signature') })">
+                  <span class="channel-icon">✍️</span>
+                  <span class="channel-name">{{ lang.t('distribution.network.signature') }}</span>
+                </button>
+                <button 
+                  class="channel-btn additional-btn google"
+                  (click)="selectSocialNetwork('google')"
+                  [title]="lang.t('distribution.shareVia', { network: lang.t('distribution.network.google') })">
+                  <span class="channel-icon">🔍</span>
+                  <span class="channel-name">{{ lang.t('distribution.network.google') }}</span>
+                </button>
+                <button 
+                  class="channel-btn additional-btn bing"
+                  (click)="selectSocialNetwork('bing')"
+                  [title]="lang.t('distribution.shareVia', { network: lang.t('distribution.network.bing') })">
+                  <span class="channel-icon">🔎</span>
+                  <span class="channel-name">{{ lang.t('distribution.network.bing') }}</span>
+                </button>
+                <button 
+                  class="channel-btn additional-btn yahoo"
+                  (click)="selectSocialNetwork('yahoo')"
+                  [title]="lang.t('distribution.shareVia', { network: lang.t('distribution.network.yahoo') })">
+                  <span class="channel-icon">📰</span>
+                  <span class="channel-name">{{ lang.t('distribution.network.yahoo') }}</span>
+                </button>
+              </div>
+            </details>
           </div>
         </div>
       </div>

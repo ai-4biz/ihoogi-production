@@ -319,8 +319,8 @@ export class DistributionHubComponent implements OnInit {
     this.qrLink = '';
   }
 
-  // Copy link only (plain link)
-  async copyLink(link: string, type: string): Promise<void> {
+  // Copy link only (plain link, no text)
+  async copyLinkOnly(link: string, type: string): Promise<void> {
     if (!link) {
       this.toast.show(
         this.lang.currentLanguage === 'he' ? 'אין קישור להעתקה' : 'No link to copy',
@@ -329,27 +329,61 @@ export class DistributionHubComponent implements OnInit {
       return;
     }
 
-    // Check if there's saved text - if yes, copy text + link together
-    const savedText = this.savedTexts['form'] || this.savedTexts[type];
-    let textToCopy = link;
-    
-    if (savedText && savedText.trim()) {
-      // Copy text + link together
-      textToCopy = `${savedText}\n${link}`;
-    }
-
-    const success = await this.copyToClipboard(textToCopy);
+    const success = await this.copyToClipboard(link);
     if (success) {
-      const message = savedText && savedText.trim()
-        ? (this.lang.currentLanguage === 'he' ? 'המלל והקישור הועתקו ללוח' : 'Text and link copied to clipboard')
-        : (this.lang.currentLanguage === 'he' ? 'הקישור הועתק ללוח' : 'Link copied to clipboard');
-      this.toast.show(message, 'success');
+      this.toast.show(
+        this.lang.currentLanguage === 'he' ? 'הקישור הועתק ללוח' : 'Link copied to clipboard',
+        'success'
+      );
     } else {
       this.toast.show(
         this.lang.currentLanguage === 'he' ? 'שגיאה בהעתקה' : 'Copy failed',
         'error'
       );
     }
+  }
+
+  // Copy link with text (if text is saved)
+  async copyLinkWithText(link: string, type: string): Promise<void> {
+    if (!link) {
+      this.toast.show(
+        this.lang.currentLanguage === 'he' ? 'אין קישור להעתקה' : 'No link to copy',
+        'error'
+      );
+      return;
+    }
+
+    // Check if there's saved text - if no, show error
+    const savedText = this.savedTexts['form'] || this.savedTexts[type];
+    if (!savedText || !savedText.trim()) {
+      this.toast.show(
+        this.lang.currentLanguage === 'he' ? 'אין מלל שמור להעתקה' : 'No saved text to copy',
+        'error'
+      );
+      return;
+    }
+
+    // Copy text + link together
+    const textToCopy = `${savedText}\n${link}`;
+    const success = await this.copyToClipboard(textToCopy);
+    
+    if (success) {
+      this.toast.show(
+        this.lang.currentLanguage === 'he' ? 'המלל והקישור הועתקו ללוח' : 'Text and link copied to clipboard',
+        'success'
+      );
+    } else {
+      this.toast.show(
+        this.lang.currentLanguage === 'he' ? 'שגיאה בהעתקה' : 'Copy failed',
+        'error'
+      );
+    }
+  }
+
+  // Legacy method - kept for backward compatibility
+  async copyLink(link: string, type: string): Promise<void> {
+    // Default to copy link only (without text)
+    await this.copyLinkOnly(link, type);
   }
 
   // Copy clickable link (HTML format - text as clickable link)
@@ -757,8 +791,26 @@ export class DistributionHubComponent implements OnInit {
   }
 
   // Social network selection and sharing
-  async selectSocialNetwork(network: 'whatsapp' | 'facebook' | 'instagram' | 'linkedin' | 'youtube' | 'telegram' | 'email' | 'sms' | 'website') {
-    // Generate form link if not already generated
+  async selectSocialNetwork(network: 'whatsapp' | 'facebook' | 'instagram' | 'linkedin' | 'youtube' | 'tiktok' | 'twitter' | 'pinterest' | 'reddit' | 'telegram' | 'email' | 'sms' | 'qr' | 'website' | 'linktree' | 'signature' | 'google' | 'bing' | 'yahoo') {
+    // For QR, use qrLink directly
+    if (network === 'qr') {
+      if (!this.qrLink) {
+        await this.handleBuildLink('qr');
+      }
+      if (!this.qrLink) {
+        return;
+      }
+      const copySuccess = await this.copyToClipboard(this.qrLink);
+      if (copySuccess) {
+        this.toast.show(
+          `QR - ${this.lang.t('distribution.linkCopiedToClipboard')}`,
+          'success'
+        );
+      }
+      return;
+    }
+
+    // For other networks, generate form link if not already generated
     const wasGenerated = !this.currentUrl;
     if (wasGenerated) {
       await this.handleBuildLink('form');
@@ -769,7 +821,7 @@ export class DistributionHubComponent implements OnInit {
       return;
     }
 
-    this.selectedSocialNetwork = network;
+    this.selectedSocialNetwork = network as any;
 
     // Get network name (translated)
     const networkNames: { [key: string]: string } = {
@@ -778,10 +830,20 @@ export class DistributionHubComponent implements OnInit {
       'instagram': 'Instagram',
       'linkedin': 'LinkedIn',
       'youtube': 'YouTube',
+      'tiktok': 'TikTok',
+      'twitter': 'Twitter',
+      'pinterest': 'Pinterest',
+      'reddit': 'Reddit',
       'telegram': 'Telegram',
       'email': 'Email',
       'sms': 'SMS',
-      'website': 'Website'
+      'qr': 'QR',
+      'website': 'Website',
+      'linktree': 'Linktree',
+      'signature': 'Signature',
+      'google': 'Google',
+      'bing': 'Bing',
+      'yahoo': 'Yahoo'
     };
     const networkName = networkNames[network] || network;
 
@@ -842,6 +904,23 @@ export class DistributionHubComponent implements OnInit {
       case 'youtube':
         // YouTube doesn't have a share endpoint for links
         return;
+      case 'tiktok':
+        // TikTok doesn't have a web share API, so we only copy the link
+        return;
+      case 'twitter':
+        // Twitter/X share with URL and text
+        const twitterText = this.lang.currentLanguage === 'he' ? 'מלא את השאלון שלנו' : 'Fill out our questionnaire';
+        shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(urlWithTracking)}&text=${encodeURIComponent(twitterText)}`;
+        break;
+      case 'pinterest':
+        // Pinterest share with URL
+        shareUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(urlWithTracking)}`;
+        break;
+      case 'reddit':
+        // Reddit share with URL and title
+        const redditTitle = this.lang.currentLanguage === 'he' ? 'מלא את השאלון שלנו' : 'Fill out our questionnaire';
+        shareUrl = `https://reddit.com/submit?url=${encodeURIComponent(urlWithTracking)}&title=${encodeURIComponent(redditTitle)}`;
+        break;
       case 'telegram':
         // Telegram share with URL and text
         const telegramText = this.lang.currentLanguage === 'he' ? 'מלא את השאלון שלנו' : 'Fill out our questionnaire';
@@ -863,6 +942,11 @@ export class DistributionHubComponent implements OnInit {
         shareUrl = `sms:?body=${encodeURIComponent(smsMessage)}`;
         break;
       case 'website':
+      case 'linktree':
+      case 'signature':
+      case 'google':
+      case 'bing':
+      case 'yahoo':
         // Generic share - only copy to clipboard
         return;
     }
