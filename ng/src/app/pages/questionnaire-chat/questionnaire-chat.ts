@@ -88,10 +88,10 @@ export class QuestionnaireChat implements OnInit, OnDestroy, AfterViewChecked {
     console.log("%c[DIAG] Full URL:", "color: #4CAF50", window.location.href);
     const queryParams = Object.fromEntries(new URLSearchParams(window.location.search));
     console.log("%c[DIAG] Query params:", "color: #4CAF50", queryParams);
-    if (!queryParams.src) {
+    if (!queryParams['src']) {
       console.warn("%c[DIAG] ⚠️ WARNING: 'src' parameter is MISSING from URL!", "color: #FF5722; font-weight: bold");
     } else {
-      console.log("%c[DIAG] ✅ 'src' parameter found:", "color: #4CAF50", queryParams.src);
+      console.log("%c[DIAG] ✅ 'src' parameter found:", "color: #4CAF50", queryParams['src']);
     }
 
     // Detect referral source/channel
