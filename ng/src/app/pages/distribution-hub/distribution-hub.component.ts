@@ -792,20 +792,21 @@ export class DistributionHubComponent implements OnInit {
       return;
     }
 
-    // GROUP 2: Social networks (with referrer) do NOT need smart redirect
-    // They work via referrer detection, so use regular distribution link
+    // All networks need tracking parameter - use ?src= for social networks (referrer + backup)
+    // Use smart redirect for non-referrer channels (whatsapp, email, sms, etc.)
     const baseUrl = environment.siteUrl;
     const distributionToken = this.currentDistribution.token;
     
     // Social networks that work via referrer (GROUP 2)
+    // They should also have ?src= as backup if link is copied/shared without referrer
     const socialNetworks = ['facebook', 'instagram', 'linkedin', 'youtube', 'tiktok', 'twitter', 'pinterest', 'reddit'];
     
     let urlWithTracking: string;
     if (socialNetworks.includes(network)) {
-      // Social networks: Use regular distribution link (no redirect, no ?src=)
-      // The referrer will be detected automatically by ReferralTrackingService
-      urlWithTracking = `${baseUrl}/q/${distributionToken}`;
-      console.log(`📤 [${network.toUpperCase()}] Social network - Using regular link (referrer-based):`, urlWithTracking);
+      // Social networks: Use ?src= parameter (works with referrer, or as fallback if copied)
+      // ReferralTrackingService checks referrer first, then falls back to ?src=
+      urlWithTracking = `${baseUrl}/q/${distributionToken}?src=${network}`;
+      console.log(`📤 [${network.toUpperCase()}] Social network - Using link with ?src= (referrer + backup):`, urlWithTracking);
     } else {
       // GROUP 1 & GROUP 3: Non-referrer channels need smart redirect
       urlWithTracking = this.buildChannelLink(network, distributionToken);
