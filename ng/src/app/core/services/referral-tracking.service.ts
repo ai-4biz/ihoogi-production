@@ -33,6 +33,8 @@ export class ReferralTrackingService {
     // Using channelsWithoutReferrer declared above (line 20)
     if (srcParam && channelsWithoutReferrer.includes(srcParam)) {
       console.log(`🔍 [${srcParam.toUpperCase()} DETECTION] PRIORITY 0 (Channel-specific): Found ?src=${srcParam}, returning ${srcParam} immediately`);
+      // PHASE 2: Log result before return (non-destructive)
+      console.log("%c[DIAG] detectChannel() result (PRIORITY 0):", "color: #2196F3", srcParam);
       return srcParam;
     }
 
@@ -130,8 +132,10 @@ export class ReferralTrackingService {
     }
 
     // PRIORITY 5: No referer means direct traffic
-    return 'direct';
-  }
+    const finalChannel = 'direct';
+    // PHASE 2: Log final result (before return, non-destructive)
+    console.log("%c[DIAG] detectChannel() final result:", "color: #2196F3", finalChannel);
+    return finalChannel;
 
   /**
    * Check if a hostname matches any of the given sources

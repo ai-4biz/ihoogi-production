@@ -72,9 +72,22 @@ export class QuestionnaireLive implements OnInit {
     console.log('=== QuestionnaireLive ngOnInit called ===');
     console.log('Current URL:', this.router.url);
 
+    // PHASE 1: Inspect incoming production URL
+    console.log("%c[DIAG] Full URL:", "color: #4CAF50", window.location.href);
+    const queryParams = Object.fromEntries(new URLSearchParams(window.location.search));
+    console.log("%c[DIAG] Query params:", "color: #4CAF50", queryParams);
+    if (!queryParams.src) {
+      console.warn("%c[DIAG] ⚠️ WARNING: 'src' parameter is MISSING from URL!", "color: #FF5722; font-weight: bold");
+    } else {
+      console.log("%c[DIAG] ✅ 'src' parameter found:", "color: #4CAF50", queryParams.src);
+    }
+
     // Detect referral source/channel
     this.detectedChannel = this.referralTracking.detectChannel();
     console.log('Detected channel:', this.detectedChannel);
+    
+    // PHASE 2: Inspect detectChannel() result
+    console.log("%c[DIAG] detectChannel() result:", "color: #2196F3", this.detectedChannel);
 
     const token = this.route.snapshot.paramMap.get('token');
     const id = this.route.snapshot.paramMap.get('id');
