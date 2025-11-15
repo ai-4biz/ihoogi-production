@@ -84,9 +84,17 @@ export class QuestionnaireChat implements OnInit, OnDestroy, AfterViewChecked {
   ) {}
 
   ngOnInit() {
+    console.log('=== QuestionnaireChat ngOnInit called ===');
+    console.log('Current URL:', window.location.href);
+    console.log('Search params:', window.location.search);
+    console.log('Referrer:', document.referrer);
+    console.log('User Agent:', navigator.userAgent);
+    
     // Detect referral source/channel
     this.detectedChannel = this.referralTracking.detectChannel();
+    console.log('=== Channel Detection Result ===');
     console.log('Detected channel:', this.detectedChannel);
+    console.log('Detected channel type:', typeof this.detectedChannel);
 
     // Prevent body scroll
     document.body.style.overflow = 'hidden';
@@ -1027,6 +1035,11 @@ export class QuestionnaireChat implements OnInit, OnDestroy, AfterViewChecked {
       }
 
       // Use RPC function to insert lead (bypasses RLS)
+      console.log('=== Submitting Lead ===');
+      console.log('Detected channel at submit time:', this.detectedChannel);
+      console.log('Channel value to send:', this.detectedChannel);
+      console.log('Distribution token:', this.distributionToken);
+      
       const { data: leadId, error: leadError } = await this.supabaseService.client
         .rpc('submit_lead', {
           p_questionnaire_id: this.questionnaire.id,
@@ -1038,6 +1051,10 @@ export class QuestionnaireChat implements OnInit, OnDestroy, AfterViewChecked {
           p_distribution_token: this.distributionToken,
           p_channel: this.detectedChannel
         });
+      
+      console.log('=== Lead Submission Result ===');
+      console.log('Lead ID:', leadId);
+      console.log('Error:', leadError);
 
       if (leadError) {
         console.error('Error saving lead data:', leadError);

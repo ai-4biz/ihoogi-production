@@ -10,11 +10,35 @@ export class ReferralTrackingService {
    * Returns a channel name like 'facebook', 'instagram', 'linkedin', 'google', 'direct', etc.
    */
   detectChannel(): string {
+    console.log('=== detectChannel() called ===');
+    console.log('Full URL:', window.location.href);
+    console.log('Search params:', window.location.search);
+    console.log('Referrer:', document.referrer);
+    console.log('User Agent:', navigator.userAgent);
+    
     const urlParams = new URLSearchParams(window.location.search);
+    console.log('URL params object:', Array.from(urlParams.entries()));
 
-    // PRIORITY 1: Check HTTP referer FIRST (real source where the response came from)
-    // This catches cases where link was shared on Facebook/Instagram/etc. even if ?src=form is present
+    // PRIORITY 1: Check for 'src' parameter FIRST (like gold version)
+    // This ensures that ?src=whatsapp is always detected as 'whatsapp', even if there's a referrer
+    console.log('Priority 1: src parameter check');
+    const srcParam = urlParams.get('src');
+    console.log('src parameter value:', srcParam || 'NONE');
+    if (srcParam) {
+      const normalizedChannel = this.normalizeSource(srcParam);
+      console.log('Normalized channel from src:', normalizedChannel);
+      // Debug: Log WhatsApp detection
+      if (normalizedChannel === 'whatsapp' || srcParam.toLowerCase().includes('whatsapp') || srcParam.toLowerCase() === 'wa') {
+        console.log('WhatsApp detected via src parameter:', { srcParam, normalizedChannel, referer: document.referrer || 'none' });
+      }
+      console.log('=== Final Channel (src parameter) ===', normalizedChannel);
+      return normalizedChannel;
+    }
+
+    // PRIORITY 2: Check HTTP referer (real source where the response came from)
+    // This catches cases where link was shared on Facebook/Instagram/etc. (but only if no src parameter)
     const referer = document.referrer;
+    console.log('Priority 2: Referrer check -', referer || 'NONE');
 
     if (referer) {
       try {
@@ -68,6 +92,7 @@ export class ReferralTrackingService {
 
         if (this.isFromSource(refererHost, ['whatsapp.com', 'api.whatsapp.com', 'wa.me', 'chat.whatsapp.com'])) {
           console.log('WhatsApp detected via referrer:', { refererHost, referer });
+          console.log('=== Final Channel (referrer) ===', 'whatsapp');
           return 'whatsapp';
         }
 
@@ -84,27 +109,18 @@ export class ReferralTrackingService {
       }
     }
 
-    // PRIORITY 2: If no referer, check User Agent FIRST (before src parameter)
+    // PRIORITY 3: If no referer, check User Agent
     // This catches cases where link is opened in WhatsApp app (no referrer, but User Agent has WhatsApp)
+    console.log('Priority 3: User Agent check');
     const uaChannel = this.detectFromUserAgent();
+    console.log('User Agent channel detected:', uaChannel || 'NONE');
     if (uaChannel) {
       // Debug: Log WhatsApp detection via User Agent
       if (uaChannel === 'whatsapp') {
         console.log('WhatsApp detected via User Agent:', { uaChannel, referer: document.referrer || 'none' });
       }
+      console.log('=== Final Channel (User Agent) ===', uaChannel);
       return uaChannel;
-    }
-
-    // PRIORITY 3: Check for 'src' parameter (e.g., ?src=facebook, ?src=form)
-    // Only used if no external referrer and no User Agent channel was detected
-    const srcParam = urlParams.get('src');
-    if (srcParam) {
-      const normalizedChannel = this.normalizeSource(srcParam);
-      // Debug: Log WhatsApp detection
-      if (normalizedChannel === 'whatsapp' || srcParam.toLowerCase().includes('whatsapp') || srcParam.toLowerCase() === 'wa') {
-        console.log('WhatsApp detected via src parameter:', { srcParam, normalizedChannel, referer: document.referrer || 'none' });
-      }
-      return normalizedChannel;
     }
 
     // PRIORITY 4: Check for utm_source parameter
@@ -114,6 +130,8 @@ export class ReferralTrackingService {
     }
 
     // PRIORITY 5: No referer means direct traffic
+    console.log('Priority 5: Default to direct');
+    console.log('=== Final Channel (default) ===', 'direct');
     return 'direct';
   }
 

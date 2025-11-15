@@ -71,10 +71,16 @@ export class QuestionnaireLive implements OnInit {
   ngOnInit() {
     console.log('=== QuestionnaireLive ngOnInit called ===');
     console.log('Current URL:', this.router.url);
+    console.log('Full URL:', window.location.href);
+    console.log('Search params:', window.location.search);
+    console.log('Referrer:', document.referrer);
+    console.log('User Agent:', navigator.userAgent);
 
     // Detect referral source/channel
     this.detectedChannel = this.referralTracking.detectChannel();
+    console.log('=== Channel Detection Result ===');
     console.log('Detected channel:', this.detectedChannel);
+    console.log('Detected channel type:', typeof this.detectedChannel);
 
     const token = this.route.snapshot.paramMap.get('token');
     const id = this.route.snapshot.paramMap.get('id');
@@ -367,6 +373,11 @@ export class QuestionnaireLive implements OnInit {
       }
 
       // Use RPC function to insert lead (bypasses RLS)
+      console.log('=== Submitting Lead ===');
+      console.log('Detected channel at submit time:', this.detectedChannel);
+      console.log('Channel value to send:', this.detectedChannel);
+      console.log('Distribution token:', this.distributionToken);
+      
       const { data: leadId, error: leadError } = await this.supabaseService.client
         .rpc('submit_lead', {
           p_questionnaire_id: this.questionnaire.id,
@@ -378,6 +389,10 @@ export class QuestionnaireLive implements OnInit {
           p_distribution_token: this.distributionToken,
           p_channel: this.detectedChannel
         });
+      
+      console.log('=== Lead Submission Result ===');
+      console.log('Lead ID:', leadId);
+      console.log('Error:', leadError);
 
       if (leadError) {
         console.error('Error saving lead data:', leadError);
