@@ -12,9 +12,20 @@ export class ReferralTrackingService {
   detectChannel(): string {
     const urlParams = new URLSearchParams(window.location.search);
 
+    // Debug: Log all detection info for WhatsApp
+    const fullUrl = window.location.href;
+    const srcParam = urlParams.get('src');
+    const referer = document.referrer;
+    
+    if (fullUrl.includes('whatsapp') || srcParam === 'whatsapp' || referer.includes('whatsapp')) {
+      console.log('🔍 [WHATSAPP DETECTION] Full URL:', fullUrl);
+      console.log('🔍 [WHATSAPP DETECTION] ?src= parameter:', srcParam);
+      console.log('🔍 [WHATSAPP DETECTION] Referrer:', referer);
+      console.log('🔍 [WHATSAPP DETECTION] All URL params:', Array.from(urlParams.entries()));
+    }
+
     // PRIORITY 1: Check HTTP referer FIRST (real source where the response came from)
     // This catches cases where link was shared on Facebook/Instagram/etc. even if ?src=form is present
-    const referer = document.referrer;
 
     if (referer) {
       try {
@@ -85,9 +96,12 @@ export class ReferralTrackingService {
 
     // PRIORITY 2: Check for 'src' parameter (e.g., ?src=facebook, ?src=form)
     // Only used if no external referrer was detected
-    const srcParam = urlParams.get('src');
     if (srcParam) {
-      return this.normalizeSource(srcParam);
+      const normalized = this.normalizeSource(srcParam);
+      if (fullUrl.includes('whatsapp') || srcParam === 'whatsapp' || referer.includes('whatsapp')) {
+        console.log('🔍 [WHATSAPP DETECTION] PRIORITY 2: srcParam =', srcParam, 'normalized =', normalized);
+      }
+      return normalized;
     }
 
     // PRIORITY 3: Check for utm_source parameter
