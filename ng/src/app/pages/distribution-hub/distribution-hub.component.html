@@ -154,7 +154,10 @@
         <div class="links-container-simple">
           <!-- Row 1: Form Link -->
           <div class="link-row-simple">
-            <div class="link-label-simple">קישור הפצה</div>
+            <div class="link-label-simple">
+              <span class="link-icon">📄</span>
+              <span>לינק טופס</span>
+            </div>
             <div class="link-content-simple">
               <code class="link-url-simple">{{ formLink || 'לא זמין' }}</code>
               <button class="copy-btn-simple" (click)="copyLink(formLink, 'form')" [disabled]="!formLink" title="העתק לינק">
@@ -165,7 +168,10 @@
 
           <!-- Row 2: Chat Link -->
           <div class="link-row-simple">
-            <div class="link-label-simple">קישור הפצה</div>
+            <div class="link-label-simple">
+              <span class="link-icon">💬</span>
+              <span>לינק צ'אט</span>
+            </div>
             <div class="link-content-simple">
               <code class="link-url-simple">{{ chatLink || 'לא זמין' }}</code>
               <button class="copy-btn-simple" (click)="copyLink(chatLink, 'chat')" [disabled]="!chatLink" title="העתק לינק">
@@ -176,7 +182,10 @@
 
           <!-- Row 3: QR Link -->
           <div class="link-row-simple">
-            <div class="link-label-simple">קישור הפצה</div>
+            <div class="link-label-simple">
+              <span class="link-icon">📱</span>
+              <span>לינק QR</span>
+            </div>
             <div class="link-content-simple">
               <code class="link-url-simple">{{ qrLink || 'לא זמין' }}</code>
               <button class="copy-btn-simple" (click)="copyLink(qrLink, 'qr')" [disabled]="!qrLink" title="העתק לינק">
