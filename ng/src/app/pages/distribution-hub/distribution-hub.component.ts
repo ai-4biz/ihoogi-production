@@ -67,7 +67,7 @@ export class DistributionHubComponent implements OnInit {
   currentMode: LinkMode = null;
   currentUrl = '';
   currentDistribution: Distribution | null = null;
-  selectedSocialNetwork: 'whatsapp' | 'facebook' | 'instagram' | 'linkedin' | 'youtube' | 'telegram' | 'email' | 'sms' | 'website' | 'qr' | 'tiktok' | 'pinterest' | 'reddit' | 'twitter' | 'google' | 'bing' | 'yahoo' | null = null;
+  selectedSocialNetwork: 'whatsapp' | 'facebook' | 'instagram' | 'linkedin' | 'youtube' | 'telegram' | 'email' | 'sms' | 'website' | 'qr' | 'tiktok' | 'pinterest' | 'reddit' | 'twitter' | 'google' | 'bing' | 'yahoo' | 'linktree' | 'signature' | null = null;
   showLinksSection = false;
   showMoreChannels: boolean = false;
 
@@ -771,7 +771,7 @@ export class DistributionHubComponent implements OnInit {
   }
 
   // Social network selection and sharing
-  async selectSocialNetwork(network: 'whatsapp' | 'facebook' | 'instagram' | 'linkedin' | 'youtube' | 'telegram' | 'email' | 'sms' | 'website' | 'qr' | 'tiktok' | 'pinterest' | 'reddit' | 'twitter' | 'google' | 'bing' | 'yahoo') {
+  async selectSocialNetwork(network: 'whatsapp' | 'facebook' | 'instagram' | 'linkedin' | 'youtube' | 'telegram' | 'email' | 'sms' | 'website' | 'qr' | 'tiktok' | 'pinterest' | 'reddit' | 'twitter' | 'google' | 'bing' | 'yahoo' | 'linktree' | 'signature') {
     // Check if questionnaire is selected
     if (!this.selectedQuestionnaire) {
       this.toast.show(
@@ -819,7 +819,9 @@ export class DistributionHubComponent implements OnInit {
       'twitter': 'Twitter',
       'google': 'Google',
       'bing': 'Bing',
-      'yahoo': 'Yahoo'
+      'yahoo': 'Yahoo',
+      'linktree': 'Linktree',
+      'signature': 'Signature'
     };
     const networkName = networkNames[network] || network;
 
@@ -917,6 +919,12 @@ export class DistributionHubComponent implements OnInit {
         return;
       case 'yahoo':
         // Yahoo doesn't have a share endpoint - only copy
+        return;
+      case 'linktree':
+        // Linktree - only copy to clipboard
+        return;
+      case 'signature':
+        // Signature - only copy to clipboard
         return;
     }
 

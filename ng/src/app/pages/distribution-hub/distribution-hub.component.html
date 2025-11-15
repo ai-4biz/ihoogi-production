@@ -388,10 +388,10 @@
           <span>לחץ על הכפתור הרלוונטי - כל קישור כולל מעקב לפי רשת</span>
         </div>
 
-        <!-- Main Channels (Non-referrer: WhatsApp, Email, SMS, QR) -->
+        <!-- GROUP 1: MAIN CHANNELS (no referrer) -->
         <div class="social-networks-section">
-          <h3 class="networks-section-title">ערוצים עיקריים (הכי ממירים)</h3>
-          <div class="networks-grid main-channels">
+          <h3 class="networks-section-title">ערוצים עיקריים</h3>
+          <div class="main-channels">
             <button 
               class="network-btn whatsapp main"
               (click)="selectSocialNetwork('whatsapp')"
@@ -399,7 +399,6 @@
               title="WhatsApp">
               <span class="network-icon">💬</span>
               <span class="network-name">WhatsApp</span>
-              <span class="network-badge">45-60%</span>
             </button>
             <button 
               class="network-btn email main"
@@ -408,7 +407,6 @@
               title="Email">
               <span class="network-icon">📧</span>
               <span class="network-name">Email</span>
-              <span class="network-badge">8-12%</span>
             </button>
             <button 
               class="network-btn sms main"
@@ -417,7 +415,6 @@
               title="SMS">
               <span class="network-icon">📱</span>
               <span class="network-name">SMS</span>
-              <span class="network-badge">8-12%</span>
             </button>
             <button 
               class="network-btn qr main"
@@ -426,15 +423,14 @@
               title="QR Code">
               <span class="network-icon">📲</span>
               <span class="network-name">QR</span>
-              <span class="network-badge">5-10%</span>
             </button>
           </div>
         </div>
 
-        <!-- Social Networks (With referrer) -->
+        <!-- GROUP 2: SOCIAL NETWORKS (with referrer) -->
         <div class="social-networks-section">
           <h3 class="networks-section-title">רשתות חברתיות</h3>
-          <div class="networks-grid compact">
+          <div class="social-networks">
             <button 
               class="network-btn facebook"
               (click)="selectSocialNetwork('facebook')"
@@ -476,20 +472,20 @@
               <span class="network-name">TikTok</span>
             </button>
             <button 
-              class="network-btn pinterest"
-              (click)="selectSocialNetwork('pinterest')"
-              [disabled]="!selectedQuestionnaire"
-              title="Pinterest">
-              <span class="network-icon">📌</span>
-              <span class="network-name">Pinterest</span>
-            </button>
-            <button 
               class="network-btn reddit"
               (click)="selectSocialNetwork('reddit')"
               [disabled]="!selectedQuestionnaire"
               title="Reddit">
               <span class="network-icon">🔴</span>
               <span class="network-name">Reddit</span>
+            </button>
+            <button 
+              class="network-btn pinterest"
+              (click)="selectSocialNetwork('pinterest')"
+              [disabled]="!selectedQuestionnaire"
+              title="Pinterest">
+              <span class="network-icon">📌</span>
+              <span class="network-name">Pinterest</span>
             </button>
             <button 
               class="network-btn twitter"
@@ -499,34 +495,10 @@
               <span class="network-icon">🐦</span>
               <span class="network-name">Twitter</span>
             </button>
-            <button 
-              class="network-btn google"
-              (click)="selectSocialNetwork('google')"
-              [disabled]="!selectedQuestionnaire"
-              title="Google">
-              <span class="network-icon">🔍</span>
-              <span class="network-name">Google</span>
-            </button>
-            <button 
-              class="network-btn bing"
-              (click)="selectSocialNetwork('bing')"
-              [disabled]="!selectedQuestionnaire"
-              title="Bing">
-              <span class="network-icon">🔎</span>
-              <span class="network-name">Bing</span>
-            </button>
-            <button 
-              class="network-btn yahoo"
-              (click)="selectSocialNetwork('yahoo')"
-              [disabled]="!selectedQuestionnaire"
-              title="Yahoo">
-              <span class="network-icon">📧</span>
-              <span class="network-name">Yahoo</span>
-            </button>
           </div>
         </div>
 
-        <!-- Additional Channels (Dropdown) -->
+        <!-- GROUP 3: MORE CHANNELS (dropdown) -->
         <div class="social-networks-section">
           <div class="more-channels-wrapper">
             <button 
@@ -538,7 +510,31 @@
               <span class="toggle-icon" [class.open]="showMoreChannels">▼</span>
             </button>
             @if (showMoreChannels) {
-              <div class="networks-grid compact more-channels-grid">
+              <div class="more-channels">
+                <button 
+                  class="network-btn website"
+                  (click)="selectSocialNetwork('website')"
+                  [disabled]="!selectedQuestionnaire"
+                  title="Website">
+                  <span class="network-icon">🌐</span>
+                  <span class="network-name">Website</span>
+                </button>
+                <button 
+                  class="network-btn linktree"
+                  (click)="selectSocialNetwork('linktree')"
+                  [disabled]="!selectedQuestionnaire"
+                  title="Linktree">
+                  <span class="network-icon">🌳</span>
+                  <span class="network-name">Linktree</span>
+                </button>
+                <button 
+                  class="network-btn signature"
+                  (click)="selectSocialNetwork('signature')"
+                  [disabled]="!selectedQuestionnaire"
+                  title="Signature">
+                  <span class="network-icon">✍️</span>
+                  <span class="network-name">Signature</span>
+                </button>
                 <button 
                   class="network-btn telegram"
                   (click)="selectSocialNetwork('telegram')"
@@ -548,12 +544,28 @@
                   <span class="network-name">Telegram</span>
                 </button>
                 <button 
-                  class="network-btn website"
-                  (click)="selectSocialNetwork('website')"
+                  class="network-btn google"
+                  (click)="selectSocialNetwork('google')"
                   [disabled]="!selectedQuestionnaire"
-                  title="Website">
-                  <span class="network-icon">🌐</span>
-                  <span class="network-name">Website</span>
+                  title="Google">
+                  <span class="network-icon">🔍</span>
+                  <span class="network-name">Google</span>
+                </button>
+                <button 
+                  class="network-btn bing"
+                  (click)="selectSocialNetwork('bing')"
+                  [disabled]="!selectedQuestionnaire"
+                  title="Bing">
+                  <span class="network-icon">🔎</span>
+                  <span class="network-name">Bing</span>
+                </button>
+                <button 
+                  class="network-btn yahoo"
+                  (click)="selectSocialNetwork('yahoo')"
+                  [disabled]="!selectedQuestionnaire"
+                  title="Yahoo">
+                  <span class="network-icon">📧</span>
+                  <span class="network-name">Yahoo</span>
                 </button>
               </div>
             }

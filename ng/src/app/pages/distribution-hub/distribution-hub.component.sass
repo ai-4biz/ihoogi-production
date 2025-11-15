@@ -2162,6 +2162,22 @@
       background: rgba(96, 1, 210, 0.1)
       box-shadow: 0 4px 12px rgba(96, 1, 210, 0.2)
 
+  &.linktree
+    border-color: #43e55e
+    background: rgba(67, 229, 94, 0.05)
+
+    &:hover:not(:disabled)
+      background: rgba(67, 229, 94, 0.1)
+      box-shadow: 0 4px 12px rgba(67, 229, 94, 0.2)
+
+  &.signature
+    border-color: #8b5cf6
+    background: rgba(139, 92, 246, 0.05)
+
+    &:hover:not(:disabled)
+      background: rgba(139, 92, 246, 0.1)
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2)
+
   // Main channels (WhatsApp, Email, SMS, QR) - more prominent but still compact
   &.main
     min-height: 85px
@@ -2176,11 +2192,50 @@
       font-size: 0.875rem
       font-weight: 700
 
-.networks-grid.main-channels
+// GROUP 1: Main Channels Container
+.main-channels
+  display: grid
   grid-template-columns: repeat(2, 1fr)
+  gap: 1rem
+  margin-bottom: 1.5rem
   
   @media (min-width: 640px)
     grid-template-columns: repeat(4, 1fr)
+    gap: 1.25rem
+
+// GROUP 2: Social Networks Container
+.social-networks
+  display: grid
+  grid-template-columns: repeat(3, 1fr)
+  gap: 0.75rem
+  margin-bottom: 1.5rem
+  
+  @media (min-width: 640px)
+    grid-template-columns: repeat(4, 1fr)
+    gap: 0.85rem
+  
+  @media (min-width: 768px)
+    grid-template-columns: repeat(4, 1fr)
+    gap: 0.9rem
+  
+  @media (min-width: 1024px)
+    grid-template-columns: repeat(4, 1fr)
+    gap: 1rem
+
+// GROUP 3: More Channels Container (inside dropdown)
+.more-channels
+  display: grid
+  grid-template-columns: repeat(2, 1fr)
+  gap: 0.75rem
+  margin-top: 1rem
+  
+  @media (min-width: 640px)
+    grid-template-columns: repeat(3, 1fr)
+    gap: 0.85rem
+  
+  @media (min-width: 768px)
+    grid-template-columns: repeat(4, 1fr)
+    gap: 0.9rem
 
 // More channels dropdown
 .more-channels-wrapper
@@ -2216,8 +2271,7 @@
     &.open
       transform: rotate(180deg)
 
-.more-channels-grid
-  margin-top: 1rem
+// Removed .more-channels-grid - using .more-channels instead
 
   &.website-card
     border-color: #6b7280
