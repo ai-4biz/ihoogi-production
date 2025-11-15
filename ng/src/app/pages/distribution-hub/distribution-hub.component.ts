@@ -754,7 +754,9 @@ export class DistributionHubComponent implements OnInit {
 
     // Non-referrer channels use smart redirect route: /r/<channel>/<token>
     // This ensures the channel is preserved even if link is copied/shared
-    const nonReferrerChannels = ['whatsapp', 'email', 'sms', 'telegram', 'website', 'qr', 'direct', 'signature', 'linktree'];
+    // GROUP 1: whatsapp, email, sms, qr
+    // GROUP 3: telegram, website, linktree, signature, google, bing, yahoo
+    const nonReferrerChannels = ['whatsapp', 'email', 'sms', 'qr', 'telegram', 'website', 'linktree', 'signature', 'google', 'bing', 'yahoo', 'direct'];
 
     if (nonReferrerChannels.includes(channelId)) {
       // Use redirect route so the channel is preserved regardless
@@ -763,10 +765,10 @@ export class DistributionHubComponent implements OnInit {
       return redirectUrl;
     }
 
-    // For social networks that may have referrer and already work:
-    // Keep existing ?src= behavior
-    const directUrl = `${baseUrl}/q/${token}?src=${channelId}`;
-    console.log(`🔗 [${channelId.toUpperCase()}] Using direct route with ?src=:`, directUrl);
+    // This should never be called for social networks (they use regular link instead)
+    // Fallback: return regular link
+    const directUrl = `${baseUrl}/q/${token}`;
+    console.warn(`⚠️ [${channelId.toUpperCase()}] buildChannelLink called for referrer-based channel, using regular link`);
     return directUrl;
   }
 
@@ -790,14 +792,25 @@ export class DistributionHubComponent implements OnInit {
       return;
     }
 
-    // Use smart buildChannelLink function
+    // GROUP 2: Social networks (with referrer) do NOT need smart redirect
+    // They work via referrer detection, so use regular distribution link
     const baseUrl = environment.siteUrl;
     const distributionToken = this.currentDistribution.token;
-    const urlWithTracking = this.buildChannelLink(network, distributionToken);
-
-    // Diagnostic log
-    console.log(`📤 [${network.toUpperCase()}] Generated link:`, urlWithTracking);
-    console.log(`📤 [${network.toUpperCase()}] Full URL:`, urlWithTracking);
+    
+    // Social networks that work via referrer (GROUP 2)
+    const socialNetworks = ['facebook', 'instagram', 'linkedin', 'youtube', 'tiktok', 'twitter', 'pinterest', 'reddit'];
+    
+    let urlWithTracking: string;
+    if (socialNetworks.includes(network)) {
+      // Social networks: Use regular distribution link (no redirect, no ?src=)
+      // The referrer will be detected automatically by ReferralTrackingService
+      urlWithTracking = `${baseUrl}/q/${distributionToken}`;
+      console.log(`📤 [${network.toUpperCase()}] Social network - Using regular link (referrer-based):`, urlWithTracking);
+    } else {
+      // GROUP 1 & GROUP 3: Non-referrer channels need smart redirect
+      urlWithTracking = this.buildChannelLink(network, distributionToken);
+      console.log(`📤 [${network.toUpperCase()}] Non-referrer channel - Using smart redirect:`, urlWithTracking);
+    }
 
     this.selectedSocialNetwork = network;
 
